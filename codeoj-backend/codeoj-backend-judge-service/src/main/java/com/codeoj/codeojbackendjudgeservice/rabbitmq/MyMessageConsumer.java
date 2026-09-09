@@ -35,14 +35,24 @@ public class MyMessageConsumer {
             channel.basicAck(deliveryTag, false);
         } catch (Exception e) {
             log.error("判题失败，questionSubmitId = {}", questionSubmitId, e);
-            // 将判题状态回滚为失败，避免提交记录一直停留在“判题中”
-            QuestionSubmit update = new QuestionSubmit();
-            update.setId(questionSubmitId);
-            update.setStatus(QuestionSubmitStatusEnum.FAILED.getValue());
-            try {
-                questionFeignClient.updateQuestionSubmitById(update);
-            } catch (Exception ex) {
-                log.error("回滚判题状态失败，questionSubmitId = {}", questionSubmitId, ex);
+            // 若记录已是终态（如：判题结果已写入但 ack 前进程崩溃导致消息重投），
+            // 不能将已完成的判题结果覆盖为失败，直接丢弃消息即可
+            QuestionSubmit current = questionFeignClient.getQuestionSubmitById(questionSubmitId);
+            boolean isFinal = current != null
+                    && (QuestionSubmitStatusEnum.SUCCEED.getValue().equals(current.getStatus())
+                    || QuestionSubmitStatusEnum.FAILED.getValue().equals(current.getStatus()));
+            if (!isFinal) {
+                // 将判题状态回滚为失败，避免提交记录一直停留在“判题中”
+                QuestionSubmit update = new QuestionSubmit();
+                update.setId(questionSubmitId);
+                update.setStatus(QuestionSubmitStatusEnum.FAILED.getValue());
+                try {
+                    questionFeignClient.updateQuestionSubmitById(update);
+                } catch (Exception ex) {
+                    log.error("回滚判题状态失败，questionSubmitId = {}", questionSubmitId, ex);
+                }
+            } else {
+                log.info("判题已存在终态结果，跳过回滚，questionSubmitId = {}", questionSubmitId);
             }
             channel.basicNack(deliveryTag, false, false);
         }

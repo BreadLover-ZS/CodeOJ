@@ -174,10 +174,10 @@ onMounted(() => {
 });
 
 const doSubmit = async () => {
-  console.log(form.value);
   // 区分更新还是创建
   if (updatePage) {
-    const res = await QuestionControllerService.updateQuestionUsingPost(
+    // 使用 /edit 接口：作者本人或管理员可编辑自己的题目
+    const res = await QuestionControllerService.editQuestionUsingPost(
       form.value
     );
     if (res.code === 0) {

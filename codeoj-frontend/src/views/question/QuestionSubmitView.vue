@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect } from "vue";
+import { onBeforeUnmount, ref, watchEffect } from "vue";
 import {
   Question,
   QuestionControllerService,
@@ -89,10 +89,36 @@ const loadData = async () => {
   if (res.code === 0) {
     dataList.value = res.data.records;
     total.value = res.data.total;
+    refreshJudgingStatus();
   } else {
     message.error("加载失败，" + res.message);
   }
 };
+
+// 判题轮询：存在待判题(0)/判题中(1)的记录时，每 3 秒自动刷新直至全部结束
+let pollTimer: number | undefined;
+
+const refreshJudgingStatus = () => {
+  const records = dataList.value ?? [];
+  const hasPending = records.some(
+    (record: any) => record.status === 0 || record.status === 1
+  );
+  if (hasPending && !pollTimer) {
+    pollTimer = window.setInterval(() => {
+      loadData();
+    }, 3000);
+  } else if (!hasPending && pollTimer) {
+    clearInterval(pollTimer);
+    pollTimer = undefined;
+  }
+};
+
+onBeforeUnmount(() => {
+  if (pollTimer) {
+    clearInterval(pollTimer);
+    pollTimer = undefined;
+  }
+});
 
 /**
  * 监听 searchParams 变量，改变时触发页面的重新加载

@@ -18,6 +18,7 @@ import com.codeoj.codeojbackenduserservice.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
@@ -38,9 +39,14 @@ import static com.codeoj.codeojbackendcommon.constant.UserConstant.USER_LOGIN_ST
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     /**
-     * 盐值，混淆密码
+     * 盐值，用于兼容校验历史 MD5 密码
      */
     private static final String SALT = "codeoj";
+
+    /**
+     * bcrypt 密码编码器（自适应哈希，安全强度优于 MD5）
+     */
+    private static final BCryptPasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
@@ -66,8 +72,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             if (count > 0) {
                 throw new BusinessException(ErrorCode.PARAMS_ERROR, "账号重复");
             }
-            // 2. 加密
-            String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
+            // 2. 加密（bcrypt）
+            String encryptPassword = PASSWORD_ENCODER.encode(userPassword);
             // 3. 插入数据
             User user = new User();
             user.setUserAccount(userAccount);
@@ -92,21 +98,60 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (userPassword.length() < 8) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "密码错误");
         }
-        // 2. 加密
-        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
-        // 查询用户是否存在
+        // 2. 查询用户（bcrypt 不支持按加密结果直查，先按账号查询再校验密码）
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("userAccount", userAccount);
-        queryWrapper.eq("userPassword", encryptPassword);
         User user = this.baseMapper.selectOne(queryWrapper);
-        // 用户不存在
-        if (user == null) {
+        // 用户不存在或密码错误
+        if (user == null || !checkPassword(user, userPassword)) {
             log.info("user login failed, userAccount cannot match userPassword");
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
         }
+        // 历史 MD5 密码校验通过后，自动升级为 bcrypt 存储
+        upgradePasswordIfNeeded(user, userPassword);
         // 3. 记录用户的登录态
         request.getSession().setAttribute(USER_LOGIN_STATE, user);
         return this.getLoginUserVO(user);
+    }
+
+    /**
+     * 校验用户密码，兼容历史 md5(SALT + pwd) 与新 bcrypt 两种存储格式
+     *
+     * @param user       用户
+     * @param rawPassword 明文密码
+     * @return 是否匹配
+     */
+    private boolean checkPassword(User user, String rawPassword) {
+        String storedPassword = user.getUserPassword();
+        if (StringUtils.isBlank(storedPassword)) {
+            return false;
+        }
+        // 新格式：bcrypt 哈希以 $2a$/$2b$/$2y$ 开头
+        if (storedPassword.startsWith("$2")) {
+            return PASSWORD_ENCODER.matches(rawPassword, storedPassword);
+        }
+        // 旧格式：md5(SALT + 密码)
+        String md5Password = DigestUtils.md5DigestAsHex((SALT + rawPassword).getBytes());
+        return md5Password.equals(storedPassword);
+    }
+
+    /**
+     * 将历史 MD5 密码升级为 bcrypt 存储（仅当密码校验已通过时调用）
+     *
+     * @param user        用户
+     * @param rawPassword 明文密码
+     */
+    private void upgradePasswordIfNeeded(User user, String rawPassword) {
+        String storedPassword = user.getUserPassword();
+        if (storedPassword != null && storedPassword.startsWith("$2")) {
+            return;
+        }
+        User updateUser = new User();
+        updateUser.setId(user.getId());
+        updateUser.setUserPassword(PASSWORD_ENCODER.encode(rawPassword));
+        if (this.updateById(updateUser)) {
+            log.info("user password upgraded to bcrypt, userId = {}", user.getId());
+        }
     }
 
     /**
