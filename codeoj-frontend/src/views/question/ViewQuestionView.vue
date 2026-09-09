@@ -51,7 +51,6 @@
               <a-option>java</a-option>
               <a-option>cpp</a-option>
               <a-option>go</a-option>
-              <a-option>html</a-option>
             </a-select>
           </a-form-item>
         </a-form>
@@ -70,8 +69,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watchEffect, withDefaults, defineProps } from "vue";
+import { ref, watchEffect, withDefaults, defineProps } from "vue";
 import message from "@arco-design/web-vue/es/message";
+import { useRouter } from "vue-router";
 import CodeEditor from "@/components/CodeEditor.vue";
 import MdViewer from "@/components/MdViewer.vue";
 import {
@@ -106,6 +106,8 @@ const form = ref<QuestionSubmitAddRequest>({
   code: "",
 });
 
+const router = useRouter();
+
 /**
  * 提交代码
  */
@@ -120,15 +122,17 @@ const doSubmit = async () => {
   });
   if (res.code === 0) {
     message.success("提交成功");
+    // 跳转到提交列表查看判题结果
+    router.push("/question_submit");
   } else {
     message.error("提交失败," + res.message);
   }
 };
 
 /**
- * 页面加载时，请求数据
+ * 页面加载时，请求数据（id 变化时自动重新加载）
  */
-onMounted(() => {
+watchEffect(() => {
   loadData();
 });
 

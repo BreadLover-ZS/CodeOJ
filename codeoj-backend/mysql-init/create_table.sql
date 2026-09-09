@@ -22,8 +22,9 @@ create table if not exists user
     userRole     varchar(256) default 'user'            not null comment '用户角色：user/admin/ban',
     createTime   datetime     default CURRENT_TIMESTAMP not null comment '创建时间',
     updateTime   datetime     default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
-    isDelete     tinyint      default 0                 not null comment '是否删除',
-    index idx_unionId (unionId)
+    isDelete     tinyint      default 0                 not null comment '是否删除',
+    index idx_unionId (unionId),
+    index idx_userAccount (userAccount)
 ) comment '用户' collate = utf8mb4_unicode_ci;
 
 -- 题目表
@@ -59,9 +60,12 @@ create table if not exists question_submit
     userId     bigint                             not null comment '创建用户 id',
     createTime datetime default CURRENT_TIMESTAMP not null comment '创建时间',
     updateTime datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
-    isDelete   tinyint  default 0                 not null comment '是否删除',
-    index idx_questionId (questionId),
-    index idx_userId (userId)
+    isDelete   tinyint  default 0                 not null comment '是否删除',
+    index idx_questionId (questionId),
+    index idx_userId (userId),
+    -- 组合索引：按题目查看判题状态 / 按用户查看提交记录
+    index idx_questionId_status (questionId, status),
+    index idx_user_question (userId, questionId)
 ) comment '题目提交';
 
 -- 帖子表

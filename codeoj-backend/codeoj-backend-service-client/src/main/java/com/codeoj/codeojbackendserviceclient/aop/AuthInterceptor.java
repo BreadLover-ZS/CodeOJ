@@ -44,11 +44,18 @@ public class AuthInterceptor {
             if (user == null) {
                 throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
             }
+            // 封号用户拒绝访问所有业务接口（登录/查询登录用户等无 @AuthCheck 的接口不受影响）
+            if (UserRoleEnum.BAN.getValue().equals(user.getUserRole())) {
+                throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "账号已被封禁");
+            }
             return joinPoint.proceed();
         }
 
         // 要求指定角色
         String userRole = user == null ? null : user.getUserRole();
+        if (UserRoleEnum.BAN.getValue().equals(userRole)) {
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "账号已被封禁");
+        }
         if (!mustRole.equals(userRole)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }

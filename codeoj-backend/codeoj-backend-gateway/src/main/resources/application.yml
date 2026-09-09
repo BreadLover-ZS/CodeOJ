@@ -2,7 +2,7 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 127.0.0.1:8848
+        server-addr: ${NACOS_ADDR:127.0.0.1:8848}
     gateway:
       routes:
         - id: codeoj-backend-user-service
@@ -34,3 +34,8 @@ knife4j:
       enabled: true
       # ④ 第四行配置，聚合子服务全部为Swagger2规范的文档
       version: swagger2
+# 内部接口（/inner/**）鉴权密钥与 CORS 白名单，生产环境务必通过环境变量覆盖
+codeoj:
+  inner-auth-secret: ${INNER_AUTH_SECRET:codeoj-default-inner-secret}
+  # 允许跨域的来源（逗号分隔），生产环境改为线上真实域名
+  cors-allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:8000}

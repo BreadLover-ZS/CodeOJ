@@ -1,6 +1,7 @@
 package com.codeoj.codeojbackendquestionservice.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.codeoj.codeojbackendcommon.common.ErrorCode;
@@ -31,12 +32,15 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+// lombok
+import lombok.extern.slf4j.Slf4j;
 
 /**
 * @author CodeOJ Team
 * @description 针对表【question_submit(题目提交)】的数据库操作Service实现
 * @createDate 2023-08-07 20:58:53
 */
+@Slf4j
 @Service
 public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper, QuestionSubmit>
     implements QuestionSubmitService {
@@ -93,6 +97,14 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         Long questionSubmitId = questionSubmit.getId();
         // 发送消息
         myMessageProducer.sendMessage("code_exchange", "my_routingKey", String.valueOf(questionSubmitId));
+        // 累加题目的提交数（更新统计失败不影响提交主流程）
+        try {
+            questionService.update(new UpdateWrapper<Question>()
+                    .eq("id", questionId)
+                    .setSql("submit_num = submit_num + 1"));
+        } catch (Exception e) {
+            log.warn("更新题目提交数失败, questionId = {}", questionId, e);
+        }
         // 执行判题服务
 //        CompletableFuture.runAsync(() -> {
 //            judgeFeignClient.doJudge(questionSubmitId);

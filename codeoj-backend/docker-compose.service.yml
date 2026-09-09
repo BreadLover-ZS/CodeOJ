@@ -15,39 +15,72 @@ services:
     build:
       context: ./codeoj-backend-user-service
       dockerfile: Dockerfile
-    ports:
-      - "8102:8102"
+    # 安全：不对外发布端口，仅通过网关（8101）访问，内部服务通过 mynetwork 互通
+    expose:
+      - "8102"
     networks:
       - mynetwork
     depends_on:
       - codeoj-backend-gateway
+    environment:
+      SPRING_DATASOURCE_URL: ${DB_URL:-jdbc:mysql://codeoj-mysql:3306/codeoj}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD:-Mysql@2026Code}
+      SPRING_REDIS_PASSWORD: ${REDIS_PASSWORD:-Redis@2026Code}
+      SPRING_REDIS_HOST: ${REDIS_HOST:-codeoj-redis}
+      SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR: ${NACOS_ADDR:-codeoj-nacos:8848}
+      INNER_AUTH_SECRET: ${INNER_AUTH_SECRET:-codeoj-default-inner-secret}
 
   codeoj-backend-question-service:
     container_name: codeoj-backend-question-service
     build:
       context: ./codeoj-backend-question-service
       dockerfile: Dockerfile
-    ports:
-      - "8103:8103"
+    # 安全：不对外发布端口，仅通过网关（8101）访问，内部服务通过 mynetwork 互通
+    expose:
+      - "8103"
     networks:
       - mynetwork
     depends_on:
       - codeoj-backend-user-service
       - codeoj-backend-gateway
+    environment:
+      SPRING_DATASOURCE_URL: ${DB_URL:-jdbc:mysql://codeoj-mysql:3306/codeoj}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD:-Mysql@2026Code}
+      SPRING_REDIS_PASSWORD: ${REDIS_PASSWORD:-Redis@2026Code}
+      SPRING_REDIS_HOST: ${REDIS_HOST:-codeoj-redis}
+      SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR: ${NACOS_ADDR:-codeoj-nacos:8848}
+      INNER_AUTH_SECRET: ${INNER_AUTH_SECRET:-codeoj-default-inner-secret}
+      SPRING_RABBITMQ_HOST: ${RABBITMQ_HOST:-codeoj-rabbitmq}
+      SPRING_RABBITMQ_USERNAME: ${RABBITMQ_USERNAME:-codeoj}
+      SPRING_RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-Rabbit@2026Code}
 
   codeoj-backend-judge-service:
     container_name: codeoj-backend-judge-service
     build:
       context: ./codeoj-backend-judge-service
       dockerfile: Dockerfile
-    ports:
-      - "8104:8104"
+    # 安全：不对外发布端口，仅通过网关（8101）访问，内部服务通过 mynetwork 互通
+    expose:
+      - "8104"
     networks:
       - mynetwork
     depends_on:
       - codeoj-backend-user-service
       - codeoj-backend-question-service
       - codeoj-backend-gateway
+    environment:
+      SPRING_DATASOURCE_URL: ${DB_URL:-jdbc:mysql://codeoj-mysql:3306/codeoj}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD:-Mysql@2026Code}
+      SPRING_REDIS_PASSWORD: ${REDIS_PASSWORD:-Redis@2026Code}
+      SPRING_REDIS_HOST: ${REDIS_HOST:-codeoj-redis}
+      SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR: ${NACOS_ADDR:-codeoj-nacos:8848}
+      INNER_AUTH_SECRET: ${INNER_AUTH_SECRET:-codeoj-default-inner-secret}
+      SPRING_RABBITMQ_HOST: ${RABBITMQ_HOST:-codeoj-rabbitmq}
+      SPRING_RABBITMQ_USERNAME: ${RABBITMQ_USERNAME:-codeoj}
+      SPRING_RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-Rabbit@2026Code}
+      # 远程代码沙箱地址与密钥（需单独部署沙箱服务）
+      CODESANDBOX_REMOTE_URL: ${CODESANDBOX_URL:-http://codeoj-codesandbox:8090/executeCode}
+      CODESANDBOX_REMOTE_AUTH_SECRET: ${CODESANDBOX_SECRET:-secretKey}
 
 # 网络，不定义的话就是默认网络
 networks:

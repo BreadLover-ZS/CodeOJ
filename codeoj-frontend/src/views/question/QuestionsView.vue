@@ -33,9 +33,11 @@
       </template>
       <template #acceptedRate="{ record }">
         {{
-          `${
-            record.submitNum ? record.acceptedNum / record.submitNum : "0"
-          }% (${record.acceptedNum}/${record.submitNum})`
+          record.submitNum
+            ? `${((record.acceptedNum / record.submitNum) * 100).toFixed(
+                1
+              )}% (${record.acceptedNum}/${record.submitNum})`
+            : `0% (${record.acceptedNum}/${record.submitNum})`
         }}
       </template>
       <template #createTime="{ record }">
@@ -53,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watchEffect } from "vue";
+import { ref, watchEffect } from "vue";
 import {
   Page_Question_,
   Question,
@@ -91,13 +93,6 @@ const loadData = async () => {
  * 监听 searchParams 变量，改变时触发页面的重新加载
  */
 watchEffect(() => {
-  loadData();
-});
-
-/**
- * 页面加载时，请求数据
- */
-onMounted(() => {
   loadData();
 });
 

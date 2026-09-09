@@ -5,6 +5,7 @@ import com.codeoj.codeojbackendmodel.model.entity.QuestionSubmit;
 import com.codeoj.codeojbackendquestionservice.service.QuestionService;
 import com.codeoj.codeojbackendquestionservice.service.QuestionSubmitService;
 import com.codeoj.codeojbackendserviceclient.service.QuestionFeignClient;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -38,6 +39,26 @@ public class QuestionInnerController implements QuestionFeignClient {
     @Override
     public boolean updateQuestionSubmitById(@RequestBody QuestionSubmit questionSubmit) {
         return questionSubmitService.updateById(questionSubmit);
+    }
+
+    @PostMapping("/update/stats")
+    @Override
+    public boolean updateQuestionStats(@RequestParam("questionId") long questionId,
+                                       @RequestParam("submitNumDelta") int submitNumDelta,
+                                       @RequestParam("acceptedNumDelta") int acceptedNumDelta) {
+        if (submitNumDelta == 0 && acceptedNumDelta == 0) {
+            return true;
+        }
+        // 增量更新提交数/通过数，MySQL IF 避免统计被减为负数
+        UpdateWrapper<Question> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id", questionId);
+        if (submitNumDelta != 0) {
+            updateWrapper.setSql("submit_num = IF(submit_num + " + submitNumDelta + " < 0, 0, submit_num + " + submitNumDelta + ")");
+        }
+        if (acceptedNumDelta != 0) {
+            updateWrapper.setSql("accepted_num = IF(accepted_num + " + acceptedNumDelta + " < 0, 0, accepted_num + " + acceptedNumDelta + ")");
+        }
+        return questionService.update(updateWrapper);
     }
 
 }

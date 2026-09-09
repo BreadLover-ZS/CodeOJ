@@ -13,7 +13,6 @@
           <a-option>java</a-option>
           <a-option>cpp</a-option>
           <a-option>go</a-option>
-          <a-option>html</a-option>
         </a-select>
       </a-form-item>
       <a-form-item>
@@ -34,17 +33,31 @@
       @page-change="onPageChange"
     >
       <template #judgeInfo="{ record }">
-        {{ JSON.stringify(record.judgeInfo) }}
+        <span v-if="record.judgeInfo?.message">
+          {{ record.judgeInfo.message }}
+          <span v-if="record.judgeInfo.time">
+            · {{ record.judgeInfo.time }}ms</span
+          >
+          <span v-if="record.judgeInfo.memory">
+            · {{ record.judgeInfo.memory }}KB</span
+          >
+        </span>
+        <span v-else>-</span>
+      </template>
+      <template #status="{ record }">
+        <a-tag :color="statusMap[record.status]?.color ?? 'gray'">
+          {{ statusMap[record.status]?.text ?? record.status }}
+        </a-tag>
       </template>
       <template #createTime="{ record }">
-        {{ moment(record.createTime).format("YYYY-MM-DD") }}
+        {{ moment(record.createTime).format("YYYY-MM-DD HH:mm") }}
       </template>
     </a-table>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watchEffect } from "vue";
+import { ref, watchEffect } from "vue";
 import {
   Question,
   QuestionControllerService,
@@ -88,13 +101,6 @@ watchEffect(() => {
   loadData();
 });
 
-/**
- * 页面加载时，请求数据
- */
-onMounted(() => {
-  loadData();
-});
-
 const columns = [
   {
     title: "提交号",
@@ -110,7 +116,7 @@ const columns = [
   },
   {
     title: "判题状态",
-    dataIndex: "status",
+    slotName: "status",
   },
   {
     title: "题目 id",
@@ -125,6 +131,16 @@ const columns = [
     slotName: "createTime",
   },
 ];
+
+/**
+ * 判题状态显示映射（与后端 QuestionSubmitStatusEnum 对应）
+ */
+const statusMap: Record<number, { text: string; color: string }> = {
+  0: { text: "待判题", color: "orange" },
+  1: { text: "判题中", color: "arcoblue" },
+  2: { text: "判题完成", color: "green" },
+  3: { text: "判题失败", color: "red" },
+};
 
 const onPageChange = (page: number) => {
   searchParams.value = {

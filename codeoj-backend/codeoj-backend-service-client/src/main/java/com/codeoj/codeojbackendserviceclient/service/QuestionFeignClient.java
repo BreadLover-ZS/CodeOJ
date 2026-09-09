@@ -26,4 +26,12 @@ public interface QuestionFeignClient {
     @PostMapping("/question_submit/update")
     boolean updateQuestionSubmitById(@RequestBody QuestionSubmit questionSubmit);
 
+    /**
+     * 更新题目统计信息（提交数/通过数，传增量数值）
+     */
+    @PostMapping("/update/stats")
+    boolean updateQuestionStats(@RequestParam("questionId") long questionId,
+                                @RequestParam("submitNumDelta") int submitNumDelta,
+                                @RequestParam("acceptedNumDelta") int acceptedNumDelta);
+
 }

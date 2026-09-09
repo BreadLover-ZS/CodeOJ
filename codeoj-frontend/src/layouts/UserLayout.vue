@@ -11,9 +11,7 @@
         <router-view />
       </a-layout-content>
       <a-layout-footer class="footer">
-        <a href="https://" target="_blank">
-           by CodeOJ Team
-        </a>
+        <a href="https://" target="_blank"> by CodeOJ Team </a>
       </a-layout-footer>
     </a-layout>
   </div>

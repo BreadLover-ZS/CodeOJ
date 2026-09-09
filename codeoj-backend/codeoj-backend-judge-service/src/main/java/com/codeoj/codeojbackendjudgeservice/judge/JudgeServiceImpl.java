@@ -13,8 +13,10 @@ import com.codeoj.codeojbackendmodel.model.codesandbox.JudgeInfo;
 import com.codeoj.codeojbackendmodel.model.dto.question.JudgeCase;
 import com.codeoj.codeojbackendmodel.model.entity.Question;
 import com.codeoj.codeojbackendmodel.model.entity.QuestionSubmit;
+import com.codeoj.codeojbackendmodel.model.enums.JudgeInfoMessageEnum;
 import com.codeoj.codeojbackendmodel.model.enums.QuestionSubmitStatusEnum;
 import com.codeoj.codeojbackendserviceclient.service.QuestionFeignClient;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class JudgeServiceImpl implements JudgeService {
 
@@ -95,6 +98,14 @@ public class JudgeServiceImpl implements JudgeService {
         update = questionFeignClient.updateQuestionSubmitById(questionSubmitUpdate);
         if (!update) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "题目状态更新错误");
+        }
+        // 判题通过则累加题目的通过数（更新统计失败不影响判题主流程）
+        if (JudgeInfoMessageEnum.ACCEPTED.getValue().equals(judgeInfo.getMessage())) {
+            try {
+                questionFeignClient.updateQuestionStats(questionId, 0, 1);
+            } catch (Exception e) {
+                log.warn("更新题目通过数失败, questionId = {}", questionId, e);
+            }
         }
         QuestionSubmit questionSubmitResult = questionFeignClient.getQuestionSubmitById(questionSubmitId);
         return questionSubmitResult;

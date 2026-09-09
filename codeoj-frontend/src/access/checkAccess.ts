@@ -18,10 +18,14 @@ const checkAccess = (loginUser: any, needAccess = ACCESS_ENUM.NOT_LOGIN) => {
     if (loginUserAccess === ACCESS_ENUM.NOT_LOGIN) {
       return false;
     }
+    // 封号用户禁止访问需要登录的页面
+    if (loginUserAccess === ACCESS_ENUM.BAN) {
+      return false;
+    }
   }
   // 如果需要管理员权限
   if (needAccess === ACCESS_ENUM.ADMIN) {
-    // 如果不为管理员，表示无权限
+    // 如果不为管理员，表示无权限（封号用户同理无权限）
     if (loginUserAccess !== ACCESS_ENUM.ADMIN) {
       return false;
     }
