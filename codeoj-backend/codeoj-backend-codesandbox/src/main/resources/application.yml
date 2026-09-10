@@ -1,0 +1,19 @@
+# 代码沙箱服务配置
+spring:
+  application:
+    name: codeoj-backend-codesandbox
+  profiles:
+    active: dev
+
+server:
+  # 沙箱服务端口，判题服务通过 codesandbox.remote.url 调用（默认 http://localhost:8090/executeCode）
+  port: 8090
+
+# 沙箱自身配置
+codesandbox:
+  # 鉴权密钥：必须与判题服务的 codesandbox.remote.auth-secret 一致，生产环境务必通过环境变量覆盖
+  auth-secret: ${CODESANDBOX_REMOTE_AUTH_SECRET:secretKey}
+  # 单个用例运行超时（毫秒）
+  run-timeout-ms: ${CODESANDBOX_RUN_TIMEOUT_MS:5000}
+  # 编译超时（毫秒）
+  compile-timeout-ms: ${CODESANDBOX_COMPILE_TIMEOUT_MS:15000}

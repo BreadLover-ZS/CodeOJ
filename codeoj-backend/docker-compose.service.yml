@@ -78,9 +78,24 @@ services:
       SPRING_RABBITMQ_HOST: ${RABBITMQ_HOST:-codeoj-rabbitmq}
       SPRING_RABBITMQ_USERNAME: ${RABBITMQ_USERNAME:-codeoj}
       SPRING_RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-Rabbit@2026Code}
-      # 远程代码沙箱地址与密钥（需单独部署沙箱服务）
+      # 远程代码沙箱地址与密钥（沙箱服务见下方 codeoj-backend-codesandbox）
       CODESANDBOX_REMOTE_URL: ${CODESANDBOX_URL:-http://codeoj-codesandbox:8090/executeCode}
       CODESANDBOX_REMOTE_AUTH_SECRET: ${CODESANDBOX_SECRET:-secretKey}
+
+  codeoj-backend-codesandbox:
+    container_name: codeoj-codesandbox
+    build:
+      context: ./codeoj-backend-codesandbox
+      dockerfile: Dockerfile
+    # 安全：沙箱执行任意用户代码，禁止对外发布端口，仅允许内部网络中的判题服务访问
+    expose:
+      - "8090"
+    networks:
+      - mynetwork
+    environment:
+      CODESANDBOX_REMOTE_AUTH_SECRET: ${CODESANDBOX_SECRET:-secretKey}
+      CODESANDBOX_RUN_TIMEOUT_MS: ${CODESANDBOX_RUN_TIMEOUT_MS:-5000}
+      CODESANDBOX_COMPILE_TIMEOUT_MS: ${CODESANDBOX_COMPILE_TIMEOUT_MS:-15000}
 
 # 网络，不定义的话就是默认网络
 networks:

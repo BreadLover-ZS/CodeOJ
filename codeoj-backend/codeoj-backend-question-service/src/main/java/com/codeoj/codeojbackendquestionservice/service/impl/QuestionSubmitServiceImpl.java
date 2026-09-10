@@ -97,11 +97,11 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         Long questionSubmitId = questionSubmit.getId();
         // 发送消息
         myMessageProducer.sendMessage("code_exchange", "my_routingKey", String.valueOf(questionSubmitId));
-        // 累加题目的提交数（更新统计失败不影响提交主流程）
+        // 累加题目的提交数（更新统计失败不影响提交主流程；表列为驼峰命名）
         try {
             questionService.update(new UpdateWrapper<Question>()
                     .eq("id", questionId)
-                    .setSql("submit_num = submit_num + 1"));
+                    .setSql("submitNum = submitNum + 1"));
         } catch (Exception e) {
             log.warn("更新题目提交数失败, questionId = {}", questionId, e);
         }

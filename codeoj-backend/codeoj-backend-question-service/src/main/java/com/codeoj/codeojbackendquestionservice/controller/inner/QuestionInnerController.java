@@ -49,14 +49,14 @@ public class QuestionInnerController implements QuestionFeignClient {
         if (submitNumDelta == 0 && acceptedNumDelta == 0) {
             return true;
         }
-        // 增量更新提交数/通过数，MySQL IF 避免统计被减为负数
+        // 增量更新提交数/通过数，MySQL IF 避免统计被减为负数（表列为驼峰命名）
         UpdateWrapper<Question> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("id", questionId);
         if (submitNumDelta != 0) {
-            updateWrapper.setSql("submit_num = IF(submit_num + " + submitNumDelta + " < 0, 0, submit_num + " + submitNumDelta + ")");
+            updateWrapper.setSql("submitNum = IF(submitNum + " + submitNumDelta + " < 0, 0, submitNum + " + submitNumDelta + ")");
         }
         if (acceptedNumDelta != 0) {
-            updateWrapper.setSql("accepted_num = IF(accepted_num + " + acceptedNumDelta + " < 0, 0, accepted_num + " + acceptedNumDelta + ")");
+            updateWrapper.setSql("acceptedNum = IF(acceptedNum + " + acceptedNumDelta + " < 0, 0, acceptedNum + " + acceptedNumDelta + ")");
         }
         return questionService.update(updateWrapper);
     }

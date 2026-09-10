@@ -16,6 +16,7 @@
         <module>codeoj-backend-question-service</module>
         <module>codeoj-backend-user-service</module>
         <module>codeoj-backend-judge-service</module>
+        <module>codeoj-backend-codesandbox</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>
