@@ -71,7 +71,7 @@ import { ref, watchEffect } from "vue";
 import { UserControllerService } from "../../../generated";
 import { UserUpdateRequest, UserVO } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
-import { Modal } from "@arco-design/web-vue";
+import Modal from "@arco-design/web-vue/es/modal";
 import moment from "moment";
 import ACCESS_ENUM from "@/access/accessEnum";
 

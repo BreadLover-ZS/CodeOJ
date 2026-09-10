@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Docker 本地数据卷 ###
+.mysql-data/
+.redis-data/
+.rabbitmq-data/
+.nacos-data/
