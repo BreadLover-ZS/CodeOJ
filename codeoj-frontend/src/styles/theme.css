@@ -1,0 +1,174 @@
+/* =========================================================
+   CodeOJ 全局主题系统
+   设计目标：现代 · 简约 · 清爽
+   通过覆盖 Arco 变量 + 全局基础样式 + 通用工具类实现
+   ========================================================= */
+
+:root {
+  /* 品牌主色（Indigo） */
+  --brand-1: #edf2ff;
+  --brand-2: #dbe4ff;
+  --brand-3: #bac8ff;
+  --brand-4: #91a7ff;
+  --brand-5: #748ffc;
+  --brand-6: #4c6ef5;
+  --brand-7: #4263eb;
+  --brand-8: #3b5bdb;
+  --brand-9: #364fc7;
+  --brand-10: #2f44ad;
+
+  /* 覆盖 Arco 主色 */
+  --primary-1: var(--brand-1);
+  --primary-2: var(--brand-2);
+  --primary-3: var(--brand-3);
+  --primary-4: var(--brand-4);
+  --primary-5: var(--brand-5);
+  --primary-6: var(--brand-6);
+  --primary-7: var(--brand-7);
+  --primary-8: var(--brand-8);
+  --primary-9: var(--brand-9);
+  --primary-10: var(--brand-10);
+
+  /* 中性色板 */
+  --ink-0: #16181d;
+  --ink-1: #1f2329;
+  --ink-2: #2a2e35;
+  --ink-3: #4e5969;
+  --ink-4: #86909c;
+  --ink-5: #c9cdd4;
+  --ink-6: #e5e6eb;
+  --ink-7: #eef0f3;
+  --ink-8: #f6f7f9;
+
+  --app-bg: var(--ink-8);
+  --card-bg: #ffffff;
+  --border-color: var(--ink-6);
+
+  /* 圆角与阴影 */
+  --radius-lg: 14px;
+  --radius-md: 10px;
+  --shadow-card: 0 1px 3px rgba(20, 24, 33, 0.04), 0 4px 16px rgba(20, 24, 33, 0.04);
+  --shadow-pop: 0 8px 30px rgba(20, 24, 33, 0.1);
+
+  /* Arco 组件级圆角 */
+  --border-radius-medium: var(--radius-md);
+  --border-radius-small: 8px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background-color: var(--app-bg);
+  color: var(--ink-1);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--ink-0);
+  font-weight: 600;
+}
+
+a {
+  color: var(--brand-6);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--brand-7);
+}
+
+/* ===================== 通用工具类 ===================== */
+
+/* 页面主容器 */
+.app-container {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* 白色卡片容器 */
+.app-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+/* 页面顶部标题区 */
+.page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.page-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ink-0);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.page-title::before {
+  content: "";
+  width: 4px;
+  height: 18px;
+  border-radius: 4px;
+  background: var(--brand-6);
+}
+
+/* ===================== 次级页面通用容器 ===================== */
+.list-page {
+  padding: 24px 0 40px;
+}
+
+/* ===================== Arco 细节微调 ===================== */
+.arco-layout-content {
+  background: transparent;
+}
+
+.arco-card {
+  border-radius: var(--radius-lg);
+}
+
+.arco-table-th {
+  background: var(--ink-8) !important;
+  font-weight: 600;
+  color: var(--ink-3);
+}
+
+.arco-table tr:hover td {
+  background: #fafbfd !important;
+}
+
+/* 滚动条（轻量化） */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--ink-5);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-4);
+}

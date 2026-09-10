@@ -3,6 +3,8 @@ import App from "./App.vue";
 // Arco 组件由 unplugin-vue-components 按需注册（见 vue.config.js），
 // 此处仅保留全量样式，避免命令式 API（message/Modal 等）样式缺失
 import "@arco-design/web-vue/dist/arco.css";
+// 项目主题系统（覆盖 Arco 变量，需在 arco.css 之后引入）
+import "@/styles/theme.css";
 import router from "./router";
 import store from "./store";
 import "@/plugins/axios";

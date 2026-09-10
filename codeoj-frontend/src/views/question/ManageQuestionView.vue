@@ -1,45 +1,78 @@
 <template>
-  <div id="manageQuestionView">
-    <a-table
-      :ref="tableRef"
-      :columns="columns"
-      :data="dataList"
-      :pagination="{
-        showTotal: true,
-        pageSize: searchParams.pageSize,
-        current: searchParams.current,
-        total,
-      }"
-      @page-change="onPageChange"
-    >
-      <template #optional="{ record }">
-        <a-space>
-          <a-button type="primary" @click="doUpdate(record)"> 修改</a-button>
-          <a-button status="danger" @click="doDelete(record)">删除</a-button>
-        </a-space>
-      </template>
-    </a-table>
+  <div id="manageQuestionView" class="list-page">
+    <div class="page-head">
+      <h2 class="page-title">题目管理</h2>
+      <a-button type="primary" @click="router.push('/add/question')">
+        <template #icon><icon-plus /></template>
+        新建题目
+      </a-button>
+    </div>
+
+    <div class="app-card table-card">
+      <a-table
+        :ref="tableRef"
+        :columns="columns"
+        :data="dataList"
+        :pagination="{
+          showTotal: true,
+          pageSize: searchParams.pageSize,
+          current: searchParams.current,
+          total,
+          showJumper: true,
+        }"
+        @page-change="onPageChange"
+      >
+        <template #title="{ record }">
+          <a
+            class="q-title"
+            @click="router.push(`/view/question/${record.id}`)"
+          >
+            {{ record.title }}
+          </a>
+        </template>
+        <template #tags="{ record }">
+          <a-tag
+            v-for="(tag, i) in record.tags"
+            :key="i"
+            size="small"
+            class="tag"
+          >
+            {{ tag }}
+          </a-tag>
+        </template>
+        <template #createTime="{ record }">
+          {{ moment(record.createTime).format("YYYY-MM-DD") }}
+        </template>
+        <template #optional="{ record }">
+          <a-space>
+            <a-button size="small" @click="doUpdate(record)">
+              <template #icon><icon-edit /></template>
+              修改
+            </a-button>
+            <a-button size="small" status="danger" @click="doDelete(record)">
+              <template #icon><icon-delete /></template>
+              删除
+            </a-button>
+          </a-space>
+        </template>
+      </a-table>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref, watchEffect } from "vue";
-import {
-  Page_Question_,
-  Question,
-  QuestionControllerService,
-} from "../../../generated";
-import message from "@arco-design/web-vue/es/message";
+import { Question, QuestionControllerService } from "../../../generated";
+import { Message, Modal } from "@arco-design/web-vue";
 import { useRouter } from "vue-router";
+import moment from "moment";
 
+const router = useRouter();
 const tableRef = ref();
 
 const dataList = ref([]);
 const total = ref(0);
-const searchParams = ref({
-  pageSize: 10,
-  current: 1,
-});
+const searchParams = ref({ pageSize: 10, current: 1 });
 
 const loadData = async () => {
   const res = await QuestionControllerService.listQuestionByPageUsingPost(
@@ -49,109 +82,75 @@ const loadData = async () => {
     dataList.value = res.data.records;
     total.value = res.data.total;
   } else {
-    message.error("加载失败，" + res.message);
+    Message.error("加载失败，" + res.message);
   }
 };
 
-/**
- * 监听 searchParams 变量，改变时触发页面的重新加载
- */
 watchEffect(() => {
   loadData();
 });
 
-/**
- * 页面加载时，请求数据
- */
 onMounted(() => {
   loadData();
 });
 
-// {id: "1", title: "A+ D", content: "新的题目内容", tags: "["二叉树"]", answer: "新的答案", submitNum: 0,…}
-
 const columns = [
-  {
-    title: "id",
-    dataIndex: "id",
-  },
-  {
-    title: "标题",
-    dataIndex: "title",
-  },
-  {
-    title: "内容",
-    dataIndex: "content",
-  },
-  {
-    title: "标签",
-    dataIndex: "tags",
-  },
-  {
-    title: "答案",
-    dataIndex: "answer",
-  },
-  {
-    title: "提交数",
-    dataIndex: "submitNum",
-  },
-  {
-    title: "通过数",
-    dataIndex: "acceptedNum",
-  },
-  {
-    title: "判题配置",
-    dataIndex: "judgeConfig",
-  },
-  {
-    title: "判题用例",
-    dataIndex: "judgeCase",
-  },
-  {
-    title: "用户id",
-    dataIndex: "userId",
-  },
-  {
-    title: "创建时间",
-    dataIndex: "createTime",
-  },
-  {
-    title: "操作",
-    slotName: "optional",
-  },
+  { title: "ID", dataIndex: "id", width: 90 },
+  { title: "标题", slotName: "title" },
+  { title: "标签", slotName: "tags" },
+  { title: "提交数", dataIndex: "submitNum", width: 90 },
+  { title: "通过数", dataIndex: "acceptedNum", width: 90 },
+  { title: "创建时间", slotName: "createTime", width: 120 },
+  { title: "操作", slotName: "optional", width: 160 },
 ];
 
 const onPageChange = (page: number) => {
-  searchParams.value = {
-    ...searchParams.value,
-    current: page,
-  };
+  searchParams.value = { ...searchParams.value, current: page };
 };
-
-const doDelete = async (question: Question) => {
-  const res = await QuestionControllerService.deleteQuestionUsingPost({
-    id: question.id,
-  });
-  if (res.code === 0) {
-    message.success("删除成功");
-    loadData();
-  } else {
-    message.error("删除失败");
-  }
-};
-
-const router = useRouter();
 
 const doUpdate = (question: Question) => {
-  router.push({
-    path: "/update/question",
-    query: {
-      id: question.id,
+  router.push({ path: "/update/question", query: { id: question.id } });
+};
+
+const doDelete = (question: Question) => {
+  Modal.confirm({
+    title: `确认删除题目「${question.title}」？`,
+    content: "删除后不可恢复，请谨慎操作",
+    okText: "删除",
+    okButtonProps: { status: "danger" },
+    onOk: async () => {
+      const res = await QuestionControllerService.deleteQuestionUsingPost({
+        id: question.id,
+      });
+      if (res.code === 0) {
+        Message.success("删除成功");
+        loadData();
+      } else {
+        Message.error("删除失败，" + res.message);
+      }
     },
   });
 };
 </script>
 
 <style scoped>
-#manageQuestionView {
+.table-card {
+  padding: 8px 16px;
+}
+
+.q-title {
+  color: var(--ink-1);
+  font-weight: 500;
+}
+.q-title:hover {
+  color: var(--brand-6);
+}
+
+.tag {
+  background: var(--brand-1);
+  color: var(--brand-6);
+  border: none;
+  border-radius: 6px;
+  margin-right: 4px;
 }
 </style>

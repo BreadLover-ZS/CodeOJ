@@ -1,68 +1,81 @@
 <template>
-  <div id="viewQuestionView">
-    <a-row :gutter="[24, 24]">
-      <a-col :md="12" :xs="24">
-        <a-tabs default-active-key="question">
-          <a-tab-pane key="question" title="题目">
-            <a-card v-if="question" :title="question.title">
-              <a-descriptions
-                title="判题条件"
-                :column="{ xs: 1, md: 2, lg: 3 }"
+  <div id="viewQuestionView" class="list-page">
+    <div class="page-head">
+      <h2 class="page-title">在线做题</h2>
+      <a-button @click="router.push('/questions')">
+        <template #icon><icon-left /></template>
+        返回题库
+      </a-button>
+    </div>
+
+    <a-row :gutter="20">
+      <!-- 左侧：题目区域 -->
+      <a-col :md="11" :xs="24">
+        <div class="app-card panel question-panel">
+          <div class="panel-header">
+            <h3 class="panel-title">{{ question?.title ?? "加载中..." }}</h3>
+            <a-space wrap>
+              <a-tag
+                v-for="(tag, index) in question?.tags || []"
+                :key="index"
+                class="tag"
+                >{{ tag }}</a-tag
               >
-                <a-descriptions-item label="时间限制">
-                  {{ question.judgeConfig.timeLimit ?? 0 }}
-                </a-descriptions-item>
-                <a-descriptions-item label="内存限制">
-                  {{ question.judgeConfig.memoryLimit ?? 0 }}
-                </a-descriptions-item>
-                <a-descriptions-item label="堆栈限制">
-                  {{ question.judgeConfig.stackLimit ?? 0 }}
-                </a-descriptions-item>
-              </a-descriptions>
-              <MdViewer :value="question.content || ''" />
-              <template #extra>
-                <a-space wrap>
-                  <a-tag
-                    v-for="(tag, index) of question.tags"
-                    :key="index"
-                    color="green"
-                    >{{ tag }}
-                  </a-tag>
-                </a-space>
-              </template>
-            </a-card>
-          </a-tab-pane>
-          <a-tab-pane key="comment" title="评论" disabled> 评论区</a-tab-pane>
-          <a-tab-pane key="answer" title="答案"> 暂时无法查看答案</a-tab-pane>
-        </a-tabs>
-      </a-col>
-      <a-col :md="12" :xs="24">
-        <a-form :model="form" layout="inline">
-          <a-form-item
-            field="language"
-            label="编程语言"
-            style="min-width: 240px"
-          >
-            <a-select
-              v-model="form.language"
-              :style="{ width: '320px' }"
-              placeholder="选择编程语言"
+            </a-space>
+          </div>
+
+          <div class="judge-meta">
+            <span
+              ><icon-clock-circle /> 时间
+              {{ question?.judgeConfig?.timeLimit ?? 0 }}ms</span
             >
+            <span
+              ><icon-book /> 内存
+              {{ question?.judgeConfig?.memoryLimit ?? 0 }}MB</span
+            >
+            <span
+              ><icon-layers /> 堆栈
+              {{ question?.judgeConfig?.stackLimit ?? 0 }}KB</span
+            >
+          </div>
+
+          <a-divider class="panel-divider" />
+
+          <div class="content-body">
+            <MdViewer :value="question?.content || ''" />
+          </div>
+        </div>
+      </a-col>
+
+      <!-- 右侧：编辑器区域 -->
+      <a-col :md="13" :xs="24">
+        <div class="app-card panel editor-panel">
+          <div class="editor-toolbar">
+            <span class="editor-label">代码</span>
+            <a-select v-model="form.language" style="width: 180px" size="small">
               <a-option>java</a-option>
               <a-option>cpp</a-option>
               <a-option>go</a-option>
             </a-select>
-          </a-form-item>
-        </a-form>
-        <CodeEditor
-          :value="form.code as string"
-          :language="form.language"
-          :handle-change="changeCode"
-        />
-        <a-divider size="0" />
-        <a-button type="primary" style="min-width: 200px" @click="doSubmit">
-          提交代码
-        </a-button>
+          </div>
+          <CodeEditor
+            :value="form.code as string"
+            :language="form.language"
+            :handle-change="changeCode"
+            class="editor-body"
+          />
+          <div class="editor-actions">
+            <a-button
+              type="primary"
+              long
+              :loading="submitting"
+              @click="doSubmit"
+            >
+              <template #icon><icon-send /></template>
+              提交代码
+            </a-button>
+          </div>
+        </div>
       </a-col>
     </a-row>
   </div>
@@ -70,7 +83,7 @@
 
 <script setup lang="ts">
 import { ref, watchEffect, withDefaults, defineProps } from "vue";
-import message from "@arco-design/web-vue/es/message";
+import { Message } from "@arco-design/web-vue";
 import { useRouter } from "vue-router";
 import CodeEditor from "@/components/CodeEditor.vue";
 import MdViewer from "@/components/MdViewer.vue";
@@ -88,7 +101,10 @@ const props = withDefaults(defineProps<Props>(), {
   id: () => "",
 });
 
+const router = useRouter();
+
 const question = ref<QuestionVO>();
+const submitting = ref(false);
 
 const loadData = async () => {
   const res = await QuestionControllerService.getQuestionVoByIdUsingGet(
@@ -97,7 +113,7 @@ const loadData = async () => {
   if (res.code === 0) {
     question.value = res.data;
   } else {
-    message.error("加载失败，" + res.message);
+    Message.error("加载失败，" + res.message);
   }
 };
 
@@ -106,32 +122,27 @@ const form = ref<QuestionSubmitAddRequest>({
   code: "",
 });
 
-const router = useRouter();
-
-/**
- * 提交代码
- */
 const doSubmit = async () => {
   if (!question.value?.id) {
     return;
   }
-
-  const res = await QuestionControllerService.doQuestionSubmitUsingPost({
-    ...form.value,
-    questionId: question.value.id,
-  });
-  if (res.code === 0) {
-    message.success("提交成功");
-    // 跳转到提交列表查看判题结果
-    router.push("/question_submit");
-  } else {
-    message.error("提交失败," + res.message);
+  submitting.value = true;
+  try {
+    const res = await QuestionControllerService.doQuestionSubmitUsingPost({
+      ...form.value,
+      questionId: question.value.id,
+    });
+    if (res.code === 0) {
+      Message.success("提交成功，正在判题");
+      router.push("/question_submit");
+    } else {
+      Message.error("提交失败，" + res.message);
+    }
+  } finally {
+    submitting.value = false;
   }
 };
 
-/**
- * 页面加载时，请求数据（id 变化时自动重新加载）
- */
 watchEffect(() => {
   loadData();
 });
@@ -141,13 +152,92 @@ const changeCode = (value: string) => {
 };
 </script>
 
-<style>
-#viewQuestionView {
-  max-width: 1400px;
-  margin: 0 auto;
+<style scoped>
+.panel {
+  padding: 24px;
+  height: 100%;
 }
 
-#viewQuestionView .arco-space-horizontal .arco-space-item {
-  margin-bottom: 0 !important;
+/* 题目面板 */
+.question-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.panel-title {
+  margin: 0;
+  font-size: 18px;
+}
+
+.tag {
+  background: var(--brand-1);
+  color: var(--brand-6);
+  border: none;
+  border-radius: 6px;
+}
+
+.judge-meta {
+  display: flex;
+  gap: 18px;
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--ink-4);
+}
+
+.judge-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.panel-divider {
+  margin: 16px 0;
+}
+
+.content-body {
+  flex: 1;
+  overflow: auto;
+  color: var(--ink-2);
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+/* 编辑器面板 */
+.editor-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+}
+
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.editor-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.editor-body {
+  flex: 1;
+  min-height: 480px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.editor-actions {
+  margin-top: 14px;
 }
 </style>
