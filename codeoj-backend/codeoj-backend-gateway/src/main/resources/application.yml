@@ -37,5 +37,5 @@ knife4j:
 # 内部接口（/inner/**）鉴权密钥与 CORS 白名单，生产环境务必通过环境变量覆盖
 codeoj:
   inner-auth-secret: ${INNER_AUTH_SECRET:codeoj-default-inner-secret}
-  # 允许跨域的来源（逗号分隔），生产环境改为线上真实域名
-  cors-allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:8000}
+  # 允许跨域的来源（逗号分隔）：8000 为 yarn serve 自定义端口，8080 为 Vue CLI 默认 dev 端口
+  cors-allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:8000,http://localhost:8080}

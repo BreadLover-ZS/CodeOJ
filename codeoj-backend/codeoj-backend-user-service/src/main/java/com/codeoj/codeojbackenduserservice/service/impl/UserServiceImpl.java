@@ -82,6 +82,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             if (!saveResult) {
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR, "注册失败，数据库错误");
             }
+            // 4. 设置默认昵称（雪花 ID 插入后已回填），避免前端展示空昵称
+            user.setUserName("用户" + user.getId() % 100000);
+            this.updateById(user);
             return user.getId();
         }
     }

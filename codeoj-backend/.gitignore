@@ -37,3 +37,6 @@ build/
 .redis-data/
 .rabbitmq-data/
 .nacos-data/
+
+### 本地运行日志 ###
+logs/
