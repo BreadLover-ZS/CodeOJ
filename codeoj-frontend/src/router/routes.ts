@@ -11,6 +11,7 @@ import ManageQuestionView from "@/views/question/ManageQuestionView.vue";
 import QuestionsView from "@/views/question/QuestionsView.vue";
 import QuestionSubmitView from "@/views/question/QuestionSubmitView.vue";
 import ViewQuestionView from "@/views/question/ViewQuestionView.vue";
+import AdminUserManageView from "@/views/user/AdminUserManageView.vue";
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -74,6 +75,14 @@ export const routes: Array<RouteRecordRaw> = [
     path: "/manage/question/",
     name: "管理题目",
     component: ManageQuestionView,
+    meta: {
+      access: ACCESS_ENUM.ADMIN,
+    },
+  },
+  {
+    path: "/manage/user",
+    name: "管理用户",
+    component: AdminUserManageView,
     meta: {
       access: ACCESS_ENUM.ADMIN,
     },
