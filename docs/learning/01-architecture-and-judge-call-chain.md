@@ -1,100 +1,123 @@
-# CodeOJ 架构与判题调用链学习手册
+# CodeOJ 当前架构与真实判题调用链
 
-> 文档状态：静态源码审计 v0.1
+> 文档状态：静态源码审计 v1.0
 >
-> 审计基线：`master` / `33a56d9`
+> 审计基线：`master` / `53e57c8`
 >
-> 证据边界：本文只证明当前源码“写了什么”，不证明服务已经成功启动、完整联调或达到生产可用。运行、故障注入和压测证据将在后续阶段补充。
+> 证据边界：本文说明当前代码实际写了什么，不代表构建、联调、安全或性能已经通过验证。
 
-## 0. 先记住这张项目地图
-
-CodeOJ 是一个前后端分离的微服务 OJ。核心业务不是题目 CRUD，而是把一次不可信的用户代码提交，可靠地转化为可查询的判题结果。
+## 1. 系统地图
 
 ```text
-Vue 前端
-   |
-   | HTTP /api/**
-   v
+Browser
+  |
+  | HTTP + Session Cookie
+  v
 Gateway :8101
-   |-- /api/user/**     -> User Service :8102
-   |-- /api/question/** -> Question Service :8103
-   `-- /api/judge/**    -> Judge Service :8104
-                                |
-Question Service               | HTTP + auth header
-   |                            v
-   | RabbitMQ code_queue   Code Sandbox :8090
-   v                            |
-Judge Service -----------------'
-   |
-   | OpenFeign 内部调用
-   v
-Question Service -> MySQL
+  |-- /api/user/**     -> User Service :8102 -> MySQL / Redis Session
+  |-- /api/question/** -> Question Service :8103 -> MySQL / RabbitMQ
+  `-- /api/judge/**    -> Judge Service :8104 -> RabbitMQ / OpenFeign
+                                                    |
+                                                    | HTTP + auth header
+                                                    v
+                                             Code Sandbox :8090
+                                                    |
+                                                    `-> javac/java child process
 
-Redis：Spring Session 登录态
 Nacos：服务注册与发现
-RabbitMQ：提交任务异步化
-MySQL：题目、提交记录、判题结果
+Redis：Spring Session 共享登录态
+RabbitMQ：只传递判题任务 ID
+MySQL：用户、题目、提交记录与结果
 ```
 
-模块职责：
+Gateway 的 `GlobalAuthFilter` 当前只对 `/**/inner/**` 校验 `X-Inner-Secret`，随后直接放行其他请求，源码仍保留“统一权限校验” TODO。登录和角色权限主要由业务服务读取 Session、`@AuthCheck` 和 `AuthInterceptor` 完成。
 
-| 模块 | 当前职责 | 核心入口 |
-|---|---|---|
-| `codeoj-backend-gateway` | 路由、CORS、外部访问内部接口的第一层拦截 | `GlobalAuthFilter`、`application.yml` |
-| `codeoj-backend-user-service` | 注册、登录、用户与会话 | `UserController`、`UserServiceImpl` |
-| `codeoj-backend-question-service` | 题目 CRUD、提交记录、发送判题消息、保存结果 | `QuestionController`、`QuestionSubmitServiceImpl` |
-| `codeoj-backend-judge-service` | 消费任务、编排沙箱、匹配答案、写回结果 | `MyMessageConsumer`、`JudgeServiceImpl` |
-| `codeoj-backend-codesandbox` | 编译和执行 Java 用户代码 | `ExecuteCodeController`、`JavaNativeCodeSandbox` |
-| `codeoj-backend-service-client` | 声明 OpenFeign 内部接口和内部鉴权头 | `QuestionFeignClient`、`FeignInnerAuthConfig` |
-| `codeoj-backend-model` | 跨服务 DTO、实体、枚举 | `QuestionSubmit`、`ExecuteCodeRequest/Response` |
-| `codeoj-backend-common` | 响应、异常、注解和工具 | `BaseResponse`、`GlobalExceptionHandler` |
+## 2. 用户与权限链路
 
-## 1. 一次提交的完整调用链
+### 2.1 注册与登录
 
-### 1.1 请求进入题目服务
+`UserServiceImpl` 的当前行为：
 
-前端调用：
+1. 注册校验账号和两次密码；
+2. 在 `synchronized(userAccount.intern())` 中先查账号再插入；
+3. 新密码用 BCrypt 保存；
+4. 登录时兼容历史 `md5(SALT + password)`，校验通过后升级为 BCrypt；
+5. 把完整 `User` 对象放入 Spring Session；
+6. 用户服务自己的 `getLoginUser` 会根据 Session 中 ID 再查数据库。
+
+并发边界：Java 锁只覆盖单个 User Service JVM；多实例注册同一账号仍可能同时“查无记录”。`create_table.sql` 对 `userAccount` 只有普通索引，没有唯一约束。因此真正的唯一性必须由数据库唯一索引兜底，并把冲突转换为业务错误。
+
+### 2.2 登录态与角色鉴权
+
+- 标注 `@AuthCheck` 的接口由 `AuthInterceptor` 读取 Session 用户并校验登录或角色；
+- 被封禁用户会在该切面中被拒绝；
+- 未标注 `@AuthCheck` 的接口不经过这层检查；
+- `UserFeignClient#getLoginUser` 是接口默认方法，只读取 Session 对象，不重新查库；
+- `/inner/**` 依赖共享密钥请求头，适合当前演示环境，但不是细粒度服务身份认证。
+
+不能把这套实现描述为“Gateway 统一 JWT 鉴权”。更准确的说法是“基于 Spring Session Redis 共享登录态，服务内切面完成接口角色校验，Gateway 拦截外部 inner 路径”。
+
+## 3. 一次提交的真实调用链
+
+### 3.1 HTTP 入口
+
+前端请求：
 
 ```http
 POST /api/question/question_submit/do
 Content-Type: application/json
 
 {
-  "questionId": 题目ID,
+  "questionId": 1,
   "language": "java",
-  "code": "用户代码"
+  "code": "public class Main { ... }"
 }
 ```
 
-源码入口：
+调用路径：
 
-- `QuestionController#doQuestionSubmit` 检查请求和题目 ID。
-- `UserFeignClient#getLoginUser` 从会话取得当前用户。
-- `QuestionSubmitService#doQuestionSubmit` 进入提交业务。
+```text
+QuestionController#doQuestionSubmit
+  -> UserFeignClient#getLoginUser
+  -> QuestionSubmitServiceImpl#doQuestionSubmit
+```
 
-注意：Gateway 当前主要做路由和 `/inner/**` 拦截，登录校验仍落在业务服务，不应把 Gateway 描述成完整的统一认证中心。
+### 3.2 入库与发布
 
-### 1.2 保存提交记录
+`QuestionSubmitServiceImpl#doQuestionSubmit` 依次：
 
-`QuestionSubmitServiceImpl#doQuestionSubmit` 当前依次执行：
+1. 用 `QuestionSubmitLanguageEnum` 校验语言；
+2. 查询题目是否存在；
+3. 构造提交记录，初始化 `WAITING(0)` 和空 JSON 判题信息；
+4. 插入 `question_submit`；
+5. 通过 `MyMessageProducer` 向 `code_exchange` 发布 submission ID；
+6. 尝试单独累加 `submitNum`，失败只记 warning。
 
-1. 用 `QuestionSubmitLanguageEnum` 校验语言。
-2. 查询题目是否存在。
-3. 构造 `question_submit` 记录：用户、题目、源码、语言。
-4. 初始化 `status = WAITING(0)`，`judgeInfo = {}`。
-5. 插入 MySQL，取得 `questionSubmitId`。
-6. 向 `code_exchange` 发送消息，routing key 为 `my_routingKey`，消息体只有提交 ID。
-7. 单独累加题目提交数；统计失败只记录 warning，不影响主流程。
+代码注释写着“每个用户串行提交题目”，但方法中没有锁、队列、幂等键或串行化机制。该注释不是实现证据。
 
-为什么 MQ 里只放提交 ID：
+MQ 只传 ID 的好处是消息小、代码和用例不重复复制；代价是消费者依赖题目服务可用，而且执行时读取的是题目当前内容。题目或隐藏用例在提交后变化时，缺少提交时快照会影响可重复判题。
 
-- 消息更小，不复制大段源码和用例。
-- 判题服务以数据库当前记录为准。
-- 代价是判题服务强依赖题目服务和数据库可用性，并且题目/用例后续被修改时存在“提交时快照”问题。
+### 3.3 入库和 MQ 之间的丢失窗口
 
-### 1.3 RabbitMQ 路由
+当前顺序是：
 
-当前拓扑：
+```text
+INSERT question_submit 成功
+  -> RabbitTemplate.convertAndSend
+  -> 返回 submissionId
+```
+
+这不是同一个事务。生产者没有 publisher confirm、return callback 或 Outbox：
+
+- 数据库成功、发布抛异常：接口失败，但记录可能永久停在 WAITING；
+- 发布调用返回：只代表客户端调用返回，不证明消息已持久化并路由到目标队列；
+- 用户重试：可能再生成一条提交记录。
+
+因此当前只能说“使用 RabbitMQ 异步解耦提交和判题”，不能说“保证任务不丢”。
+
+### 3.4 RabbitMQ 拓扑
+
+目标拓扑在代码和文档中名为：
 
 ```text
 direct exchange: code_exchange
@@ -104,251 +127,215 @@ direct exchange: code_exchange
 durable queue: code_queue
 ```
 
-`InitRabbitMqBean` 在判题服务启动时声明 exchange、queue 和 binding。生产者使用 `RabbitTemplate#convertAndSend`，当前没有看到 publisher confirm、return callback 或 Outbox。
+但 `InitRabbitMqBean` 存在配置缺口：
 
-### 1.4 消费与手动 ACK
+- 只给 Rabbit Java Client 设置 host，忽略 Spring 配置中的 username、password、port 和 vhost；
+- Compose 使用 `codeoj/Rabbit@2026Code`，而 Java Client 默认 guest/guest；
+- `exchangeDeclare(name, "direct")` 的默认 durable 语义与 README 中 durable 目标不一致；
+- 初始化异常只记录日志，服务仍可能继续启动；
+- connection/channel 没有显式关闭。
 
-`MyMessageConsumer#receiveMessage` 使用：
+应以 Spring AMQP 的 `Exchange`、`Queue`、`Binding` Bean 统一声明，不保留多套初始化方式。
 
-```java
-@RabbitListener(queues = {"code_queue"}, ackMode = "MANUAL")
-```
+### 3.5 消费与 ACK
 
-当前时间线：
+`MyMessageConsumer#receiveMessage` 使用手动确认：
 
 ```text
-收到 submissionId
+收到字符串消息
+  -> Long.parseLong(message)
   -> judgeService.doJudge(id)
       -> 成功：basicAck
-      -> 异常：检查数据库是否已有终态
-          -> 非终态：尝试标记 FAILED
-          -> basicNack(requeue=false)
+      -> 异常：查询提交终态、尝试标记 FAILED
+                -> basicNack(requeue=false)
 ```
 
-`MANUAL` 只表示确认动作由业务代码负责，并不自动获得“恰好一次”。当前能够合理描述为：项目尝试用手动 ACK 控制消费完成点，但幂等、重试与死信闭环尚未建立。
+当前有四个关键问题：
 
-### 1.5 判题编排
+1. `Long.parseLong` 位于 `try` 外，毒消息不会进入显式 ACK/NACK 分支；
+2. catch 中查询提交记录本身没有被保护，Feign 失败可能再次跳出确认逻辑；
+3. 结果已是终态时仍执行 `basicNack(requeue=false)`，语义上应把重复消息视为幂等成功并 ACK；
+4. 没有 DLX/DLQ、重试次数和重放入口，`requeue=false` 的失败消息没有业务审计闭环。
 
-`JudgeServiceImpl#doJudge` 的源码流程：
+手动 ACK 只控制 Broker 何时删除消息，不保证业务恰好执行一次。
 
-1. 通过 `QuestionFeignClient` 读取提交记录。
-2. 读取对应题目与测试用例。
-3. 只允许 `WAITING` 状态继续处理。
-4. 把提交状态更新为 `RUNNING(1)`。
-5. 根据 `codesandbox.type` 从 `CodeSandboxFactory` 选择沙箱。
-6. 通过 `CodeSandboxProxy` 包装调用。
-7. 把代码、语言、输入用例组成 `ExecuteCodeRequest`。
-8. 调用远程沙箱。
-9. 把输出、资源数据和预期用例交给 `JudgeManager`。
-10. 写回 `SUCCEED(2)` 与 `judgeInfo`。
-11. 如果 verdict 是 Accepted，累加题目通过数。
+## 4. 判题服务的状态与并发
 
-这里有两个容易讲错的概念：
+`JudgeServiceImpl#doJudge` 当前流程：
 
-- `QuestionSubmitStatusEnum.SUCCEED` 表示判题流程完成，不等于答案通过；WA/TLE 等也可能处于该状态。
-- 真正的题目结果位于 `judgeInfo.message`，例如 Accepted、Wrong Answer、Time Limit Exceeded。
+1. 通过 Feign 查询提交和题目；
+2. 检查提交状态必须为 WAITING；
+3. 普通 `updateById` 把状态改为 RUNNING；
+4. 调远程沙箱；
+5. 调判题策略；
+6. 写回 `SUCCEED(2)` 与 `judgeInfo`；
+7. Accepted 时尝试累加 `acceptNum`。
 
-### 1.6 沙箱调用
+### 4.1 先查后改不是抢占
 
-默认配置选择 `remote`：
-
-```text
-Judge Service
-  -> RemoteCodeSandbox
-  -> POST http://codeoj-codesandbox:8090/executeCode
-  -> auth: CODESANDBOX_SECRET
-  -> ExecuteCodeController
-  -> JavaNativeCodeSandbox
-```
-
-当前 Java 沙箱流程：
-
-1. 检查共享密钥、代码非空和代码长度。
-2. 创建临时目录并写入 `.java` 文件。
-3. 使用 `javac` 编译。
-4. 为每个用例单独启动 `java` 子进程，通过 stdin 输入。
-5. 收集 stdout，计算最大执行时间。
-6. 返回 `ExecuteCodeResponse`。
-7. `finally` 清理临时目录。
-
-当前实现的“远程”表示 HTTP 服务边界，不等于安全隔离。Compose 只是把整个沙箱服务放进一个长期运行容器，用户代码仍与沙箱服务进程共享该容器的权限、网络和文件系统。
-
-### 1.7 判题策略
-
-`JudgeManager` 对 Java 使用 `JavaLanguageJudgeStrategy`，其他语言走 `DefaultJudgeStrategy`。策略按以下顺序判断：
-
-1. 输出数量是否与输入数量一致。
-2. 每个实际输出是否与期望输出字符串完全相等。
-3. 内存是否超过限制。
-4. 时间是否超过限制。
-
-当前 Java 策略包含固定减去 10 秒的逻辑，但本项目沙箱记录的是进程实际毫秒耗时，因此这条规则缺少当前实现依据，后续应通过测试重构，而不是写进简历当作“语言性能优化”。
-
-## 2. 状态机：当前实现与目标实现
-
-### 2.1 当前状态
-
-```text
-WAITING(0) -> RUNNING(1) -> SUCCEED(2)
-                  |
-                  `------> FAILED(3)  （基础设施或消费异常）
-```
-
-当前表只有 `status`，没有任务版本、重试次数、租约截止时间、失败类型和下一次重试时间。
-
-### 2.2 当前并发缺口
-
-当前“判定 WAITING”和“更新 RUNNING”是两个远程调用。两个消费者可能同时读到 WAITING，并分别成功写入 RUNNING，然后重复执行用户代码。
-
-需要验证的目标语义：
+两个消费者可能同时读到 WAITING，然后都成功执行普通 update，最终重复运行用户代码。取得执行权至少需要数据库条件更新：
 
 ```sql
 update question_submit
-set status = RUNNING
-where id = ? and status = WAITING;
+set status = 1
+where id = ? and status = 0;
 ```
 
-只有受影响行数为 1 的消费者获得任务执行权。最终设计还必须解决消费者在获得执行权后崩溃、记录长期停在 RUNNING 的恢复问题。
+只有影响行数为 1 的消费者获得执行权。这个 CAS 仍不能单独解决 RUNNING 后宕机，后者还需要租约、重试计数或恢复扫描。
 
-## 3. 失败时间线审计
+### 4.2 三种状态不能混用
 
-| 失败点 | 当前结果 | 风险 | 后续验证方向 |
-|---|---|---|---|
-| MySQL 插入前失败 | 无记录、无消息 | 可重试请求 | 接口错误语义 |
-| MySQL 插入成功，MQ 发送失败 | 记录长期 WAITING | 任务丢失 | Transactional Outbox 或补偿扫描 |
-| MQ 已路由，响应前接口失败 | 用户可能重提 | 重复提交 | 请求幂等键/业务去重策略 |
-| 两个消费者收到同一 ID | 都可能通过先查后改 | 重复执行 | 条件状态迁移 |
-| 更新 RUNNING 后进程崩溃 | 消息重投时发现非 WAITING | 任务被判失败或卡住 | 租约、重试次数、恢复扫描 |
-| 沙箱临时超时 | 返回失败响应 | 目前可能被流读取阻塞 | 并发排空 stdout/stderr，先受控等待 |
-| 判题结果已写回，ACK 前崩溃 | 重投后发现终态 | 当前最终丢弃消息 | 明确幂等 ACK 分支 |
-| 异常后 `nack(requeue=false)` | 消息直接丢弃 | 无 DLQ 审计/重放 | DLX、失败分类、人工重放 |
-
-## 4. 沙箱安全边界
-
-### 4.1 当前已有防护
-
-- 沙箱 HTTP 接口有共享密钥。
-- 代码大小限制为 256 KiB。
-- 单次输出截断为 64 KiB。
-- 配置了编译和单用例运行超时。
-- 每次请求创建独立临时目录并在结束后清理。
-- 业务服务不直接暴露沙箱端口。
-
-### 4.2 当前缺失防护
-
-- 没有每次提交级容器隔离。
-- 没有 CPU、内存、进程数限制。
-- 没有禁网。
-- 没有只读根文件系统和最小文件权限。
-- Dockerfile 没有声明非 root 用户。
-- 没有限制测试用例数量与输入总大小。
-- `CodeSandboxProxy` 会记录完整请求，可能把用户源码和隐藏用例写入日志。
-- stdout/stderr 没有并发排空，`readOutput()` 发生在 `waitFor(timeout)` 之前，超时可能不能按预期生效。
-- `destroyForcibly()` 后没有继续等待子进程退出，也没有处理用户程序创建的后代进程。
-- 内存统计固定为 `0L`，当前 MLE 判定没有真实数据基础。
-
-因此当前只能称为“进程执行器”或“演示级进程沙箱”，不能称为生产安全沙箱。
-
-## 5. 14 天二开候选主线
-
-以下是静态审计后的优先级，不等同于已完成计划。
-
-### P0：先形成可靠判题闭环
-
-1. 补充提交/任务状态字段与合法迁移规则。
-2. 用条件更新抢占任务，证明重复投递只执行一次。
-3. 解决“数据库成功、MQ 失败”的任务丢失窗口。
-4. 区分可重试基础设施异常、用户代码错误和永久失败。
-5. 增加 DLQ 或失败任务表、重放入口、超时 RUNNING 恢复机制。
-6. 为以上时间线编写单元测试、集成测试和故障注入测试。
-
-### P1：把执行器升级为可证明的安全沙箱
-
-1. 修复进程输出读取与超时控制。
-2. 每次提交使用短生命周期隔离环境。
-3. 限制 CPU、内存、PID、网络、文件系统和总执行时间。
-4. 不记录隐藏用例与完整用户源码。
-5. 用恶意样例验证：死循环、内存膨胀、fork、刷屏、读文件、访问网络。
-
-### P2：压测与可观测性
-
-1. 指标至少包含：提交吞吐、队列积压、排队时延、判题时延、成功率、重试数、DLQ 数。
-2. 固定机器配置、JVM 参数、数据集、并发阶梯和测试时长。
-3. 分开报告“提交 API 吞吐”和“真实判题吞吐”，不能混成一个 QPS。
-4. 保存原始报告和失败拐点，不只保存最高数字。
-
-## 6. 建议的源码阅读顺序
-
-每读完一组，应该能独立回答后面的面试问题。
-
-1. `QuestionController#doQuestionSubmit`
-2. `QuestionSubmitServiceImpl#doQuestionSubmit`
-3. `MyMessageProducer`、`InitRabbitMqBean`、`MyMessageConsumer`
-4. `JudgeServiceImpl#doJudge`
-5. `QuestionFeignClient`、`QuestionInnerController`
-6. `CodeSandboxFactory`、`RemoteCodeSandbox`、`ExecuteCodeController`
-7. `JavaNativeCodeSandbox`
-8. `JudgeManager`、`DefaultJudgeStrategy`、`JavaLanguageJudgeStrategy`
-9. `QuestionSubmitStatusEnum`、`JudgeInfoMessageEnum`
-10. `docker-compose.*.yml` 和各服务配置
-
-第一轮必须能回答：
-
-- 为什么 MQ 只传 submission ID？代价是什么？
-- 手动 ACK 是否意味着消息不会重复？
-- 消费者在哪个时刻取得任务执行权？当前为什么不可靠？
-- WA、TLE、CE 与系统 FAILED 有什么区别？
-- 如果 MQ 发送失败、消费者宕机、结果写回后 ACK 前宕机，各发生什么？
-- 当前沙箱防住了什么，没防住什么？
-- 为什么提交 API QPS 不等于判题吞吐量？
-
-## 7. 当前证据清单
-
-| 结论 | 证据等级 | 状态 |
+| 层级 | 字段 | 含义 |
 |---|---|---|
-| 后端为 8 模块 Maven 工程 | 静态源码/POM | 已确认 |
-| 网关、用户、题目、判题通过 Nacos 组织 | 静态配置 | 已确认 |
-| 提交通过 RabbitMQ 异步传递 | 静态源码 | 已确认 |
-| 消费端使用手动 ACK | 静态源码 | 已确认 |
-| 远程沙箱执行 Java 程序 | 静态源码 | 已确认 |
-| Maven 完整构建成功 | 构建 | 未确认；本机 Java 26 下失败 |
-| Compose 配置可用 | 配置解析 | 未确认；本机无 Docker |
-| 注册到判题完整闭环 | E2E | 未确认 |
-| 故障恢复符合设计 | 故障注入 | 未确认 |
-| 压测指标 | 压测 | 未开始 |
+| 提交任务 | `question_submit.status` | WAITING / RUNNING / SUCCEED / FAILED |
+| 沙箱调用 | `ExecuteCodeResponse.status` | 当前约定 1 成功、2 失败 |
+| 题目判定 | `judgeInfo.message` | Accepted / Wrong Answer / Time Limit Exceeded 等 |
 
-## 8. 来源与公开发布边界
+`SUCCEED` 应表示判题流程正常结束，WA/CE/RE/TLE 也应是可查询的业务终态；`FAILED` 应留给基础设施或内部系统无法完成判题的情况。
 
-当前仓库：
+## 5. 当前最严重的结果契约缺陷
 
-- 没有 `LICENSE` 或 `NOTICE`。
-- Git 历史从一次整体导入开始，不能证明原始创作过程。
-- 多个判题类与公开的 YuOJ 衍生仓库高度相似。
-- 编程导航官方项目介绍将 YuOJ 描述为其原创课程项目。
+`JavaNativeCodeSandbox#fail` 对编译错误、运行错误和超时返回：
 
-因此，在找到代码的真实获取来源及明确许可证/授权之前：
+```text
+status = 2
+message = 错误详情
+outputList = []
+judgeInfo = null
+```
 
-- 可以用于私人学习和本地分析。
-- 不应声称现有基线代码由自己原创。
-- 不应默认认为“公开可见”等于“允许复制和再发布”。
-- 暂不建议继续公开推送完整基线；README 中也不能把 `CodeOJ Team` 当作来源说明。
+但 `JudgeServiceImpl`：
 
-后续应记录：原始下载 URL、获取日期、作者、许可证或授权文本、保留署名要求，以及你自己的变更清单。
+- 没有分支处理 `ExecuteCodeResponse.status`；
+- 把 null `judgeInfo` 交给策略；
+- `JavaLanguageJudgeStrategy` 立即调用 `judgeInfo.getMemory()`。
 
-## 9. 官方语义参考
+这会触发空指针异常，随后消费者把提交尝试标记为系统 `FAILED`。所以当前不能声称编译错误、运行错误、超时能稳定映射为 CE、RE、TLE。
 
-- Spring AMQP：`MANUAL` 模式要求监听器显式 `basicAck/basicNack`，但不提供业务幂等保证。
+正确方向是先定义明确契约，例如：
 
-  <https://docs.spring.io/spring-amqp/reference/amqp/containerAttributes.html>
-- Spring AMQP：发布确认需要显式启用 correlated publisher confirms，并可结合 returns 识别不可路由消息。
+```text
+SandboxOutcome
+  kind: SUCCESS | COMPILE_ERROR | RUNTIME_ERROR | TIMEOUT | SYSTEM_ERROR
+  outputs: [...]          仅 SUCCESS 必需
+  timeMs / memoryKb       可获取时填写
+  detail                  对用户脱敏后的错误
+```
 
-  <https://docs.spring.io/spring-amqp/reference/amqp/template.html>
-- Java 8 `Process`：`waitFor(timeout, unit)` 才是带时限的进程等待，stdout/stderr 是独立管道。
+Judge Service 先映射沙箱 outcome，再决定是否需要做答案、时间和内存比较；用户代码失败不应抛成基础设施异常。
 
-  <https://docs.oracle.com/javase/8/docs/api/java/lang/Process.html>
+## 6. 判题策略的当前边界
 
-## 10. 更新记录
+正常成功响应进入 `JavaLanguageJudgeStrategy` 后，顺序是：
 
-| 日期 | 版本 | 内容 |
+1. 输出数量是否与输入数量相等；
+2. 每项输出字符串是否完全相等；
+3. 内存是否超过题目限制；
+4. 时间是否超过题目限制。
+
+仍有两个无法成立的结论：
+
+- 沙箱把 memory 固定为 `0L`，MLE 没有真实测量基础；
+- Java 策略从实际毫秒耗时中固定减去 10,000ms，而单用例运行超时默认 5,000ms，当前 TLE 判断缺少依据且很可能不可达。
+
+此外，`JudgeInfo.time` 的注释写成“KB”，属于单位文档错误。二开时应统一时间和内存单位，并用边界测试锁定语义。
+
+`JudgeInfoMessageEnum` 的 `text/value` 也不一致：Accepted、Wrong Answer 的 value 是英文，而 Compile Error、Runtime Error、TLE 等 value 是中文。API 和数据库若直接保存 `getValue()`，客户端将收到混合语言且不稳定的机器值。目标契约应使用固定 code，展示文案由前端或国际化层处理。
+
+## 7. 语言支持的真实范围
+
+`QuestionSubmitLanguageEnum` 包含 java/cpp/go，前端也可能允许选择这些值；但 `JavaNativeCodeSandbox` 无论 language 是什么，都：
+
+- 提取 Java public class 名；
+- 写入 `.java`；
+- 调用 `javac`；
+- 调用 `java`。
+
+因此当前是“接口层接受三种字符串，执行层只实现 Java”。在补齐编译器、运行命令、镜像、资源限制和每种语言的测试前，不得写“支持 Java/C++/Go 判题”。
+
+## 8. 沙箱实现与安全边界
+
+### 8.1 已有机制
+
+- HTTP 共享密钥；
+- 最大代码长度 256 KiB；
+- 单次读取最大输出长度 64 KiB；
+- 编译/运行超时配置；
+- 每次请求创建临时目录并在 finally 清理；
+- 每个用例启动独立 Java 子进程。
+
+### 8.2 超时实现仍可能失效
+
+当前顺序是先同步读取流，再 `waitFor(timeout)`：
+
+```text
+readOutput(process stdout/stderr)
+  -> waitFor(timeout)
+```
+
+如果进程不关闭流，`readOutput` 可先阻塞，代码根本到不了带超时的 waitFor。stdout/stderr 也没有并发排空；向 stdin 写入发生在计时等待之前，也可能阻塞。输出截断只是停止本次读取，不能阻止子进程继续写管道。
+
+### 8.3 缺失的隔离
+
+- 无提交级短生命周期容器；
+- 无 CPU、内存、PID 和总墙钟限制；
+- 无禁网；
+- 无只读根文件系统和受控工作目录；
+- Dockerfile 默认 root；
+- 没有处理后代进程和完整进程树；
+- 没有限制用例数量与输入总大小；
+- `CodeSandboxProxy` 记录完整请求/响应，会泄露用户源码和隐藏用例；
+- `RemoteCodeSandbox` 未显式设置连接/读取超时，也未先校验 HTTP 状态。
+
+准确称谓应是“带部分限制的 Java 进程执行器”。容器化部署服务本身不等于每次提交都被安全隔离。
+
+## 9. 失败时间线
+
+| 失败点 | 当前可能结果 | 目标能力 |
 |---|---|---|
-| 2026-09-10 | v0.1 | 建立架构图、提交判题调用链、状态机、失败时间线、安全边界与证据清单 |
+| 提交 INSERT 前失败 | 无记录、无消息 | 明确接口错误即可 |
+| INSERT 成功、MQ 发布失败 | 永久 WAITING | Outbox + 重试发布 |
+| 消息不可路由 | 当前无法确认 | mandatory return + 告警 |
+| 重复消息/并发消费 | 可能重复执行 | CAS 抢占 + 幂等终态 ACK |
+| RUNNING 后宕机 | 卡住或重投后转 FAILED | 租约/超时恢复 |
+| 沙箱 CE/RE/TLE | 可能 NPE 后系统 FAILED | 结果契约与业务终态映射 |
+| 结果写回后、ACK 前崩溃 | 重投后异常再 NACK | 识别终态并 ACK |
+| 依赖暂时不可用 | 直接 NACK 丢弃 | 有界重试 + DLQ |
+| 毒消息 | 可能绕过显式确认 | 解析保护 + 隔离队列 |
+
+## 10. 当前测试与运行证据
+
+仓库只发现少量空的 Spring Boot `contextLoads()`，没有：
+
+- 判题策略单元测试；
+- 消费幂等和状态迁移测试；
+- RabbitMQ/Testcontainers 集成测试；
+- 沙箱编译、运行、超时和恶意样例测试；
+- 前端测试；
+- E2E、故障注入或压测报告。
+
+项目声明 Java 8；本机 Java 26 下的 Maven 失败不能证明源码本身不可构建。先冻结工具链，再建立基线。
+
+## 11. 源码阅读索引
+
+| 主题 | 入口 |
+|---|---|
+| Gateway | `GlobalAuthFilter`、gateway `application.yml` |
+| 登录与权限 | `UserServiceImpl`、`AuthInterceptor`、`UserFeignClient` |
+| 提交 | `QuestionController`、`QuestionSubmitServiceImpl` |
+| MQ 发布 | `MyMessageProducer`、`InitRabbitMqBean` |
+| MQ 消费 | `MyMessageConsumer` |
+| 判题编排 | `JudgeServiceImpl`、`JudgeManager` |
+| 沙箱客户端 | `CodeSandboxFactory`、`CodeSandboxProxy`、`RemoteCodeSandbox` |
+| 沙箱服务 | `ExecuteCodeController`、`JavaNativeCodeSandbox` |
+| 策略 | `JavaLanguageJudgeStrategy`、`DefaultJudgeStrategy` |
+| 数据契约 | `QuestionSubmit`、`ExecuteCodeResponse`、`JudgeInfo`、相关枚举 |
+| 数据库 | `mysql-init/create_table.sql` |
+
+## 12. 外部语义参考
+
+- Spring AMQP MANUAL 确认模式：<https://docs.spring.io/spring-amqp/reference/amqp/containerAttributes.html>
+- Spring AMQP 发布确认与 returns：<https://docs.spring.io/spring-amqp/reference/amqp/template.html>
+- Java 8 `Process` 与超时等待：<https://docs.oracle.com/javase/8/docs/api/java/lang/Process.html>
+
+这些参考解释框架/API 语义，不是本项目已经正确实现这些机制的证据。
