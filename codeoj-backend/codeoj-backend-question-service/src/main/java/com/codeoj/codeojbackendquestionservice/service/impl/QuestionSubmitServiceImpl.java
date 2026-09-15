@@ -79,9 +79,9 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         if (question == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
-        // 是否已提交题目
+
         long userId = loginUser.getId();
-        // 每个用户串行提交题目
+        // 创建题目提交对象
         QuestionSubmit questionSubmit = new QuestionSubmit();
         questionSubmit.setUserId(userId);
         questionSubmit.setQuestionId(questionId);
@@ -105,10 +105,6 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         } catch (Exception e) {
             log.warn("更新题目提交数失败, questionId = {}", questionId, e);
         }
-        // 执行判题服务
-//        CompletableFuture.runAsync(() -> {
-//            judgeFeignClient.doJudge(questionSubmitId);
-//        });
         return questionSubmitId;
     }
 

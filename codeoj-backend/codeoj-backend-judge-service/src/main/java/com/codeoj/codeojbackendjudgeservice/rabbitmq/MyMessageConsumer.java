@@ -32,6 +32,7 @@ public class MyMessageConsumer {
         long questionSubmitId = Long.parseLong(message);
         try {
             judgeService.doJudge(questionSubmitId);
+            //表示 "这条消息我已经处理完了，可以从队列里删掉了"。
             channel.basicAck(deliveryTag, false);
         } catch (Exception e) {
             log.error("判题失败，questionSubmitId = {}", questionSubmitId, e);
