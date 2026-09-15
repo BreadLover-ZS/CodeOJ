@@ -146,8 +146,6 @@ where id = ? and status = WAITING;
 - 异常链：消息可能在哪里丢、重或卡住；
 - 个人主线：为什么按结果契约、幂等、恢复、可靠发布、安全的顺序二开。
 
-需要更细的旧版设计、表结构和测试矩阵时，再查 `archive/`。
-
 ## 6. 语义参考
 
 - [RabbitMQ Consumer Acknowledgements and Publisher Confirms](https://www.rabbitmq.com/docs/confirms)

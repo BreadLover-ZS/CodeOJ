@@ -64,7 +64,7 @@ MySQL       用户、题目、提交和判题结果
 2. [关键源码与判题主链](docs/learning/01-key-source-and-judge-chain.md)
 3. [高频面试问答与证据边界](docs/learning/02-interview-qa-and-evidence.md)
 
-旧版完整审计和设计材料已归档到 `docs/learning/archive/`，不属于日常阅读任务。需要开发前端时再查阅[前端说明](codeoj-frontend/README.md)。
+需要开发前端时再查阅[前端说明](codeoj-frontend/README.md)。
 
 ## 技术栈
 
