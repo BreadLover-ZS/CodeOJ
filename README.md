@@ -58,13 +58,13 @@ MySQL       用户、题目、提交和判题结果
 
 ## 文档导航
 
-建议先读文档，再沿文档中的类名回到源码：
+面试准备只读以下三份，再沿文档中的关键方法回到源码：
 
-1. [学习与二开导航](docs/learning/00-reading-index.md)
-2. [当前架构与真实判题调用链](docs/learning/01-architecture-and-judge-call-chain.md)
-3. [可靠判题二次开发设计](docs/learning/02-secondary-development-design.md)
-4. [证据、压测与简历台账](docs/learning/03-evidence-and-resume-ledger.md)
-5. [前端说明](codeoj-frontend/README.md)
+1. [面试阅读入口](docs/learning/00-interview-reading-guide.md)
+2. [关键源码与判题主链](docs/learning/01-key-source-and-judge-chain.md)
+3. [高频面试问答与证据边界](docs/learning/02-interview-qa-and-evidence.md)
+
+旧版完整审计和设计材料已归档到 `docs/learning/archive/`，不属于日常阅读任务。需要开发前端时再查阅[前端说明](codeoj-frontend/README.md)。
 
 ## 技术栈
 
@@ -141,7 +141,7 @@ docker compose -f docker-compose.service.yml up --build
 4. `question_submit` 状态和 `judgeInfo` 与接口返回一致；
 5. MQ 中无无法解释的积压，服务日志中无源码或隐藏用例泄露。
 
-当前源码对编译错误、运行错误和超时的返回契约存在缺陷，Gate 4 预计不会全部通过；详见[调用链审计](docs/learning/01-architecture-and-judge-call-chain.md)。
+当前源码对编译错误、运行错误和超时的返回契约存在缺陷，以上第 4 项预计不会全部通过；详见[关键源码与判题主链](docs/learning/01-key-source-and-judge-chain.md)。
 
 ## 前端开发
 
@@ -162,7 +162,7 @@ npm run serve
          -> 分类结果 -> 条件写回 -> ACK / 重试 / DLQ -> 超时恢复
 ```
 
-完成顺序和验收 Gate 见[可靠判题二次开发设计](docs/learning/02-secondary-development-design.md)。压测必须分开报告“提交 API 吞吐”和“真实判题吞吐”，并保存环境、脚本、原始结果和失败拐点。
+完成顺序和面试口径见[关键源码与判题主链](docs/learning/01-key-source-and-judge-chain.md)与[高频面试问答](docs/learning/02-interview-qa-and-evidence.md)。压测必须分开报告“提交 API 吞吐”和“真实判题吞吐”，并保存环境、脚本、原始结果和失败拐点。
 
 ## 来源与许可状态
 
