@@ -56,15 +56,16 @@ MySQL       用户、题目、提交和判题结果
 | `codeoj-backend-common` | 通用响应、异常、注解和工具 |
 | `codeoj-frontend` | Vue 3 页面和已生成的 TypeScript API 客户端 |
 
-## 文档导航
+## 文档结构与阅读顺序
 
-面试准备只读以下三份，再沿文档中的关键方法回到源码：
+| 文档 | 用途 | 什么时候读 |
+|---|---|---|
+| 本 README | 项目定位、结构、启动方式和当前证据 | 第一次接触项目、准备运行时 |
+| [关键源码与判题主链](docs/learning/01-key-source-and-judge-chain.md) | 只读 10 个关键类/方法，掌握提交到结果回写 | 面试前第一遍阅读 |
+| [高频面试问答与证据边界](docs/learning/02-interview-qa-and-evidence.md) | 18 个常见追问及准确回答口径 | 读完源码后自测、面试前复习 |
+| [前端说明](codeoj-frontend/README.md) | 前端目录、命令、API 客户端和联调检查 | 实际开发或联调前端时 |
 
-1. [面试阅读入口](docs/learning/00-interview-reading-guide.md)
-2. [关键源码与判题主链](docs/learning/01-key-source-and-judge-chain.md)
-3. [高频面试问答与证据边界](docs/learning/02-interview-qa-and-evidence.md)
-
-需要开发前端时再查阅[前端说明](codeoj-frontend/README.md)。
+面试准备按“关键源码 → 高频问答”阅读即可。第一轮跳过前端页面、普通 CRUD、通用工具类和配置项细节；答不清某个问题时，再回到文档指向的方法，不做全仓库通读。
 
 ## 技术栈
 
