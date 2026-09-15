@@ -1,0 +1,333 @@
+# CodeOJ 源码阅读路径与成果测试
+
+本文只解决两个问题：**源码按什么顺序读，以及怎样证明自己真的读懂了。**
+
+不要求通读仓库。每条路径只打开列出的方法，先理解正常流程，再推演失败分支。完成路径后关闭源码做测试；没有通过时，只回看该路径，不扩散到无关目录。
+
+## 1. 使用方法与评分标准
+
+每条路径按下面顺序学习：
+
+1. 先读“要解决的问题”，写下自己的猜测；
+2. 按表格顺序打开类和方法，不从 import 继续扩散；
+3. 记录输入、输出、状态变化、数据库和外部系统；
+4. 关闭源码完成成果测试；
+5. 对照折叠的判定要点评分。
+
+每条路径 10 分：
+
+| 能力 | 分值 | 判断方式 |
+|---|---:|---|
+| 定位 | 2 | 能说出入口类和核心方法 |
+| 链路 | 3 | 能按顺序画出调用关系 |
+| 状态与数据 | 3 | 能说明读写的数据和状态变化 |
+| 故障与边界 | 2 | 能推演失败后果，不把设计说成当前实现 |
+
+达到 8 分算通过；“链路”和“状态与数据”任一项为 0，即使总分够也要重读。
+
+---
+
+## 2. 必读路径一：一次 Java 提交如何完成判题
+
+### 要解决的问题
+
+用户点击“提交”后，代码如何经过 HTTP、MySQL、RabbitMQ、Judge Service 和 Code Sandbox，最终形成判题结果？
+
+### 源码顺序
+
+| 顺序 | 只看这个方法 | 关注点 |
+|---:|---|---|
+| 1 | [`QuestionController#doQuestionSubmit`][question-controller] | 请求校验、登录用户、提交服务入口 |
+| 2 | [`QuestionSubmitServiceImpl#doQuestionSubmit`][submit-service] | 保存 `WAITING`、发送 submissionId |
+| 3 | [`MyMessageProducer#sendMessage`][producer] | `RabbitTemplate.convertAndSend` 的三个参数 |
+| 4 | [`MyMessageConsumer#receiveMessage`][consumer] | 消息解析、`doJudge`、ACK/NACK 时机 |
+| 5 | [`JudgeServiceImpl#doJudge`][judge-service] | 查提交和题目、改 RUNNING、调沙箱、写结果 |
+| 6 | [`RemoteCodeSandbox#executeCode`][remote-sandbox] | HTTP 请求地址、鉴权头、响应反序列化 |
+| 7 | [`ExecuteCodeController#executeCode`][sandbox-controller] | 沙箱服务的 HTTP 入口和鉴权 |
+| 8 | [`JavaNativeCodeSandbox#executeCode`][native-sandbox] | 写文件、编译、逐用例执行、输出和清理 |
+| 9 | [`JudgeManager#doJudge`][judge-manager] | 如何选择判题策略 |
+| 10 | [`JavaLanguageJudgeStrategy#doJudge`][java-strategy] | 输出、时间和内存如何形成 verdict |
+
+### 应形成的链路
+
+```text
+POST /question_submit/do
+  -> QuestionController
+  -> QuestionSubmitServiceImpl：INSERT question_submit(WAITING)
+  -> RabbitMQ：submissionId
+  -> MyMessageConsumer
+  -> JudgeServiceImpl：WAITING -> RUNNING
+  -> RemoteCodeSandbox -> ExecuteCodeController
+  -> JavaNativeCodeSandbox：javac + java
+  -> JudgeManager -> JavaLanguageJudgeStrategy
+  -> QuestionSubmit：SUCCEED + judgeInfo
+  -> Consumer ACK
+```
+
+RabbitMQ 只传 submissionId，提交记录保存在数据库；Judge Service 消费时再查询提交、题目和用例。
+
+### 阅读成果测试
+
+关闭源码，完成以下任务：
+
+1. 画出上面的链路，并在图中标出两次跨服务调用和一次消息传递。
+2. 说出 `question_submit.status` 在正常链路中的变化。
+3. 说出 RabbitMQ 消息体是什么，为什么没有直接传源码和测试用例。
+4. 指出最终 verdict 保存在什么对象/字段，而不是只说“数据库里”。
+5. 解释为什么 Controller 返回 submissionId 时，判题通常还没有完成。
+
+<details>
+<summary>判定要点</summary>
+
+- 跨服务包括 Question/Judge 之间的 Feign 查询与更新，以及 Judge/Code Sandbox 之间的 HTTP 调用；消息从 Question Service 发往 Judge Service。
+- 正常状态为 `WAITING -> RUNNING -> SUCCEED`，其中 SUCCEED 表示流程完成，不等于 Accepted。
+- 消息体是 submissionId；业务数据仍由数据库保存，消费端按 ID 读取。
+- verdict 位于序列化后的 `JudgeInfo.message`。
+- 提交接口只完成入库和发送消息，判题由消费者异步执行。
+
+</details>
+
+---
+
+## 3. 必读路径二：任务状态、沙箱状态和判题结果
+
+### 要解决的问题
+
+Accepted、Wrong Answer、Compile Error、Runtime Error 和 Time Limit Exceeded 在当前代码中分别如何产生？为什么有些结果会错误地变成任务 FAILED？
+
+### 源码顺序
+
+| 顺序 | 只看哪里 | 关注点 |
+|---:|---|---|
+| 1 | [`QuestionSubmitStatusEnum`][submit-status] | WAITING、RUNNING、SUCCEED、FAILED 是任务状态 |
+| 2 | [`ExecuteCodeResponse`][execute-response] | 沙箱响应包含 outputList、message、status、judgeInfo |
+| 3 | [`JavaNativeCodeSandbox#executeCode` 与 `fail`][native-sandbox] | 正常响应和失败响应分别填了哪些字段 |
+| 4 | [`JudgeServiceImpl#doJudge`][judge-service] | 是否先检查沙箱 status，再进入策略 |
+| 5 | [`JavaLanguageJudgeStrategy#doJudge`][java-strategy] | 读取 judgeInfo、比对输出、判断限制 |
+| 6 | [`MyMessageConsumer#receiveMessage`][consumer] | 上述异常最终如何影响任务状态 |
+| 7 | [`JudgeInfoMessageEnum`][judge-message] | verdict 的候选值 |
+
+### 必须区分的三层状态
+
+| 层次 | 当前字段 | 回答的问题 |
+|---|---|---|
+| 任务生命周期 | `question_submit.status` | 任务在等待、执行、完成还是系统失败？ |
+| 沙箱调用状态 | `ExecuteCodeResponse.status` | 这次代码执行调用成功还是失败？ |
+| 判题结论 | `JudgeInfo.message` | 用户代码是 AC、WA、CE、RE 还是 TLE？ |
+
+### 阅读成果测试
+
+对下列场景分别写出：当前代码的实际走向、理想任务状态、理想 verdict、源码依据。
+
+| 场景 | 需要判断 |
+|---|---|
+| 输出完全正确 | 最终任务状态与 verdict |
+| 输出数量或内容错误 | 为什么是 WA 而不是系统错误 |
+| `javac` 编译失败 | 当前为什么可能进入 FAILED |
+| Java 进程非零退出 | 当前为什么可能进入 FAILED |
+| Java 程序超时 | 当前为什么可能进入 FAILED |
+| 程序占用大量内存 | 当前能否可靠得出 MLE |
+
+<details>
+<summary>判定要点</summary>
+
+- 正确输出和错误输出能进入策略，任务通常写 SUCCEED，verdict 分别是 Accepted、Wrong Answer。
+- 编译错误、运行错误和沙箱超时由 `JavaNativeCodeSandbox#fail` 返回 `status=2`，但 `judgeInfo` 为空。
+- `JudgeServiceImpl` 没有先分支处理沙箱失败，策略读取空 `judgeInfo` 可能触发异常，消费者再把任务改为 FAILED。
+- CE、RE、TLE 应是判题流程完成后的业务 verdict；临时基础设施故障才适合进入重试。
+- 当前内存固定为 `0L`，不能证明 MLE 判断有效。
+
+</details>
+
+---
+
+## 4. 必读路径三：RabbitMQ 消息为什么会丢、重或卡住
+
+### 要解决的问题
+
+当前使用了 RabbitMQ 和手动 ACK，为什么仍不能声称消息不丢、任务不重、失败可恢复？
+
+### 源码顺序
+
+| 顺序 | 只看哪里 | 关注点 |
+|---:|---|---|
+| 1 | [`QuestionSubmitServiceImpl#doQuestionSubmit`][submit-service] | DB 保存和 MQ 发送的先后顺序 |
+| 2 | [`MyMessageProducer#sendMessage`][producer] | 是否处理 Confirm、Return 和发送重试 |
+| 3 | [`InitRabbitMqBean#init`][mq-init] | exchange、queue、binding、DLX 参数与异常处理 |
+| 4 | [`MyMessageConsumer#receiveMessage`][consumer] | 成功 ACK、异常 NACK、是否 requeue |
+| 5 | [`JudgeServiceImpl#doJudge`][judge-service] | WAITING 检查和 RUNNING 更新是否原子 |
+
+### 五个故障时间线
+
+阅读时逐个在纸上画“数据库状态—消息状态—进程动作”：
+
+1. 提交记录保存成功，进程在发送 MQ 前崩溃；
+2. 消息无法路由，生产者没有感知；
+3. 两个消费者同时收到同一个 submissionId；
+4. 任务改成 RUNNING 后 worker 崩溃；
+5. 结果写回成功，但消费者在 ACK 前崩溃。
+
+### 阅读成果测试
+
+1. 为五个故障时间线写出当前后果。
+2. 把 Outbox、Publisher Confirm、Return、CAS、租约恢复、DLQ 分别放到它解决的故障点，不能只罗列名词。
+3. 解释 Confirm、Return、Consumer ACK 和数据库业务状态为什么互相不能替代。
+4. 写出一条防止两个消费者同时执行的条件更新 SQL。
+5. 说明为什么 CAS 之后仍需要 RUNNING 租约。
+
+<details>
+<summary>判定要点</summary>
+
+- DB 成功、发送前崩溃：记录永久 WAITING；用本地事务写 submission + Outbox，再异步发布。
+- 无法路由：当前没有 Return 闭环；Return 负责路由失败证据，Confirm 负责 Broker 接收证据。
+- 重复投递：当前先查 WAITING 再普通 update，存在竞态；应条件更新抢占。
+- RUNNING 后崩溃：CAS 无法恢复已取得执行权的任务，需要租约和恢复扫描。
+- 写回后 ACK 前崩溃：消息可能重投；终态应作为幂等成功处理，避免重复执行或误写失败。
+- 当前 `basicNack(requeue=false)` 且队列未配置 DLX，没有项目内可观察的重试/DLQ/重放闭环。
+
+</details>
+
+---
+
+## 5. 必读路径四：Java 沙箱执行与安全边界
+
+### 要解决的问题
+
+当前沙箱如何编译和运行 Java 代码？超时、输出限制和鉴权为什么仍不等于安全隔离？
+
+### 源码顺序
+
+| 顺序 | 只看哪里 | 关注点 |
+|---:|---|---|
+| 1 | [`RemoteCodeSandbox#executeCode`][remote-sandbox] | HTTP 地址、共享密钥、是否设置明确超时 |
+| 2 | [`ExecuteCodeController#executeCode`][sandbox-controller] | 调用鉴权和执行入口 |
+| 3 | [`JavaNativeCodeSandbox#checkAuth`][native-sandbox] | 共享密钥只限制调用者 |
+| 4 | [`JavaNativeCodeSandbox#executeCode`][native-sandbox] | 临时目录、javac、java、逐用例执行 |
+| 5 | [`JavaNativeCodeSandbox#readOutput` 与 `cleanup`][native-sandbox] | 读流顺序、输出上限、目录清理 |
+
+### 阅读成果测试
+
+对每段用户代码判断“当前可能发生什么、缺少什么控制、应如何验证”：
+
+1. `while (true) {}`：不输出且不退出；
+2. 无限打印：持续写 stdout；
+3. 不断申请内存；
+4. 读取宿主机文件或发起网络请求；
+5. 创建子进程后主进程退出。
+
+再回答：
+
+- 为什么共享密钥不是沙箱隔离？
+- 为什么 `destroyForcibly()` 不等于可靠回收进程树？
+- 为什么 `memory=0L` 使 MLE 结论不成立？
+- 为什么先 `readOutput`、后 `waitFor(timeout)` 可能绕过超时？
+
+<details>
+<summary>判定要点</summary>
+
+- 无输出的无限循环可能让同步读 stdout 等不到 EOF，代码还没走到带超时的 waitFor。
+- 大量输出只做字符串截断，没有提交级 CPU、磁盘和完整背压隔离。
+- Java 子进程没有提交级内存、PID、网络和文件系统限制。
+- 强制销毁父进程不保证所有后代进程都被回收。
+- 鉴权控制“谁能调用”，容器/系统调用/资源限制控制“用户代码能做什么”，两者不是同一问题。
+
+</details>
+
+---
+
+## 6. 选读路径五：登录、业务权限与内部接口
+
+这条路径不是判题主线，但面试官从 Spring Cloud 项目继续追问权限时需要掌握。
+
+### 要解决的问题
+
+普通业务请求如何识别用户？管理员权限在哪里检查？服务之间调用 `/inner/**` 为什么不依赖用户 Session？
+
+### 源码顺序
+
+| 顺序 | 只看哪里 | 关注点 |
+|---:|---|---|
+| 1 | [`UserServiceImpl#userLogin`][user-service] | 登录成功后把 User 放入 Session |
+| 2 | [`UserFeignClient#getLoginUser`][user-feign] | Question Service 实际如何从共享 Session 取用户 |
+| 3 | [`AuthCheck` 与 `AuthInterceptor#doInterceptor`][auth-interceptor] | 登录要求、角色要求和封禁用户处理 |
+| 4 | [`QuestionController#doQuestionSubmit`][question-controller] | 提交接口如何取得登录用户 |
+| 5 | [`FeignInnerAuthConfig`][feign-auth] | Feign 请求如何添加内部密钥 |
+| 6 | [`GlobalAuthFilter#filter`][gateway-filter] | Gateway 只校验 `/inner/**`，没有统一登录认证 |
+| 7 | [`InnerApiAuthFilter#doFilterInternal`][inner-filter] | 绕过 Gateway 直连服务时的第二层校验 |
+| 8 | [`UserInnerController`][user-inner] | 内部接口的实际服务端实现 |
+
+### 阅读成果测试
+
+判断下列请求会在哪一层被允许或拒绝，并指出源码：
+
+1. 未登录用户通过 Gateway 提交代码；
+2. 普通用户调用带 `@AuthCheck(mustRole="admin")` 的接口；
+3. 外部请求不带密钥访问 Gateway 下的 `/inner/**`；
+4. 攻击者绕过 Gateway，直接访问业务服务 `/inner/**`；
+5. 正常 Feign 客户端调用内部接口；
+6. 普通已登录请求经过 Gateway 时，Gateway 是否会统一验证 Session。
+
+<details>
+<summary>判定要点</summary>
+
+- 提交接口通过 `UserFeignClient` 的 default 方法从共享 Session 取用户，未登录时抛出 NOT_LOGIN。
+- `AuthInterceptor` 根据 `@AuthCheck` 检查登录态、角色和封禁状态。
+- Gateway 和业务服务过滤器都校验内部密钥；Feign 拦截器负责添加该请求头。
+- Gateway 对普通业务请求没有统一 Session/JWT 登录校验，最终仍依赖各服务入口和 AOP。
+- 共享静态密钥是当前内部调用边界，不等于完善的服务身份系统。
+
+</details>
+
+---
+
+## 7. 总体阅读验收
+
+完成四条必读路径后，关闭源码完成一次综合测试：
+
+1. 画出正常提交判题链，标出数据库、MQ、Feign 和 HTTP 边界；
+2. 从“DB 保存后崩溃”“RUNNING 后崩溃”“写回后 ACK 前崩溃”中随机抽一个，画失败时间线；
+3. 分别解释任务状态、沙箱状态和 verdict；
+4. 在两分钟内定位一个发布问题、一个重复消费问题和一个沙箱问题的源码方法；
+5. 用三分钟说明当前实现、存在问题、二开方向和验证方案；
+6. 明确哪些结论只有静态源码证据，不能说成已实现或已通过生产验证。
+
+全部完成后，再进入[面试问题与回答](02-interview-questions.md)。如果某项失败，只重读对应路径。
+
+## 8. 第一轮明确不读
+
+- 前端页面和组件；
+- 用户、题目、提交记录的普通 CRUD；
+- 通用响应、异常、分页和工具类；
+- 每个 DTO、VO、Mapper 的全部字段；
+- 所有配置项和依赖的逐行解释；
+- 未进入本次二开主线的点赞、收藏等旁支功能。
+
+## 9. 外部语义参考
+
+- [RabbitMQ Consumer Acknowledgements and Publisher Confirms](https://www.rabbitmq.com/docs/confirms)
+- [Spring AMQP Publisher Confirms and Returns](https://docs.spring.io/spring-amqp/reference/amqp/connections.html#publisher-confirms-returns)
+- [Java 8 Process](https://docs.oracle.com/javase/8/docs/api/java/lang/Process.html)
+
+外部资料只用于解释框架和 API 语义，不能作为本项目已经完成可靠性改造的证据。
+
+[question-controller]: ../../codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/controller/QuestionController.java
+[submit-service]: ../../codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/service/impl/QuestionSubmitServiceImpl.java
+[producer]: ../../codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/rabbitmq/MyMessageProducer.java
+[consumer]: ../../codeoj-backend/codeoj-backend-judge-service/src/main/java/com/codeoj/codeojbackendjudgeservice/rabbitmq/MyMessageConsumer.java
+[judge-service]: ../../codeoj-backend/codeoj-backend-judge-service/src/main/java/com/codeoj/codeojbackendjudgeservice/judge/JudgeServiceImpl.java
+[remote-sandbox]: ../../codeoj-backend/codeoj-backend-judge-service/src/main/java/com/codeoj/codeojbackendjudgeservice/judge/codesandbox/impl/RemoteCodeSandbox.java
+[sandbox-controller]: ../../codeoj-backend/codeoj-backend-codesandbox/src/main/java/com/codeoj/codeojbackendcodesandbox/controller/ExecuteCodeController.java
+[native-sandbox]: ../../codeoj-backend/codeoj-backend-codesandbox/src/main/java/com/codeoj/codeojbackendcodesandbox/service/impl/JavaNativeCodeSandbox.java
+[judge-manager]: ../../codeoj-backend/codeoj-backend-judge-service/src/main/java/com/codeoj/codeojbackendjudgeservice/judge/JudgeManager.java
+[java-strategy]: ../../codeoj-backend/codeoj-backend-judge-service/src/main/java/com/codeoj/codeojbackendjudgeservice/judge/strategy/JavaLanguageJudgeStrategy.java
+[submit-status]: ../../codeoj-backend/codeoj-backend-model/src/main/java/com/codeoj/codeojbackendmodel/model/enums/QuestionSubmitStatusEnum.java
+[execute-response]: ../../codeoj-backend/codeoj-backend-model/src/main/java/com/codeoj/codeojbackendmodel/model/codesandbox/ExecuteCodeResponse.java
+[judge-message]: ../../codeoj-backend/codeoj-backend-model/src/main/java/com/codeoj/codeojbackendmodel/model/enums/JudgeInfoMessageEnum.java
+[mq-init]: ../../codeoj-backend/codeoj-backend-judge-service/src/main/java/com/codeoj/codeojbackendjudgeservice/rabbitmq/InitRabbitMqBean.java
+[user-service]: ../../codeoj-backend/codeoj-backend-user-service/src/main/java/com/codeoj/codeojbackenduserservice/service/impl/UserServiceImpl.java
+[user-feign]: ../../codeoj-backend/codeoj-backend-service-client/src/main/java/com/codeoj/codeojbackendserviceclient/service/UserFeignClient.java
+[auth-interceptor]: ../../codeoj-backend/codeoj-backend-service-client/src/main/java/com/codeoj/codeojbackendserviceclient/aop/AuthInterceptor.java
+[feign-auth]: ../../codeoj-backend/codeoj-backend-service-client/src/main/java/com/codeoj/codeojbackendserviceclient/config/FeignInnerAuthConfig.java
+[gateway-filter]: ../../codeoj-backend/codeoj-backend-gateway/src/main/java/com/codeoj/codeojbackendgateway/filter/GlobalAuthFilter.java
+[inner-filter]: ../../codeoj-backend/codeoj-backend-service-client/src/main/java/com/codeoj/codeojbackendserviceclient/filter/InnerApiAuthFilter.java
+[user-inner]: ../../codeoj-backend/codeoj-backend-user-service/src/main/java/com/codeoj/codeojbackenduserservice/controller/inner/UserInnerController.java

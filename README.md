@@ -61,11 +61,11 @@ MySQL       用户、题目、提交和判题结果
 | 文档 | 用途 | 什么时候读 |
 |---|---|---|
 | 本 README | 项目定位、结构、启动方式和当前证据 | 第一次接触项目、准备运行时 |
-| [关键源码与判题主链](docs/learning/01-key-source-and-judge-chain.md) | 只读 10 个关键类/方法，掌握提交到结果回写 | 面试前第一遍阅读 |
-| [高频面试问答与证据边界](docs/learning/02-interview-qa-and-evidence.md) | 18 个常见追问及准确回答口径 | 读完源码后自测、面试前复习 |
+| [源码阅读路径与成果测试](docs/learning/01-source-reading-paths-and-tests.md) | 4 条必读判题路径、1 条选读鉴权路径及分路径测试 | 第一次系统阅读源码时 |
+| [面试问题与回答](docs/learning/02-interview-questions.md) | 19 个常见追问、源码依据和回答边界 | 完成源码测试后、面试前复习 |
 | [前端说明](codeoj-frontend/README.md) | 前端目录、命令、API 客户端和联调检查 | 实际开发或联调前端时 |
 
-面试准备按“关键源码 → 高频问答”阅读即可。第一轮跳过前端页面、普通 CRUD、通用工具类和配置项细节；答不清某个问题时，再回到文档指向的方法，不做全仓库通读。
+面试准备按“源码阅读路径 → 阅读成果测试 → 面试问题”推进。第一轮跳过前端页面、普通 CRUD、通用工具类和配置项细节；测试不通过时，只回到对应路径中的方法，不做全仓库通读。
 
 ## 技术栈
 
@@ -142,7 +142,7 @@ docker compose -f docker-compose.service.yml up --build
 4. `question_submit` 状态和 `judgeInfo` 与接口返回一致；
 5. MQ 中无无法解释的积压，服务日志中无源码或隐藏用例泄露。
 
-当前源码对编译错误、运行错误和超时的返回契约存在缺陷，以上第 4 项预计不会全部通过；详见[关键源码与判题主链](docs/learning/01-key-source-and-judge-chain.md)。
+当前源码对编译错误、运行错误和超时的返回契约存在缺陷，以上第 4 项预计不会全部通过；详见[源码阅读路径与成果测试](docs/learning/01-source-reading-paths-and-tests.md)。
 
 ## 前端开发
 
@@ -163,7 +163,7 @@ npm run serve
          -> 分类结果 -> 条件写回 -> ACK / 重试 / DLQ -> 超时恢复
 ```
 
-完成顺序和面试口径见[关键源码与判题主链](docs/learning/01-key-source-and-judge-chain.md)与[高频面试问答](docs/learning/02-interview-qa-and-evidence.md)。压测必须分开报告“提交 API 吞吐”和“真实判题吞吐”，并保存环境、脚本、原始结果和失败拐点。
+完成顺序和面试口径见[源码阅读路径](docs/learning/01-source-reading-paths-and-tests.md)与[面试问题](docs/learning/02-interview-questions.md)。压测必须分开报告“提交 API 吞吐”和“真实判题吞吐”，并保存环境、脚本、原始结果和失败拐点。
 
 ## 来源与许可状态
 
