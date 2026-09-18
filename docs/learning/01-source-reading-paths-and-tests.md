@@ -11,8 +11,8 @@
 | ✅   | [`QuestionController#doQuestionSubmit`][question-controller]   | 请求校验、登录用户、提交服务入口                      |
 | ✅   | [`QuestionSubmitServiceImpl#doQuestionSubmit`][submit-service] | 保存 `WAITING`、发送 submissionId          |
 | ✅   | [`MyMessageProducer#sendMessage`][producer]                    | `RabbitTemplate.convertAndSend` 的三个参数 |
-| 4   | [`MyMessageConsumer#receiveMessage`][consumer]                 | 消息解析、`doJudge`、ACK/NACK 时机            |
-| 5   | [`JudgeServiceImpl#doJudge`][judge-service]                    | 查提交和题目、改 RUNNING、调沙箱、写结果              |
+| ✅   | [`MyMessageConsumer#receiveMessage`][consumer]                 | 消息解析、`doJudge`、ACK/NACK 时机            |
+| ✅   | [`JudgeServiceImpl#doJudge`][judge-service]                    | 查提交和题目、改 RUNNING、调沙箱、写结果              |
 | 6   | [`RemoteCodeSandbox#executeCode`][remote-sandbox]              | HTTP 请求地址、鉴权头、响应反序列化                  |
 | 7   | [`ExecuteCodeController#executeCode`][sandbox-controller]      | 沙箱服务的 HTTP 入口和鉴权                      |
 | 8   | [`JavaNativeCodeSandbox#executeCode`][native-sandbox]          | 写文件、编译、逐用例执行、输出和清理                    |
@@ -70,8 +70,8 @@ Accepted、Wrong Answer、Compile Error、Runtime Error 和 Time Limit Exceeded 
 
 | 顺序  | 只看哪里                                                           | 关注点                                        |
 | ---:| -------------------------------------------------------------- | ------------------------------------------ |
-| 1   | [`QuestionSubmitStatusEnum`][submit-status]                    | WAITING、RUNNING、SUCCEED、FAILED 是任务状态       |
-| 2   | [`ExecuteCodeResponse`][execute-response]                      | 沙箱响应包含 outputList、message、status、judgeInfo |
+| ✅   | [`QuestionSubmitStatusEnum`][submit-status]                    | WAITING、RUNNING、SUCCEED、FAILED 是任务状态       |
+| ✅   | [`ExecuteCodeResponse`][execute-response]                      | 沙箱响应包含 outputList、message、status、judgeInfo |
 | 3   | [`JavaNativeCodeSandbox#executeCode` 与 `fail`][native-sandbox] | 正常响应和失败响应分别填了哪些字段                          |
 | 4   | [`JudgeServiceImpl#doJudge`][judge-service]                    | 是否先检查沙箱 status，再进入策略                       |
 | 5   | [`JavaLanguageJudgeStrategy#doJudge`][java-strategy]           | 读取 judgeInfo、比对输出、判断限制                     |
