@@ -1,6 +1,7 @@
 package com.codeoj.codeojbackendjudgeservice.judge;
 
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.codeoj.codeojbackendcommon.common.ErrorCode;
 import com.codeoj.codeojbackendcommon.exception.BusinessException;
 import com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandbox;
@@ -65,6 +66,7 @@ public class JudgeServiceImpl implements JudgeService {
         if (!update) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "题目状态更新错误");
         }
+
         // 4）调用沙箱，获取到执行结果
         CodeSandbox codeSandbox = codeSandboxFactory.newInstance(type);
         codeSandbox = new CodeSandboxProxy(codeSandbox);
@@ -107,7 +109,6 @@ public class JudgeServiceImpl implements JudgeService {
                 log.warn("更新题目通过数失败, questionId = {}", questionId, e);
             }
         }
-        QuestionSubmit questionSubmitResult = questionFeignClient.getQuestionSubmitById(questionSubmitId);
-        return questionSubmitResult;
+        return questionFeignClient.getQuestionSubmitById(questionSubmitId);
     }
 }
