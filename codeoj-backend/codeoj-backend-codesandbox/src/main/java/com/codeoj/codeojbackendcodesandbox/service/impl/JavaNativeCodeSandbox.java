@@ -103,14 +103,34 @@ public class JavaNativeCodeSandbox implements CodeSandboxService {
             // 1. 提取类名并写入临时目录
             workDir = Files.createTempDirectory("codeoj-sandbox-");
             String className = resolveClassName(code);
+            // 将相对文件名拼接到目录路径后面，自动处理分隔符
             Path sourceFile = workDir.resolve(className + ".java");
             Files.write(sourceFile, code.getBytes(StandardCharsets.UTF_8));
 
             // 2. 编译
+            /*
+                记开始时间 → 拼好 `javac` 命令并指定工作目录 → 启动子进程
+                        → 先读走错误流防死锁 → 等最多 15s → 超时就杀进程返回 "编译超时"
+                         → 退出码非 0 返回截断的编译错误 → 成功则记日志，进入下一步 "逐用例运行"。
+             */
+            //记录编译开始时间，用于最后统计编译耗时（毫秒）
             long compileStart = System.currentTimeMillis();
+            /*
+             * `ProcessBuilder` 是 Java 启动外部进程的 API，参数列表 = 命令 + 参数，等价于在命令行执行：
+             * `javac -encoding UTF-8 C:\...\codeoj-sandbox-xxx\Main.java`
+             * `-encoding UTF-8` 是防止 Windows 默认编码（GBK）导致中文注释乱码甚至编译失败。
+             *
+             * directory 设置工作目录
+             */
             Process compile = new ProcessBuilder("javac", "-encoding", "UTF-8", sourceFile.toAbsolutePath().toString())
                     .directory(workDir.toFile())
                     .start();
+            /*
+             * 读取错误流（编译错误信息走 stderr，不是 stdout）。
+             * `readOutput` 是自定义方法，阻塞读到流结束，超过 64KB 截断。
+             * 这里有个容易被忽略的细节：在 `waitFor` 之前读。
+             * 如果 javac 输出的错误信息太多，把管道缓冲区写满，javac 会阻塞在写 stderr 上永远结束不了 —— 先读掉就可以防止这种死锁。
+             */
             String compileError = readOutput(compile.getErrorStream());
             boolean compileFinished = compile.waitFor(compileTimeoutMs, TimeUnit.MILLISECONDS);
             if (!compileFinished) {
