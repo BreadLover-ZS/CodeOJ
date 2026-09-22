@@ -9,6 +9,13 @@ services:
       - "8101:8101"
     networks:
       - mynetwork
+    # Nacos/内部鉴权/CORS 显式注入，避免仅依赖 prod yml 中的硬编码主机名
+    environment:
+      SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR: ${NACOS_ADDR:-codeoj-nacos:8848}
+      INNER_AUTH_SECRET: ${INNER_AUTH_SECRET:-codeoj-default-inner-secret}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:8000,http://localhost:8080}
+    # Nacos 就绪前可能首启失败，自动重启恢复
+    restart: unless-stopped
 
   codeoj-backend-user-service:
     container_name: codeoj-backend-user-service
@@ -29,6 +36,7 @@ services:
       SPRING_REDIS_HOST: ${REDIS_HOST:-codeoj-redis}
       SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR: ${NACOS_ADDR:-codeoj-nacos:8848}
       INNER_AUTH_SECRET: ${INNER_AUTH_SECRET:-codeoj-default-inner-secret}
+    restart: unless-stopped
 
   codeoj-backend-question-service:
     container_name: codeoj-backend-question-service
@@ -53,6 +61,7 @@ services:
       SPRING_RABBITMQ_HOST: ${RABBITMQ_HOST:-codeoj-rabbitmq}
       SPRING_RABBITMQ_USERNAME: ${RABBITMQ_USERNAME:-codeoj}
       SPRING_RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-Rabbit@2026Code}
+    restart: unless-stopped
 
   codeoj-backend-judge-service:
     container_name: codeoj-backend-judge-service
@@ -81,6 +90,7 @@ services:
       # 远程代码沙箱地址与密钥（沙箱服务见下方 codeoj-backend-codesandbox）
       CODESANDBOX_REMOTE_URL: ${CODESANDBOX_URL:-http://codeoj-codesandbox:8090/executeCode}
       CODESANDBOX_REMOTE_AUTH_SECRET: ${CODESANDBOX_SECRET:-secretKey}
+    restart: unless-stopped
 
   codeoj-backend-codesandbox:
     container_name: codeoj-codesandbox
@@ -96,6 +106,9 @@ services:
       CODESANDBOX_REMOTE_AUTH_SECRET: ${CODESANDBOX_SECRET:-secretKey}
       CODESANDBOX_RUN_TIMEOUT_MS: ${CODESANDBOX_RUN_TIMEOUT_MS:-5000}
       CODESANDBOX_COMPILE_TIMEOUT_MS: ${CODESANDBOX_COMPILE_TIMEOUT_MS:-15000}
+      # 沙箱继承父 POM 引入了 Nacos starter，显式指定地址避免反复连接 127.0.0.1 刷错误日志
+      SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR: ${NACOS_ADDR:-codeoj-nacos:8848}
+    restart: unless-stopped
 
 # 网络，不定义的话就是默认网络
 networks:

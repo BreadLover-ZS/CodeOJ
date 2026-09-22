@@ -1,5 +1,6 @@
 # 基础镜像：沙箱需要在容器内编译运行用户代码，必须使用 JDK
-FROM openjdk:8-jdk-alpine
+# openjdk:8-jdk-alpine 已停止维护且国内镜像源不可拉取，改用同版本 Temurin（沙箱需要完整 JDK 编译用户代码）
+FROM eclipse-temurin:8-jdk
 
 # 指定工作目录
 WORKDIR /app

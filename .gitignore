@@ -2,3 +2,6 @@
 
 # IntelliJ IDEA
 .idea/
+
+# Trae 本地工作目录（计划等过程文档）
+.trae/

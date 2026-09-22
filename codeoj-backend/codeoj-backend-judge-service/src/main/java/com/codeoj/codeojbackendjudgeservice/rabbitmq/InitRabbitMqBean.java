@@ -19,11 +19,24 @@ public class InitRabbitMqBean {
     @Value("${spring.rabbitmq.host:localhost}")
     private String host;
 
+    @Value("${spring.rabbitmq.port:5672}")
+    private int port;
+
+    @Value("${spring.rabbitmq.username:guest}")
+    private String username;
+
+    @Value("${spring.rabbitmq.password:guest}")
+    private String password;
+
     @PostConstruct
     public void init() {
         try {
             ConnectionFactory factory = new ConnectionFactory();
             factory.setHost(host);
+            factory.setPort(port);
+            // 必须显式携带凭据：broker 配置了非 guest 账号时，默认 guest 无法通过非 loopback 连接认证
+            factory.setUsername(username);
+            factory.setPassword(password);
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
             String EXCHANGE_NAME = "code_exchange";

@@ -1,5 +1,6 @@
 # 基础镜像
-FROM openjdk:8-jdk-alpine
+# openjdk:8-jdk-alpine 已停止维护且国内镜像源不可拉取，改用同版本 Temurin（含完整 JDK）
+FROM eclipse-temurin:8-jdk
   
 # 指定工作目录
 WORKDIR /app
