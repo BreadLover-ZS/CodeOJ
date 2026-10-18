@@ -1,0 +1,255 @@
+
+> codeoj-frontend@0.1.0 build
+> vue-cli-service build
+
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+All browser targets in the browserslist configuration have supported ES module.
+Therefore we don't build two separate bundles for differential loading.
+
+
+-  Building for production...
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+(node:33475) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+(node:33474) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+(node:33476) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+(node:33479) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+(node:33481) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:33477) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+(node:33478) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:33482) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+(node:33480) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+ WARNING  Compiled with 3 warnings7:03:21 PM
+
+[eslint] 
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/App.vue
+  27:3  warning  Unexpected console statement  no-console
+
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/access/checkAccess.ts
+  9:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/access/index.ts
+  7:3  warning  Unexpected console statement  no-console
+
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/components/CodeEditor.vue
+  38:5  warning  Unexpected console statement  no-console
+
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/components/MdEditor.vue
+  13:18  warning  'Viewer' is defined but never used          @typescript-eslint/no-unused-vars
+  14:10  warning  'ref' is defined but never used             @typescript-eslint/no-unused-vars
+  34:7   warning  'props' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  38:5   warning  Unexpected console statement                no-console
+
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/components/MdViewer.vue
+  27:7  warning  'props' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/plugins/axios.ts
+  20:5  warning  Unexpected console statement  no-console
+
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/router/index.ts
+  1:42  warning  'RouteRecordRaw' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/router/routes.ts
+  2:8  warning  'HomeView' is defined but never used   @typescript-eslint/no-unused-vars
+  6:8  warning  'AdminView' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/store/user.ts
+  14:43  warning  'payload' is defined but never used       @typescript-eslint/no-unused-vars
+  32:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/views/question/AddQuestionView.vue
+  123:16  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  136:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/views/question/QuestionSubmitView.vue
+   94:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  124:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  176:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/views/question/ViewQuestionView.vue
+  105:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 21 problems (0 errors, 21 warnings)
+
+
+You may use special comments to disable some warnings.
+Use // eslint-disable-next-line to ignore the next line.
+Use /* eslint-disable */ to ignore all warnings in a file.
+ warning  
+
+asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
+This can impact web performance.
+Assets: 
+  editor.worker.js (248 KiB)
+  js/3399.f0b2256b.js (917 KiB)
+  css/chunk-vendors.726b9b17.css (500 KiB)
+  js/chunk-vendors.b176bbce.js (4.47 MiB)
+
+ warning  
+
+entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
+Entrypoints:
+  app (5.02 MiB)
+      css/chunk-vendors.726b9b17.css
+      js/chunk-vendors.b176bbce.js
+      css/app.1113673c.css
+      js/app.6def4b13.js
+
+
+  File                                   Size              Gzipped
+
+  dist/js/chunk-vendors.b176bbce.js      4573.55 KiB       1194.62 KiB
+  dist/js/3399.f0b2256b.js               916.60 KiB        292.26 KiB
+  dist/editor.worker.js                  247.73 KiB        79.11 KiB
+  dist/js/app.6def4b13.js                55.87 KiB         17.19 KiB
+  dist/js/7271.84ad37c2.js               38.84 KiB         10.42 KiB
+  dist/js/4962.203e1195.js               33.44 KiB         8.43 KiB
+  dist/js/6786.48d79ff0.js               32.88 KiB         8.33 KiB
+  dist/js/1126.f23d43e4.js               23.75 KiB         7.88 KiB
+  dist/js/6877.f37f325b.js               23.00 KiB         6.27 KiB
+  dist/js/3629.575f3ced.js               18.61 KiB         4.60 KiB
+  dist/js/5096.e4707a69.js               16.99 KiB         5.01 KiB
+  dist/js/5250.e9e07ca9.js               16.15 KiB         5.72 KiB
+  dist/js/3986.e974a7c3.js               15.87 KiB         4.07 KiB
+  dist/js/3268.e1f7139d.js               14.28 KiB         5.47 KiB
+  dist/js/5019.c721bfd6.js               13.60 KiB         4.65 KiB
+  dist/js/9906.ddd5a7d5.js               11.97 KiB         4.48 KiB
+  dist/js/7643.7caa6db3.js               11.46 KiB         4.23 KiB
+  dist/js/413.18641670.js                10.50 KiB         4.02 KiB
+  dist/js/9700.df9517fb.js               10.47 KiB         2.71 KiB
+  dist/js/386.aaf5e005.js                9.86 KiB          3.77 KiB
+  dist/js/6540.46988caa.js               9.29 KiB          2.27 KiB
+  dist/js/9583.70f2cc52.js               9.03 KiB          2.46 KiB
+  dist/js/3817.1d0e00fb.js               8.75 KiB          2.76 KiB
+  dist/js/5662.079cc878.js               8.51 KiB          3.29 KiB
+  dist/js/1463.f3df7e84.js               8.34 KiB          2.82 KiB
+  dist/js/5710.bb4c0a45.js               8.29 KiB          2.27 KiB
+  dist/js/9903.46963227.js               8.12 KiB          2.62 KiB
+  dist/js/6862.2b515d91.js               7.87 KiB          2.94 KiB
+  dist/js/622.d7257a2f.js                7.67 KiB          2.44 KiB
+  dist/js/4514.570a33d4.js               7.65 KiB          3.17 KiB
+  dist/js/5856.b7031262.js               7.60 KiB          2.29 KiB
+  dist/js/8412.2ab279f2.js               7.43 KiB          2.83 KiB
+  dist/js/3703.d0757878.js               7.07 KiB          1.80 KiB
+  dist/js/6048.bd2d1e2e.js               6.97 KiB          2.48 KiB
+  dist/js/5535.ac6b3da4.js               6.81 KiB          2.94 KiB
+  dist/js/1030.c0cd7ff6.js               6.71 KiB          1.95 KiB
+  dist/js/3202.d51ebdbb.js               6.29 KiB          1.74 KiB
+  dist/js/3263.f889eed5.js               6.10 KiB          2.26 KiB
+  dist/js/1636.3efdb3ed.js               5.80 KiB          2.33 KiB
+  dist/js/7954.266c72b0.js               5.73 KiB          2.34 KiB
+  dist/js/7083.799c6b0f.js               5.67 KiB          2.45 KiB
+  dist/js/9111.5f52d050.js               5.37 KiB          1.60 KiB
+  dist/js/2804.1b805036.js               5.25 KiB          2.23 KiB
+  dist/js/7517.7f6b256e.js               5.25 KiB          2.17 KiB
+  dist/js/4816.c7158f34.js               5.20 KiB          1.64 KiB
+  dist/js/7010.fd90b134.js               5.16 KiB          1.86 KiB
+  dist/js/9007.be8dee33.js               4.87 KiB          1.94 KiB
+  dist/js/6044.2360fb87.js               4.86 KiB          1.60 KiB
+  dist/js/2784.5f0cfc37.js               4.60 KiB          1.86 KiB
+  dist/js/9270.bf81be77.js               4.51 KiB          2.03 KiB
+  dist/js/2341.d93e0e89.js               4.37 KiB          1.71 KiB
+  dist/js/2936.3664eecd.js               4.32 KiB          1.85 KiB
+  dist/js/4034.170fc3cb.js               4.26 KiB          1.59 KiB
+  dist/js/5661.6ec28344.js               4.26 KiB          1.64 KiB
+  dist/js/1598.ed75cfc5.js               4.17 KiB          1.60 KiB
+  dist/js/786.0176c1ce.js                3.98 KiB          1.78 KiB
+  dist/js/5191.77cc4abb.js               3.96 KiB          1.53 KiB
+  dist/js/9765.35309c5e.js               3.96 KiB          1.70 KiB
+  dist/js/3956.e76da3e0.js               3.94 KiB          1.81 KiB
+  dist/js/5985.fb43b8e2.js               3.94 KiB          1.58 KiB
+  dist/js/6388.67d6acb6.js               3.92 KiB          1.70 KiB
+  dist/js/3415.3be772f1.js               3.81 KiB          1.69 KiB
+  dist/js/8822.3f86f82b.js               3.76 KiB          1.66 KiB
+  dist/js/5254.4589bb34.js               3.64 KiB          1.59 KiB
+  dist/js/4366.4ab605cd.js               3.59 KiB          1.61 KiB
+  dist/js/8248.b0f83b8d.js               3.51 KiB          1.50 KiB
+  dist/js/8647.352e1a05.js               3.45 KiB          1.43 KiB
+  dist/js/9380.ed8358d6.js               3.37 KiB          1.63 KiB
+  dist/js/7146.193ca1fb.js               3.36 KiB          1.54 KiB
+  dist/js/5527.7140885a.js               3.32 KiB          1.58 KiB
+  dist/js/9928.31af6e82.js               3.20 KiB          1.53 KiB
+  dist/js/501.2b51d14e.js                3.15 KiB          1.42 KiB
+  dist/js/6590.7ac2402e.js               3.04 KiB          1.37 KiB
+  dist/js/2532.021b8d5a.js               2.97 KiB          1.31 KiB
+  dist/js/9674.64d5fcd8.js               2.94 KiB          1.39 KiB
+  dist/js/7099.759ae719.js               2.93 KiB          1.19 KiB
+  dist/js/1319.f0f9007b.js               2.83 KiB          1.16 KiB
+  dist/js/7973.6a453003.js               2.81 KiB          1.18 KiB
+  dist/js/15.67c94349.js                 2.79 KiB          1.28 KiB
+  dist/js/3700.7cc95f13.js               2.66 KiB          1.25 KiB
+  dist/js/5106.1795c698.js               2.58 KiB          1.19 KiB
+  dist/js/6896.85db9730.js               2.52 KiB          1.15 KiB
+  dist/js/5630.3ae5446a.js               2.40 KiB          1.14 KiB
+  dist/js/2250.56ccf90b.js               2.27 KiB          0.91 KiB
+  dist/js/7007.c46d66ce.js               2.25 KiB          1.10 KiB
+  dist/js/2358.af418026.js               2.24 KiB          1.06 KiB
+  dist/js/1022.5549aa0e.js               2.22 KiB          1.08 KiB
+  dist/js/7500.c9aedcf6.js               2.17 KiB          1.05 KiB
+  dist/js/7473.f030518c.js               2.09 KiB          0.89 KiB
+  dist/js/2401.b597d5da.js               1.83 KiB          0.77 KiB
+  dist/js/2008.b5a25148.js               1.52 KiB          0.78 KiB
+  dist/js/6346.2b8973f1.js               1.28 KiB          0.57 KiB
+  dist/css/chunk-vendors.726b9b17.css    499.71 KiB        66.61 KiB
+  dist/css/app.1113673c.css              11.73 KiB         2.97 KiB
+  dist/css/1126.d30da1d1.css             9.71 KiB          1.88 KiB
+  dist/css/4514.589392d8.css             4.75 KiB          1.02 KiB
+  dist/css/5535.93d169fe.css             2.91 KiB          0.70 KiB
+
+  Images and other types of assets omitted.
+  Build at: 2026-10-18T11:03:22.103Z - Hash: cefaa0a64118dd49 - Time: 352128ms
+
+ DONE  Build complete. The dist directory is ready to be deployed.
+ INFO  Check out deployment instructions at https://cli.vuejs.org/guide/deployment.html
+       

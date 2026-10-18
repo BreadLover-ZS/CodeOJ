@@ -1,0 +1,6 @@
+2026-10-18T10:51:01.569271Z 0 [System] [MY-013169] [Server] /private/tmp/codeoj-verdict-fix-0pg03pub/runtimes/mysql/mysql-8.0.46-macos15-arm64/bin/mysqld (mysqld 8.0.46) initializing of server in progress as process 30838
+2026-10-18T10:51:01.571939Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /private/tmp/codeoj-native-stack-0kkzapff/mysql-data/ is case insensitive
+2026-10-18T10:51:01.576213Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2026-10-18T10:51:01.617378Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2026-10-18T10:51:01.896410Z 5 [Warning] [MY-010453] [Server] root@localhost is created with an empty password ! Please consider switching off the --initialize-insecure option.
+2026-10-18T10:51:02.060249Z 0 [System] [MY-013172] [Server] Received SHUTDOWN from user <via user signal>. Shutting down mysqld (Version: 8.0.46).

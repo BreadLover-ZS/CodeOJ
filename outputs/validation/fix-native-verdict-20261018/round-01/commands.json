@@ -1,0 +1,54 @@
+[
+  {
+    "step": "runtime-preparation",
+    "command": [
+      "python3",
+      "scripts/local/prepare-runtimes.py",
+      "--root",
+      "/private/tmp/codeoj-verdict-fix-0pg03pub/runtimes"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 25.77
+  },
+  {
+    "step": "backend-regression",
+    "command": [
+      "mvn",
+      "-o",
+      "-B",
+      "-f",
+      "codeoj-backend/pom.xml",
+      "-Dcodeoj.real-redis=true",
+      "-Dcodeoj.redis-server=/private/tmp/codeoj-verdict-fix-0pg03pub/runtimes/redis/redis-6.2.24/src/redis-server",
+      "-Dcodeoj.native-observation=true",
+      "package"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 22.31
+  },
+  {
+    "step": "frontend-build",
+    "command": [
+      "npm",
+      "--prefix",
+      "codeoj-frontend",
+      "run",
+      "build"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 14.05
+  },
+  {
+    "step": "native-integration",
+    "command": [
+      "python3",
+      "scripts/local/run-native-stack.py",
+      "--runtimes",
+      "/private/tmp/codeoj-verdict-fix-0pg03pub/runtimes",
+      "--evidence",
+      "/Users/zzds/Workspace/gitStore/CodeOJ/outputs/validation/fix-native-verdict-20261018/native"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 240.29
+  }
+]

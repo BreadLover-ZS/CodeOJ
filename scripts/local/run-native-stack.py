@@ -187,11 +187,15 @@ log.file.level = warning
         valid='public class Main { public static void main(String[] a) throws Exception { java.util.Scanner s=new java.util.Scanner(System.in); System.out.println(s.nextInt()+s.nextInt()); Thread.sleep(100); }}'
         wrong=valid.replace('s.nextInt()+s.nextInt()','s.nextInt()-s.nextInt()')
         def submit(code,key):return self.api('/contests/'+cid+'/submissions','POST',{'problemSnapshotId':snapshot,'publishedVersion':c['publishedVersion'],'language':'java','code':code},'participant',key)
-        for verdict,code in [('AC',valid),('WA',wrong),('CE','public class Main { not java }')]:
-            sid=submit(code,'native-fixture-'+verdict.lower());self.state[verdict+'SubmissionId']=sid
+        runtime_error='public class Main { public static void main(String[] a) { throw new IllegalArgumentException(); }}'
+        for case,verdict,code in [('AC','AC',valid),('COMMENT_AC','AC','// public class Decoy\n'+valid),
+                                  ('WA','WA',wrong),('CE','CE','public class Main { not java }'),('RE','RE',runtime_error)]:
+            sid=submit(code,'native-fixture-'+case.lower());self.state[case+'SubmissionId']=sid
             result=self.wait('judge',lambda sid=sid:(lambda r:r if r.get('executionStatus')=='COMPLETED' else None)(self.api('/submissions/'+sid,actor='participant')),50)
-            assert result['judgeInfo']['verdict']==verdict,result;self.event('REAL_JUDGE_RESULT',submissionId=sid,verdict=verdict)
-            assert submit(code,'native-fixture-'+verdict.lower())==sid
+            assert result['judgeInfo']['verdict']==verdict,result
+            if verdict=='RE': assert result['activeAttempt']==1,result
+            self.event('REAL_JUDGE_RESULT',submissionId=sid,verdict=verdict,case=case)
+            assert submit(code,'native-fixture-'+case.lower())==sid
         board=self.wait('question',lambda:(lambda b:b if int(b['projectionPendingCount'])==0 and int(b['entries'][0]['solvedCount'])==1 else None)(self.api('/contests/'+cid+'/scoreboard',actor='observer')),20)
         assert int(board['entries'][0]['rank'])==1
         status,_=self.api('/contests/'+cid+'/scoreboard/cache-clear','POST',{'expectedVersion':board['contestVersion'],'expectedProjectionVersion':board['projectionVersion'],'expectedRevision':board['revision'],'reason':'must be forbidden'},'participant',allow_error=True);assert status==403

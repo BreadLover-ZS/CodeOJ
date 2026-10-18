@@ -1,0 +1,205 @@
+[
+  {
+    "id": "JV01",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "PASS",
+    "requirement": "相同提交键回原ID，不同内容409",
+    "evidenceAndGap": "实际HTTP 202/409；H2并发唯一事实；最终MySQL事实数核对"
+  },
+  {
+    "id": "JV02",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "提交事务前/后杀API",
+    "evidenceAndGap": "H2事务回滚已测；未在两个提交窗口杀真实API"
+  },
+  {
+    "id": "JV03",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "MQ断连、Confirm丢失、不可路由",
+    "evidenceAndGap": "替身确认/Return/UNKNOWN已测；正常Broker重启已测；未逐一注入真实确认丢失与路由失败"
+  },
+  {
+    "id": "JV04",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "两个消费者同时领取同一消息",
+    "evidenceAndGap": "H2同时claim只得一个租约；实际Broker重复投递已测，未做两个真实消费者同时竞争"
+  },
+  {
+    "id": "JV05",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "RUNNING杀worker后接管，拒绝旧token",
+    "evidenceAndGap": "H2租约过期/代次/旧token通过；实际沙箱不可用恢复通过，未杀RUNNING worker并验证迟到写回"
+  },
+  {
+    "id": "JV06",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "结果提交后ACK前杀worker",
+    "evidenceAndGap": "H2完成幂等与真实重复消息通过；未在指定ACK窗口杀worker"
+  },
+  {
+    "id": "JV07",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "PASS",
+    "requirement": "死循环、stderr刷屏、stdin不读",
+    "evidenceAndGap": "真实javac/java受控样例通过；仅直接JVM/流/临时文件范围，不外推任意后代回收"
+  },
+  {
+    "id": "JV08",
+    "componentStatus": "UNTESTED",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "内存、PID、网络、文件限制",
+    "evidenceAndGap": "RSS观测超限有证据；PID/CPU硬限制、网络/文件隔离未实现；按已确认范围后置"
+  },
+  {
+    "id": "JV09",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "N>M并发报名与重复混合",
+    "evidenceAndGap": "真实Redis+H2中8人争2名额通过；本轮MySQL仅1参赛者，未做InnoDB/MQ组合竞争"
+  },
+  {
+    "id": "JV10",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "Redis预留后DB前杀API",
+    "evidenceAndGap": "真实Redis账本补建/AOF通过；DB侧H2，未杀真实API卡在该窗口"
+  },
+  {
+    "id": "JV11",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "DB确认后标记失败、回收时Redis失败",
+    "evidenceAndGap": "真实Lua+H2故障标记测试通过；未在MySQL/MQ链逐一注入这些窗口"
+  },
+  {
+    "id": "JV12",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "关闭前预留，关闭后确认",
+    "evidenceAndGap": "真实Redis+H2跨结束时间确认通过；未做真实Broker延迟到报名关闭后消费"
+  },
+  {
+    "id": "JV13",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "取消与确认/提交竞争",
+    "evidenceAndGap": "H2事务并发和Redis取消栅栏通过；真实MySQL取消竞争未执行"
+  },
+  {
+    "id": "JV14",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "PASS",
+    "requirement": "权限、他人代码、私有赛题与旧接口",
+    "evidenceAndGap": "实际匿名401、他人提交403、伪管理标记403、内部接口双层403、旁观者无题面；专用题不入普通题表"
+  },
+  {
+    "id": "JV15",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "编辑原题后仍按发布快照判题",
+    "evidenceAndGap": "H2固定发布快照通过；真实MySQL赛中编辑原题场景未执行"
+  },
+  {
+    "id": "JV16",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "重复AC、较早提交迟到",
+    "evidenceAndGap": "独立手算与H2重复/乱序通过；真实多题多用户迟到矩阵未执行"
+  },
+  {
+    "id": "JV17",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "截止前受理、截止后完成与最终结算",
+    "evidenceAndGap": "H2赛后完成通过；真实到期/原键重放/新键409/结算通过，未刻意让执行跨截止线"
+  },
+  {
+    "id": "JV18",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "清缓存与权威重建一致",
+    "evidenceAndGap": "H2清投影含零分重建及缓存替身通过；真实MySQL重建通过，未以多题并列样本清真实缓存对照"
+  },
+  {
+    "id": "JV19",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "平台失败到有限上限和人工审计",
+    "evidenceAndGap": "H2预算耗尽/显式追加/审计通过；真实沙箱恢复只覆盖一次失败，不覆盖全额度耗尽"
+  },
+  {
+    "id": "JV20",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "旧调度代次迟到",
+    "evidenceAndGap": "H2旧代次/token拒绝和恢复幂等通过；真实Broker旧代次迟到未执行"
+  },
+  {
+    "id": "JV21",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "已Confirm但长期QUEUED",
+    "evidenceAndGap": "H2业务扫描重派通过；真实短暂停judge队列恢复通过，未覆盖超过扫描阈值的重派"
+  },
+  {
+    "id": "JV22",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "终止回收与迟到确认竞争",
+    "evidenceAndGap": "真实Redis+H2释放幂等与确认互斥通过；实际MySQL/MQ竞争窗口未执行"
+  },
+  {
+    "id": "JV23",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "取消已提交而Redis关闸失败",
+    "evidenceAndGap": "H2/Redis权威取消和延迟闸门栅栏通过；真实联合故障未执行"
+  },
+  {
+    "id": "JV24",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "重复初始化、未决预留、时钟偏差",
+    "evidenceAndGap": "真实Redis+H2初始化/缺失/旧账本/双向时钟偏差通过；真实联合组合未执行"
+  },
+  {
+    "id": "JV25",
+    "componentStatus": "PASS（部分）",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "slot耗尽、失联旧沙箱、残留回收",
+    "evidenceAndGap": "本进程slot/token去重和DB旧token有测试；跨重启注册表不持久，任意后代/跨管理器残留回收未完成"
+  },
+  {
+    "id": "JV26",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "同用户两题同时AC、跨页并列与零分",
+    "evidenceAndGap": "H2事务多题并发、手算与跨页排名通过；真实MySQL多用户多题并发未执行"
+  },
+  {
+    "id": "JV27",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "重建遇迟到消息与旧缓存",
+    "evidenceAndGap": "H2重建竞争/回滚/版本切换及缓存契约通过；真实最终重建通过，未复现该竞争组合"
+  },
+  {
+    "id": "JV28",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "PASS",
+    "requirement": "未决账本不受普通缓存TTL清空",
+    "evidenceAndGap": "真实Redis确认五个键TTL=-1；源码无expire；AOF重启保留；归档策略为保留，未自动清理"
+  },
+  {
+    "id": "JV29",
+    "componentStatus": "PASS",
+    "realScenarioStatus": "UNTESTED",
+    "requirement": "普通练习排队后编辑原题",
+    "evidenceAndGap": "H2练习私有规格与幂等通过；本轮实际网站演示是比赛提交，未重跑真实普通练习编辑链"
+  }
+]

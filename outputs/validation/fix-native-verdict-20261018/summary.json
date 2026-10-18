@@ -1,0 +1,21 @@
+{
+  "status": "PASS_LOCAL_FIX",
+  "scope": "F01 compiled entry selection and F02 agreed native main-thread/class-initialization RE attribution; not all JV or isolation acceptance",
+  "baseCommit": "5d6333e0bce3f1112c790b0c4824e5dd2fb3a6de",
+  "F01": "PASS",
+  "F02AgreedScope": "PASS",
+  "backend": {
+    "tests": 208,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "testClasses": 24,
+  "realBrowserScenarios": 8,
+  "realSubmissions": 8,
+  "scoreReceipts": 8,
+  "finalVersion": 2,
+  "portsReleased": true,
+  "committed": false,
+  "pushed": false
+}

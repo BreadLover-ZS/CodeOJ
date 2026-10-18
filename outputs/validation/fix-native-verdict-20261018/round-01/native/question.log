@@ -1,0 +1,20 @@
+2026-10-18 10:51:14.303  WARN 30913 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionSubmitMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionSubmitMapper' mapperInterface. Bean already defined with the same name!
+2026-10-18 10:51:14.304  WARN 30913 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionMapper' mapperInterface. Bean already defined with the same name!
+2026-10-18 10:51:14.304  WARN 30913 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendquestionservice.mapper]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-18 10:51:16.278  WARN 30913 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-18 10:52:06.763  WARN 30913 --- [127.0.0.1:55178] c.r.c.impl.ForgivingExceptionHandler     : An unexpected connection driver error occurred (Exception message: Connection reset)
+2026-10-18 10:52:12.628  WARN 30913 --- [ntContainer#1-2] o.s.a.r.l.SimpleMessageListenerContainer : Consumer raised exception, processing can restart if the connection factory supports it. Exception summary: org.springframework.amqp.AmqpConnectException: java.net.ConnectException: Connection refused (Connection refused)
+2026-10-18 10:52:12.741  WARN 30913 --- [ntContainer#0-2] o.s.a.r.l.SimpleMessageListenerContainer : Consumer raised exception, processing can restart if the connection factory supports it. Exception summary: org.springframework.amqp.AmqpConnectException: java.net.ConnectException: Connection refused (Connection refused)
+2026-10-18 10:52:20.589  WARN 30913 --- [ioEventLoop-4-4] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:55177]: Connection refused: /127.0.0.1:55177
+2026-10-18 10:52:20.589  WARN 30913 --- [ioEventLoop-4-3] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:55177]: Connection refused: /127.0.0.1:55177
+2026-10-18 10:52:26.768  WARN 30913 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2111772121019564033
+2026-10-18 10:52:29.692  WARN 30913 --- [ioEventLoop-4-7] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:55177]: Connection refused: /127.0.0.1:55177
+2026-10-18 10:52:29.692  WARN 30913 --- [ioEventLoop-4-8] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:55177]: Connection refused: /127.0.0.1:55177
+2026-10-18 10:52:30.589  WARN 30913 --- [.1-55183-exec-8] c.c.c.filter.SessionAvailabilityFilter   : Redis-dependent request unavailable: type=org.springframework.dao.QueryTimeoutException
+2026-10-18 10:52:33.789  WARN 30913 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2111772121019564033
+2026-10-18 10:52:37.997  WARN 30913 --- [.1-55183-exec-9] c.c.c.filter.SessionAvailabilityFilter   : Redis-dependent request unavailable: type=org.springframework.web.util.NestedServletException
+2026-10-18 10:52:37.999  WARN 30913 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2111772121019564033

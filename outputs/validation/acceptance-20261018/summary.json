@@ -1,0 +1,62 @@
+{
+  "baseline": "5d6333e0bce3f1112c790b0c4824e5dd2fb3a6de",
+  "overallStatus": "FAIL",
+  "businessSourceModified": false,
+  "findings": [
+    {
+      "id": "F01",
+      "priority": "P2",
+      "status": "FAIL",
+      "newlyDiscovered": true,
+      "title": "comment public class causes false CE"
+    },
+    {
+      "id": "F02",
+      "priority": "P2",
+      "status": "FAIL",
+      "newlyDiscovered": false,
+      "title": "native uncaught user exception has no RE attribution"
+    }
+  ],
+  "backend": {
+    "tests": 186,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "realBrowserScenarios": 8,
+  "realHttpScenarios": 8,
+  "mockBrowserScenarios": 15,
+  "nativeFunctionalChainPassed": true,
+  "probeResults": [
+    {
+      "case": "plain-main",
+      "expected": "EXECUTED",
+      "actual": "EXECUTED",
+      "output": [
+        "3\n"
+      ]
+    },
+    {
+      "case": "comment-before-main",
+      "expected": "EXECUTED",
+      "actual": "CE",
+      "errorCode": "COMPILATION_FAILED",
+      "output": []
+    },
+    {
+      "case": "uncaught-user-exception",
+      "expected": "RE",
+      "actual": "PLATFORM_ERROR",
+      "errorCode": "UNCLASSIFIED_PROCESS_EXIT",
+      "output": []
+    }
+  ],
+  "fullRealJvScenarios": {
+    "passed": 4,
+    "untested": 25
+  },
+  "temporaryRuntimesAndOrchestratorRemoved": true,
+  "committed": false,
+  "pushed": false
+}

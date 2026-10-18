@@ -1,0 +1,13 @@
+[
+  {
+    "step": "runtime-preparation",
+    "command": [
+      "python3",
+      "scripts/local/prepare-runtimes.py",
+      "--root",
+      "/private/tmp/codeoj-verdict-fix-0pg03pub/runtimes"
+    ],
+    "exitCode": 1,
+    "elapsedSeconds": 23.05
+  }
+]

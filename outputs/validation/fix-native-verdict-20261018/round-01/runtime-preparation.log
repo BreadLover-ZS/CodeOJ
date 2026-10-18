@@ -1,0 +1,12 @@
+/Library/Developer/CommandLineTools/usr/bin/install_name_tool: warning: changes being made to the file will invalidate the code signature in: /private/tmp/codeoj-verdict-fix-0pg03pub/runtimes/erlang/erlang@28/28.5.0.8/lib/erlang/lib/crypto-5.8.3.3/priv/lib/crypto.so
+/Library/Developer/CommandLineTools/usr/bin/install_name_tool: warning: changes being made to the file will invalidate the code signature in: /private/tmp/codeoj-verdict-fix-0pg03pub/runtimes/openssl/openssl@4/4.0.3/lib/libssl.4.dylib
+/Library/Developer/CommandLineTools/usr/bin/install_name_tool: warning: changes being made to the file will invalidate the code signature in: /private/tmp/codeoj-verdict-fix-0pg03pub/runtimes/openssl/openssl@4/4.0.3/lib/libssl.4.dylib
+/Library/Developer/CommandLineTools/usr/bin/install_name_tool: warning: changes being made to the file will invalidate the code signature in: /private/tmp/codeoj-verdict-fix-0pg03pub/runtimes/openssl/openssl@4/4.0.3/lib/libcrypto.4.dylib
+/Library/Developer/CommandLineTools/usr/bin/install_name_tool: warning: changes being made to the file will invalidate the code signature in: /private/tmp/codeoj-verdict-fix-0pg03pub/runtimes/openssl/openssl@4/4.0.3/lib/libcrypto.4.dylib
+{
+  "mysql": "/private/tmp/codeoj-verdict-fix-0pg03pub/runtimes/mysql/mysql-8.0.46-macos15-arm64",
+  "rabbitmq": "/private/tmp/codeoj-verdict-fix-0pg03pub/runtimes/rabbitmq/rabbitmq_server-4.3.6",
+  "redis": "/private/tmp/codeoj-verdict-fix-0pg03pub/runtimes/redis/redis-6.2.24/src/redis-server",
+  "erlang": "/private/tmp/codeoj-verdict-fix-0pg03pub/runtimes/erlang/erlang@28/28.5.0.8/lib/erlang",
+  "openssl": "/private/tmp/codeoj-verdict-fix-0pg03pub/runtimes/openssl/openssl@4/4.0.3/lib"
+}

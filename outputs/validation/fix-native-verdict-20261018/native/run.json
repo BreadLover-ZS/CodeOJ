@@ -1,0 +1,266 @@
+{
+  "scope": "Real native MySQL/Redis/RabbitMQ, Spring Session, Gateway, Feign, remote native Java sandbox; static discovery, no Nacos; not load/production acceptance",
+  "passed": true,
+  "ports": {
+    "mysql": 56127,
+    "redis": 56128,
+    "amqp": 56129,
+    "management": 56130,
+    "epmd": 56131,
+    "distribution": 56132,
+    "user": 56133,
+    "question": 56134,
+    "judge": 56135,
+    "sandbox": 56136,
+    "gateway": 56137,
+    "frontend": 56138
+  },
+  "runtimeArchives": {
+    "mysql": {
+      "url": "https://cdn.mysql.com/Downloads/MySQL-8.0/mysql-8.0.46-macos15-arm64.tar.gz",
+      "verification": "sha256:6ca4a361a45f5019fbf6d500997986b4aaf6f0e30ff9c41179d1e8ecd635f3db",
+      "sha256": "6ca4a361a45f5019fbf6d500997986b4aaf6f0e30ff9c41179d1e8ecd635f3db"
+    },
+    "rabbitmq": {
+      "url": "https://github.com/rabbitmq/rabbitmq-server/releases/download/v4.3.6/rabbitmq-server-generic-unix-4.3.6.tar.xz",
+      "verification": "sha256:aa0ff5de9ff0136dc42eba21dc3a973cc3b286437cdba0f45556e890509c1614",
+      "sha256": "aa0ff5de9ff0136dc42eba21dc3a973cc3b286437cdba0f45556e890509c1614"
+    },
+    "erlang": {
+      "url": "https://ghcr.io/v2/homebrew/core/erlang/28/blobs/sha256:e37b0ce944f1e772767bb7b2fa8844076c3069754ce44c224f15d76fd39aed67",
+      "verification": "sha256:e37b0ce944f1e772767bb7b2fa8844076c3069754ce44c224f15d76fd39aed67",
+      "sha256": "e37b0ce944f1e772767bb7b2fa8844076c3069754ce44c224f15d76fd39aed67"
+    },
+    "openssl": {
+      "url": "https://ghcr.io/v2/homebrew/core/openssl/4/blobs/sha256:39fb74d25429fbb9794cf4327530ba458b97d0000406715270d3b0715bd6ba35",
+      "verification": "sha256:39fb74d25429fbb9794cf4327530ba458b97d0000406715270d3b0715bd6ba35",
+      "sha256": "39fb74d25429fbb9794cf4327530ba458b97d0000406715270d3b0715bd6ba35"
+    },
+    "redis": {
+      "url": "https://download.redis.io/releases/redis-6.2.24.tar.gz",
+      "verification": "sha256:c3f112749c7cb108597713469cc9beed305e91f036fba313ce8dcbad829f5821",
+      "sha256": "c3f112749c7cb108597713469cc9beed305e91f036fba313ce8dcbad829f5821"
+    }
+  },
+  "events": [
+    {
+      "at": "2026-10-18T11:03:22.291699+00:00",
+      "action": "PACKAGED_ARTIFACTS_MATCH_CURRENT_BUILD"
+    },
+    {
+      "at": "2026-10-18T11:05:25.072033+00:00",
+      "action": "MIGRATION_APPLIED",
+      "name": "V001__reliable_judging.sql"
+    },
+    {
+      "at": "2026-10-18T11:05:25.105837+00:00",
+      "action": "MIGRATION_APPLIED",
+      "name": "V002__contest_core.sql"
+    },
+    {
+      "at": "2026-10-18T11:05:25.149989+00:00",
+      "action": "MIGRATION_APPLIED",
+      "name": "V003__async_registration.sql"
+    },
+    {
+      "at": "2026-10-18T11:05:25.175718+00:00",
+      "action": "MIGRATION_APPLIED",
+      "name": "V004__contest_scoreboard.sql"
+    },
+    {
+      "at": "2026-10-18T11:05:27.722901+00:00",
+      "action": "INFRASTRUCTURE_READY",
+      "mysql": "8.0.46",
+      "rabbitmq": "4.3.6",
+      "erlang": "28.5.0.8",
+      "redis": "6.2.24"
+    },
+    {
+      "at": "2026-10-18T11:05:31.703523+00:00",
+      "action": "SERVICE_READY",
+      "service": "sandbox"
+    },
+    {
+      "at": "2026-10-18T11:05:37.818909+00:00",
+      "action": "SERVICE_READY",
+      "service": "user"
+    },
+    {
+      "at": "2026-10-18T11:06:31.776139+00:00",
+      "action": "SERVICE_READY",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-18T11:06:37.605617+00:00",
+      "action": "SERVICE_READY",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-18T11:07:33.168351+00:00",
+      "action": "SERVICE_READY",
+      "service": "gateway"
+    },
+    {
+      "at": "2026-10-18T11:07:34.090050+00:00",
+      "action": "REAL_SESSION_LOGIN_PASSED"
+    },
+    {
+      "at": "2026-10-18T11:07:40.002570+00:00",
+      "action": "ASYNC_REGISTRATION_CONFIRMED",
+      "requestId": "2111776215500115970"
+    },
+    {
+      "at": "2026-10-18T11:08:11.066336+00:00",
+      "action": "REAL_JUDGE_RESULT",
+      "submissionId": "2111776340461015042",
+      "verdict": "AC",
+      "case": "AC"
+    },
+    {
+      "at": "2026-10-18T11:08:12.677629+00:00",
+      "action": "REAL_JUDGE_RESULT",
+      "submissionId": "2111776348656685058",
+      "verdict": "AC",
+      "case": "COMMENT_AC"
+    },
+    {
+      "at": "2026-10-18T11:08:13.650094+00:00",
+      "action": "REAL_JUDGE_RESULT",
+      "submissionId": "2111776355388542978",
+      "verdict": "WA",
+      "case": "WA"
+    },
+    {
+      "at": "2026-10-18T11:08:14.303769+00:00",
+      "action": "REAL_JUDGE_RESULT",
+      "submissionId": "2111776359469600769",
+      "verdict": "CE",
+      "case": "CE"
+    },
+    {
+      "at": "2026-10-18T11:08:15.283630+00:00",
+      "action": "REAL_JUDGE_RESULT",
+      "submissionId": "2111776362212675586",
+      "verdict": "RE",
+      "case": "RE"
+    },
+    {
+      "at": "2026-10-18T11:08:16.284575+00:00",
+      "action": "REAL_SCOREBOARD_AND_ROLE_CHECK_PASSED"
+    },
+    {
+      "at": "2026-10-18T11:08:17.464384+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-18T11:08:19.247102+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "rabbitmq"
+    },
+    {
+      "at": "2026-10-18T11:08:21.064709+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "rabbitmq"
+    },
+    {
+      "at": "2026-10-18T11:08:23.803889+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-18T11:08:26.854920+00:00",
+      "action": "DURABLE_QUEUE_BROKER_RESTART_AND_DUPLICATE_PASSED",
+      "submissionId": "2111776375445704705"
+    },
+    {
+      "at": "2026-10-18T11:08:26.888974+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "sandbox"
+    },
+    {
+      "at": "2026-10-18T11:08:28.741546+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "sandbox"
+    },
+    {
+      "at": "2026-10-18T11:08:31.914320+00:00",
+      "action": "SANDBOX_FAILURE_AND_LEASE_RECOVERY_PASSED",
+      "submissionId": "2111776414972825602"
+    },
+    {
+      "at": "2026-10-18T11:08:31.950988+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "redis"
+    },
+    {
+      "at": "2026-10-18T11:08:42.274593+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "redis"
+    },
+    {
+      "at": "2026-10-18T11:08:49.628090+00:00",
+      "action": "REDIS_RESTART_SESSION_AND_LEDGER_RECOVERY_PASSED"
+    },
+    {
+      "at": "2026-10-18T11:09:54.269621+00:00",
+      "action": "REAL_BROWSER_PASSED"
+    },
+    {
+      "at": "2026-10-18T11:11:05.409882+00:00",
+      "action": "FINALIZATION_PASSED",
+      "projectionVersion": "2"
+    },
+    {
+      "at": "2026-10-18T11:11:05.409951+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "browser"
+    },
+    {
+      "at": "2026-10-18T11:11:07.919481+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "gateway"
+    },
+    {
+      "at": "2026-10-18T11:11:08.465414+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-18T11:11:08.961430+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-18T11:11:09.138164+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "user"
+    },
+    {
+      "at": "2026-10-18T11:11:09.172105+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "sandbox"
+    },
+    {
+      "at": "2026-10-18T11:11:10.220091+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "rabbitmq"
+    },
+    {
+      "at": "2026-10-18T11:11:10.221585+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "epmd"
+    },
+    {
+      "at": "2026-10-18T11:11:10.350949+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "redis"
+    },
+    {
+      "at": "2026-10-18T11:11:11.437202+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "mysql"
+    }
+  ],
+  "temporaryDataRemoved": true
+}

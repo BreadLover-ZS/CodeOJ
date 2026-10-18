@@ -1,0 +1,14 @@
+{
+  "scope": "Real login, Redis session, Vue -> gateway -> real services; no HTTP mocks",
+  "passed": [
+    "admin browser login",
+    "real contest administration",
+    "real Redis registration view",
+    "admin browser reconciliation after Redis hold",
+    "participant browser login",
+    "real Monaco submission and remote native AC",
+    "real scoreboard",
+    "nonparticipant scoreboard access without private problem access"
+  ],
+  "pageErrors": []
+}

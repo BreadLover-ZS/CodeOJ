@@ -1,0 +1,3 @@
+PROBE {"case":"plain-main","expected":"EXECUTED","actual":"EXECUTED","output":["3\n"]}
+PROBE {"case":"comment-before-main","expected":"EXECUTED","actual":"CE","errorCode":"COMPILATION_FAILED","output":[]}
+PROBE {"case":"uncaught-user-exception","expected":"RE","actual":"PLATFORM_ERROR","errorCode":"UNCLASSIFIED_PROCESS_EXIT","output":[]}

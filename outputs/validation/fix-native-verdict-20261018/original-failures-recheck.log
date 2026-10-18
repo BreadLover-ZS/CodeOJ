@@ -1,0 +1,3 @@
+PROBE {"case":"plain-main","expected":"EXECUTED","actual":"EXECUTED","output":["3\n"]}
+PROBE {"case":"comment-before-main","expected":"EXECUTED","actual":"EXECUTED","output":["3\n"]}
+PROBE {"case":"uncaught-user-exception","expected":"RE","actual":"RE","errorCode":"USER_MAIN_EXCEPTION","output":[]}

@@ -1,0 +1,1 @@
+最终复验的运行时准备阶段因Erlang归档SHA-256不符退出，尚未启动实例或执行业务回归。清理器已删除该次归档，无法回溯首次HTTP头/实际摘要，不推测具体网络原因。随后单独下载同一固定URL，HTTP200、Content-Length=88073667、无Content-Range，文件全长且SHA-256与固定值一致；诊断保存在父目录download-diagnostic.json。后续复验复用这份已校验归档，未改变固定摘要、URL或校验流程。

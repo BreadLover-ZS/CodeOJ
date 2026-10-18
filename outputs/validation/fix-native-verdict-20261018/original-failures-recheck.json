@@ -1,0 +1,28 @@
+[
+  {
+    "case": "plain-main",
+    "expected": "EXECUTED",
+    "actual": "EXECUTED",
+    "output": [
+      "3\n"
+    ],
+    "passed": true
+  },
+  {
+    "case": "comment-before-main",
+    "expected": "EXECUTED",
+    "actual": "EXECUTED",
+    "output": [
+      "3\n"
+    ],
+    "passed": true
+  },
+  {
+    "case": "uncaught-user-exception",
+    "expected": "RE",
+    "actual": "RE",
+    "errorCode": "USER_MAIN_EXCEPTION",
+    "output": [],
+    "passed": true
+  }
+]

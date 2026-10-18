@@ -1,0 +1,556 @@
+diff --git a/codeoj-backend/codeoj-backend-codesandbox/src/main/java/com/codeoj/codeojbackendcodesandbox/service/impl/JavaNativeCodeSandbox.java b/codeoj-backend/codeoj-backend-codesandbox/src/main/java/com/codeoj/codeojbackendcodesandbox/service/impl/JavaNativeCodeSandbox.java
+index e430b11..e4dba42 100644
+--- a/codeoj-backend/codeoj-backend-codesandbox/src/main/java/com/codeoj/codeojbackendcodesandbox/service/impl/JavaNativeCodeSandbox.java
++++ b/codeoj-backend/codeoj-backend-codesandbox/src/main/java/com/codeoj/codeojbackendcodesandbox/service/impl/JavaNativeCodeSandbox.java
+@@ -3,17 +3,18 @@ package com.codeoj.codeojbackendcodesandbox.service.impl;
+ import cn.hutool.core.util.StrUtil;
+ import com.codeoj.codeojbackendcodesandbox.service.CodeSandboxService;
+ import com.codeoj.codeojbackendmodel.model.codesandbox.*;
++import com.codeoj.codeojbackendcodesandbox.service.impl.nativejava.*;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.beans.factory.annotation.Value;
+ import org.springframework.stereotype.Service;
+ 
+ import java.io.IOException;
++import java.io.InputStream;
+ import java.nio.charset.StandardCharsets;
+ import java.nio.file.*;
+ import java.util.*;
+ import java.util.concurrent.Semaphore;
+ import java.util.concurrent.TimeUnit;
+-import java.util.regex.*;
+ import java.util.stream.Stream;
+ 
+ /** Native runner for trusted local samples only. Isolation validation is deferred. */
+@@ -23,7 +24,6 @@ public class JavaNativeCodeSandbox implements CodeSandboxService {
+     private static final int MAX_CODE_BYTES = 256 * 1024;
+     private static final int MAX_INPUT_BYTES = 1024 * 1024;
+     private static final int MAX_CASES = 20;
+-    private static final Pattern CLASS_NAME = Pattern.compile("public\\s+class\\s+([A-Za-z_$][A-Za-z0-9_$]*)");
+     private final BoundedProcessRunner runner = new BoundedProcessRunner();
+     private final Semaphore slots;
+     private final NativeExecutionRegistry executions = new NativeExecutionRegistry();
+@@ -84,22 +84,29 @@ public class JavaNativeCodeSandbox implements CodeSandboxService {
+             long deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(budget);
+             workDir = Files.createTempDirectory("codeoj-sandbox-");
+             Path classes = Files.createDirectory(workDir.resolve("classes"));
+-            Matcher matcher = CLASS_NAME.matcher(request.getCode());
+-            String className = matcher.find() ? matcher.group(1) : "Main";
+-            Path source = workDir.resolve(className + ".java");
++            Path launcher = Files.createDirectory(workDir.resolve("launcher"));
++            copyHelper(NativeCompiler.class, launcher);
++            copyHelper(NativeLauncher.class, launcher);
++            copyHelper(NativeReceipt.class, launcher);
++            Path source = workDir.resolve("Submission.java");
+             Files.write(source, request.getCode().getBytes(StandardCharsets.UTF_8));
+-            List<String> compileCommand = Arrays.asList(jdkTool("javac"), "-J-Duser.language=en",
+-                    "-J-Duser.country=US", "-encoding", "UTF-8", "-proc:none", "-d", classes.toString(), source.toString());
++            Path compilationReceipt = Files.createTempFile(workDir, "compile-", ".receipt");
++            String compileNonce = UUID.randomUUID().toString();
++            List<String> compileCommand = Arrays.asList(jdkTool("java"), "-Duser.language=en",
++                    "-Duser.country=US", "-cp", launcher.toString(), NativeCompiler.class.getName(),
++                    source.toString(), classes.toString(), compilationReceipt.toString(), compileNonce);
+             BoundedProcessRunner.Result compile = runner.run(compileCommand, workDir, "",
+                     remaining(compileTimeoutMs, deadline), maxOutputBytes);
+             if (compile.end != BoundedProcessRunner.End.EXITED) {
+                 return response(SandboxOutcome.PLATFORM_ERROR, "COMPILER_BUDGET_EXCEEDED", null, null);
+             }
+             if (compile.exitCode != 0) {
+-                boolean diagnostic = compile.stderr.contains(".java:") && compile.stderr.contains("error:");
+-                return response(diagnostic ? SandboxOutcome.CE : SandboxOutcome.PLATFORM_ERROR,
+-                        diagnostic ? "COMPILATION_FAILED" : "COMPILER_FAILURE", null, null);
++                return response(SandboxOutcome.PLATFORM_ERROR, "COMPILER_FAILURE", null, null);
+             }
++            String[] compiled = NativeReceipt.read(compilationReceipt, compileNonce);
++            if ("CE".equals(compiled[0])) { return response(SandboxOutcome.CE, "COMPILATION_FAILED", null, null); }
++            if (!"OK".equals(compiled[0])) { return response(SandboxOutcome.PLATFORM_ERROR, "COMPILER_FAILURE", null, null); }
++            String className = compiled[1];
+             List<String> output = new ArrayList<>();
+             long maxWallTime = 0;
+             Long peakMemory = null;
+@@ -113,8 +120,11 @@ public class JavaNativeCodeSandbox implements CodeSandboxService {
+                     return response(SandboxOutcome.PLATFORM_ERROR, "ATTEMPT_BUDGET_EXHAUSTED", null, null);
+                 }
+                 Path caseDir = Files.createDirectory(workDir.resolve("case-" + i));
++                Path executionReceipt = Files.createTempFile(workDir, "run-", ".receipt");
++                String executionNonce = UUID.randomUUID().toString();
+                 List<String> command = Arrays.asList(jdkTool("java"), "-Dfile.encoding=UTF-8",
+-                        "-XX:+UseSerialGC", "-cp", classes.toString(), className);
++                        "-XX:+UseSerialGC", "-cp", launcher.toString(), NativeLauncher.class.getName(),
++                        classes.toString(), className, executionReceipt.toString(), executionNonce);
+                 BoundedProcessRunner.Result run = runner.run(command, caseDir, request.getInputList().get(i),
+                         caseLimit, maxOutputBytes, memoryLimit);
+                 maxWallTime = Math.max(maxWallTime, run.wallTimeMs);
+@@ -138,10 +148,22 @@ public class JavaNativeCodeSandbox implements CodeSandboxService {
+                     return response(SandboxOutcome.OUTPUT_LIMIT, "CASE_OUTPUT_EXCEEDED", metrics, null);
+                 }
+                 if (run.exitCode != 0) {
+-                    // No reliable memory/termination attribution in native mode.
++                    // System.exit, external termination and lost launchers have no attributed receipt.
+                     return response(SandboxOutcome.PLATFORM_ERROR,
+                             "UNCLASSIFIED_PROCESS_EXIT", metrics, null);
+                 }
++                String[] executed;
++                try { executed = NativeReceipt.read(executionReceipt, executionNonce); }
++                catch (IOException invalid) {
++                    return response(SandboxOutcome.PLATFORM_ERROR, "EXECUTION_RECEIPT_UNAVAILABLE", metrics, null);
++                }
++                if ("RE".equals(executed[0]) && ("USER_MAIN_EXCEPTION".equals(executed[1])
++                        || "USER_CLASS_INITIALIZATION_EXCEPTION".equals(executed[1]))) {
++                    return response(SandboxOutcome.RE, executed[1], metrics, null);
++                }
++                if (!"OK".equals(executed[0]) || !"MAIN_RETURNED".equals(executed[1])) {
++                    return response(SandboxOutcome.PLATFORM_ERROR, "JVM_OR_ENTRY_POINT_FAILURE", metrics, null);
++                }
+                 output.add(run.stdout);
+             }
+             JudgeInfo metrics = new JudgeInfo();
+@@ -161,6 +183,17 @@ public class JavaNativeCodeSandbox implements CodeSandboxService {
+         }
+     }
+ 
++    private void copyHelper(Class<?> type, Path root) throws IOException {
++        String resource = type.getName().replace('.', '/') + ".class";
++        Path target = root.resolve(resource);
++        Files.createDirectories(target.getParent());
++        try (InputStream stream = type.getResourceAsStream("/" + resource)) {
++            if (stream == null) { throw new IOException("NATIVE_HELPER_MISSING"); }
++            Files.copy(stream, target);
++        }
++        for (Class<?> nested : type.getDeclaredClasses()) { copyHelper(nested, root); }
++    }
++
+     private boolean valid(ExecuteCodeRequest request) {
+         if (request == null || !"java".equals(request.getLanguage()) || StrUtil.isBlank(request.getCode())
+                 || request.getCode().getBytes(StandardCharsets.UTF_8).length > MAX_CODE_BYTES
+diff --git a/codeoj-backend/codeoj-backend-codesandbox/src/test/java/com/codeoj/codeojbackendcodesandbox/service/impl/JavaNativeCodeSandboxTest.java b/codeoj-backend/codeoj-backend-codesandbox/src/test/java/com/codeoj/codeojbackendcodesandbox/service/impl/JavaNativeCodeSandboxTest.java
+index cb6710d..8e4f790 100644
+--- a/codeoj-backend/codeoj-backend-codesandbox/src/test/java/com/codeoj/codeojbackendcodesandbox/service/impl/JavaNativeCodeSandboxTest.java
++++ b/codeoj-backend/codeoj-backend-codesandbox/src/test/java/com/codeoj/codeojbackendcodesandbox/service/impl/JavaNativeCodeSandboxTest.java
+@@ -4,6 +4,8 @@ import com.codeoj.codeojbackendmodel.model.codesandbox.*;
+ import org.junit.jupiter.api.Test;
+ import org.junit.jupiter.api.Timeout;
+ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
++import org.junit.jupiter.params.ParameterizedTest;
++import org.junit.jupiter.params.provider.ValueSource;
+ import org.springframework.test.util.ReflectionTestUtils;
+ 
+ import java.util.Arrays;
+@@ -43,6 +45,76 @@ class JavaNativeCodeSandboxTest {
+         assertEquals(2, response.getStatus());
+     }
+ 
++    @ParameterizedTest
++    @ValueSource(strings = {
++            "// public class Decoy\npublic class Main",
++            "/* public class Decoy {} */ public class Main",
++            "class Helper { String s=\"public class Decoy\"; } public class Solution",
++            "class Helper { public static class Decoy {} } public class Solution",
++            "public final class Solution",
++            "public strictfp final class Solution",
++            "public interface Main",
++            "package contest; public class Solution",
++            "class Main",
++            "public class NativeLauncher"
++    })
++    void entryIsSelectedFromCompiledTypesInsteadOfSourceText(String declaration) {
++        ExecuteCodeRequest request = request("", "");
++        request.setCode(declaration + " { public static void main(String[] a) { System.out.print(3); } }");
++        ExecuteCodeResponse response = sandbox().executeCode(request);
++        assertEquals(SandboxOutcome.EXECUTED, response.getOutcome(), response.getErrorCode());
++        assertEquals(Collections.singletonList("3"), response.getOutputList());
++    }
++
++    @Test void compilerHandlesUnicodeEscapesAndDoesNotInitializeEntry() {
++        ExecuteCodeRequest request = request("", "");
++        request.setCode("public cl" + "\\" + "u0061ss Solution { static { System.out.print(\"init:\"); }"
++                + " public static void main(String[] a) { System.out.print(3); } }");
++        ExecuteCodeResponse response = sandbox().executeCode(request);
++        assertEquals(SandboxOutcome.EXECUTED, response.getOutcome());
++        assertEquals(Collections.singletonList("init:3"), response.getOutputList());
++    }
++
++    @ParameterizedTest
++    @ValueSource(strings = {"throw new IllegalArgumentException(\"private detail\");",
++            "int zero=0; System.out.print(1/zero);", "String value=null; value.length();"})
++    void attributedMainExceptionIsCompletedReWithoutLeakingDiagnostic(String body) {
++        ExecuteCodeResponse response = sandbox().executeCode(request(body, ""));
++        assertEquals(SandboxOutcome.RE, response.getOutcome());
++        assertEquals(2, response.getStatus());
++        assertEquals("USER_MAIN_EXCEPTION", response.getErrorCode());
++        assertTrue(response.getOutputList().isEmpty());
++        assertFalse(response.getMessage().contains("private detail"));
++    }
++
++    @Test void entryInitializationExceptionIsAttributedRe() {
++        ExecuteCodeRequest request = request("", "");
++        request.setCode("public class Main { static { if(true) throw new IllegalArgumentException(); }"
++                + "public static void main(String[] a) {} }");
++        ExecuteCodeResponse response = sandbox().executeCode(request);
++        assertEquals(SandboxOutcome.RE, response.getOutcome());
++        assertEquals("USER_CLASS_INITIALIZATION_EXCEPTION", response.getErrorCode());
++    }
++
++    @Test void vmErrorIsNotGuessedToBeUserReOrMle() {
++        ExecuteCodeResponse response = sandbox().executeCode(request("throw new OutOfMemoryError();", ""));
++        assertEquals(SandboxOutcome.PLATFORM_ERROR, response.getOutcome());
++        assertEquals("JVM_OR_ENTRY_POINT_FAILURE", response.getErrorCode());
++    }
++
++    @Test void zeroSystemExitWithoutLauncherReceiptCannotBecomeAc() {
++        ExecuteCodeResponse response = sandbox().executeCode(request("System.out.print(3); System.exit(0);", ""));
++        assertEquals(SandboxOutcome.PLATFORM_ERROR, response.getOutcome());
++        assertEquals("EXECUTION_RECEIPT_UNAVAILABLE", response.getErrorCode());
++    }
++
++    @Test void protocolLookingStdoutAndStderrCannotSupplyAControlReceipt() {
++        ExecuteCodeResponse response = sandbox().executeCode(request(
++                "System.err.print(\"USER_MAIN_EXCEPTION\"); System.out.print(\"CODEOJ_NATIVE_V1\\nRE\");", ""));
++        assertEquals(SandboxOutcome.EXECUTED, response.getOutcome());
++        assertEquals(Collections.singletonList("CODEOJ_NATIVE_V1\nRE"), response.getOutputList());
++    }
++
+     @Test void silentInfiniteLoopReachesTrustedRunDeadline() {
+         ExecuteCodeResponse response = sandbox().executeCode(request("while(true) {}", ""));
+         assertEquals(SandboxOutcome.TLE, response.getOutcome());
+diff --git a/codeoj-backend/codeoj-backend-judge-service/src/test/java/com/codeoj/codeojbackendjudgeservice/judge/ReliableJudgeWorkerTest.java b/codeoj-backend/codeoj-backend-judge-service/src/test/java/com/codeoj/codeojbackendjudgeservice/judge/ReliableJudgeWorkerTest.java
+index cb1a64b..13a0402 100644
+--- a/codeoj-backend/codeoj-backend-judge-service/src/test/java/com/codeoj/codeojbackendjudgeservice/judge/ReliableJudgeWorkerTest.java
++++ b/codeoj-backend/codeoj-backend-judge-service/src/test/java/com/codeoj/codeojbackendjudgeservice/judge/ReliableJudgeWorkerTest.java
+@@ -58,6 +58,16 @@ class ReliableJudgeWorkerTest {
+         when(sandbox.executeCode(any())).thenReturn(ExecuteCodeResponse.builder().outcome(SandboxOutcome.PLATFORM_ERROR).status(3).build());
+         worker.process(event);verify(client).failExecution(any());verify(client,never()).completeExecution(any());
+     }
++    @Test void attributedUserReCompletesOnceAndNeverSchedulesPlatformRetry() throws Exception {
++        when(sandbox.executeCode(any())).thenReturn(ExecuteCodeResponse.builder().outcome(SandboxOutcome.RE)
++                .status(2).errorCode("USER_MAIN_EXCEPTION").build());
++        worker.process(event);
++        ArgumentCaptor<ExecutionCommand> complete=ArgumentCaptor.forClass(ExecutionCommand.class);
++        verify(client,times(1)).completeExecution(complete.capture());
++        assertEquals(JudgeVerdict.RE,complete.getValue().getResult().getVerdict());
++        assertEquals(lease.getExecutionToken(),complete.getValue().getExecutionToken());
++        verify(client,never()).failExecution(any());
++    }
+     @Test void cannotAcknowledgeWhenPlatformFailureCouldNotBePersisted() {
+         when(sandbox.executeCode(any())).thenThrow(new IllegalStateException("transport unavailable"));
+         when(client.failExecution(any())).thenThrow(new IllegalStateException("database unavailable"));
+diff --git a/docs/contest/README.md b/docs/contest/README.md
+index 83b90b2..cf6bc89 100644
+--- a/docs/contest/README.md
++++ b/docs/contest/README.md
+@@ -13,7 +13,7 @@
+ | 阶段 | 当前进展 | 证据边界 |
+ | --- | --- | --- |
+ | J0 | 已核对源码、Java 8 构建、测试发现机制及原生判题样例；保存协议和本机基线 | 完整 API→MySQL→MQ 链未复验，不能记整阶段 PASS |
+-| J1 | 已实现本机执行的期限、双流读取、输出预算、有限 slot、RSS 采样、结构化结果和严格文本比较 | 原生受控样例通过；提交级容器隔离、完整进程树回收、受信 RE 归因仍未完成 |
++| J1 | 已实现本机执行期限、双流读取、输出预算、有限 slot、RSS、结构化结果和文本比较；已补编译产物选入口、主线程/类初始化异常 RE | 原生受控样例范围；System.exit/JVM故障/外部终止仍保留平台未知；提交隔离、完整进程树回收未完成 |
+ | J2 | 已加入提交+Outbox 事务、私有规格、调度代次、租约命令、恢复、异常查询及人工重试；开关默认关闭 | 83 个本机测试通过，真实 MySQL/MQ、旧队列切换及跨重启执行回收未验证，不能记整阶段 PASS |
+ | J3 | 已加入比赛草稿/发布快照、DB_SYNC报名、资格/时间校验、比赛提交、参赛/管理页面与本机演示 | 22项比赛测试、网关契约、本机H2+真实Java样例与mock浏览器检查通过；真实MySQL/MQ联合链未验证 |
+ | J4 | 已加入Redis Lua预留、独立报名Outbox/队列、确认、未决补建、有限复核、取消及回收对账 | 29项真实Redis+H2、7项mock消息契约及管理浏览器检查通过；真实MySQL/MQ联合链、Cluster未验证，不能记整阶段PASS |
+@@ -22,6 +22,8 @@
+ 
+ 详细记录见 [J0/J1 本机验证](j0-j1-local.md)、[J2 可靠判题](j2-local.md)、[J3 比赛本机闭环](j3-local.md)、[J4 秒杀报名](j4-local.md)、[J5 成绩与结算](j5-local.md)和[源码阅读地图](source-reading.md)。最新真实链路和剩余边界见 [J6 本机联调](j6-native-local.md)；不把局部测试当作 JV01—JV29 整体通过。
+ 
++全面验收发现的源码注释误判CE与原生RE缺口，已按用户确认范围修复，见 [判题修复与复验](fix-native-verdict.md)。历史验收报告保留原失败结果，修复证据单独记录，不改写为整套JV通过。
++
+ ## 最新本机联合验证
+ 
+ J6使用真实MySQL8.0.46、Redis6.2.24、RabbitMQ4.3.6、五个服务和真实浏览器；网关/Feign使用静态实例发现，未运行Nacos。实际执行注册登录、异步报名、AC/WA/CE、重复消息、Broker/判题/沙箱/Redis重启恢复、管理员对账、浏览器提交与最终结算。详细证据以J6最终成功轮为准；前几轮失败与根因保留。历史阶段文档中的“真实联合链未验证”是当时的证据状态，不应据此忽略J6新增结果，也不应将本轮局部验证提升为全部JV验收或生产可用。
+diff --git a/docs/contest/j0-j1-local.md b/docs/contest/j0-j1-local.md
+index 5e9cd32..be0741c 100644
+--- a/docs/contest/j0-j1-local.md
++++ b/docs/contest/j0-j1-local.md
+@@ -1,5 +1,7 @@
+ # J0/J1：本机构建与单次判题
+ 
++后续修复说明（2026-10-18）：入口识别与主线程/类初始化异常的RE归因已更新，见 [修复记录](fix-native-verdict.md)。以下保留本阶段当时的代码和证据边界；不能将历史“尚未完成”或协议枚举当作当前全部能力的结论。
++
+ 日期：2026-10-17。代码基线：`b2f43551a4929babe6f5b8be22007670f18767b9`。本轮修改保留在工作区，未提交、未推送；证据目录记录修改文件的哈希，不能把基线 SHA 当成本轮修改的提交 SHA。
+ 
+ ## 本机基线
+diff --git a/scripts/local/run-native-stack.py b/scripts/local/run-native-stack.py
+index 69df32d..7bc5f10 100644
+--- a/scripts/local/run-native-stack.py
++++ b/scripts/local/run-native-stack.py
+@@ -187,11 +187,15 @@ log.file.level = warning
+         valid='public class Main { public static void main(String[] a) throws Exception { java.util.Scanner s=new java.util.Scanner(System.in); System.out.println(s.nextInt()+s.nextInt()); Thread.sleep(100); }}'
+         wrong=valid.replace('s.nextInt()+s.nextInt()','s.nextInt()-s.nextInt()')
+         def submit(code,key):return self.api('/contests/'+cid+'/submissions','POST',{'problemSnapshotId':snapshot,'publishedVersion':c['publishedVersion'],'language':'java','code':code},'participant',key)
+-        for verdict,code in [('AC',valid),('WA',wrong),('CE','public class Main { not java }')]:
+-            sid=submit(code,'native-fixture-'+verdict.lower());self.state[verdict+'SubmissionId']=sid
++        runtime_error='public class Main { public static void main(String[] a) { throw new IllegalArgumentException(); }}'
++        for case,verdict,code in [('AC','AC',valid),('COMMENT_AC','AC','// public class Decoy\n'+valid),
++                                  ('WA','WA',wrong),('CE','CE','public class Main { not java }'),('RE','RE',runtime_error)]:
++            sid=submit(code,'native-fixture-'+case.lower());self.state[case+'SubmissionId']=sid
+             result=self.wait('judge',lambda sid=sid:(lambda r:r if r.get('executionStatus')=='COMPLETED' else None)(self.api('/submissions/'+sid,actor='participant')),50)
+-            assert result['judgeInfo']['verdict']==verdict,result;self.event('REAL_JUDGE_RESULT',submissionId=sid,verdict=verdict)
+-            assert submit(code,'native-fixture-'+verdict.lower())==sid
++            assert result['judgeInfo']['verdict']==verdict,result
++            if verdict=='RE': assert result['activeAttempt']==1,result
++            self.event('REAL_JUDGE_RESULT',submissionId=sid,verdict=verdict,case=case)
++            assert submit(code,'native-fixture-'+case.lower())==sid
+         board=self.wait('question',lambda:(lambda b:b if int(b['projectionPendingCount'])==0 and int(b['entries'][0]['solvedCount'])==1 else None)(self.api('/contests/'+cid+'/scoreboard',actor='observer')),20)
+         assert int(board['entries'][0]['rank'])==1
+         status,_=self.api('/contests/'+cid+'/scoreboard/cache-clear','POST',{'expectedVersion':board['contestVersion'],'expectedProjectionVersion':board['projectionVersion'],'expectedRevision':board['revision'],'reason':'must be forbidden'},'participant',allow_error=True);assert status==403
+diff --git a/codeoj-backend/codeoj-backend-codesandbox/src/main/java/com/codeoj/codeojbackendcodesandbox/service/impl/nativejava/NativeCompiler.java b/codeoj-backend/codeoj-backend-codesandbox/src/main/java/com/codeoj/codeojbackendcodesandbox/service/impl/nativejava/NativeCompiler.java
+new file mode 100644
+index 0000000..711877c
+--- /dev/null
++++ b/codeoj-backend/codeoj-backend-codesandbox/src/main/java/com/codeoj/codeojbackendcodesandbox/service/impl/nativejava/NativeCompiler.java
+@@ -0,0 +1,60 @@
++package com.codeoj.codeojbackendcodesandbox.service.impl.nativejava;
++
++import javax.tools.*;
++import java.io.IOException;
++import java.lang.reflect.Modifier;
++import java.net.URL;
++import java.net.URLClassLoader;
++import java.nio.charset.StandardCharsets;
++import java.nio.file.*;
++import java.util.*;
++import java.util.stream.Collectors;
++import java.util.stream.Stream;
++
++/** Runs in a separate, bounded JDK process. Never initializes contestant classes. */
++public final class NativeCompiler {
++    private NativeCompiler() { }
++
++    public static void main(String[] args) throws Exception {
++        Path source = Paths.get(args[0]), classes = Paths.get(args[1]), receipt = Paths.get(args[2]);
++        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
++        if (compiler == null) { NativeReceipt.write(receipt, args[3], "PLATFORM", "COMPILER_UNAVAILABLE");return; }
++        try (StandardJavaFileManager manager = compiler.getStandardFileManager(null, Locale.ROOT, StandardCharsets.UTF_8)) {
++            // A virtual source has no physical public-type filename restriction. javac handles
++            // comments, literals, modifiers and Unicode; the actual class metadata picks entry.
++            Boolean compiled = compiler.getTask(null, manager, null,
++                    Arrays.asList("-encoding", "UTF-8", "-proc:none", "-classpath", classes.toString(),
++                            "-sourcepath", classes.toString(), "-d", classes.toString()), null,
++                    Collections.singletonList(new Source(source))).call();
++            if (!Boolean.TRUE.equals(compiled)) { NativeReceipt.write(receipt, args[3], "CE", "COMPILATION_FAILED");return; }
++        }
++        List<String> publicTypes = new ArrayList<>(), mainTypes = new ArrayList<>();
++        try (URLClassLoader loader = new URLClassLoader(new URL[]{classes.toUri().toURL()}, null);
++             Stream<Path> files = Files.walk(classes)) {
++            List<Path> outputs = files.filter(p -> p.toString().endsWith(".class")).collect(Collectors.toList());
++            for (Path output : outputs) {
++                String relative = classes.relativize(output).toString();
++                String name = relative.substring(0, relative.length() - 6).replace(java.io.File.separatorChar, '.');
++                Class<?> type = Class.forName(name, false, loader);
++                if (type.getEnclosingClass() != null) { continue; }
++                if (Modifier.isPublic(type.getModifiers())) { publicTypes.add(name); }
++                if (type.getSimpleName().equals("Main")) { mainTypes.add(name); }
++            }
++        }
++        if (publicTypes.size() > 1) { NativeReceipt.write(receipt, args[3], "CE", "MULTIPLE_PUBLIC_ENTRY_TYPES");return; }
++        String entry = publicTypes.size() == 1 ? publicTypes.get(0) : mainTypes.size() == 1 ? mainTypes.get(0) : null;
++        NativeReceipt.write(receipt, args[3], entry == null ? "PLATFORM" : "OK",
++                entry == null ? "ENTRY_POINT_UNAVAILABLE" : entry);
++    }
++
++    public static final class Source extends SimpleJavaFileObject {
++        private final Path path;
++        Source(Path path) { super(path.toUri(), Kind.SOURCE);this.path = path; }
++        @Override public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
++            return new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
++        }
++        @Override public boolean isNameCompatible(String simpleName, Kind kind) {
++            return kind == Kind.SOURCE && !"package-info".equals(simpleName) && !"module-info".equals(simpleName);
++        }
++    }
++}
+diff --git a/codeoj-backend/codeoj-backend-codesandbox/src/main/java/com/codeoj/codeojbackendcodesandbox/service/impl/nativejava/NativeLauncher.java b/codeoj-backend/codeoj-backend-codesandbox/src/main/java/com/codeoj/codeojbackendcodesandbox/service/impl/nativejava/NativeLauncher.java
+new file mode 100644
+index 0000000..118c9a8
+--- /dev/null
++++ b/codeoj-backend/codeoj-backend-codesandbox/src/main/java/com/codeoj/codeojbackendcodesandbox/service/impl/nativejava/NativeLauncher.java
+@@ -0,0 +1,45 @@
++package com.codeoj.codeojbackendcodesandbox.service.impl.nativejava;
++
++import java.lang.reflect.*;
++import java.net.URL;
++import java.net.URLClassLoader;
++import java.nio.file.*;
++
++/** Local trusted samples only: explicit main-thread attribution, never stderr matching. */
++public final class NativeLauncher {
++    private NativeLauncher() { }
++
++    public static void main(String[] args) throws Exception {
++        Path receipt = Paths.get(args[2]);
++        String status = "PLATFORM", detail = "ENTRY_POINT_UNAVAILABLE";
++        try (URLClassLoader loader = new URLClassLoader(new URL[]{Paths.get(args[0]).toUri().toURL()}, null)) {
++            Class<?> entry = Class.forName(args[1], false, loader);
++            Method main = entry.getMethod("main", String[].class);
++            if (!Modifier.isStatic(main.getModifiers()) || main.getReturnType() != void.class) {
++                NativeReceipt.write(receipt, args[3], status, detail);return;
++            }
++            main.setAccessible(true); // Preserve package-private Main supported by the java launcher.
++            Thread.currentThread().setContextClassLoader(loader);
++            try {
++                main.invoke(null, (Object) new String[0]);
++                status = "OK";detail = "MAIN_RETURNED";
++            } catch (InvocationTargetException userFailure) {
++                Throwable cause = userFailure.getCause();
++                if (cause != null && !platformFailure(cause)) { status = "RE";detail = "USER_MAIN_EXCEPTION"; }
++                else { detail = "JVM_OR_LINKAGE_FAILURE"; }
++            } catch (ExceptionInInitializerError initialization) {
++                Throwable cause = initialization.getException();
++                if (cause != null && !platformFailure(cause)) { status = "RE";detail = "USER_CLASS_INITIALIZATION_EXCEPTION"; }
++                else { detail = "JVM_OR_LINKAGE_FAILURE"; }
++            }
++        } catch (Throwable unavailable) {
++            // Includes VM/linkage/bootstrap errors. Do not publish exception messages or stack traces.
++            status = "PLATFORM";detail = "JVM_OR_ENTRY_POINT_FAILURE";
++        }
++        NativeReceipt.write(receipt, args[3], status, detail);
++    }
++
++    private static boolean platformFailure(Throwable failure) {
++        return failure instanceof VirtualMachineError || failure instanceof ThreadDeath || failure instanceof LinkageError;
++    }
++}
+diff --git a/codeoj-backend/codeoj-backend-codesandbox/src/main/java/com/codeoj/codeojbackendcodesandbox/service/impl/nativejava/NativeReceipt.java b/codeoj-backend/codeoj-backend-codesandbox/src/main/java/com/codeoj/codeojbackendcodesandbox/service/impl/nativejava/NativeReceipt.java
+new file mode 100644
+index 0000000..fc6d300
+--- /dev/null
++++ b/codeoj-backend/codeoj-backend-codesandbox/src/main/java/com/codeoj/codeojbackendcodesandbox/service/impl/nativejava/NativeReceipt.java
+@@ -0,0 +1,44 @@
++package com.codeoj.codeojbackendcodesandbox.service.impl.nativejava;
++
++import java.io.IOException;
++import java.nio.ByteBuffer;
++import java.nio.channels.SeekableByteChannel;
++import java.nio.charset.StandardCharsets;
++import java.nio.file.*;
++
++/** Private control file, separate from contestant stdout/stderr. Not a hostile-code boundary. */
++public final class NativeReceipt {
++    private static final String VERSION = "CODEOJ_NATIVE_V1";
++    private static final int MAX_BYTES = 8192;
++
++    private NativeReceipt() { }
++
++    public static void write(Path path, String nonce, String status, String detail) throws IOException {
++        String record = VERSION + "\n" + nonce + "\n" + status + "\n" + detail + "\n";
++        byte[] bytes = record.getBytes(StandardCharsets.UTF_8);
++        if (bytes.length > MAX_BYTES || detail.contains("\n") || detail.contains("\r")) {
++            throw new IOException("INVALID_NATIVE_RECEIPT");
++        }
++        try (SeekableByteChannel channel = Files.newByteChannel(path, StandardOpenOption.WRITE,
++                StandardOpenOption.TRUNCATE_EXISTING, LinkOption.NOFOLLOW_LINKS)) {
++            ByteBuffer buffer = ByteBuffer.wrap(bytes);
++            while (buffer.hasRemaining()) { channel.write(buffer); }
++        }
++    }
++
++    public static String[] read(Path path, String nonce) throws IOException {
++        ByteBuffer buffer = ByteBuffer.allocate(MAX_BYTES + 1);
++        try (SeekableByteChannel channel = Files.newByteChannel(path, StandardOpenOption.READ,
++                LinkOption.NOFOLLOW_LINKS)) {
++            while (buffer.hasRemaining() && channel.read(buffer) != -1) { /* bounded read */ }
++        }
++        if (buffer.position() > MAX_BYTES) { throw new IOException("OVERSIZED_NATIVE_RECEIPT"); }
++        buffer.flip();
++        String[] fields = StandardCharsets.UTF_8.newDecoder().decode(buffer).toString().split("\n", -1);
++        if (fields.length != 5 || !VERSION.equals(fields[0]) || !nonce.equals(fields[1])
++                || !fields[4].isEmpty() || fields[3].isEmpty()) {
++            throw new IOException("INVALID_NATIVE_RECEIPT");
++        }
++        return new String[]{fields[2], fields[3]};
++    }
++}
+diff --git a/codeoj-backend/codeoj-backend-codesandbox/src/test/java/com/codeoj/codeojbackendcodesandbox/service/impl/NativeReceiptTest.java b/codeoj-backend/codeoj-backend-codesandbox/src/test/java/com/codeoj/codeojbackendcodesandbox/service/impl/NativeReceiptTest.java
+new file mode 100644
+index 0000000..45f8449
+--- /dev/null
++++ b/codeoj-backend/codeoj-backend-codesandbox/src/test/java/com/codeoj/codeojbackendcodesandbox/service/impl/NativeReceiptTest.java
+@@ -0,0 +1,34 @@
++package com.codeoj.codeojbackendcodesandbox.service.impl;
++
++import com.codeoj.codeojbackendcodesandbox.service.impl.nativejava.NativeReceipt;
++import org.junit.jupiter.api.Test;
++import org.junit.jupiter.api.io.TempDir;
++import java.io.IOException;
++import java.nio.file.*;
++import static org.junit.jupiter.api.Assertions.*;
++
++class NativeReceiptTest {
++    @TempDir Path directory;
++
++    @Test void receiptIsBoundToThisInvocationAndRequiresCompleteRecord() throws Exception {
++        Path receipt = Files.createFile(directory.resolve("result"));
++        assertThrows(IOException.class, () -> NativeReceipt.read(receipt, "current"));
++        NativeReceipt.write(receipt, "current", "RE", "USER_MAIN_EXCEPTION");
++        assertArrayEquals(new String[]{"RE", "USER_MAIN_EXCEPTION"}, NativeReceipt.read(receipt, "current"));
++        assertThrows(IOException.class, () -> NativeReceipt.read(receipt, "another"));
++        Files.write(receipt, "CODEOJ_NATIVE_V1\ncurrent\nRE\n".getBytes(java.nio.charset.StandardCharsets.UTF_8));
++        assertThrows(IOException.class, () -> NativeReceipt.read(receipt, "current"));
++    }
++
++    @Test void oversizedRecordCannotCauseUnboundedRead() throws Exception {
++        Path receipt = Files.write(directory.resolve("large"), new byte[8193]);
++        assertThrows(IOException.class, () -> NativeReceipt.read(receipt, "current"));
++    }
++
++    @Test void controlFileCannotFollowAContestantSymlink() throws Exception {
++        Path target = Files.createFile(directory.resolve("real"));
++        Path link = Files.createSymbolicLink(directory.resolve("link"), target);
++        assertThrows(IOException.class, () -> NativeReceipt.write(link, "current", "OK", "MAIN_RETURNED"));
++        assertThrows(IOException.class, () -> NativeReceipt.read(link, "current"));
++    }
++}
+diff --git a/docs/contest/fix-native-verdict.md b/docs/contest/fix-native-verdict.md
+new file mode 100644
+index 0000000..f141950
+--- /dev/null
++++ b/docs/contest/fix-native-verdict.md
+@@ -0,0 +1,49 @@
++# 本机判题 F01/F02 修复
++
++日期：2026-10-18。基线：`5d6333e0bce3f1112c790b0c4824e5dd2fb3a6de`。修复起因是 [全面验收报告](../../outputs/validation/acceptance-20261018/report.md) 的两项FAIL；历史报告及原始失败证据保持不变。本轮不涉及部署、Docker或压测。
++
++## F01：用实际编译结果选择入口
++
++根因：原执行器对整个源码执行 `public class` 正则，注释、字符串或嵌套类可能先被匹配。正确的Main代码因此写成另一个文件名而被误判CE；修饰符和Unicode声明也可能识别错误。
++
++修复后的 `NativeCompiler` 是仅依赖JDK的独立子进程。通过JavaCompiler与虚拟JavaFileObject编译源码，源对象不依赖物理文件的公共类型文件名约定；编译器处理语法、注释、字符串与Unicode。随后从本次编译产物中读取顶层类型元数据，选择唯一公共顶层类型，或无公共类型时的Main。不会在编译阶段初始化用户类；多个公共顶层类型明确拒绝为CE。
++
++保留普通Main、非public Main及其他公共入口名（例如Solution），支持合法修饰符；不添加第三方解析器或升级JDK。编译仍在原有期限与输出预算下运行，禁用注解处理，编译类路径/源码路径只指向该提交的产物目录。编译失败由编译任务的明确结果记录CE，不再依赖stderr诊断文本。
++
++启动器字节码从本次运行包复制到独立目录，用户类由单独的、父加载器为空的URLClassLoader读取。运行时检查有无公共静态void main(String[])，无有效入口或启动器失效保留平台错误。
++
++## F02：单独记录可归因的主线程异常
++
++用户确认的边界：**本机受控程序的主线程未捕获异常、入口类初始化异常判RE；System.exit、外部终止、JVM异常等原因不明确的退出保留平台故障。**
++
++`NativeLauncher` 调用main并处理InvocationTargetException或入口类初始化异常。成功返回、用户异常、平台错误分别写入独立控制回执；不记录异常消息/堆栈，不从用户stdout/stderr推断RE。宿主校验本次随机标识、版本、完整字段、字节上限及正常子进程退出。回执按用例单独创建，位于用例工作目录之外；读写不跟随符号链接。
++
++| 情况 | 结果 |
++| --- | --- |
++| main正常返回且回执有效 | EXECUTED，继续原比较器和资源完整性检查 |
++| 普通主线程异常，如IllegalArgumentException、ArithmeticException、NullPointerException | RE / USER_MAIN_EXCEPTION，属于COMPLETED，不触发平台重试 |
++| 入口类初始化时普通异常 | RE / USER_CLASS_INITIALIZATION_EXCEPTION |
++| 实测运行期限、RSS或输出预算超限 | 继续原TLE/MLE/OUTPUT_LIMIT规则，优先于控制回执 |
++| System.exit(7)、外部非零退出 | PLATFORM_ERROR / UNCLASSIFIED_PROCESS_EXIT |
++| System.exit(0)提前退出但没有有效回执 | PLATFORM_ERROR / EXECUTION_RECEIPT_UNAVAILABLE，不能仅凭exit=0判执行成功 |
++| VM/链接错误或入口/启动器错误 | PLATFORM_ERROR；不猜RE或MLE |
++| 回执缺失、截断、标识不匹配、过大或不合法 | PLATFORM_ERROR |
++
++RE沿用既有SandboxResultMapper→完成命令→结果Outbox→计分链路；不改动租约/token/不可变结果规则。用户异常消息不会进入公开判题信息。
++
++这不是恶意代码隔离或防篡改协议：原生用户进程仍具有宿主用户权限，不能把回执标识当作恶意程序无法获取的秘密。这里证明的是已确认的受控本机归因，未声称任意程序下完整RE、子线程异常归因、任意后代/跨重启回收或资源硬隔离完成。
++
++## 回归与真实链路
++
++证据目录：[fix-native-verdict-20261018](../../outputs/validation/fix-native-verdict-20261018/)。
++
++- 原验收三段同源码探针重新运行：普通Main正常执行、含干扰注释Main正常执行、未捕获用户异常RE。保留旧失败证据作对照。
++- 定向覆盖行/块注释、字符串、嵌套类、合法修饰符、Unicode、非public Main、同名启动器、接口入口，以及主线程/初始化异常、VM错误、System.exit和输出伪协议文本。
++- 回执测试覆盖随机标识隔离、缺失/截断、过大与符号链接；worker契约确认RE仅调用完成命令、不走平台失败重试。
++- `run-native-stack.py` 增加COMMENT_AC与RE真实提交；RE必须COMPLETED且activeAttempt=1。原异步报名、AC/WA/CE、故障恢复、浏览器和最终结算继续验证。
++
++具体运行结果与最终权威事实以该目录的测试汇总、命令、native事件及database-facts为准。未测的JV崩溃/竞争场景不因两项修复自动变为PASS。
++
++## 机制参考
++
++兼容性按Java8 API和本机Corretto8核对：[JavaCompiler](https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaCompiler.html)、[SimpleJavaFileObject](https://docs.oracle.com/javase/8/docs/api/javax/tools/SimpleJavaFileObject.html)、[Method.invoke](https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html)。编译文件名检查另对照 [OpenJDK8 Enter实现](https://github.com/openjdk/jdk8u/blob/master/langtools/src/share/classes/com/sun/tools/javac/comp/Enter.java)，虚拟源码不冒充package-info/module-info专用文件。这些参考解释机制，是否修复以本轮测试和实际链路为准。

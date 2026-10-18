@@ -1,0 +1,54 @@
+[
+  {
+    "step": "runtime-preparation",
+    "command": [
+      "python3",
+      "scripts/local/prepare-runtimes.py",
+      "--root",
+      "/private/tmp/codeoj-acceptance-xr_p46kx/runtimes"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 24.33
+  },
+  {
+    "step": "backend-regression",
+    "command": [
+      "mvn",
+      "-o",
+      "-B",
+      "-f",
+      "codeoj-backend/pom.xml",
+      "-Dcodeoj.real-redis=true",
+      "-Dcodeoj.redis-server=/private/tmp/codeoj-acceptance-xr_p46kx/runtimes/redis/redis-6.2.24/src/redis-server",
+      "-Dcodeoj.native-observation=true",
+      "package"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 16.45
+  },
+  {
+    "step": "frontend-build",
+    "command": [
+      "npm",
+      "--prefix",
+      "codeoj-frontend",
+      "run",
+      "build"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 13.27
+  },
+  {
+    "step": "native-integration",
+    "command": [
+      "python3",
+      "scripts/local/run-native-stack.py",
+      "--runtimes",
+      "/private/tmp/codeoj-acceptance-xr_p46kx/runtimes",
+      "--evidence",
+      "/Users/zzds/Workspace/gitStore/CodeOJ/outputs/validation/acceptance-20261018/native"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 240.59
+  }
+]

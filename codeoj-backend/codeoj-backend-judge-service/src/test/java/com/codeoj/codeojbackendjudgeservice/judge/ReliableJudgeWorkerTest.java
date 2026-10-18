@@ -58,6 +58,16 @@ class ReliableJudgeWorkerTest {
         when(sandbox.executeCode(any())).thenReturn(ExecuteCodeResponse.builder().outcome(SandboxOutcome.PLATFORM_ERROR).status(3).build());
         worker.process(event);verify(client).failExecution(any());verify(client,never()).completeExecution(any());
     }
+    @Test void attributedUserReCompletesOnceAndNeverSchedulesPlatformRetry() throws Exception {
+        when(sandbox.executeCode(any())).thenReturn(ExecuteCodeResponse.builder().outcome(SandboxOutcome.RE)
+                .status(2).errorCode("USER_MAIN_EXCEPTION").build());
+        worker.process(event);
+        ArgumentCaptor<ExecutionCommand> complete=ArgumentCaptor.forClass(ExecutionCommand.class);
+        verify(client,times(1)).completeExecution(complete.capture());
+        assertEquals(JudgeVerdict.RE,complete.getValue().getResult().getVerdict());
+        assertEquals(lease.getExecutionToken(),complete.getValue().getExecutionToken());
+        verify(client,never()).failExecution(any());
+    }
     @Test void cannotAcknowledgeWhenPlatformFailureCouldNotBePersisted() {
         when(sandbox.executeCode(any())).thenThrow(new IllegalStateException("transport unavailable"));
         when(client.failExecution(any())).thenThrow(new IllegalStateException("database unavailable"));

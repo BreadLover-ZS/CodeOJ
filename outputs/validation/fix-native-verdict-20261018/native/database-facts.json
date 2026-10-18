@@ -1,0 +1,29 @@
+{
+  "executions": [
+    "2111776340461015042\tCOMPLETED\t1\tAC",
+    "2111776348656685058\tCOMPLETED\t1\tAC",
+    "2111776355388542978\tCOMPLETED\t1\tWA",
+    "2111776359469600769\tCOMPLETED\t1\tCE",
+    "2111776362212675586\tCOMPLETED\t1\tRE",
+    "2111776375445704705\tCOMPLETED\t1\tAC",
+    "2111776414972825602\tCOMPLETED\t2\tAC",
+    "2111776517817159682\tCOMPLETED\t1\tAC"
+  ],
+  "outboxes": [
+    "JUDGE_DISPATCH\tCONFIRMED\t9",
+    "JUDGE_RESULT\tCONFIRMED\t8",
+    "REGISTRATION_CONFIRM\tCONFIRMED\t1"
+  ],
+  "publishAttempts": [
+    "ACK\t0\t18"
+  ],
+  "scoreReceipts": 8,
+  "qualificationCounts": [
+    "CONFIRMED\t1"
+  ],
+  "registrationCapacity": [
+    "2\t1\tREDIS_READY\tFINISHED"
+  ],
+  "afterEndOriginalKeyReplay": true,
+  "afterEndNewKeyRejected": true
+}

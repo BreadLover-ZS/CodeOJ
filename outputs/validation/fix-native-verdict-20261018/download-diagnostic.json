@@ -1,0 +1,12 @@
+{
+  "status": 200,
+  "headers": {
+    "Content-Length": "88073667",
+    "Content-Range": null,
+    "Content-Type": "application/octet-stream",
+    "Content-Encoding": null
+  },
+  "bytes": 88073667,
+  "sha256": "e37b0ce944f1e772767bb7b2fa8844076c3069754ce44c224f15d76fd39aed67",
+  "expectedSha256": "e37b0ce944f1e772767bb7b2fa8844076c3069754ce44c224f15d76fd39aed67"
+}

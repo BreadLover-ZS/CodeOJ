@@ -1,0 +1,40 @@
+{"at": "2026-10-18T10:35:45.642204+00:00", "action": "PACKAGED_ARTIFACTS_MATCH_CURRENT_BUILD"}
+{"at": "2026-10-18T10:35:49.836969+00:00", "action": "MIGRATION_APPLIED", "name": "V001__reliable_judging.sql"}
+{"at": "2026-10-18T10:35:49.872743+00:00", "action": "MIGRATION_APPLIED", "name": "V002__contest_core.sql"}
+{"at": "2026-10-18T10:35:49.917256+00:00", "action": "MIGRATION_APPLIED", "name": "V003__async_registration.sql"}
+{"at": "2026-10-18T10:35:49.943143+00:00", "action": "MIGRATION_APPLIED", "name": "V004__contest_scoreboard.sql"}
+{"at": "2026-10-18T10:35:54.680822+00:00", "action": "INFRASTRUCTURE_READY", "mysql": "8.0.46", "rabbitmq": "4.3.6", "erlang": "28.5.0.8", "redis": "6.2.24"}
+{"at": "2026-10-18T10:35:56.504193+00:00", "action": "SERVICE_READY", "service": "sandbox"}
+{"at": "2026-10-18T10:35:59.244092+00:00", "action": "SERVICE_READY", "service": "user"}
+{"at": "2026-10-18T10:36:02.576258+00:00", "action": "SERVICE_READY", "service": "question"}
+{"at": "2026-10-18T10:36:05.931003+00:00", "action": "SERVICE_READY", "service": "judge"}
+{"at": "2026-10-18T10:36:08.362481+00:00", "action": "SERVICE_READY", "service": "gateway"}
+{"at": "2026-10-18T10:36:09.284219+00:00", "action": "REAL_SESSION_LOGIN_PASSED"}
+{"at": "2026-10-18T10:36:14.798789+00:00", "action": "ASYNC_REGISTRATION_CONFIRMED", "requestId": "2111768309739352066"}
+{"at": "2026-10-18T10:36:45.846016+00:00", "action": "REAL_JUDGE_RESULT", "submissionId": "2111768435929182210", "verdict": "AC"}
+{"at": "2026-10-18T10:36:47.463165+00:00", "action": "REAL_JUDGE_RESULT", "submissionId": "2111768441465663490", "verdict": "WA"}
+{"at": "2026-10-18T10:36:48.122881+00:00", "action": "REAL_JUDGE_RESULT", "submissionId": "2111768448231075841", "verdict": "CE"}
+{"at": "2026-10-18T10:36:49.120320+00:00", "action": "REAL_SCOREBOARD_AND_ROLE_CHECK_PASSED"}
+{"at": "2026-10-18T10:36:50.139638+00:00", "action": "PROCESS_STOPPED", "service": "judge"}
+{"at": "2026-10-18T10:36:52.241917+00:00", "action": "PROCESS_STOPPED", "service": "rabbitmq"}
+{"at": "2026-10-18T10:36:53.766281+00:00", "action": "PROCESS_RESTARTED", "service": "rabbitmq"}
+{"at": "2026-10-18T10:36:56.800550+00:00", "action": "PROCESS_RESTARTED", "service": "judge"}
+{"at": "2026-10-18T10:36:59.517922+00:00", "action": "DURABLE_QUEUE_BROKER_RESTART_AND_DUPLICATE_PASSED", "submissionId": "2111768459429867521"}
+{"at": "2026-10-18T10:36:59.556650+00:00", "action": "PROCESS_STOPPED", "service": "sandbox"}
+{"at": "2026-10-18T10:37:01.741797+00:00", "action": "PROCESS_RESTARTED", "service": "sandbox"}
+{"at": "2026-10-18T10:37:04.600303+00:00", "action": "SANDBOX_FAILURE_AND_LEASE_RECOVERY_PASSED", "submissionId": "2111768498931822594"}
+{"at": "2026-10-18T10:37:04.671404+00:00", "action": "PROCESS_STOPPED", "service": "redis"}
+{"at": "2026-10-18T10:37:14.990790+00:00", "action": "PROCESS_RESTARTED", "service": "redis"}
+{"at": "2026-10-18T10:37:22.319399+00:00", "action": "REDIS_RESTART_SESSION_AND_LEDGER_RECOVERY_PASSED"}
+{"at": "2026-10-18T10:38:28.104453+00:00", "action": "REAL_BROWSER_PASSED"}
+{"at": "2026-10-18T10:39:40.730220+00:00", "action": "FINALIZATION_PASSED", "projectionVersion": "2"}
+{"at": "2026-10-18T10:39:40.730288+00:00", "action": "PROCESS_STOPPED", "service": "browser"}
+{"at": "2026-10-18T10:39:43.215508+00:00", "action": "PROCESS_STOPPED", "service": "gateway"}
+{"at": "2026-10-18T10:39:44.302407+00:00", "action": "PROCESS_STOPPED", "service": "judge"}
+{"at": "2026-10-18T10:39:44.638357+00:00", "action": "PROCESS_STOPPED", "service": "question"}
+{"at": "2026-10-18T10:39:44.820471+00:00", "action": "PROCESS_STOPPED", "service": "user"}
+{"at": "2026-10-18T10:39:44.856476+00:00", "action": "PROCESS_STOPPED", "service": "sandbox"}
+{"at": "2026-10-18T10:39:45.937226+00:00", "action": "PROCESS_STOPPED", "service": "rabbitmq"}
+{"at": "2026-10-18T10:39:45.941331+00:00", "action": "PROCESS_STOPPED", "service": "epmd"}
+{"at": "2026-10-18T10:39:45.979474+00:00", "action": "PROCESS_STOPPED", "service": "redis"}
+{"at": "2026-10-18T10:39:46.106136+00:00", "action": "PROCESS_STOPPED", "service": "mysql"}

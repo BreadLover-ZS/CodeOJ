@@ -1,0 +1,42 @@
+[
+  {
+    "case": "same key identical content replays original",
+    "passed": true,
+    "httpStatus": 202
+  },
+  {
+    "case": "same key changed code rejected",
+    "passed": true,
+    "httpStatus": 409
+  },
+  {
+    "case": "anonymous scoreboard denied",
+    "passed": true,
+    "httpStatus": 401
+  },
+  {
+    "case": "nonparticipant cannot read private statement",
+    "passed": true,
+    "httpStatus": 200
+  },
+  {
+    "case": "other user cannot read submission",
+    "passed": true,
+    "httpStatus": 403
+  },
+  {
+    "case": "query flag cannot grant administrator view",
+    "passed": true,
+    "httpStatus": 403
+  },
+  {
+    "case": "gateway refuses internal endpoint",
+    "passed": true,
+    "httpStatus": 403
+  },
+  {
+    "case": "direct service refuses internal endpoint without secret",
+    "passed": true,
+    "httpStatus": 403
+  }
+]

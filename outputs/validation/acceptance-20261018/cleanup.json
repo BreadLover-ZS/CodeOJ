@@ -1,0 +1,66 @@
+{
+  "temporaryDataRemovedByRunner": true,
+  "ports": [
+    {
+      "service": "mysql",
+      "port": 53587,
+      "released": true
+    },
+    {
+      "service": "redis",
+      "port": 53588,
+      "released": true
+    },
+    {
+      "service": "amqp",
+      "port": 53589,
+      "released": true
+    },
+    {
+      "service": "management",
+      "port": 53590,
+      "released": true
+    },
+    {
+      "service": "epmd",
+      "port": 53591,
+      "released": true
+    },
+    {
+      "service": "distribution",
+      "port": 53592,
+      "released": true
+    },
+    {
+      "service": "user",
+      "port": 53593,
+      "released": true
+    },
+    {
+      "service": "question",
+      "port": 53594,
+      "released": true
+    },
+    {
+      "service": "judge",
+      "port": 53595,
+      "released": true
+    },
+    {
+      "service": "sandbox",
+      "port": 53596,
+      "released": true
+    },
+    {
+      "service": "gateway",
+      "port": 53597,
+      "released": true
+    },
+    {
+      "service": "frontend",
+      "port": 53598,
+      "released": true
+    }
+  ],
+  "allPortsReleased": true
+}

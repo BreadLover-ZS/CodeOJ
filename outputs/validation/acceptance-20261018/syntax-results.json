@@ -1,0 +1,42 @@
+[
+  {
+    "file": "scripts/local/prepare-runtimes.py",
+    "check": "Python AST",
+    "passed": true
+  },
+  {
+    "file": "scripts/local/run-native-stack.py",
+    "check": "Python AST",
+    "passed": true
+  },
+  {
+    "file": "scripts/demo-local-contest.sh",
+    "check": "bash -n",
+    "passed": true
+  },
+  {
+    "file": "scripts/demo-local-judge.sh",
+    "check": "bash -n",
+    "passed": true
+  },
+  {
+    "file": "scripts/test-native-stack.sh",
+    "check": "bash -n",
+    "passed": true
+  },
+  {
+    "file": "scripts/test-registration-local.sh",
+    "check": "bash -n",
+    "passed": true
+  },
+  {
+    "file": "scripts/validation/contest-browser-smoke.cjs",
+    "check": "node --check",
+    "passed": true
+  },
+  {
+    "file": "scripts/validation/contest-real-browser.cjs",
+    "check": "node --check",
+    "passed": true
+  }
+]

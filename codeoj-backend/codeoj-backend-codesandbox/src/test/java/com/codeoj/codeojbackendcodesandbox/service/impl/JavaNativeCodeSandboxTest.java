@@ -4,6 +4,8 @@ import com.codeoj.codeojbackendmodel.model.codesandbox.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Arrays;
@@ -41,6 +43,76 @@ class JavaNativeCodeSandboxTest {
         ExecuteCodeResponse response = sandbox().executeCode(request("this does not compile;", ""));
         assertEquals(SandboxOutcome.CE, response.getOutcome());
         assertEquals(2, response.getStatus());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "// public class Decoy\npublic class Main",
+            "/* public class Decoy {} */ public class Main",
+            "class Helper { String s=\"public class Decoy\"; } public class Solution",
+            "class Helper { public static class Decoy {} } public class Solution",
+            "public final class Solution",
+            "public strictfp final class Solution",
+            "public interface Main",
+            "package contest; public class Solution",
+            "class Main",
+            "public class NativeLauncher"
+    })
+    void entryIsSelectedFromCompiledTypesInsteadOfSourceText(String declaration) {
+        ExecuteCodeRequest request = request("", "");
+        request.setCode(declaration + " { public static void main(String[] a) { System.out.print(3); } }");
+        ExecuteCodeResponse response = sandbox().executeCode(request);
+        assertEquals(SandboxOutcome.EXECUTED, response.getOutcome(), response.getErrorCode());
+        assertEquals(Collections.singletonList("3"), response.getOutputList());
+    }
+
+    @Test void compilerHandlesUnicodeEscapesAndDoesNotInitializeEntry() {
+        ExecuteCodeRequest request = request("", "");
+        request.setCode("public cl" + "\\" + "u0061ss Solution { static { System.out.print(\"init:\"); }"
+                + " public static void main(String[] a) { System.out.print(3); } }");
+        ExecuteCodeResponse response = sandbox().executeCode(request);
+        assertEquals(SandboxOutcome.EXECUTED, response.getOutcome());
+        assertEquals(Collections.singletonList("init:3"), response.getOutputList());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"throw new IllegalArgumentException(\"private detail\");",
+            "int zero=0; System.out.print(1/zero);", "String value=null; value.length();"})
+    void attributedMainExceptionIsCompletedReWithoutLeakingDiagnostic(String body) {
+        ExecuteCodeResponse response = sandbox().executeCode(request(body, ""));
+        assertEquals(SandboxOutcome.RE, response.getOutcome());
+        assertEquals(2, response.getStatus());
+        assertEquals("USER_MAIN_EXCEPTION", response.getErrorCode());
+        assertTrue(response.getOutputList().isEmpty());
+        assertFalse(response.getMessage().contains("private detail"));
+    }
+
+    @Test void entryInitializationExceptionIsAttributedRe() {
+        ExecuteCodeRequest request = request("", "");
+        request.setCode("public class Main { static { if(true) throw new IllegalArgumentException(); }"
+                + "public static void main(String[] a) {} }");
+        ExecuteCodeResponse response = sandbox().executeCode(request);
+        assertEquals(SandboxOutcome.RE, response.getOutcome());
+        assertEquals("USER_CLASS_INITIALIZATION_EXCEPTION", response.getErrorCode());
+    }
+
+    @Test void vmErrorIsNotGuessedToBeUserReOrMle() {
+        ExecuteCodeResponse response = sandbox().executeCode(request("throw new OutOfMemoryError();", ""));
+        assertEquals(SandboxOutcome.PLATFORM_ERROR, response.getOutcome());
+        assertEquals("JVM_OR_ENTRY_POINT_FAILURE", response.getErrorCode());
+    }
+
+    @Test void zeroSystemExitWithoutLauncherReceiptCannotBecomeAc() {
+        ExecuteCodeResponse response = sandbox().executeCode(request("System.out.print(3); System.exit(0);", ""));
+        assertEquals(SandboxOutcome.PLATFORM_ERROR, response.getOutcome());
+        assertEquals("EXECUTION_RECEIPT_UNAVAILABLE", response.getErrorCode());
+    }
+
+    @Test void protocolLookingStdoutAndStderrCannotSupplyAControlReceipt() {
+        ExecuteCodeResponse response = sandbox().executeCode(request(
+                "System.err.print(\"USER_MAIN_EXCEPTION\"); System.out.print(\"CODEOJ_NATIVE_V1\\nRE\");", ""));
+        assertEquals(SandboxOutcome.EXECUTED, response.getOutcome());
+        assertEquals(Collections.singletonList("CODEOJ_NATIVE_V1\nRE"), response.getOutputList());
     }
 
     @Test void silentInfiniteLoopReachesTrustedRunDeadline() {
