@@ -1,0 +1,13 @@
+# cwd: /Users/zzds/Workspace/gitStore/CodeOJ
+# Runtime archives prepared in a private temporary directory, metadata and SHA retained in run.json
+python3 scripts/local/prepare-runtimes.py --root <temporary-runtime-directory>
+# Java8 full reactor, isolated per-test Redis. No existing database/Redis is used.
+REDIS_SERVER=<temporary-runtime-directory>/redis/redis-6.2.24/src/redis-server scripts/test-registration-local.sh
+# Real frontend uses same-origin proxy only; no fabricated responses
+VUE_APP_API_BASE_URL= npm --prefix codeoj-frontend run build
+# Actual run-07 invoked the native runner against the checked temporary binaries
+PLAYWRIGHT_MODULE=<installed-playwright-module> PLAYWRIGHT_BROWSER_CHANNEL=chrome python3 scripts/local/run-native-stack.py --runtimes <temporary-runtime-directory> --evidence outputs/validation/j6-native-20261018/run-07
+# Reusable wrapper executes the same preparation/build/runner stages and cleans its runtimes on EXIT:
+# PLAYWRIGHT_MODULE=<installed-playwright-module> scripts/test-native-stack.sh
+# Wrapper syntax checked; individual substantive stages executed in this session. No global services installed.
+git diff --check

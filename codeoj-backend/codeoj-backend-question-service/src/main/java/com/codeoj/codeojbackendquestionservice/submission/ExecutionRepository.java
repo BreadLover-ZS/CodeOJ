@@ -14,9 +14,12 @@ import java.util.*;
 
 @Repository
 public class ExecutionRepository {
-    final JdbcTemplate jdbc;
+    private final JdbcTemplate jdbc;
 
     public ExecutionRepository(JdbcTemplate jdbc) { this.jdbc = jdbc; }
+
+    /** Read through a method: exception-translation CGLIB proxies do not initialize target fields. */
+    public JdbcTemplate jdbc() { return jdbc; }
 
     /** Read after acquiring the authority row lock, so lock wait cannot extend an expired lease. */
     public LocalDateTime now() {

@@ -1,0 +1,14 @@
+{
+  "sourceFiles": 42,
+  "scope": "Cumulative uncommitted J5 and J6 source/docs/scripts against base HEAD",
+  "baseCommit": "71d6898519447ab89bbf48428f37bd55e4f486dc",
+  "sourceManifestCheck": "PASS",
+  "gitDiffCheck": "PASS",
+  "newSourceWhitespaceCheck": "PASS",
+  "workspacePatchReverseCheck": "PASS",
+  "pythonSyntax": "PASS",
+  "patchBytes": 218031,
+  "committed": false,
+  "pushed": false,
+  "originalOutput": "not read or modified"
+}

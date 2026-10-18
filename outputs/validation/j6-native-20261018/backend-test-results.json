@@ -1,0 +1,173 @@
+{
+  "totals": {
+    "tests": 186,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "suites": [
+    {
+      "suite": "com.codeoj.codeojbackendmodel.model.codesandbox.TextOutputComparatorTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.codeoj.codeojbackendgateway.ContestRouteTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.codeoj.codeojbackendserviceclient.filter.SessionAvailabilityFilterTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardMessagingTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardTest",
+      "tests": 25,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardCacheTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.codeoj.codeojbackendquestionservice.contest.RegistrationMessagingTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.codeoj.codeojbackendquestionservice.contest.ContestCoreTest",
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.codeoj.codeojbackendquestionservice.contest.RegistrationRedisIntegrationTest",
+      "tests": 30,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.codeoj.codeojbackendquestionservice.submission.outbox.OutboxRelayTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.codeoj.codeojbackendquestionservice.submission.SubmissionStatusAccessTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcAdviceTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.codeoj.codeojbackendquestionservice.submission.ReliableExecutionTest",
+      "tests": 26,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.codeoj.codeojbackendquestionservice.submission.QuestionSubmitPrivacyTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcContractTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.codeoj.codeojbackendjudgeservice.rabbitmq.ReliableJudgeConsumerTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.codeoj.codeojbackendjudgeservice.judge.SandboxResultMapperTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandboxTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.codeoj.codeojbackendjudgeservice.judge.ReliableJudgeWorkerTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImplTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.codeoj.codeojbackendjudgeservice.judge.strategy.JavaLanguageJudgeStrategyTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandboxTest",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.codeoj.codeojbackendcodesandbox.service.impl.NativeExecutionIdentityTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "scope": "Final Java8 full reactor; 30 independent Redis/H2 tests, real exception translation proxies enabled. Four infrastructure-only empty Spring contexts remain opt-in, not counted.",
+  "staleXmlCounted": false
+}

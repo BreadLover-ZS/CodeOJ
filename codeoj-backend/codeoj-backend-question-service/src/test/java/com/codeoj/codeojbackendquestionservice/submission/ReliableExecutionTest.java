@@ -35,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ReliableExecutionTest {
     @Configuration @EnableTransactionManagement
     static class Config {
+        @Bean static org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor repositoryProxies() { return new org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor(); }
         @Bean DataSource dataSource() { return new DriverManagerDataSource("jdbc:h2:mem:reliable-tests;MODE=MySQL;DB_CLOSE_DELAY=-1;LOCK_TIMEOUT=3000","sa",""); }
         @Bean JdbcTemplate jdbc(DataSource ds) { return new JdbcTemplate(ds); }
         @Bean PlatformTransactionManager transactionManager(DataSource ds) { return new DataSourceTransactionManager(ds); }
@@ -264,4 +265,9 @@ class ReliableExecutionTest {
         assertThrows(com.codeoj.codeojbackendcommon.exception.BusinessException.class,()->commands.manualRetry(id,retry,99));
         assertEquals(ExecutionStatus.NEEDS_ATTENTION,repository.find(id,false).getExecutionStatus());
     }
+    @Test void repositoryUsesRealExceptionTranslationProxyAndJdbcAccessor() {
+        assertTrue(org.springframework.aop.support.AopUtils.isCglibProxy(repository));
+        assertNotNull(repository.jdbc());
+    }
+
 }

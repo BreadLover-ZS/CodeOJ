@@ -1,0 +1,12 @@
+{
+  "sourceFiles": 27,
+  "sourceManifestCheck": "PASS",
+  "gitDiffCheck": "PASS",
+  "newSourceWhitespaceCheck": "PASS",
+  "workspacePatchReverseCheck": "PASS",
+  "patchBytes": 140439,
+  "baseCommit": "71d6898519447ab89bbf48428f37bd55e4f486dc",
+  "committed": false,
+  "pushed": false,
+  "originalOutput": "not read or modified"
+}

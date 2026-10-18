@@ -1,0 +1,17 @@
+{
+  "capturedAt": "2026-10-18T05:01:36.230502+00:00",
+  "system": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "java": "openjdk version \"1.8.0_504\"\nOpenJDK Runtime Environment Corretto-8.504.01.1 (build 1.8.0_504-b01)\nOpenJDK 64-Bit Server VM Corretto-8.504.01.1 (build 25.504-b01, mixed mode)",
+  "node": "v26.0.0",
+  "redis": "6.2.24; temporary build; random private test port/password/AOF directory; stopped and cleaned",
+  "redisSource": "https://download.redis.io/releases/redis-6.2.24.tar.gz",
+  "redisSourceSha256": "c3f112749c7cb108597713469cc9beed305e91f036fba313ce8dcbad829f5821",
+  "h2": "2.2.224 MySQL mode; controlled database UTC clock",
+  "browser": "Installed Google Chrome, Playwright, mocked HTTP",
+  "realMySQL": false,
+  "realRabbitMQ": false,
+  "deployment": false,
+  "loadTest": false,
+  "nativeRestrictedAttempt": "ps denied in restricted shell; RESOURCE_METRICS_UNAVAILABLE; allowed native-observation rerun passed",
+  "browserRestrictedAttempt": "127.0.0.1 listen EPERM; permitted random loopback rerun passed"
+}

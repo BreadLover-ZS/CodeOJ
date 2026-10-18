@@ -1,0 +1,12 @@
+# cwd: /Users/zzds/Workspace/gitStore/CodeOJ
+# Final full backend reactor, fixed Redis archive verified by script; temporary runtime cleaned
+BUILD_TEST_REDIS=true scripts/test-registration-local.sh
+# Exact J5-focused suite was also run during development; final authority is the full reactor log
+JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-8.jdk/Contents/Home mvn -B -f codeoj-backend/pom.xml -pl codeoj-backend-question-service -am -Dtest=ScoreboardTest,ScoreboardCacheTest,ScoreboardMessagingTest -Dsurefire.failIfNoSpecifiedTests=false package
+npm --prefix codeoj-frontend run build
+PLAYWRIGHT_MODULE=/Users/zzds/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright PLAYWRIGHT_BROWSER_CHANNEL=chrome node scripts/validation/contest-browser-smoke.cjs
+scripts/demo-local-contest.sh
+# Final source/patch checks
+git diff --check
+git apply --reverse --check outputs/validation/j5-local-20261018/workspace.patch
+# Original output/ was not read, traversed, modified, or staged. No commit/push in this development turn.

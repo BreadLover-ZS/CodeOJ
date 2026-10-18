@@ -1,0 +1,8 @@
+locator.waitFor: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for getByText('当前通道：秒杀报名') to be visible[22m
+
+    at /Users/zzds/Workspace/gitStore/CodeOJ/scripts/validation/contest-real-browser.cjs:30:56 {
+  log: [ "  - waiting for getByText('当前通道：秒杀报名') to be visible" ],
+  name: 'TimeoutError'
+}

@@ -29,7 +29,7 @@ public class ExecutionCommands {
         LocalDateTime now=repository.now();
         if(now.isBefore(r.getNextRunAt())) { return lease; }
         if(exhausted(r,now)) { attention(r,now,"RECOVERY_BUDGET_EXHAUSTED"); return lease; }
-        String spec=repository.jdbc.queryForObject("SELECT payload FROM judge_spec WHERE specHash=?",String.class,r.getJudgeSpecHash());
+        String spec=repository.jdbc().queryForObject("SELECT payload FROM judge_spec WHERE specHash=?",String.class,r.getJudgeSpecHash());
         if(!ExecutionRepository.hash(spec).equals(r.getJudgeSpecHash())) {
             attention(r,now,"JUDGE_SPEC_HASH_MISMATCH"); return lease;
         }
@@ -37,7 +37,7 @@ public class ExecutionCommands {
         if(snapshot.getInt("version",0)!=1 || !"TEXT_V1".equals(snapshot.getStr("comparator"))) {
             attention(r,now,"JUDGE_SPEC_VERSION_UNSUPPORTED"); return lease;
         }
-        Map<String,String> source=repository.jdbc.queryForObject("SELECT code,language FROM question_submit WHERE id=?",
+        Map<String,String> source=repository.jdbc().queryForObject("SELECT code,language FROM question_submit WHERE id=?",
                 (rs,row)->{Map<String,String> m=new HashMap<>();m.put("code",rs.getString("code"));m.put("language",rs.getString("language"));return m;},r.getSubmissionId());
         r.setActiveAttempt(r.getActiveAttempt()+1);
         r.setExecutionToken(UUID.randomUUID().toString());
@@ -45,9 +45,9 @@ public class ExecutionCommands {
         r.setLeaseUntil(min(now.plusSeconds(15),r.getAttemptDeadlineAt()));
         r.setExecutionStatus(ExecutionStatus.RUNNING);
         repository.save(r);
-        repository.jdbc.update("INSERT INTO judge_attempt(submissionId,attemptNo,executionToken,state,startedAt,deadlineAt)"
+        repository.jdbc().update("INSERT INTO judge_attempt(submissionId,attemptNo,executionToken,state,startedAt,deadlineAt)"
                 +" VALUES (?,?,?,'RUNNING',?,?)",r.getSubmissionId(),r.getActiveAttempt(),r.getExecutionToken(),now,r.getAttemptDeadlineAt());
-        repository.jdbc.update("UPDATE question_submit SET status=1,judgeInfo='{}' WHERE id=?",r.getSubmissionId());
+        repository.jdbc().update("UPDATE question_submit SET status=1,judgeInfo='{}' WHERE id=?",r.getSubmissionId());
         lease.setClaimed(true);lease.setSubmissionId(r.getSubmissionId());lease.setAttemptNo(r.getActiveAttempt());
         lease.setExecutionToken(r.getExecutionToken());lease.setDeadlineEpochMs(r.getAttemptDeadlineAt().toInstant(ZoneOffset.UTC).toEpochMilli());
         lease.setCode(source.get("code"));lease.setLanguage(source.get("language"));lease.setJudgeSpecHash(r.getJudgeSpecHash());
@@ -87,13 +87,13 @@ public class ExecutionCommands {
         r.setExecutionStatus(ExecutionStatus.COMPLETED);r.setResultVersion(r.getResultVersion()+1);
         r.setResultDigest(digest);r.setLeaseUntil(null);r.setLastError(null);
         repository.save(r);
-        repository.jdbc.update("UPDATE question_submit SET status=2,judgeInfo=? WHERE id=?",json,r.getSubmissionId());
+        repository.jdbc().update("UPDATE question_submit SET status=2,judgeInfo=? WHERE id=?",json,r.getSubmissionId());
         if(result.getVerdict()==JudgeVerdict.AC && r.getContestId()==null) {
-            repository.jdbc.update("UPDATE question SET acceptedNum=acceptedNum+1 WHERE id=(SELECT questionId FROM question_submit WHERE id=?)",r.getSubmissionId());
+            repository.jdbc().update("UPDATE question SET acceptedNum=acceptedNum+1 WHERE id=(SELECT questionId FROM question_submit WHERE id=?)",r.getSubmissionId());
         }
         // Retain result events for the later projection stage; dispatch relay never sends these to judge workers.
         Map<String,Object> event=new LinkedHashMap<>();event.put("submissionId",r.getSubmissionId());event.put("resultVersion",r.getResultVersion());
-        repository.jdbc.update("INSERT INTO reliable_outbox(eventId,eventType,aggregateId,aggregateVersion,payloadVersion,payload,publishState,nextRetryAt,attempts)"
+        repository.jdbc().update("INSERT INTO reliable_outbox(eventId,eventType,aggregateId,aggregateVersion,payloadVersion,payload,publishState,nextRetryAt,attempts)"
                 +" VALUES (?,'JUDGE_RESULT',?,?,1,?,'PENDING',?,0)",UUID.randomUUID().toString(),r.getSubmissionId(),r.getResultVersion(),JSONUtil.toJsonStr(event),now);
         return true;
     }
@@ -116,7 +116,7 @@ public class ExecutionCommands {
             r.setExecutionStatus(ExecutionStatus.RETRY_WAIT);
             r.setNextRunAt(now.plusSeconds(Math.min(60,1L<<Math.min(6,r.getActiveAttempt()))));
             repository.save(r);
-            repository.jdbc.update("UPDATE question_submit SET status=0,judgeInfo='{\"message\":\"平台暂时异常，等待重试\"}' WHERE id=?",r.getSubmissionId());
+            repository.jdbc().update("UPDATE question_submit SET status=0,judgeInfo='{\"message\":\"平台暂时异常，等待重试\"}' WHERE id=?",r.getSubmissionId());
         }
         return true;
     }
@@ -187,16 +187,16 @@ public class ExecutionCommands {
         r.setExecutionStatus(ExecutionStatus.QUEUED);r.setDispatchGeneration(r.getDispatchGeneration()+1);
         r.setDispatchEventId(UUID.randomUUID().toString());r.setExecutionToken(null);r.setLeaseUntil(null);
         r.setAttemptDeadlineAt(null);r.setNextRunAt(now);r.setQueuedAt(now);repository.save(r);repository.insertDispatch(r,now);
-        repository.jdbc.update("UPDATE question_submit SET status=0,judgeInfo='{}' WHERE id=?",r.getSubmissionId());
+        repository.jdbc().update("UPDATE question_submit SET status=0,judgeInfo='{}' WHERE id=?",r.getSubmissionId());
     }
     private void attention(ExecutionRecord r,LocalDateTime now,String code) {
         long before=r.getStateVersion();
         r.setExecutionStatus(ExecutionStatus.NEEDS_ATTENTION);r.setLeaseUntil(null);r.setLastError(code);repository.save(r);
-        repository.jdbc.update("UPDATE question_submit SET status=3,judgeInfo='{\"message\":\"平台判题异常，需管理员处理\"}' WHERE id=?",r.getSubmissionId());
+        repository.jdbc().update("UPDATE question_submit SET status=3,judgeInfo='{\"message\":\"平台判题异常，需管理员处理\"}' WHERE id=?",r.getSubmissionId());
         repository.audit(r,null,"NEEDS_ATTENTION",code,before,policy(r));
     }
     private void finishAttempt(ExecutionRecord r,LocalDateTime now,String state,String error,String digest,String metrics) {
-        int changed=repository.jdbc.update("UPDATE judge_attempt SET state=?,finishedAt=?,errorCode=?,resultDigest=?,resourceMetrics=?"
+        int changed=repository.jdbc().update("UPDATE judge_attempt SET state=?,finishedAt=?,errorCode=?,resultDigest=?,resourceMetrics=?"
                 +" WHERE submissionId=? AND attemptNo=? AND executionToken=? AND state='RUNNING'",state,now,error,digest,metrics,
                 r.getSubmissionId(),r.getActiveAttempt(),r.getExecutionToken());
         if(changed!=1) { throw new IllegalStateException("ATTEMPT_STATE_CONFLICT"); }

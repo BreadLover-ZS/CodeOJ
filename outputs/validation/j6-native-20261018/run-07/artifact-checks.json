@@ -1,0 +1,45 @@
+[
+  {
+    "module": "user-service",
+    "classes": 7,
+    "matchingDependencies": [
+      "common",
+      "model",
+      "service-client"
+    ]
+  },
+  {
+    "module": "question-service",
+    "classes": 60,
+    "matchingDependencies": [
+      "common",
+      "model",
+      "service-client"
+    ]
+  },
+  {
+    "module": "judge-service",
+    "classes": 22,
+    "matchingDependencies": [
+      "common",
+      "model",
+      "service-client"
+    ]
+  },
+  {
+    "module": "gateway",
+    "classes": 3,
+    "matchingDependencies": [
+      "common",
+      "model"
+    ]
+  },
+  {
+    "module": "codesandbox",
+    "classes": 11,
+    "matchingDependencies": [
+      "common",
+      "model"
+    ]
+  }
+]

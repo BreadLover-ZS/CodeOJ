@@ -54,7 +54,7 @@
         >
         <p class="muted">
           按各题最早 AC
-          提交的受理时间计分；解题数优先，达到该解题数的时间次之。目前榜单功能待接入。
+          提交的受理时间计分；解题数优先，达到该解题数的时间次之。同分同时间并列。
         </p>
         <a-button v-if="pending" :loading="submitting" @click="sendPending"
           >重试上次未确认的提交</a-button
@@ -77,6 +77,12 @@
         </p>
       </div>
     </div>
+    <ScoreboardPanel
+      v-if="contest"
+      :key="contest.id"
+      :contest-id="contest.id"
+      :version="contest.version"
+    />
     <a-row v-if="contest?.problems?.length" :gutter="20">
       <a-col :span="11"
         ><div class="app-card problem">
@@ -125,6 +131,7 @@ import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { Message } from "@arco-design/web-vue";
+import ScoreboardPanel from "@/components/ScoreboardPanel.vue";
 import CodeEditor from "@/components/CodeEditor.vue";
 import MdViewer from "@/components/MdViewer.vue";
 import {

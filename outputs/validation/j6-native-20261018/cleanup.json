@@ -1,0 +1,57 @@
+{
+  "at": "2026-10-18T10:27:16.903920+00:00",
+  "ports": {
+    "mysql": {
+      "port": 52149,
+      "released": true
+    },
+    "redis": {
+      "port": 52150,
+      "released": true
+    },
+    "amqp": {
+      "port": 52151,
+      "released": true
+    },
+    "management": {
+      "port": 52152,
+      "released": true
+    },
+    "epmd": {
+      "port": 52153,
+      "released": true
+    },
+    "distribution": {
+      "port": 52154,
+      "released": true
+    },
+    "user": {
+      "port": 52155,
+      "released": true
+    },
+    "question": {
+      "port": 52156,
+      "released": true
+    },
+    "judge": {
+      "port": 52157,
+      "released": true
+    },
+    "sandbox": {
+      "port": 52158,
+      "released": true
+    },
+    "gateway": {
+      "port": 52159,
+      "released": true
+    },
+    "frontend": {
+      "port": 52160,
+      "released": true
+    }
+  },
+  "fixtureDataRemoved": true,
+  "downloadedRuntimesAndArchivesRemoved": true,
+  "globalServicesInstalled": false,
+  "originalOutput": "not read or modified"
+}

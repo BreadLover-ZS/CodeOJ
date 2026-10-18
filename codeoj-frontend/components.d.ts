@@ -42,5 +42,6 @@ declare module 'vue' {
     RegistrationOperations: typeof import('./src/components/RegistrationOperations.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    ScoreboardPanel: typeof import('./src/components/ScoreboardPanel.vue')['default']
   }
 }

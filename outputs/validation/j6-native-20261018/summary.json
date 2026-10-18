@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-18T10:26:50.792197+00:00",
+  "system": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "backendTests": 186,
+  "realBrowserScenarios": 8,
+  "realBrowserPageErrors": 0,
+  "finalStatus": "FINISHED",
+  "finalVersion": "2",
+  "completedSubmissions": 6,
+  "scoreReceipts": 6,
+  "pendingCount": 0,
+  "projectionPendingCount": 0,
+  "finalRun": "run-07",
+  "historicalFailedRuns": [
+    "run-01",
+    "run-02",
+    "run-03",
+    "run-04",
+    "run-05",
+    "run-06"
+  ],
+  "nacos": "UNTESTED: static instances used",
+  "deployment": false,
+  "loadTest": false,
+  "committed": false,
+  "pushed": false
+}

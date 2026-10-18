@@ -35,7 +35,7 @@ public class SubmissionAcceptance {
         ExecutionRecord prior = repository.byKey(user.getId(), request.getRequestKey());
         if (prior != null) { return replay(prior, hash); }
         repository.requireAccount(user.getId(),null,true);
-        List<Map<String,String>> rows=repository.jdbc.query(
+        List<Map<String,String>> rows=repository.jdbc().query(
                 "SELECT judgeConfig,judgeCase FROM question WHERE id=? AND isDelete=0", (rs, row) -> {
                     Map<String,String> q = new HashMap<>();
                     q.put("limits",rs.getString("judgeConfig")); q.put("cases",rs.getString("judgeCase")); return q;
@@ -46,7 +46,7 @@ public class SubmissionAcceptance {
         List<JudgeCase> cases = JSONUtil.toList(question.get("cases"), JudgeCase.class);
         String specHash = freezeSpec(limits,cases);
         long id = write(request,user.getId(),hash,specHash,null,null,null,repository.now());
-        repository.jdbc.update("UPDATE question SET submitNum=submitNum+1 WHERE id=?",request.getQuestionId());
+        repository.jdbc().update("UPDATE question SET submitNum=submitNum+1 WHERE id=?",request.getQuestionId());
         return id;
     }
 
@@ -55,16 +55,16 @@ public class SubmissionAcceptance {
     public long write(QuestionSubmitAddRequest request,long userId,String hash,String specHash,
                       Long contestId,Long snapshotId,Long publishedVersion,LocalDateTime now) {
         long id = IdWorker.getId();
-        repository.jdbc.update("INSERT INTO question_submit(id,language,code,judgeInfo,status,questionId,userId,isDelete)"
+        repository.jdbc().update("INSERT INTO question_submit(id,language,code,judgeInfo,status,questionId,userId,isDelete)"
                         + " VALUES (?,?,?,'{}',0,?,?,0)",id,request.getLanguage(),request.getCode(),request.getQuestionId(),userId);
         String eventId = UUID.randomUUID().toString();
-        repository.jdbc.update("INSERT INTO submission_execution(submissionId,userId,requestKey,requestHash,judgeSpecHash,"
+        repository.jdbc().update("INSERT INTO submission_execution(submissionId,userId,requestKey,requestHash,judgeSpecHash,"
                         + "executionStatus,dispatchGeneration,dispatchEventId,activeAttempt,nextRunAt,queuedAt,acceptedAt,"
                         + "recoveryDeadlineAt,maxAttempts,maxDispatches,recoveryPolicyVersion,resultVersion,stateVersion)"
                         + " VALUES (?,?,?,?,?,'QUEUED',1,?,0,?,?,?,?,3,10,1,0,0)",id,userId,request.getRequestKey(),hash,
                 specHash,eventId,now,now,now,now.plusMinutes(15));
         if(contestId!=null) {
-            repository.jdbc.update("UPDATE submission_execution SET contestId=?,problemSnapshotId=?,publishedVersion=? WHERE submissionId=?",
+            repository.jdbc().update("UPDATE submission_execution SET contestId=?,problemSnapshotId=?,publishedVersion=? WHERE submissionId=?",
                     contestId,snapshotId,publishedVersion,id);
         }
         ExecutionRecord record = repository.find(id,false);
@@ -78,7 +78,7 @@ public class SubmissionAcceptance {
         Map<String,Object> spec=new LinkedHashMap<>();
         spec.put("version",1);spec.put("comparator","TEXT_V1");spec.put("limits",limits);spec.put("cases",cases);
         String payload=JSONUtil.toJsonStr(spec),hash=ExecutionRepository.hash(payload);
-        repository.jdbc.update("INSERT INTO judge_spec(specHash,payload) VALUES (?,?) ON DUPLICATE KEY UPDATE specHash=specHash",hash,payload);
+        repository.jdbc().update("INSERT INTO judge_spec(specHash,payload) VALUES (?,?) ON DUPLICATE KEY UPDATE specHash=specHash",hash,payload);
         return hash;
     }
 

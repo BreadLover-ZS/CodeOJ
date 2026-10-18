@@ -1,0 +1,11 @@
+21741:C 18 Oct 2026 18:05:17.555 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+21741:C 18 Oct 2026 18:05:17.555 # Redis version=6.2.24, bits=64, commit=00000000, modified=0, pid=21741, just started
+21741:C 18 Oct 2026 18:05:17.555 # Configuration loaded
+21741:M 18 Oct 2026 18:05:17.556 * monotonic clock: POSIX clock_gettime
+21741:M 18 Oct 2026 18:05:17.557 * Running mode=standalone, port=49321.
+21741:M 18 Oct 2026 18:05:17.557 # Server initialized
+21741:M 18 Oct 2026 18:05:17.557 * Ready to accept connections
+21741:signal-handler (1792317941) Received SIGTERM scheduling shutdown...
+21741:M 18 Oct 2026 18:05:41.783 # User requested shutdown...
+21741:M 18 Oct 2026 18:05:41.783 * Calling fsync() on the AOF file.
+21741:M 18 Oct 2026 18:05:41.783 # Redis is now ready to exit, bye bye...

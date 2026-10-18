@@ -71,6 +71,8 @@ knife4j:
   enable: true
 # 内部接口（/inner/**）鉴权密钥，服务间调用使用，生产环境务必通过环境变量 INNER_AUTH_SECRET 覆盖
 codeoj:
+  scoreboard:
+    enabled: ${SCOREBOARD_ENABLED:false}
   registration:
     enabled: ${ASYNC_REGISTRATION_ENABLED:false}
     max-clock-skew-ms: ${REGISTRATION_MAX_CLOCK_SKEW_MS:2000}
@@ -79,3 +81,4 @@ codeoj:
     worker-slots: ${RELIABLE_JUDGE_WORKER_SLOTS:2}
   inner-auth-secret: ${INNER_AUTH_SECRET:codeoj-default-inner-secret}
 # Reliable judging needs V001/V002 and old-queue cutover; async registration additionally needs V003 and per-contest cutover.
+# Scoreboard additionally needs V004 and RELIABLE_JUDGE_ENABLED=true.

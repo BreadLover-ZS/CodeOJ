@@ -19,6 +19,8 @@ import java.util.*;
  * No Feign, Redis, MQ or sandbox calls belong in these transactions. */
 @Service
 public class ContestTransactions {
+    @org.springframework.beans.factory.annotation.Autowired(required=false)
+    private com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardTransactions scoreboard;
     private final JdbcTemplate jdbc;
     private final ExecutionRepository executions;
     private final SubmissionAcceptance acceptance;
@@ -176,6 +178,7 @@ public class ContestTransactions {
         if(jdbc.update("UPDATE contest SET remainingCapacity=remainingCapacity-1 WHERE id=? AND remainingCapacity>0",c.id)!=1) { conflict("CONTEST_FULL"); }
         jdbc.update("INSERT INTO contest_registration(id,contestId,userId,requestId,confirmedAt,status) VALUES(?,?,?,?,?,'CONFIRMED')",IdWorker.getId(),c.id,user,request,now);
         if(jdbc.update("UPDATE contest_registration_request SET status='CONFIRMED',stateVersion=stateVersion+1 WHERE id=? AND status='PROCESSING'",request)!=1) { conflict("REGISTRATION_STATE_CONFLICT"); }
+        if(scoreboard!=null) { scoreboard.qualificationConfirmed(c.id); }
     }
     public static void requireKey(String key) { if(key==null || !key.matches("[A-Za-z0-9._:-]{8,128}")) { invalid("INVALID_IDEMPOTENCY_KEY"); } }
     private List<Map<String,Object>> registrationRows(long id,long user) {

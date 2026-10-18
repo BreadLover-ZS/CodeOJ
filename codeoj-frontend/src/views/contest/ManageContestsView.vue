@@ -203,6 +203,13 @@
             >打开参赛页面</router-link
           ></a-space
         >
+        <ScoreboardPanel
+          :key="`score-${active.id}`"
+          :contest-id="active.id"
+          :version="active.version"
+          admin
+          @changed="refreshActive"
+        />
         <RegistrationOperations
           :key="active.id"
           :contest-id="active.id"
@@ -217,6 +224,7 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue";
 import { Message } from "@arco-design/web-vue";
+import ScoreboardPanel from "@/components/ScoreboardPanel.vue";
 import RegistrationOperations from "@/components/RegistrationOperations.vue";
 import {
   Contest,

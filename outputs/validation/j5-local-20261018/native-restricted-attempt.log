@@ -1,0 +1,4 @@
+Exception in thread "main" com.codeoj.codeojbackendcommon.exception.BusinessException: RESOURCE_METRICS_UNAVAILABLE
+	at com.codeoj.codeojbackendjudgeservice.judge.strategy.JavaLanguageJudgeStrategy.platformError(JavaLanguageJudgeStrategy.java:61)
+	at com.codeoj.codeojbackendjudgeservice.judge.strategy.JavaLanguageJudgeStrategy.doJudge(JavaLanguageJudgeStrategy.java:21)
+	at LocalContestDemo.main(LocalContestDemo.java:81)

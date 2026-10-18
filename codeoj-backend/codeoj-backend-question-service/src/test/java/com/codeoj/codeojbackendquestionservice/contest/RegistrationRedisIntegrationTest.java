@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /** Actual isolated Redis/Lua + H2 transactions; not MySQL/RabbitMQ acceptance or load testing. */
 @ExtendWith(SpringExtension.class) @ContextConfiguration(classes=RegistrationRedisIntegrationTest.Config.class)
-@TestPropertySource(properties="codeoj.registration.enabled=true") @DirtiesContext(classMode=DirtiesContext.ClassMode.AFTER_CLASS)
+@TestPropertySource(properties={"codeoj.registration.enabled=true","codeoj.scoreboard.enabled=true"}) @DirtiesContext(classMode=DirtiesContext.ClassMode.AFTER_CLASS)
 @EnabledIfSystemProperty(named="codeoj.real-redis",matches="true") @Timeout(20)
 class RegistrationRedisIntegrationTest {
     static class RedisHarness implements AutoCloseable {
@@ -70,6 +70,7 @@ class RegistrationRedisIntegrationTest {
         @Bean RedisRegistrationLedger ledger(StringRedisTemplate redis) { return new RedisRegistrationLedger(redis); }
         @Bean RegistrationTransactions registrationTransactions(JdbcTemplate j,ContestTransactions c,ExecutionRepository e) { return new RegistrationTransactions(j,c,e); }
         @Bean RegistrationService registrationService(ContestTransactions c,RegistrationTransactions t,RedisRegistrationLedger r,ExecutionRepository e,JdbcTemplate j) { return new RegistrationService(c,t,r,e,j); }
+        @Bean com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardTransactions scores(JdbcTemplate j,ExecutionRepository e) { return new com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardTransactions(j,e); }
         @Bean OutboxStore outbox(JdbcTemplate j,ExecutionRepository e) { return new OutboxStore(j,e); }
     }
     @Autowired DataSource ds;@Autowired JdbcTemplate jdbc;@Autowired ContestTransactions contests;@Autowired RegistrationTransactions transactions;
@@ -79,6 +80,8 @@ class RegistrationRedisIntegrationTest {
         ContestCoreTest seed=new ContestCoreTest();seed.ds=ds;seed.jdbc=jdbc;seed.schema();
         String sql=new String(Files.readAllBytes(Paths.get("..","mysql-init","migrations","V003__async_registration.sql")),StandardCharsets.UTF_8);
         try(Connection c=ds.getConnection()) { ScriptUtils.executeSqlScript(c,new ByteArrayResource(sql.getBytes(StandardCharsets.UTF_8))); }
+        String scoreSql=new String(Files.readAllBytes(Paths.get("..","mysql-init","migrations","V004__contest_scoreboard.sql")),StandardCharsets.UTF_8).replace(" DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci","");
+        try(Connection c=ds.getConnection()) { ScriptUtils.executeSqlScript(c,new ByteArrayResource(scoreSql.getBytes(StandardCharsets.UTF_8))); }
         try(RedisConnection c=redis.getConnectionFactory().getConnection()) { c.flushDb(); } // Only this harness's private server.
         base=LocalDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.MICROS);ContestCoreTest.Clock.now=base;
     }
@@ -255,4 +258,23 @@ class RegistrationRedisIntegrationTest {
         long id=active(1);RegistrationReservation r=raw(id,10);ContestCoreTest.Clock.now=base.plusMinutes(6);
         assertEquals("MANUAL_REVIEW",service.status(id,10).get("status"));RegistrationRequest q=request(id,10);assertEquals(r.getRequestId(),q.getReservation().getRequestId());assertTrue(q.getDeadline().isBefore(ContestCoreTest.Clock.now));assertTrue(outbox.due("REGISTRATION_CONFIRM").isEmpty());assertEquals(0,stock(id));assertEquals(0,count("contest_registration"));
     }
+    @Autowired com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardTransactions scores;
+    com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardCommand scoreCommand(long id) {
+        Map<String,Object> view=scores.snapshot(id,0,20,null,99,true);
+        com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardCommand c=new com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardCommand();
+        c.setExpectedVersion(((Number)view.get("contestVersion")).longValue());c.setExpectedProjectionVersion(((Number)view.get("projectionVersion")).longValue());c.setExpectedRevision(((Number)view.get("revision")).longValue());c.setReason("verified real Redis finalizing ledger");return c;
+    }
+    @Test void finalizationFindsUndurableReservationAndRequiresClosedReconciledLedger() {
+        long id=active(1);RegistrationReservation reservation=raw(id,10);assertEquals(0,count("contest_registration_request"));
+        ContestCoreTest.Clock.now=base.plusMinutes(3);contests.finalizeIfDue(id);
+        assertThrows(SubmissionConflictException.class,()->scores.rebuild(id,scoreCommand(id),99,false));
+        service.reconcile(id,command(transactions.settings(id).getRevision()),99);
+        assertEquals(reservation.getRequestId(),request(id,10).getReservation().getRequestId());assertEquals("0",ledger.stats(id).getStr("open"));
+        assertThrows(SubmissionConflictException.class,()->scores.rebuild(id,scoreCommand(id),99,false));
+        transactions.confirm(request(id,10).event());service.synchronize(request(id,10));
+        service.reconcile(id,command(transactions.settings(id).getRevision()),99);assertEquals("0",ledger.stats(id).getStr("open"));
+        scores.rebuild(id,scoreCommand(id),99,false);scores.finish(id,scoreCommand(id),99);
+        Map<String,Object> finalBoard=scores.snapshot(id,0,20,null,99,true);assertEquals(true,finalBoard.get("final"));assertEquals(1L,finalBoard.get("total"));assertEquals("FINISHED",finalBoard.get("status"));
+    }
+
 }

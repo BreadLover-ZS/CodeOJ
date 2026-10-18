@@ -21,12 +21,13 @@ public class OutboxStore {
     public List<String> due() {
         return due("JUDGE_DISPATCH");
     }
-    private void type(String type) { if(!Arrays.asList("JUDGE_DISPATCH","REGISTRATION_CONFIRM").contains(type)) { throw new IllegalArgumentException("UNSUPPORTED_OUTBOX_TYPE"); } }
+    private void type(String type) { if(!Arrays.asList("JUDGE_DISPATCH","REGISTRATION_CONFIRM","JUDGE_RESULT").contains(type)) { throw new IllegalArgumentException("UNSUPPORTED_OUTBOX_TYPE"); } }
     public List<String> due(String type) {
         type(type);
         LocalDateTime now=repository.now();
         return jdbc.queryForList("SELECT eventId FROM reliable_outbox WHERE eventType=? AND publishState='PENDING'"
                 +" AND nextRetryAt<=? AND (leaseUntil IS NULL OR leaseUntil<=?)"
+                +("JUDGE_RESULT".equals(type)?" AND NOT EXISTS(SELECT 1 FROM scoreboard_result_receipt s WHERE s.eventId=reliable_outbox.eventId)":"")
                 +("REGISTRATION_CONFIRM".equals(type)?" AND EXISTS(SELECT 1 FROM contest_registration_request r WHERE r.id=reliable_outbox.aggregateId AND r.status='PROCESSING')":"")
                 +" ORDER BY nextRetryAt LIMIT 20",String.class,type,now,now);
     }
@@ -47,6 +48,10 @@ public class OutboxStore {
         if(candidates.isEmpty()) { return null; }
         int attempts=jdbc.queryForObject("SELECT attempts FROM reliable_outbox WHERE eventId=?",Integer.class,eventId);
         int budget=20;
+        if("JUDGE_RESULT".equals(type)) {
+            if(jdbc.queryForObject("SELECT COUNT(*) FROM scoreboard_result_receipt WHERE eventId=?",Integer.class,eventId)>0) { return null; }
+            budget=jdbc.queryForObject("SELECT maxPublishAttempts FROM reliable_outbox WHERE eventId=?",Integer.class,eventId);
+        }
         if("REGISTRATION_CONFIRM".equals(type)) {
             List<Integer> budgets=jdbc.queryForList("SELECT maxPublishAttempts FROM contest_registration_request WHERE eventId=? AND status='PROCESSING'",Integer.class,eventId);
             if(budgets.isEmpty()) { return null; }budget=budgets.get(0);

@@ -1,0 +1,1715 @@
+diff --git a/README.md b/README.md
+index 0f95194..a6d053f 100644
+--- a/README.md
++++ b/README.md
+@@ -4,7 +4,7 @@ CodeOJ 是我基于 **Spring Cloud + Vue 3** 实现的微服务在线判题系
+ 
+ 我梳理了提交、消息消费与判题执行三条核心源码流程，并绘制了对应流程图。
+ 
+-赛事平台二次开发正在进行，实施范围与证据见 [赛事开发记录](docs/contest/README.md)。已加入可靠判题、比赛快照/资格、[秒杀报名与恢复对账](docs/contest/j4-local.md)，业务开关默认关闭，真实 MySQL/MQ 联合链尚未验证。可运行 `./scripts/demo-local-contest.sh` 查看 H2 与真实 Java 判题样例；`BUILD_TEST_REDIS=true ./scripts/test-registration-local.sh` 会临时编译 Redis 并运行本机功能回归，不安装全局服务。榜单与结算在 J5 实施；开发阶段不处理部署与压测。
++赛事平台二次开发正在进行，实施范围与证据见 [赛事开发记录](docs/contest/README.md)。已加入可靠判题、比赛快照/资格、[秒杀报名与恢复对账](docs/contest/j4-local.md)，业务开关默认关闭，真实 MySQL/MQ 联合链尚未验证。已接入[成绩榜单、重建与最终结算](docs/contest/j5-local.md)。可运行 `./scripts/demo-local-contest.sh` 查看 H2 报名、真实 Java 判题及最终榜单样例；`BUILD_TEST_REDIS=true ./scripts/test-registration-local.sh` 会临时编译 Redis 并运行本机功能回归，不安装全局服务。新增榜单开关 `SCOREBOARD_ENABLED` 同样默认关闭；开发阶段不处理部署与压测。
+ 
+ ## 核心功能
+ 
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/ContestTransactions.java b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/ContestTransactions.java
+index 32036a4..02c5e87 100644
+--- a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/ContestTransactions.java
++++ b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/ContestTransactions.java
+@@ -19,6 +19,8 @@ import java.util.*;
+  * No Feign, Redis, MQ or sandbox calls belong in these transactions. */
+ @Service
+ public class ContestTransactions {
++    @org.springframework.beans.factory.annotation.Autowired(required=false)
++    private com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardTransactions scoreboard;
+     private final JdbcTemplate jdbc;
+     private final ExecutionRepository executions;
+     private final SubmissionAcceptance acceptance;
+@@ -176,6 +178,7 @@ public class ContestTransactions {
+         if(jdbc.update("UPDATE contest SET remainingCapacity=remainingCapacity-1 WHERE id=? AND remainingCapacity>0",c.id)!=1) { conflict("CONTEST_FULL"); }
+         jdbc.update("INSERT INTO contest_registration(id,contestId,userId,requestId,confirmedAt,status) VALUES(?,?,?,?,?,'CONFIRMED')",IdWorker.getId(),c.id,user,request,now);
+         if(jdbc.update("UPDATE contest_registration_request SET status='CONFIRMED',stateVersion=stateVersion+1 WHERE id=? AND status='PROCESSING'",request)!=1) { conflict("REGISTRATION_STATE_CONFLICT"); }
++        if(scoreboard!=null) { scoreboard.qualificationConfirmed(c.id); }
+     }
+     public static void requireKey(String key) { if(key==null || !key.matches("[A-Za-z0-9._:-]{8,128}")) { invalid("INVALID_IDEMPOTENCY_KEY"); } }
+     private List<Map<String,Object>> registrationRows(long id,long user) {
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationTransactions.java b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationTransactions.java
+index dd5ce75..7286cf1 100644
+--- a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationTransactions.java
++++ b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationTransactions.java
+@@ -13,6 +13,7 @@ import java.util.*;
+ /** DB only. Contest is always locked first. All Redis/MQ work is outside this proxy. */
+ @Service
+ public class RegistrationTransactions {
++    @org.springframework.beans.factory.annotation.Value("${codeoj.scoreboard.enabled:false}") private boolean scoreboardEnabled;
+     private final JdbcTemplate jdbc;private final ContestTransactions contests;private final ExecutionRepository executions;
+     @org.springframework.beans.factory.annotation.Value("${codeoj.registration.max-clock-skew-ms:2000}") private long clockSkewMs=2000;
+     @javax.annotation.PostConstruct public void validateClockPolicy() { if(clockSkewMs<0 || clockSkewMs>60000) { throw new IllegalArgumentException("INVALID_REGISTRATION_CLOCK_POLICY"); } }
+@@ -185,6 +186,7 @@ public class RegistrationTransactions {
+         int allConfirmed=jdbc.queryForObject("SELECT COUNT(*) FROM contest_registration WHERE contestId=? AND status='CONFIRMED'",Integer.class,contest);
+         if(ids.size()!=rows.size() || allConfirmed+c.remaining!=c.capacity || c.remaining!=s.getInitialCapacity()-confirmed || stock!=s.getInitialCapacity()-active) { throw new SubmissionConflictException("CAPACITY_LEDGER_MISMATCH"); }
+         jdbc.update("UPDATE contest SET registrationMode='REDIS_READY',registrationReady=true,registrationIssue=NULL,version=version+1 WHERE id=?",contest);
++        if(scoreboardEnabled && "FINALIZING".equals(c.status)) { jdbc.update("UPDATE contest SET registrationReconciledAt=? WHERE id=?",executions.now(),contest); }
+         audit(contest,actor,"REGISTRATION_RECONCILE_COMPLETE",reason,c.version,c.version+1,"No stock overwrite");return settings(contest);
+     }
+ }
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/submission/ExecutionRpcAdvice.java b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/submission/ExecutionRpcAdvice.java
+index 2bbcf71..97ac1cb 100644
+--- a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/submission/ExecutionRpcAdvice.java
++++ b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/submission/ExecutionRpcAdvice.java
+@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
+ 
+ /** A failed authority command must not be decoded as a default false claim at HTTP 200. */
+ @RestControllerAdvice(assignableTypes={QuestionInnerController.class,ExecutionAdminController.class,SubmissionStatusController.class,
+-        com.codeoj.codeojbackendquestionservice.contest.ContestController.class,com.codeoj.codeojbackendquestionservice.contest.RegistrationAdminController.class})
++        com.codeoj.codeojbackendquestionservice.contest.ContestController.class,com.codeoj.codeojbackendquestionservice.contest.RegistrationAdminController.class,
++        com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardController.class})
+ @Order(Ordered.HIGHEST_PRECEDENCE+1)
+ public class ExecutionRpcAdvice {
+     @ExceptionHandler(BusinessException.class)
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/submission/outbox/OutboxStore.java b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/submission/outbox/OutboxStore.java
+index 9a1a59f..7bc844d 100644
+--- a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/submission/outbox/OutboxStore.java
++++ b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/submission/outbox/OutboxStore.java
+@@ -21,12 +21,13 @@ public class OutboxStore {
+     public List<String> due() {
+         return due("JUDGE_DISPATCH");
+     }
+-    private void type(String type) { if(!Arrays.asList("JUDGE_DISPATCH","REGISTRATION_CONFIRM").contains(type)) { throw new IllegalArgumentException("UNSUPPORTED_OUTBOX_TYPE"); } }
++    private void type(String type) { if(!Arrays.asList("JUDGE_DISPATCH","REGISTRATION_CONFIRM","JUDGE_RESULT").contains(type)) { throw new IllegalArgumentException("UNSUPPORTED_OUTBOX_TYPE"); } }
+     public List<String> due(String type) {
+         type(type);
+         LocalDateTime now=repository.now();
+         return jdbc.queryForList("SELECT eventId FROM reliable_outbox WHERE eventType=? AND publishState='PENDING'"
+                 +" AND nextRetryAt<=? AND (leaseUntil IS NULL OR leaseUntil<=?)"
++                +("JUDGE_RESULT".equals(type)?" AND NOT EXISTS(SELECT 1 FROM scoreboard_result_receipt s WHERE s.eventId=reliable_outbox.eventId)":"")
+                 +("REGISTRATION_CONFIRM".equals(type)?" AND EXISTS(SELECT 1 FROM contest_registration_request r WHERE r.id=reliable_outbox.aggregateId AND r.status='PROCESSING')":"")
+                 +" ORDER BY nextRetryAt LIMIT 20",String.class,type,now,now);
+     }
+@@ -47,6 +48,10 @@ public class OutboxStore {
+         if(candidates.isEmpty()) { return null; }
+         int attempts=jdbc.queryForObject("SELECT attempts FROM reliable_outbox WHERE eventId=?",Integer.class,eventId);
+         int budget=20;
++        if("JUDGE_RESULT".equals(type)) {
++            if(jdbc.queryForObject("SELECT COUNT(*) FROM scoreboard_result_receipt WHERE eventId=?",Integer.class,eventId)>0) { return null; }
++            budget=jdbc.queryForObject("SELECT maxPublishAttempts FROM reliable_outbox WHERE eventId=?",Integer.class,eventId);
++        }
+         if("REGISTRATION_CONFIRM".equals(type)) {
+             List<Integer> budgets=jdbc.queryForList("SELECT maxPublishAttempts FROM contest_registration_request WHERE eventId=? AND status='PROCESSING'",Integer.class,eventId);
+             if(budgets.isEmpty()) { return null; }budget=budgets.get(0);
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/main/resources/application.yml b/codeoj-backend/codeoj-backend-question-service/src/main/resources/application.yml
+index a3b52ea..13200cf 100644
+--- a/codeoj-backend/codeoj-backend-question-service/src/main/resources/application.yml
++++ b/codeoj-backend/codeoj-backend-question-service/src/main/resources/application.yml
+@@ -71,6 +71,8 @@ knife4j:
+   enable: true
+ # 内部接口（/inner/**）鉴权密钥，服务间调用使用，生产环境务必通过环境变量 INNER_AUTH_SECRET 覆盖
+ codeoj:
++  scoreboard:
++    enabled: ${SCOREBOARD_ENABLED:false}
+   registration:
+     enabled: ${ASYNC_REGISTRATION_ENABLED:false}
+     max-clock-skew-ms: ${REGISTRATION_MAX_CLOCK_SKEW_MS:2000}
+@@ -79,3 +81,4 @@ codeoj:
+     worker-slots: ${RELIABLE_JUDGE_WORKER_SLOTS:2}
+   inner-auth-secret: ${INNER_AUTH_SECRET:codeoj-default-inner-secret}
+ # Reliable judging needs V001/V002 and old-queue cutover; async registration additionally needs V003 and per-contest cutover.
++# Scoreboard additionally needs V004 and RELIABLE_JUDGE_ENABLED=true.
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationRedisIntegrationTest.java b/codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationRedisIntegrationTest.java
+index 0b6772c..ce148e9 100644
+--- a/codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationRedisIntegrationTest.java
++++ b/codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationRedisIntegrationTest.java
+@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
+ 
+ /** Actual isolated Redis/Lua + H2 transactions; not MySQL/RabbitMQ acceptance or load testing. */
+ @ExtendWith(SpringExtension.class) @ContextConfiguration(classes=RegistrationRedisIntegrationTest.Config.class)
+-@TestPropertySource(properties="codeoj.registration.enabled=true") @DirtiesContext(classMode=DirtiesContext.ClassMode.AFTER_CLASS)
++@TestPropertySource(properties={"codeoj.registration.enabled=true","codeoj.scoreboard.enabled=true"}) @DirtiesContext(classMode=DirtiesContext.ClassMode.AFTER_CLASS)
+ @EnabledIfSystemProperty(named="codeoj.real-redis",matches="true") @Timeout(20)
+ class RegistrationRedisIntegrationTest {
+     static class RedisHarness implements AutoCloseable {
+@@ -70,6 +70,7 @@ class RegistrationRedisIntegrationTest {
+         @Bean RedisRegistrationLedger ledger(StringRedisTemplate redis) { return new RedisRegistrationLedger(redis); }
+         @Bean RegistrationTransactions registrationTransactions(JdbcTemplate j,ContestTransactions c,ExecutionRepository e) { return new RegistrationTransactions(j,c,e); }
+         @Bean RegistrationService registrationService(ContestTransactions c,RegistrationTransactions t,RedisRegistrationLedger r,ExecutionRepository e,JdbcTemplate j) { return new RegistrationService(c,t,r,e,j); }
++        @Bean com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardTransactions scores(JdbcTemplate j,ExecutionRepository e) { return new com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardTransactions(j,e); }
+         @Bean OutboxStore outbox(JdbcTemplate j,ExecutionRepository e) { return new OutboxStore(j,e); }
+     }
+     @Autowired DataSource ds;@Autowired JdbcTemplate jdbc;@Autowired ContestTransactions contests;@Autowired RegistrationTransactions transactions;
+@@ -79,6 +80,8 @@ class RegistrationRedisIntegrationTest {
+         ContestCoreTest seed=new ContestCoreTest();seed.ds=ds;seed.jdbc=jdbc;seed.schema();
+         String sql=new String(Files.readAllBytes(Paths.get("..","mysql-init","migrations","V003__async_registration.sql")),StandardCharsets.UTF_8);
+         try(Connection c=ds.getConnection()) { ScriptUtils.executeSqlScript(c,new ByteArrayResource(sql.getBytes(StandardCharsets.UTF_8))); }
++        String scoreSql=new String(Files.readAllBytes(Paths.get("..","mysql-init","migrations","V004__contest_scoreboard.sql")),StandardCharsets.UTF_8).replace(" DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci","");
++        try(Connection c=ds.getConnection()) { ScriptUtils.executeSqlScript(c,new ByteArrayResource(scoreSql.getBytes(StandardCharsets.UTF_8))); }
+         try(RedisConnection c=redis.getConnectionFactory().getConnection()) { c.flushDb(); } // Only this harness's private server.
+         base=LocalDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.MICROS);ContestCoreTest.Clock.now=base;
+     }
+@@ -255,4 +258,23 @@ class RegistrationRedisIntegrationTest {
+         long id=active(1);RegistrationReservation r=raw(id,10);ContestCoreTest.Clock.now=base.plusMinutes(6);
+         assertEquals("MANUAL_REVIEW",service.status(id,10).get("status"));RegistrationRequest q=request(id,10);assertEquals(r.getRequestId(),q.getReservation().getRequestId());assertTrue(q.getDeadline().isBefore(ContestCoreTest.Clock.now));assertTrue(outbox.due("REGISTRATION_CONFIRM").isEmpty());assertEquals(0,stock(id));assertEquals(0,count("contest_registration"));
+     }
++    @Autowired com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardTransactions scores;
++    com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardCommand scoreCommand(long id) {
++        Map<String,Object> view=scores.snapshot(id,0,20,null,99,true);
++        com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardCommand c=new com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardCommand();
++        c.setExpectedVersion(((Number)view.get("contestVersion")).longValue());c.setExpectedProjectionVersion(((Number)view.get("projectionVersion")).longValue());c.setExpectedRevision(((Number)view.get("revision")).longValue());c.setReason("verified real Redis finalizing ledger");return c;
++    }
++    @Test void finalizationFindsUndurableReservationAndRequiresClosedReconciledLedger() {
++        long id=active(1);RegistrationReservation reservation=raw(id,10);assertEquals(0,count("contest_registration_request"));
++        ContestCoreTest.Clock.now=base.plusMinutes(3);contests.finalizeIfDue(id);
++        assertThrows(SubmissionConflictException.class,()->scores.rebuild(id,scoreCommand(id),99,false));
++        service.reconcile(id,command(transactions.settings(id).getRevision()),99);
++        assertEquals(reservation.getRequestId(),request(id,10).getReservation().getRequestId());assertEquals("0",ledger.stats(id).getStr("open"));
++        assertThrows(SubmissionConflictException.class,()->scores.rebuild(id,scoreCommand(id),99,false));
++        transactions.confirm(request(id,10).event());service.synchronize(request(id,10));
++        service.reconcile(id,command(transactions.settings(id).getRevision()),99);assertEquals("0",ledger.stats(id).getStr("open"));
++        scores.rebuild(id,scoreCommand(id),99,false);scores.finish(id,scoreCommand(id),99);
++        Map<String,Object> finalBoard=scores.snapshot(id,0,20,null,99,true);assertEquals(true,finalBoard.get("final"));assertEquals(1L,finalBoard.get("total"));assertEquals("FINISHED",finalBoard.get("status"));
++    }
++
+ }
+diff --git a/codeoj-frontend/components.d.ts b/codeoj-frontend/components.d.ts
+index 206856b..c929858 100644
+--- a/codeoj-frontend/components.d.ts
++++ b/codeoj-frontend/components.d.ts
+@@ -42,5 +42,6 @@ declare module 'vue' {
+     RegistrationOperations: typeof import('./src/components/RegistrationOperations.vue')['default']
+     RouterLink: typeof import('vue-router')['RouterLink']
+     RouterView: typeof import('vue-router')['RouterView']
++    ScoreboardPanel: typeof import('./src/components/ScoreboardPanel.vue')['default']
+   }
+ }
+diff --git a/codeoj-frontend/src/views/contest/ContestDetailView.vue b/codeoj-frontend/src/views/contest/ContestDetailView.vue
+index e2f6ddf..43de630 100644
+--- a/codeoj-frontend/src/views/contest/ContestDetailView.vue
++++ b/codeoj-frontend/src/views/contest/ContestDetailView.vue
+@@ -54,7 +54,7 @@
+         >
+         <p class="muted">
+           按各题最早 AC
+-          提交的受理时间计分；解题数优先，达到该解题数的时间次之。目前榜单功能待接入。
++          提交的受理时间计分；解题数优先，达到该解题数的时间次之。同分同时间并列。
+         </p>
+         <a-button v-if="pending" :loading="submitting" @click="sendPending"
+           >重试上次未确认的提交</a-button
+@@ -77,6 +77,12 @@
+         </p>
+       </div>
+     </div>
++    <ScoreboardPanel
++      v-if="contest"
++      :key="contest.id"
++      :contest-id="contest.id"
++      :version="contest.version"
++    />
+     <a-row v-if="contest?.problems?.length" :gutter="20">
+       <a-col :span="11"
+         ><div class="app-card problem">
+@@ -125,6 +131,7 @@ import { computed, onMounted, onUnmounted, ref } from "vue";
+ import { useRoute } from "vue-router";
+ import { useStore } from "vuex";
+ import { Message } from "@arco-design/web-vue";
++import ScoreboardPanel from "@/components/ScoreboardPanel.vue";
+ import CodeEditor from "@/components/CodeEditor.vue";
+ import MdViewer from "@/components/MdViewer.vue";
+ import {
+diff --git a/codeoj-frontend/src/views/contest/ManageContestsView.vue b/codeoj-frontend/src/views/contest/ManageContestsView.vue
+index 18fb760..7b1092c 100644
+--- a/codeoj-frontend/src/views/contest/ManageContestsView.vue
++++ b/codeoj-frontend/src/views/contest/ManageContestsView.vue
+@@ -203,6 +203,13 @@
+             >打开参赛页面</router-link
+           ></a-space
+         >
++        <ScoreboardPanel
++          :key="`score-${active.id}`"
++          :contest-id="active.id"
++          :version="active.version"
++          admin
++          @changed="refreshActive"
++        />
+         <RegistrationOperations
+           :key="active.id"
+           :contest-id="active.id"
+@@ -217,6 +224,7 @@
+ <script setup lang="ts">
+ import { computed, onMounted, reactive, ref } from "vue";
+ import { Message } from "@arco-design/web-vue";
++import ScoreboardPanel from "@/components/ScoreboardPanel.vue";
+ import RegistrationOperations from "@/components/RegistrationOperations.vue";
+ import {
+   Contest,
+diff --git a/docs/contest/README.md b/docs/contest/README.md
+index 1d0f824..803e73c 100644
+--- a/docs/contest/README.md
++++ b/docs/contest/README.md
+@@ -17,7 +17,7 @@
+ | J2 | 已加入提交+Outbox 事务、私有规格、调度代次、租约命令、恢复、异常查询及人工重试；开关默认关闭 | 83 个本机测试通过，真实 MySQL/MQ、旧队列切换及跨重启执行回收未验证，不能记整阶段 PASS |
+ | J3 | 已加入比赛草稿/发布快照、DB_SYNC报名、资格/时间校验、比赛提交、参赛/管理页面与本机演示 | 22项比赛测试、网关契约、本机H2+真实Java样例与mock浏览器检查通过；真实MySQL/MQ联合链未验证 |
+ | J4 | 已加入Redis Lua预留、独立报名Outbox/队列、确认、未决补建、有限复核、取消及回收对账 | 29项真实Redis+H2、7项mock消息契约及管理浏览器检查通过；真实MySQL/MQ联合链、Cluster未验证，不能记整阶段PASS |
+-| J5 | 待实施 | 成绩投影、并列名次、重建和结算尚未接入 |
+-| J6 | 开发文档和演示随阶段推进 | 部署与压测按用户要求后置 |
++| J5 | 已加入结果事件投影、并列/跨页排名、版本化页缓存、重建/结算/修订、参赛及管理榜单 | 本机事务/Redis/真实Java与mock浏览器证据见J5；真实MySQL/MQ联合链仍未验证，不能记整阶段PASS |
++| J6 | 已更新完整原生演示、阶段文档和源码阅读地图 | 真实基础设施API/浏览器联合闭环未验证；部署与压测按用户要求后置 |
+ 
+-详细记录见 [J0/J1 本机验证](j0-j1-local.md)、[J2 可靠判题](j2-local.md)、[J3 比赛本机闭环](j3-local.md)、[J4 秒杀报名](j4-local.md)。后续推进 J5；不把局部测试当作 JV01—JV29 整体通过。
++详细记录见 [J0/J1 本机验证](j0-j1-local.md)、[J2 可靠判题](j2-local.md)、[J3 比赛本机闭环](j3-local.md)、[J4 秒杀报名](j4-local.md)、[J5 成绩与结算](j5-local.md)和[源码阅读地图](source-reading.md)。后续按本机范围完善 J6；不把局部测试当作 JV01—JV29 整体通过。
+diff --git a/scripts/demo/LocalContestDemo.java b/scripts/demo/LocalContestDemo.java
+index 1fb7ccb..67f1438 100644
+--- a/scripts/demo/LocalContestDemo.java
++++ b/scripts/demo/LocalContestDemo.java
+@@ -9,6 +9,7 @@ import com.codeoj.codeojbackendmodel.model.enums.JudgeVerdict;
+ import com.codeoj.codeojbackendmodel.model.reliability.*;
+ import com.codeoj.codeojbackendquestionservice.contest.*;
+ import com.codeoj.codeojbackendquestionservice.submission.*;
++import com.codeoj.codeojbackendquestionservice.scoreboard.*;
+ import org.springframework.context.annotation.*;
+ import org.springframework.core.io.ByteArrayResource;
+ import org.springframework.jdbc.core.JdbcTemplate;
+@@ -39,6 +40,7 @@ public class LocalContestDemo {
+         @Bean SubmissionAcceptance acceptance(ExecutionRepository r) { return new SubmissionAcceptance(r); }
+         @Bean ExecutionCommands commands(ExecutionRepository r) { return new ExecutionCommands(r); }
+         @Bean ContestTransactions contests(JdbcTemplate j,ExecutionRepository r,SubmissionAcceptance a) { return new ContestTransactions(j,r,a); }
++        @Bean ScoreboardTransactions scores(JdbcTemplate j,ExecutionRepository r) { return new ScoreboardTransactions(j,r); }
+         @Bean ContestService service(ContestTransactions c,ExecutionRepository r) { return new ContestService(c,r); }
+     }
+     public static void main(String[] args) throws Exception {
+@@ -49,7 +51,7 @@ public class LocalContestDemo {
+             jdbc.execute("CREATE TABLE `user`(id BIGINT PRIMARY KEY,userRole VARCHAR(32),isDelete INT DEFAULT 0)");jdbc.update("INSERT INTO `user` VALUES(10,'user',0),(99,'admin',0)");
+             jdbc.execute("CREATE TABLE question(id BIGINT PRIMARY KEY,title VARCHAR(120),content TEXT,judgeConfig TEXT,judgeCase TEXT,submitNum INT DEFAULT 0,acceptedNum INT DEFAULT 0,isDelete INT DEFAULT 0)");
+             jdbc.execute("CREATE TABLE question_submit(id BIGINT PRIMARY KEY,language VARCHAR(128),code TEXT,judgeInfo TEXT,status INT,questionId BIGINT,userId BIGINT,isDelete INT)");
+-            for(String name:Arrays.asList("V001__reliable_judging.sql","V002__contest_core.sql")) {
++            for(String name:Arrays.asList("V001__reliable_judging.sql","V002__contest_core.sql","V003__async_registration.sql","V004__contest_scoreboard.sql")) {
+                 String sql=new String(Files.readAllBytes(Paths.get(args[0],"codeoj-backend","mysql-init","migrations",name)),StandardCharsets.UTF_8)
+                         .replace(" CHARACTER SET ascii COLLATE ascii_bin","").replace(" DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci","");
+                 try(Connection c=ds.getConnection()) { ScriptUtils.executeSqlScript(c,new ByteArrayResource(sql.getBytes(StandardCharsets.UTF_8))); }
+@@ -81,12 +83,24 @@ public class LocalContestDemo {
+             if(verdict.getVerdict()!=JudgeVerdict.AC) { throw new AssertionError("Expected AC: "+verdict.getVerdict()); }
+             ExecutionCommand completed=new ExecutionCommand();completed.setSubmissionId(id);completed.setAttemptNo(lease.getAttemptNo());completed.setExecutionToken(lease.getExecutionToken());completed.setResult(verdict);
+             if(!commands.complete(completed) || !commands.complete(completed)) { throw new AssertionError("Completion replay failed"); }
++            ScoreboardTransactions scores=context.getBean(ScoreboardTransactions.class);
++            String resultEvent=jdbc.queryForObject("SELECT eventId FROM reliable_outbox WHERE eventType='JUDGE_RESULT' AND aggregateId=?",String.class,id);
++            ScoreResultEvent resultMessage=JSONUtil.toBean(jdbc.queryForObject("SELECT payload FROM reliable_outbox WHERE eventId=?",String.class,resultEvent),ScoreResultEvent.class);
++            if(!scores.project(resultEvent,resultMessage)) { throw new AssertionError("Projection rejected result event"); }
++            Clock.now=LocalDateTime.ofInstant(Instant.parse(draft.getEndAt()),ZoneOffset.UTC);contests.finalizeIfDue(contest);
++            scores.rebuild(contest,scoreCommand(scores,contest),99,false);scores.finish(contest,scoreCommand(scores,contest),99);
++            Map<String,Object> scoreboard=scores.snapshot(contest,0,20,null,10,true);
++            if(!Boolean.TRUE.equals(scoreboard.get("final"))) { throw new AssertionError("Final scoreboard missing"); }
+             Map<String,Object> evidence=new LinkedHashMap<>();evidence.put("scope","H2 transactions + native javac/java; manual outbox dispatch; not MySQL/MQ/HTTP acceptance");
+-            evidence.put("registration",registration.get("status"));evidence.put("executionStatus",repo.find(id,false).getExecutionStatus());evidence.put("verdict",verdict.getVerdict());
++            evidence.put("scoreboard",scoreboard);evidence.put("registration",registration.get("status"));evidence.put("executionStatus",repo.find(id,false).getExecutionStatus());evidence.put("verdict",verdict.getVerdict());
+             evidence.put("submissions",jdbc.queryForObject("SELECT COUNT(*) FROM submission_execution",Integer.class));evidence.put("attempts",jdbc.queryForObject("SELECT COUNT(*) FROM judge_attempt",Integer.class));
+             evidence.put("resultEvents",jdbc.queryForObject("SELECT COUNT(*) FROM reliable_outbox WHERE eventType='JUDGE_RESULT'",Integer.class));evidence.put("remainingCapacity",jdbc.queryForObject("SELECT remainingCapacity FROM contest WHERE id=?",Integer.class,contest));
+             evidence.put("wallMs",verdict.getTime());evidence.put("memoryKiB",verdict.getMemory());evidence.put("memoryMeasurement",verdict.getMemoryMeasurement());System.out.println(JSONUtil.toJsonStr(evidence));
+         }
+     }
++    static ScoreboardCommand scoreCommand(ScoreboardTransactions scores,long contest) {
++        Map<String,Object> view=scores.snapshot(contest,0,20,null,99,true);ScoreboardCommand c=new ScoreboardCommand();
++        c.setExpectedVersion(((Number)view.get("contestVersion")).longValue());c.setExpectedProjectionVersion(((Number)view.get("projectionVersion")).longValue());c.setExpectedRevision(((Number)view.get("revision")).longValue());c.setReason("verified local native contest result");return c;
++    }
+     static String utc(LocalDateTime time) { return time.toInstant(ZoneOffset.UTC).toString(); }
+ }
+diff --git a/scripts/validation/contest-browser-smoke.cjs b/scripts/validation/contest-browser-smoke.cjs
+index fb47180..1090fce 100644
+--- a/scripts/validation/contest-browser-smoke.cjs
++++ b/scripts/validation/contest-browser-smoke.cjs
+@@ -15,12 +15,13 @@ let browser;
+   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+   const errors = []; page.on("pageerror", e => errors.push(e.message));
+   let registered = false, phase = "REGISTRATION_OPEN", failures = 0, submissionCalls = [];
++  let scoreVersion = 1, scoreRevision = 4, finalVersion = null, scoreCalls = [];
+   let registrationMode = "DB_SYNC", revision = 1, reviewState = "MANUAL_REVIEW", reviewCalls = [];
+   const adminSettings = () => ({ mode: registrationMode, revision });
+   const adminRequests = () => [{ requestId: "9007199254741999", userId: "10", status: reviewState, stateVersion: 3, reclaimState: "RESERVED", attempts: [{ attemptNo: 1, confirmState: "UNKNOWN", returned: false }] }];
+   const contest = () => ({ id: "123", title: "浏览器功能样例", contestType: "PRIVATE", capacity: 2, remainingCapacity: registered ? 1 : 2,
+     registrationOpenAt: "2026-10-20T00:00:00Z", registrationCloseAt: "2026-10-20T01:00:00Z", startAt: "2026-10-20T02:00:00Z", endAt: "2026-10-20T03:00:00Z",
+-    status: phase === "FINALIZING" ? "FINALIZING" : "PUBLISHED", phase, version: revision, publishedVersion: 1, registrationReady: true, ruleVersion: "FIRST_AC_V1", registrationMode,
++    status: ["FINALIZING", "FINISHED"].includes(phase) ? phase : "PUBLISHED", phase, version: revision, publishedVersion: 1, registrationReady: true, ruleVersion: "FIRST_AC_V1", registrationMode,
+     problems: registered && phase !== "REGISTRATION_OPEN" ? [{ id: "456", problemCode: "A", title: "求和", content: "计算两个数的和。", limits: { timeLimit: 1000, memoryLimit: 131072 } }] : [] });
+   const registration = () => ({ requestId: registered ? "789" : null, status: registered ? "CONFIRMED" : "NOT_REGISTERED", qualificationValid: registered, contestStatus: "PUBLISHED" });
+   await page.route("**/api/**", async route => {
+@@ -29,6 +30,22 @@ let browser;
+     if (url.pathname.includes("/user/")) data = { id: "99", userName: "本机样例管理员", userRole: "admin" };
+     else if (url.pathname === "/api/contests") data = [contest()];
+     else if (url.pathname === "/api/contests/123") data = contest();
++    else if (url.pathname === "/api/contests/123/scoreboard") {
++      const version = Number(url.searchParams.get("version") || scoreVersion), page = Number(url.searchParams.get("page") || 0);
++      data = { contestVersion: revision, projectionVersion: version, activeProjectionVersion: scoreVersion, revision: scoreRevision, ruleVersion: "FIRST_AC_V1", status: contest().status,
++        final: version === finalVersion, finalVersion, asOf: "2026-10-20T03:01:00Z", pendingCount: 0, projectionPendingCount: 0, total: 21,
++        entries: page === 0 ? [{ userId: "10", rank: 1, solvedCount: 2, achievedAt: "2026-10-20T02:20:00Z" }, { userId: "11", rank: 1, solvedCount: 2, achievedAt: "2026-10-20T02:20:00Z" }, { userId: "12", rank: 3, solvedCount: 0, achievedAt: null }] : [{ userId: "9007199254741999", rank: 3, solvedCount: 0, achievedAt: null }] };
++    }
++    else if (url.pathname === "/api/contests/123/scoreboard/operations") data = { pending: [], publications: [] };
++    else if (url.pathname.startsWith("/api/contests/123/scoreboard/")) {
++      const action = url.pathname.split("/").pop(), body = request.postDataJSON();
++      assert.equal(body.expectedVersion, revision); assert.equal(body.expectedProjectionVersion, scoreVersion); assert.equal(body.expectedRevision, scoreRevision); assert.ok(body.reason.trim());
++      scoreCalls.push({ action, body }); revision++;
++      if (action === "rebuild") { scoreVersion++; scoreRevision++; data = { matchedPrevious: false }; }
++      else if (action === "finish") { finalVersion = scoreVersion; phase = "FINISHED"; scoreRevision++; data = true; }
++      else if (action === "revise") { scoreVersion++; finalVersion = scoreVersion; scoreRevision++; data = { matchedPrevious: true }; }
++      else data = true;
++    }
+     else if (url.pathname === "/api/contests/123/registration-admin") data = { settings: adminSettings(), requests: adminRequests() };
+     else if (url.pathname.endsWith("/registration-admin/prepare")) { registrationMode = "REDIS_PAUSED"; revision = 2; data = adminSettings(); }
+     else if (url.pathname.endsWith("/registration-admin/reconcile")) { registrationMode = "REDIS_READY"; revision = 4; data = adminSettings(); }
+@@ -48,6 +65,10 @@ let browser;
+   await page.getByRole("link", { name: "查看比赛" }).click(); await page.getByRole("button", { name: "报名", exact: true }).click();
+   await page.getByText("已确认", { exact: false }).waitFor();
+   assert.equal(await page.locator(".monaco-editor").count(), 0, "no prestart editor");
++  const publicBoard = page.locator(".scoreboard-panel"); await publicBoard.getByText("临时榜单", { exact: false }).waitFor();
++  const ties = publicBoard.getByRole("row").filter({ has: page.getByRole("cell", { name: "1", exact: true }) }); assert.equal(await ties.count(), 2);
++  await publicBoard.getByRole("button", { name: "下一页榜单", exact: true }).click(); await publicBoard.getByText("9007199254741999", { exact: true }).waitFor();
++  assert.equal(await publicBoard.getByRole("row").filter({ hasText: "9007199254741999" }).getByRole("cell").first().textContent(), "3");
+   phase = "RUNNING"; await page.getByRole("button", { name: "刷新状态" }).click(); await page.locator(".monaco-editor").waitFor();
+   await page.getByRole("button", { name: "提交当前题目", exact: true }).click(); await page.getByRole("button", { name: "重试上次未确认的提交" }).waitFor();
+   phase = "FINALIZING"; await page.getByRole("button", { name: "刷新状态" }).click(); await page.getByRole("button", { name: "重试上次未确认的提交" }).click();
+@@ -64,6 +85,15 @@ let browser;
+   await page.getByRole("button", { name: "继续确认原请求", exact: true }).click();
+   await page.getByText("确认中", { exact: true }).waitFor();
+   assert.equal(reviewCalls.length, 1); assert.equal(reviewCalls[0].expectedVersion, 3); assert.equal(reviewCalls[0].decision, "CONTINUE"); assert.equal(reviewCalls[0].reason, "已核对原预留及发布证据");
++  const scores = page.locator(".scoreboard-panel");
++  await scores.getByRole("button", { name: "刷新榜单", exact: true }).click();
++  await scores.getByPlaceholder("成绩操作原因（必填，保留审计）").fill("已按权威提交核对成绩");
++  await scores.getByRole("button", { name: "清除榜单缓存", exact: true }).click(); await scores.getByText("成绩操作已完成", { exact: true }).waitFor();
++  await scores.getByRole("button", { name: "从提交重建成绩", exact: true }).click(); await scores.getByText("已重建新版本，发现原投影与权威记录不一致，请核查后结算。", { exact: true }).waitFor();
++  await scores.getByRole("button", { name: "完成结算", exact: true }).click(); await page.getByRole("button", { name: "确定", exact: true }).click(); await scores.getByText("最终榜单", { exact: false }).waitFor();
++  await scores.getByPlaceholder("历史投影版本（留空为当前版本）").fill("1"); await scores.getByRole("button", { name: "查看榜单版本", exact: true }).click(); await scores.getByText("临时榜单", { exact: false }).waitFor();
++  assert.equal(await scores.getByRole("button", { name: "清除榜单缓存", exact: true }).isDisabled(), true);
++  assert.deepEqual(scoreCalls.map(call => call.action), ["cache-clear", "rebuild", "finish"]);
+   assert.deepEqual(errors, []);
+-  process.stdout.write(JSON.stringify({ scope: "mocked HTTP browser smoke", passed: ["contest list", "registration confirmation", "prestart editor hidden", "contest editor", "unknown submission retried with original key and payload after end", "admin draft form", "unknown publication evidence", "paused registration cutover and reconciliation", "versioned review with exact large request ID"], pageErrors: errors }, null, 2) + "\n");
++  process.stdout.write(JSON.stringify({ scope: "mocked HTTP browser smoke", passed: ["contest list", "registration confirmation", "prestart editor hidden", "contest editor", "unknown submission retried with original key and payload after end", "admin draft form", "unknown publication evidence", "paused registration cutover and reconciliation", "versioned review with exact large request ID", "provisional scoreboard ties", "cross-page rank and exact large user ID", "versioned cache invalidation", "projection rebuild mismatch surfaced", "final settlement", "historical scoreboard with mutations disabled"], pageErrors: errors }, null, 2) + "\n");
+ })().catch(e => { console.error(e); process.exitCode = 1; }).finally(async () => { if (browser) await browser.close(); server.close(); });
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreResultEvent.java b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreResultEvent.java
+new file mode 100644
+index 0000000..4dfa064
+--- /dev/null
++++ b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreResultEvent.java
+@@ -0,0 +1,11 @@
++package com.codeoj.codeojbackendquestionservice.scoreboard;
++
++import lombok.Data;
++
++/** Compatible with the result payload already persisted by J2. Identity is the AMQP messageId. */
++@Data
++public class ScoreResultEvent {
++    private Long submissionId;
++    private Integer resultVersion;
++    public boolean valid() { return submissionId!=null && submissionId>0 && resultVersion!=null && resultVersion>0; }
++}
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardCommand.java b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardCommand.java
+new file mode 100644
+index 0000000..d47d422
+--- /dev/null
++++ b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardCommand.java
+@@ -0,0 +1,12 @@
++package com.codeoj.codeojbackendquestionservice.scoreboard;
++
++import lombok.Data;
++
++@Data
++public class ScoreboardCommand {
++    private Long expectedVersion;
++    private Long expectedProjectionVersion;
++    private Long expectedRevision;
++    private String reason;
++    private int additionalPublishAttempts;
++}
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardConsumer.java b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardConsumer.java
+new file mode 100644
+index 0000000..e0ab514
+--- /dev/null
++++ b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardConsumer.java
+@@ -0,0 +1,34 @@
++package com.codeoj.codeojbackendquestionservice.scoreboard;
++
++import cn.hutool.json.JSONUtil;
++import com.rabbitmq.client.Channel;
++import org.springframework.amqp.core.Message;
++import org.springframework.amqp.rabbit.annotation.RabbitListener;
++import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
++import org.springframework.stereotype.Component;
++import java.nio.charset.StandardCharsets;
++import java.util.concurrent.atomic.AtomicInteger;
++
++@Component
++@ConditionalOnExpression("${codeoj.reliable-judge.enabled:false} && ${codeoj.scoreboard.enabled:false}")
++public class ScoreboardConsumer {
++    private final ScoreboardTransactions transactions;private final AtomicInteger failures=new AtomicInteger();
++    public ScoreboardConsumer(ScoreboardTransactions transactions) { this.transactions=transactions; }
++    @RabbitListener(queues=ScoreboardMessaging.QUEUE,containerFactory="scoreboardListenerFactory")
++    public void receive(Message raw,Channel channel) throws Exception {
++        long tag=raw.getMessageProperties().getDeliveryTag();ScoreResultEvent event;
++        try {
++            if(raw.getBody().length>4096) { throw new IllegalArgumentException("OVERSIZED_SCORE_RESULT_EVENT"); }
++            event=JSONUtil.toBean(new String(raw.getBody(),StandardCharsets.UTF_8),ScoreResultEvent.class);
++            if(event==null || !event.valid()) { throw new IllegalArgumentException("INVALID_SCORE_RESULT_EVENT"); }
++        } catch(RuntimeException malformed) { channel.basicReject(tag,false);return; }
++        try { if(transactions.project(raw.getMessageProperties().getMessageId(),event)) { channel.basicAck(tag,false); }else { channel.basicReject(tag,false); }failures.set(0); }
++        catch(com.codeoj.codeojbackendquestionservice.submission.SubmissionConflictException invalidFact) { channel.basicReject(tag,false); }
++        catch(RuntimeException unavailable) {
++            int n=failures.updateAndGet(v->Math.min(v+1,5));
++            try { pause(Math.min(30000,1000L<<n)); }catch(InterruptedException interrupted) { Thread.currentThread().interrupt();throw interrupted; }
++            channel.basicNack(tag,false,true);
++        }
++    }
++    protected void pause(long millis) throws InterruptedException { Thread.sleep(millis); }
++}
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardController.java b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardController.java
+new file mode 100644
+index 0000000..2e08df1
+--- /dev/null
++++ b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardController.java
+@@ -0,0 +1,39 @@
++package com.codeoj.codeojbackendquestionservice.scoreboard;
++
++import com.codeoj.codeojbackendcommon.common.*;
++import com.codeoj.codeojbackendserviceclient.service.UserFeignClient;
++import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
++import org.springframework.web.bind.annotation.*;
++import javax.servlet.http.HttpServletRequest;
++import java.util.*;
++
++@RestController
++@RequestMapping("/contests/{id}/scoreboard")
++@ConditionalOnProperty(name="codeoj.scoreboard.enabled",havingValue="true")
++public class ScoreboardController {
++    private final ScoreboardService service;private final ScoreboardTransactions transactions;private final UserFeignClient users;
++    public ScoreboardController(ScoreboardService service,ScoreboardTransactions transactions,UserFeignClient users) { this.service=service;this.transactions=transactions;this.users=users; }
++    private long actor(HttpServletRequest http) { return users.getLoginUser(http).getId(); }
++    @GetMapping public BaseResponse<Map<String,Object>> page(@PathVariable long id,@RequestParam(defaultValue="0") int page,
++            @RequestParam(defaultValue="20") int size,@RequestParam(required=false) Long version,HttpServletRequest http) {
++        return ResultUtils.success(service.page(id,page,size,version,actor(http)));
++    }
++    @GetMapping("/operations") public BaseResponse<Map<String,Object>> operations(@PathVariable long id,@RequestParam(defaultValue="0") int page,HttpServletRequest http) {
++        return ResultUtils.success(transactions.operations(id,page,actor(http)));
++    }
++    @PostMapping("/rebuild") public BaseResponse<Map<String,Object>> rebuild(@PathVariable long id,@RequestBody ScoreboardCommand command,HttpServletRequest http) {
++        return ResultUtils.success(transactions.rebuild(id,command,actor(http),false));
++    }
++    @PostMapping("/revise") public BaseResponse<Map<String,Object>> revise(@PathVariable long id,@RequestBody ScoreboardCommand command,HttpServletRequest http) {
++        return ResultUtils.success(transactions.rebuild(id,command,actor(http),true));
++    }
++    @PostMapping("/finish") public BaseResponse<Boolean> finish(@PathVariable long id,@RequestBody ScoreboardCommand command,HttpServletRequest http) {
++        transactions.finish(id,command,actor(http));return ResultUtils.success(true);
++    }
++    @PostMapping("/cache-clear") public BaseResponse<Boolean> clear(@PathVariable long id,@RequestBody ScoreboardCommand command,HttpServletRequest http) {
++        transactions.clearCache(id,command,actor(http));return ResultUtils.success(true);
++    }
++    @PostMapping("/replay") public BaseResponse<Integer> replay(@PathVariable long id,@RequestBody ScoreboardCommand command,HttpServletRequest http) {
++        return ResultUtils.success(transactions.replay(id,command,actor(http)));
++    }
++}
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardMessaging.java b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardMessaging.java
+new file mode 100644
+index 0000000..0c3c435
+--- /dev/null
++++ b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardMessaging.java
+@@ -0,0 +1,36 @@
++package com.codeoj.codeojbackendquestionservice.scoreboard;
++
++import com.codeoj.codeojbackendquestionservice.submission.outbox.*;
++import org.springframework.amqp.core.*;
++import org.springframework.amqp.rabbit.connection.ConnectionFactory;
++import org.springframework.amqp.rabbit.core.RabbitTemplate;
++import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
++import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainerFactoryConfigurer;
++import org.springframework.context.annotation.*;
++import org.springframework.scheduling.annotation.Scheduled;
++
++@Configuration
++@org.springframework.boot.autoconfigure.condition.ConditionalOnProperty(name="codeoj.scoreboard.enabled",havingValue="true")
++public class ScoreboardMessaging {
++    @org.springframework.beans.factory.annotation.Value("${codeoj.reliable-judge.enabled:false}") private boolean reliableEnabled;
++    @javax.annotation.PostConstruct public void validate() { if(!reliableEnabled) { throw new IllegalStateException("SCOREBOARD_REQUIRES_RELIABLE_JUDGE"); } }
++    public static final String EXCHANGE="codeoj.scoreboard.v1.exchange",QUEUE="codeoj.scoreboard.v1.queue";
++    @Bean public Declarables scoreboardTopology() {
++        DirectExchange exchange=new DirectExchange(EXCHANGE,true,false),dead=new DirectExchange("codeoj.scoreboard.v1.dlx",true,false);
++        Queue work=QueueBuilder.durable(QUEUE).deadLetterExchange(dead.getName()).deadLetterRoutingKey("quarantine").build(),quarantine=QueueBuilder.durable("codeoj.scoreboard.v1.quarantine").build();
++        return new Declarables(exchange,dead,work,quarantine,BindingBuilder.bind(work).to(exchange).with("result"),BindingBuilder.bind(quarantine).to(dead).with("quarantine"));
++    }
++    @Bean public RabbitTemplate scoreboardTemplate(ConnectionFactory factory) { RabbitTemplate template=new RabbitTemplate(factory);template.setMandatory(true);template.setReturnsCallback(returned->{});return template; }
++    @Bean public SimpleRabbitListenerContainerFactory scoreboardListenerFactory(SimpleRabbitListenerContainerFactoryConfigurer configurer,ConnectionFactory connection) {
++        SimpleRabbitListenerContainerFactory factory=new SimpleRabbitListenerContainerFactory();configurer.configure(factory,connection);factory.setPrefetchCount(10);factory.setConcurrentConsumers(1);factory.setMaxConcurrentConsumers(1);factory.setAcknowledgeMode(AcknowledgeMode.MANUAL);return factory;
++    }
++    @Bean public Relay scoreboardRelay(ScoreboardTransactions transactions,OutboxStore store,@org.springframework.beans.factory.annotation.Qualifier("scoreboardTemplate") RabbitTemplate rabbit) { return new Relay(transactions,store,rabbit); }
++    public static class Relay {
++        private final ScoreboardTransactions transactions;private final OutboxStore store;private final RabbitTemplate rabbit;
++        public Relay(ScoreboardTransactions transactions,OutboxStore store,RabbitTemplate rabbit) { this.transactions=transactions;this.store=store;this.rabbit=rabbit; }
++        @Scheduled(fixedDelay=1000) public void tick() {
++            transactions.recoverPublications();
++            for(String id:store.due("JUDGE_RESULT")) { OutboxStore.Publication p=store.claim(id,"JUDGE_RESULT");if(p!=null) { OutboxDelivery.publish(store,rabbit,p,EXCHANGE,"result"); } }
++        }
++    }
++}
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardService.java b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardService.java
+new file mode 100644
+index 0000000..7b0a25f
+--- /dev/null
++++ b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardService.java
+@@ -0,0 +1,33 @@
++package com.codeoj.codeojbackendquestionservice.scoreboard;
++
++import cn.hutool.json.JSONUtil;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
++import org.springframework.data.redis.core.StringRedisTemplate;
++import org.springframework.stereotype.Service;
++import java.time.Duration;
++import java.util.*;
++
++/** Cache only public page entries. DB authority selects every version and all freshness metadata. */
++@Service
++@ConditionalOnProperty(name="codeoj.scoreboard.enabled",havingValue="true")
++public class ScoreboardService {
++    private final ScoreboardTransactions transactions;
++    @Autowired(required=false) private StringRedisTemplate redis;
++    public ScoreboardService(ScoreboardTransactions transactions) { this.transactions=transactions; }
++    private String key(Map<String,Object> view) {
++        return "contest:scoreboard:{"+view.get("contestId")+"}:"+view.get("projectionVersion")+":"+view.get("revision")+":"+view.get("cacheEpoch")+":"+view.get("page")+":"+view.get("pageSize");
++    }
++    public Map<String,Object> page(long id,int page,int size,Long version,long actor) {
++        Map<String,Object> metadata=transactions.snapshot(id,page,size,version,actor,false);
++        if(redis!=null) {
++            try {
++                String cached=redis.opsForValue().get(key(metadata));
++                if(cached!=null) { metadata.put("entries",JSONUtil.parseArray(cached));return metadata; }
++            } catch(RuntimeException unavailable) { /* Cache availability never changes scoring authority. */ }
++        }
++        Map<String,Object> full=transactions.snapshot(id,page,size,version,actor,true);
++        if(redis!=null) { try { redis.opsForValue().set(key(full),JSONUtil.toJsonStr(full.get("entries")),Duration.ofSeconds(15)); }catch(RuntimeException unavailable) { /* DB page remains valid. */ } }
++        return full;
++    }
++}
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardTransactions.java b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardTransactions.java
+new file mode 100644
+index 0000000..09fdf95
+--- /dev/null
++++ b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardTransactions.java
+@@ -0,0 +1,259 @@
++package com.codeoj.codeojbackendquestionservice.scoreboard;
++
++import cn.hutool.json.JSONUtil;
++import com.codeoj.codeojbackendcommon.common.ErrorCode;
++import com.codeoj.codeojbackendcommon.exception.BusinessException;
++import com.codeoj.codeojbackendmodel.model.enums.JudgeVerdict;
++import com.codeoj.codeojbackendquestionservice.submission.*;
++import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
++import org.springframework.jdbc.core.JdbcTemplate;
++import org.springframework.stereotype.Service;
++import org.springframework.transaction.annotation.Transactional;
++import java.time.*;
++import java.util.*;
++
++/** DB authority only. Contest -> current account -> score-user lock order.
++ * A contest lock deliberately serializes first-version projection/rebuild/qualification changes.
++ * No network calls occur here. Rebuilds are bounded and require immutable completed facts. */
++@Service
++@Transactional(rollbackFor=Exception.class,isolation=org.springframework.transaction.annotation.Isolation.READ_COMMITTED)
++@ConditionalOnProperty(name="codeoj.scoreboard.enabled",havingValue="true")
++public class ScoreboardTransactions {
++    private final JdbcTemplate jdbc;
++    private final ExecutionRepository executions;
++    public ScoreboardTransactions(JdbcTemplate jdbc,ExecutionRepository executions) { this.jdbc=jdbc;this.executions=executions; }
++    static class State {
++        long id,contestVersion,published,version,revision,epoch;Long finalVersion;
++        String status,rule,mode;boolean ready;LocalDateTime start,end,asOf,sealed;
++    }
++    private State lock(long id) {
++        List<State> rows=jdbc.query("SELECT * FROM contest WHERE id=? FOR UPDATE",(rs,n)->{
++            State s=new State();s.id=id;s.contestVersion=rs.getLong("version");s.published=rs.getLong("publishedVersion");
++            s.status=rs.getString("status");s.rule=rs.getString("ruleVersion");s.mode=rs.getString("registrationMode");s.ready=rs.getBoolean("registrationReady");
++            s.start=rs.getObject("startAt",LocalDateTime.class);s.end=rs.getObject("endAt",LocalDateTime.class);s.sealed=rs.getObject("registrationReconciledAt",LocalDateTime.class);return s;
++        },id);
++        if(rows.isEmpty()) { throw new BusinessException(ErrorCode.NOT_FOUND_ERROR); }
++        State s=rows.get(0);
++        if("DRAFT".equals(s.status)) { throw new BusinessException(ErrorCode.NOT_FOUND_ERROR); }
++        if(!"FIRST_AC_V1".equals(s.rule)) { conflict("SCORING_RULE_UNSUPPORTED"); }
++        if(jdbc.queryForObject("SELECT COUNT(*) FROM contest_scoreboard_state WHERE contestId=?",Integer.class,id)==0) {
++            LocalDateTime now=executions.now();
++            jdbc.update("INSERT INTO contest_scoreboard_version VALUES(?,1,'LIVE',NULL,?,?)",id,now,now);
++            jdbc.update("INSERT INTO contest_scoreboard_state VALUES(?,1,0,0,NULL,?)",id,now);
++        }
++        jdbc.query("SELECT * FROM contest_scoreboard_state WHERE contestId=?",rs->{
++            s.version=rs.getLong("activeVersion");s.revision=rs.getLong("revision");s.epoch=rs.getLong("cacheEpoch");
++            s.finalVersion=rs.getObject("finalVersion")==null?null:rs.getLong("finalVersion");s.asOf=rs.getObject("asOf",LocalDateTime.class);
++        },id);
++        return s;
++    }
++    private static void conflict(String message) { throw new SubmissionConflictException(message); }
++    private static String utc(LocalDateTime value) { return value==null?null:value.toInstant(ZoneOffset.UTC).toString(); }
++    private static Map<String,Object> map(Object... pairs) {
++        Map<String,Object> m=new LinkedHashMap<>();for(int i=0;i<pairs.length;i+=2) { m.put((String)pairs[i],pairs[i+1]); }return m;
++    }
++    private void bump(State s) {
++        s.revision++;s.asOf=executions.now();
++        jdbc.update("UPDATE contest_scoreboard_state SET revision=?,asOf=? WHERE contestId=?",s.revision,s.asOf,s.id);
++        jdbc.update("UPDATE contest_scoreboard_version SET asOf=? WHERE contestId=? AND projectionVersion=?",s.asOf,s.id,s.version);
++    }
++    private void zeros(State s) {
++        if("FINISHED".equals(s.status) || "CANCELLED".equals(s.status)) { return; }
++        int added=jdbc.update("INSERT INTO contest_score_user(contestId,projectionVersion,userId,solvedCount,achievedAt)"
++                +" SELECT r.contestId,?,r.userId,0,NULL FROM contest_registration r WHERE r.contestId=? AND r.status='CONFIRMED'"
++                +" AND NOT EXISTS(SELECT 1 FROM contest_score_user u WHERE u.contestId=r.contestId AND u.projectionVersion=? AND u.userId=r.userId)",s.version,s.id,s.version);
++        if(added>0) { bump(s); }
++    }
++    /** Called in the same registration-confirmation transaction when J5 is enabled. */
++    public void qualificationConfirmed(long contest) { State s=lock(contest);zeros(s); }
++
++    static class Fact {
++        long submission,user,problem,published;int resultVersion;String status,digest,result,spec,expectedSpec;
++        LocalDateTime accepted;boolean contextValid;
++    }
++    private List<Fact> facts(long contest,Long submission) {
++        return jdbc.query("SELECT e.submissionId,e.userId,e.problemSnapshotId,e.publishedVersion,e.acceptedAt,e.executionStatus,e.resultVersion,e.resultDigest,e.judgeSpecHash,q.judgeInfo,"
++                +" p.judgeSpecHash AS expectedSpec,CASE WHEN p.id IS NOT NULL AND g.id IS NOT NULL AND q.userId=e.userId THEN true ELSE false END AS contextValid"
++                +" FROM submission_execution e JOIN question_submit q ON q.id=e.submissionId"
++                +" LEFT JOIN contest_problem_snapshot p ON p.id=e.problemSnapshotId AND p.contestId=e.contestId AND p.publishedVersion=e.publishedVersion"
++                +" LEFT JOIN contest_registration g ON g.contestId=e.contestId AND g.userId=e.userId AND g.status='CONFIRMED'"
++                +" WHERE e.contestId=?"+(submission==null?"":" AND e.submissionId=?")+" ORDER BY e.submissionId",(rs,n)->{
++            Fact f=new Fact();f.submission=rs.getLong("submissionId");f.user=rs.getLong("userId");f.problem=rs.getLong("problemSnapshotId");f.published=rs.getLong("publishedVersion");
++            f.accepted=rs.getObject("acceptedAt",LocalDateTime.class);f.status=rs.getString("executionStatus");f.resultVersion=rs.getInt("resultVersion");
++            f.digest=rs.getString("resultDigest");f.result=rs.getString("judgeInfo");f.spec=rs.getString("judgeSpecHash");f.expectedSpec=rs.getString("expectedSpec");f.contextValid=rs.getBoolean("contextValid");return f;
++        },submission==null?new Object[]{contest}:new Object[]{contest,submission});
++    }
++    private JudgeVerdict verdict(State s,Fact f) {
++        if(!f.contextValid || f.published!=s.published || f.accepted.isBefore(s.start) || !f.accepted.isBefore(s.end)
++                || !Objects.equals(f.spec,f.expectedSpec) || !"COMPLETED".equals(f.status) || f.resultVersion<1
++                || f.result==null || !Objects.equals(f.digest,ExecutionRepository.hash(f.result))) { conflict("INVALID_OR_UNRESOLVED_RESULT_FACT"); }
++        try { return JudgeVerdict.valueOf(JSONUtil.parseObj(f.result).getStr("verdict")); }
++        catch(RuntimeException invalid) { throw new SubmissionConflictException("INVALID_RESULT_VERDICT"); }
++    }
++    public boolean project(String eventId,ScoreResultEvent message) {
++        if(eventId==null || !eventId.matches("[a-fA-F0-9-]{36}") || message==null || !message.valid()) { return false; }
++        List<String> events=jdbc.query("SELECT payload FROM reliable_outbox WHERE eventId=? AND eventType='JUDGE_RESULT' AND aggregateId=? AND aggregateVersion=? AND payloadVersion=1",
++                (rs,n)->rs.getString(1),eventId,message.getSubmissionId(),message.getResultVersion());
++        if(events.isEmpty()) { return false; }
++        ScoreResultEvent authority=JSONUtil.toBean(events.get(0),ScoreResultEvent.class);
++        if(!Objects.equals(authority.getSubmissionId(),message.getSubmissionId()) || !Objects.equals(authority.getResultVersion(),message.getResultVersion())) { return false; }
++        ExecutionRecord e=executions.find(message.getSubmissionId(),false);
++        if(e==null || e.getResultVersion()!=message.getResultVersion() || e.getExecutionStatus()!=com.codeoj.codeojbackendmodel.model.reliability.ExecutionStatus.COMPLETED) { return false; }
++        if(e.getContestId()==null) {
++            // Practice results are deliberately outside all contest projections.
++            jdbc.update("INSERT INTO scoreboard_result_receipt(eventId,submissionId,resultVersion,processedAt) SELECT ?,?,?,? WHERE NOT EXISTS(SELECT 1 FROM scoreboard_result_receipt WHERE eventId=?)",
++                    eventId,e.getSubmissionId(),e.getResultVersion(),executions.now(),eventId);return true;
++        }
++        State s=lock(e.getContestId());
++        if(jdbc.queryForObject("SELECT COUNT(*) FROM scoreboard_result_receipt WHERE eventId=?",Integer.class,eventId)>0) { return true; }
++        if(!"CANCELLED".equals(s.status) && !"FINISHED".equals(s.status)) {
++            zeros(s);Fact f=facts(s.id,e.getSubmissionId()).get(0);JudgeVerdict verdict=verdict(s,f);
++            jdbc.queryForObject("SELECT userId FROM contest_score_user WHERE contestId=? AND projectionVersion=? AND userId=? FOR UPDATE",Long.class,s.id,s.version,f.user);
++            if(verdict==JudgeVerdict.AC) {
++                List<LocalDateTime> prior=jdbc.query("SELECT firstAcSubmittedAt FROM contest_score_problem WHERE contestId=? AND projectionVersion=? AND userId=? AND problemSnapshotId=?",
++                        (rs,n)->rs.getObject(1,LocalDateTime.class),s.id,s.version,f.user,f.problem);
++                if(prior.isEmpty()) { jdbc.update("INSERT INTO contest_score_problem VALUES(?,?,?,?,?)",s.id,s.version,f.user,f.problem,f.accepted); }
++                else if(f.accepted.isBefore(prior.get(0))) { jdbc.update("UPDATE contest_score_problem SET firstAcSubmittedAt=? WHERE contestId=? AND projectionVersion=? AND userId=? AND problemSnapshotId=?",f.accepted,s.id,s.version,f.user,f.problem); }
++                jdbc.update("UPDATE contest_score_user SET solvedCount=(SELECT COUNT(*) FROM contest_score_problem p WHERE p.contestId=? AND p.projectionVersion=? AND p.userId=?),"
++                        +" achievedAt=(SELECT MAX(firstAcSubmittedAt) FROM contest_score_problem p WHERE p.contestId=? AND p.projectionVersion=? AND p.userId=?) WHERE contestId=? AND projectionVersion=? AND userId=?",
++                        s.id,s.version,f.user,s.id,s.version,f.user,s.id,s.version,f.user);
++            }
++            bump(s);
++        }
++        jdbc.update("INSERT INTO scoreboard_result_receipt VALUES(?,?,?,?,?,?)",eventId,e.getSubmissionId(),e.getResultVersion(),s.id,s.version,executions.now());return true;
++    }
++    private long pending(State s) {
++        return jdbc.queryForObject("SELECT COUNT(*) FROM submission_execution WHERE contestId=? AND executionStatus<>'COMPLETED'",Long.class,s.id);
++    }
++    private long lag(State s) {
++        return jdbc.queryForObject("SELECT COUNT(*) FROM reliable_outbox o JOIN submission_execution e ON e.submissionId=o.aggregateId WHERE o.eventType='JUDGE_RESULT' AND e.contestId=?"
++                +" AND NOT EXISTS(SELECT 1 FROM scoreboard_result_receipt r WHERE r.eventId=o.eventId)",Long.class,s.id);
++    }
++    public Map<String,Object> snapshot(long id,int page,int size,Long selectedVersion,long actor,boolean withRows) {
++        if(page<0 || page>100000 || size<1 || size>100) { throw new BusinessException(ErrorCode.PARAMS_ERROR,"INVALID_SCOREBOARD_PAGE"); }
++        State s=lock(id);executions.requireAccount(actor,null,false);zeros(s);
++        long version=selectedVersion==null?s.version:selectedVersion;
++        List<Map<String,Object>> versions=jdbc.query("SELECT state,asOf FROM contest_scoreboard_version WHERE contestId=? AND projectionVersion=?",(rs,n)->map("state",rs.getString(1),"asOf",utc(rs.getObject(2,LocalDateTime.class))),id,version);
++        if(versions.isEmpty()) { throw new BusinessException(ErrorCode.NOT_FOUND_ERROR); }
++        Map<String,Object> result=map("contestId",Long.toString(id),"contestVersion",s.contestVersion,"status",s.status,"ruleVersion",s.rule,
++                "projectionVersion",version,"activeProjectionVersion",s.version,"revision",s.revision,"cacheEpoch",s.epoch,"finalVersion",s.finalVersion,
++                "asOf",versions.get(0).get("asOf"),"pendingCount",pending(s),"projectionPendingCount",lag(s),"final","FINAL".equals(versions.get(0).get("state")),
++                "versionState",versions.get(0).get("state"),"page",page,"pageSize",size,
++                "total",jdbc.queryForObject("SELECT COUNT(*) FROM contest_score_user WHERE contestId=? AND projectionVersion=?",Long.class,id,version));
++        if(withRows) {
++            result.put("entries",jdbc.query("SELECT s.userId,s.solvedCount,s.achievedAt,1+(SELECT COUNT(*) FROM contest_score_user t WHERE t.contestId=s.contestId AND t.projectionVersion=s.projectionVersion"
++                    +" AND (t.solvedCount>s.solvedCount OR (t.solvedCount=s.solvedCount AND s.solvedCount>0 AND t.achievedAt<s.achievedAt))) AS ranking"
++                    +" FROM contest_score_user s WHERE s.contestId=? AND s.projectionVersion=? ORDER BY s.solvedCount DESC,s.achievedAt ASC,s.userId ASC LIMIT ? OFFSET ?",
++                    (rs,n)->map("userId",rs.getString(1),"solvedCount",rs.getInt(2),"achievedAt",utc(rs.getObject(3,LocalDateTime.class)),"rank",rs.getLong(4)),id,version,size,(long)page*size));
++        }
++        return result;
++    }
++    private void command(State s,ScoreboardCommand c,long actor) {
++        executions.requireAccount(actor,"admin",true);
++        if(c==null || c.getExpectedVersion()==null || c.getExpectedProjectionVersion()==null || c.getExpectedRevision()==null
++                || c.getReason()==null || c.getReason().trim().isEmpty() || c.getReason().length()>500) { throw new BusinessException(ErrorCode.PARAMS_ERROR,"SCOREBOARD_REASON_AND_VERSIONS_REQUIRED"); }
++        if(c.getExpectedVersion()!=s.contestVersion || c.getExpectedProjectionVersion()!=s.version || c.getExpectedRevision()!=s.revision) { conflict("SCOREBOARD_VERSION_CONFLICT"); }
++    }
++    private void audit(State s,ScoreboardCommand c,long actor,String action,String details) {
++        jdbc.update("INSERT INTO operation_audit VALUES(?,?,?,?,?,?,?,?,?)",UUID.randomUUID().toString(),actor,action,s.id,c.getReason(),s.contestVersion,s.contestVersion+1,details,executions.now());
++        jdbc.update("UPDATE contest SET version=version+1 WHERE id=?",s.id);
++    }
++    private void settledFacts(State s) {
++        if(executions.now().isBefore(s.end) || !("FINALIZING".equals(s.status)||"FINISHED".equals(s.status))) { conflict("FINALIZING_AFTER_END_REQUIRED"); }
++        if(!s.ready || pending(s)>0) { conflict("UNRESOLVED_SUBMISSIONS_OR_REGISTRATION_HOLD"); }
++        long unresolved=jdbc.queryForObject("SELECT COUNT(*) FROM contest_registration_request WHERE contestId=? AND (status IN ('PROCESSING','MANUAL_REVIEW')"
++                +" OR (reservationEpoch IS NOT NULL AND reclaimState NOT IN ('COMPLETE','RELEASED')))",Long.class,s.id);
++        long participants=jdbc.queryForObject("SELECT COUNT(*) FROM contest_registration WHERE contestId=? AND status='CONFIRMED'",Long.class,s.id);
++        long distinct=jdbc.queryForObject("SELECT COUNT(DISTINCT userId) FROM contest_registration WHERE contestId=? AND status='CONFIRMED'",Long.class,s.id);
++        long capacity=jdbc.queryForObject("SELECT capacity-remainingCapacity FROM contest WHERE id=?",Long.class,s.id);
++        long invalidQualifications=jdbc.queryForObject("SELECT COUNT(*) FROM contest_registration g LEFT JOIN contest_registration_request r ON r.id=g.requestId"
++                +" WHERE g.contestId=? AND g.status='CONFIRMED' AND (r.id IS NULL OR r.status<>'CONFIRMED' OR r.contestId<>g.contestId OR r.userId<>g.userId OR r.publishedVersion<>?)",Long.class,s.id,s.published);
++        if(unresolved>0 || participants!=distinct || participants!=capacity || invalidQualifications>0) { conflict("UNRESOLVED_OR_INCONSISTENT_REGISTRATION"); }
++        if(s.mode.startsWith("REDIS_") && (!"REDIS_READY".equals(s.mode) || s.sealed==null || s.sealed.isBefore(s.end))) { conflict("FINALIZING_REGISTRATION_RECONCILIATION_REQUIRED"); }
++        if(participants>10000 || jdbc.queryForObject("SELECT COUNT(*) FROM submission_execution WHERE contestId=?",Long.class,s.id)>50000) { conflict("LOCAL_REBUILD_BOUND_EXCEEDED"); }
++    }
++    private SortedMap<String,LocalDateTime> authoritative(State s) {
++        SortedMap<String,LocalDateTime> values=new TreeMap<>();
++        for(Fact f:facts(s.id,null)) {
++            if(verdict(s,f)==JudgeVerdict.AC) { String key=f.user+":"+f.problem;LocalDateTime prior=values.get(key);if(prior==null || f.accepted.isBefore(prior)) { values.put(key,f.accepted); } }
++        }
++        return values;
++    }
++    private SortedMap<String,LocalDateTime> projected(State s) {
++        SortedMap<String,LocalDateTime> values=new TreeMap<>();
++        jdbc.query("SELECT userId,problemSnapshotId,firstAcSubmittedAt FROM contest_score_problem WHERE contestId=? AND projectionVersion=?",rs->{
++            values.put(rs.getLong(1)+":"+rs.getLong(2),rs.getObject(3,LocalDateTime.class));
++        },s.id,s.version);return values;
++    }
++    private SortedMap<Long,List<LocalDateTime>> totals(State s,SortedMap<String,LocalDateTime> values) {
++        SortedMap<Long,List<LocalDateTime>> users=new TreeMap<>();
++        for(long user:jdbc.queryForList("SELECT userId FROM contest_registration WHERE contestId=? AND status='CONFIRMED' ORDER BY userId",Long.class,s.id)) { users.put(user,new ArrayList<>()); }
++        values.forEach((key,time)->users.get(Long.parseLong(key.split(":")[0])).add(time));return users;
++    }
++    private boolean matches(State s,SortedMap<String,LocalDateTime> values) {
++        if(!values.equals(projected(s))) { return false; }
++        SortedMap<Long,List<LocalDateTime>> totals=totals(s,values);
++        List<Map<String,Object>> stored=jdbc.query("SELECT userId,solvedCount,achievedAt FROM contest_score_user WHERE contestId=? AND projectionVersion=?",(rs,n)->map("id",rs.getLong(1),"count",rs.getInt(2),"at",rs.getObject(3,LocalDateTime.class)),s.id,s.version);
++        if(stored.size()!=totals.size()) { return false; }
++        for(Map<String,Object> row:stored) {
++            List<LocalDateTime> times=totals.get((Long)row.get("id"));
++            if(times==null || times.size()!=(Integer)row.get("count") || !Objects.equals(times.isEmpty()?null:Collections.max(times),row.get("at"))) { return false; }
++        }
++        return true;
++    }
++    public Map<String,Object> rebuild(long id,ScoreboardCommand c,long actor,boolean revision) {
++        State s=lock(id);command(s,c,actor);settledFacts(s);
++        if(revision!="FINISHED".equals(s.status)) { conflict("USE_EXPLICIT_FINAL_REVISION"); }
++        SortedMap<String,LocalDateTime> values=authoritative(s);boolean matched=matches(s,values);long old=s.version;
++        String digest=ExecutionRepository.hash(JSONUtil.toJsonStr(map("participants",totals(s,values),"firstAc",values)));
++        s.version++;LocalDateTime now=executions.now();
++        jdbc.update("INSERT INTO contest_scoreboard_version VALUES(?,?,?,?,?,?)",id,s.version,revision?"FINAL":"REBUILT",digest,now,now);
++        for(Map.Entry<Long,List<LocalDateTime>> user:totals(s,values).entrySet()) {
++            List<LocalDateTime> times=user.getValue();jdbc.update("INSERT INTO contest_score_user VALUES(?,?,?,?,?)",id,s.version,user.getKey(),times.size(),times.isEmpty()?null:Collections.max(times));
++        }
++        values.forEach((key,time)->{String[] parts=key.split(":");jdbc.update("INSERT INTO contest_score_problem VALUES(?,?,?,?,?)",id,s.version,Long.parseLong(parts[0]),Long.parseLong(parts[1]),time);});
++        if(!matches(s,values)) { throw new IllegalStateException("REBUILT_PROJECTION_VALIDATION_FAILED"); }
++        jdbc.update("UPDATE contest_scoreboard_state SET activeVersion=?,finalVersion=? WHERE contestId=?",s.version,revision?Long.valueOf(s.version):s.finalVersion,id);bump(s);
++        jdbc.update("UPDATE contest_scoreboard_version SET state='RETIRED' WHERE contestId=? AND projectionVersion=? AND state<>'FINAL'",id,old);
++        audit(s,c,actor,revision?"SCOREBOARD_FINAL_REVISION":"SCOREBOARD_REBUILD",JSONUtil.toJsonStr(map("previousVersion",old,"newVersion",s.version,"matchedPrevious",matched,"digest",digest)));
++        return map("projectionVersion",s.version,"revision",s.revision,"matchedPrevious",matched,"digest",digest);
++    }
++    public void finish(long id,ScoreboardCommand c,long actor) {
++        State s=lock(id);command(s,c,actor);settledFacts(s);
++        if(!"FINALIZING".equals(s.status) || s.version<2) { conflict("REBUILD_BEFORE_FINALIZATION"); }
++        if(!matches(s,authoritative(s))) { conflict("PROJECTION_MISMATCH_REBUILD_REQUIRED"); }
++        jdbc.update("UPDATE contest_scoreboard_version SET state='FINAL' WHERE contestId=? AND projectionVersion=?",id,s.version);
++        jdbc.update("UPDATE contest_scoreboard_state SET finalVersion=? WHERE contestId=?",s.version,id);bump(s);
++        jdbc.update("UPDATE contest SET status='FINISHED' WHERE id=?",id);audit(s,c,actor,"CONTEST_FINISHED","Authoritative facts and projection agree");
++    }
++    public void clearCache(long id,ScoreboardCommand c,long actor) {
++        State s=lock(id);command(s,c,actor);jdbc.update("UPDATE contest_scoreboard_state SET cacheEpoch=cacheEpoch+1 WHERE contestId=?",id);audit(s,c,actor,"SCOREBOARD_CACHE_CLEAR","Versioned cache namespace advanced");
++    }
++    public int replay(long id,ScoreboardCommand c,long actor) {
++        State s=lock(id);command(s,c,actor);
++        if("FINISHED".equals(s.status)||"CANCELLED".equals(s.status)) { conflict("SCOREBOARD_NOT_REPLAYABLE"); }
++        if(c.getAdditionalPublishAttempts()<0 || c.getAdditionalPublishAttempts()>20) { throw new BusinessException(ErrorCode.PARAMS_ERROR,"INVALID_SCORE_REPLAY_BUDGET"); }
++        List<String> events=jdbc.queryForList("SELECT o.eventId FROM reliable_outbox o JOIN submission_execution e ON e.submissionId=o.aggregateId WHERE o.eventType='JUDGE_RESULT' AND e.contestId=?"
++                +" AND NOT EXISTS(SELECT 1 FROM scoreboard_result_receipt r WHERE r.eventId=o.eventId) ORDER BY e.acceptedAt LIMIT 20",String.class,id);
++        for(String event:events) {
++            int changed=jdbc.update("UPDATE reliable_outbox SET maxPublishAttempts=maxPublishAttempts+?,publishState='PENDING',nextRetryAt=?,lastError=NULL WHERE eventId=?"
++                    +" AND maxPublishAttempts+?<=100 AND attempts<maxPublishAttempts+? AND (leaseUntil IS NULL OR leaseUntil<=?)",c.getAdditionalPublishAttempts(),executions.now(),event,c.getAdditionalPublishAttempts(),c.getAdditionalPublishAttempts(),executions.now());
++            if(changed!=1) { conflict("SCORE_REPLAY_BUDGET_OR_LEASE_CONFLICT"); }
++        }
++        audit(s,c,actor,"SCOREBOARD_EVENT_REPLAY",JSONUtil.toJsonStr(map("eventIds",events,"additionalPublishAttempts",c.getAdditionalPublishAttempts())));return events.size();
++    }
++    public void recoverPublications() {
++        LocalDateTime now=executions.now();
++        List<String> events=jdbc.queryForList("SELECT o.eventId FROM reliable_outbox o WHERE o.eventType='JUDGE_RESULT' AND o.publishState='CONFIRMED' AND o.nextRetryAt<=?"
++                +" AND NOT EXISTS(SELECT 1 FROM scoreboard_result_receipt r WHERE r.eventId=o.eventId) ORDER BY o.nextRetryAt LIMIT 20",String.class,now.minusSeconds(30));
++        for(String event:events) { jdbc.update("UPDATE reliable_outbox SET publishState=CASE WHEN attempts<maxPublishAttempts THEN 'PENDING' ELSE 'ATTENTION' END,nextRetryAt=?,lastError='PROJECTION_RECEIPT_MISSING' WHERE eventId=? AND publishState='CONFIRMED'",now,event); }
++    }
++    public Map<String,Object> operations(long id,int page,long actor) {
++        State s=lock(id);executions.requireAccount(actor,"admin",true);if(page<0 || page>100000) { throw new BusinessException(ErrorCode.PARAMS_ERROR); }zeros(s);
++        return map("pendingCount",pending(s),"projectionPendingCount",lag(s),"pending",jdbc.query("SELECT submissionId,executionStatus,stateVersion,lastError FROM submission_execution WHERE contestId=? AND executionStatus<>'COMPLETED' ORDER BY acceptedAt LIMIT 20 OFFSET ?",
++                (rs,n)->map("submissionId",rs.getString(1),"executionStatus",rs.getString(2),"stateVersion",rs.getLong(3),"errorCode",rs.getString(4)),id,(long)page*20),
++                "publications",jdbc.query("SELECT o.eventId,o.aggregateId,o.publishState,o.attempts,o.maxPublishAttempts,o.lastError FROM reliable_outbox o JOIN submission_execution e ON e.submissionId=o.aggregateId"
++                        +" WHERE o.eventType='JUDGE_RESULT' AND e.contestId=? AND NOT EXISTS(SELECT 1 FROM scoreboard_result_receipt r WHERE r.eventId=o.eventId) ORDER BY e.acceptedAt LIMIT 20 OFFSET ?",
++                        (rs,n)->map("eventId",rs.getString(1),"submissionId",rs.getString(2),"publishState",rs.getString(3),"attempts",rs.getInt(4),"maxPublishAttempts",rs.getInt(5),"errorCode",rs.getString(6)),id,(long)page*20));
++    }
++}
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardCacheTest.java b/codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardCacheTest.java
+new file mode 100644
+index 0000000..19d0ad6
+--- /dev/null
++++ b/codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardCacheTest.java
+@@ -0,0 +1,34 @@
++package com.codeoj.codeojbackendquestionservice.scoreboard;
++
++import org.junit.jupiter.api.Test;
++import org.springframework.data.redis.core.*;
++import org.springframework.test.util.ReflectionTestUtils;
++import java.time.Duration;
++import java.util.*;
++import static org.junit.jupiter.api.Assertions.*;
++import static org.mockito.ArgumentMatchers.*;
++import static org.mockito.Mockito.*;
++
++class ScoreboardCacheTest {
++    Map<String,Object> view(long revision,boolean rows) {
++        Map<String,Object> m=new LinkedHashMap<>();m.put("contestId","1");m.put("projectionVersion",2L);m.put("revision",revision);m.put("cacheEpoch",0L);m.put("page",0);m.put("pageSize",20);m.put("pendingCount",3L);
++        if(rows) { m.put("entries",Collections.singletonList(Collections.singletonMap("userId","9007199254741999"))); }return m;
++    }
++    @Test void cacheHitStillReadsFreshAuthorityAndOnlyCachesEntries() {
++        ScoreboardTransactions t=mock(ScoreboardTransactions.class);StringRedisTemplate redis=mock(StringRedisTemplate.class);ValueOperations<String,String> values=mock(ValueOperations.class);
++        when(redis.opsForValue()).thenReturn(values);when(values.get(anyString())).thenReturn("[{\"userId\":\"9007199254741999\"}]");when(t.snapshot(1,0,20,null,10,false)).thenReturn(view(1,false));
++        ScoreboardService service=new ScoreboardService(t);ReflectionTestUtils.setField(service,"redis",redis);Map<String,Object> result=service.page(1,0,20,null,10);
++        assertEquals(3L,result.get("pendingCount"));assertTrue(result.get("entries").toString().contains("9007199254741999"));verify(t,never()).snapshot(1,0,20,null,10,true);verify(values).get("contest:scoreboard:{1}:2:1:0:0:20");
++    }
++    @Test void redisFailureDoesNotRollbackOrHideDatabasePage() {
++        ScoreboardTransactions t=mock(ScoreboardTransactions.class);StringRedisTemplate redis=mock(StringRedisTemplate.class);when(redis.opsForValue()).thenThrow(new IllegalStateException("CACHE_UNAVAILABLE"));
++        when(t.snapshot(1,0,20,null,10,false)).thenReturn(view(1,false));when(t.snapshot(1,0,20,null,10,true)).thenReturn(view(1,true));
++        ScoreboardService service=new ScoreboardService(t);ReflectionTestUtils.setField(service,"redis",redis);assertEquals(view(1,true),service.page(1,0,20,null,10));
++    }
++    @Test void revisionChangedDuringMissPublishesOnlyUnderNewRevision() {
++        ScoreboardTransactions t=mock(ScoreboardTransactions.class);StringRedisTemplate redis=mock(StringRedisTemplate.class);ValueOperations<String,String> values=mock(ValueOperations.class);when(redis.opsForValue()).thenReturn(values);
++        when(t.snapshot(1,0,20,null,10,false)).thenReturn(view(1,false));when(t.snapshot(1,0,20,null,10,true)).thenReturn(view(2,true));
++        ScoreboardService service=new ScoreboardService(t);ReflectionTestUtils.setField(service,"redis",redis);assertEquals(2L,service.page(1,0,20,null,10).get("revision"));
++        verify(values).set(eq("contest:scoreboard:{1}:2:2:0:0:20"),anyString(),eq(Duration.ofSeconds(15)));
++    }
++}
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardMessagingTest.java b/codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardMessagingTest.java
+new file mode 100644
+index 0000000..92eeee6
+--- /dev/null
++++ b/codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardMessagingTest.java
+@@ -0,0 +1,60 @@
++package com.codeoj.codeojbackendquestionservice.scoreboard;
++
++import cn.hutool.json.JSONUtil;
++import com.codeoj.codeojbackendquestionservice.submission.outbox.*;
++import com.rabbitmq.client.Channel;
++import org.junit.jupiter.api.Test;
++import org.springframework.amqp.core.*;
++import org.springframework.amqp.rabbit.connection.CorrelationData;
++import org.springframework.amqp.rabbit.core.RabbitTemplate;
++import java.nio.charset.StandardCharsets;
++import java.util.*;
++import static org.junit.jupiter.api.Assertions.*;
++import static org.mockito.ArgumentMatchers.*;
++import static org.mockito.Mockito.*;
++
++class ScoreboardMessagingTest {
++    String eventId=UUID.randomUUID().toString();
++    ScoreResultEvent event() { ScoreResultEvent e=new ScoreResultEvent();e.setSubmissionId(2L);e.setResultVersion(1);return e; }
++    Message message(ScoreResultEvent e) { MessageProperties p=new MessageProperties();p.setDeliveryTag(123);p.setMessageId(eventId);return new Message(JSONUtil.toJsonStr(e).getBytes(StandardCharsets.UTF_8),p); }
++    @Test void unsupportedPayloadIsQuarantinedWithoutTouchingAuthority() throws Exception {
++        ScoreboardTransactions t=mock(ScoreboardTransactions.class);Channel c=mock(Channel.class);ScoreResultEvent e=event();e.setResultVersion(0);
++        new ScoreboardConsumer(t).receive(message(e),c);verify(c).basicReject(123,false);verifyNoInteractions(t);verify(c,never()).basicAck(anyLong(),anyBoolean());
++    }
++    @Test void onlyDurablyHandledRequestsAreAcknowledged() throws Exception {
++        ScoreboardTransactions t=mock(ScoreboardTransactions.class);Channel c=mock(Channel.class);ScoreResultEvent e=event();when(t.project(eventId,e)).thenReturn(true);
++        new ScoreboardConsumer(t).receive(message(e),c);verify(t).project(eventId,e);verify(c).basicAck(123,false);
++    }
++    @Test void mismatchedIdentityIsQuarantined() throws Exception {
++        ScoreboardTransactions t=mock(ScoreboardTransactions.class);Channel c=mock(Channel.class);new ScoreboardConsumer(t).receive(message(event()),c);verify(c).basicReject(123,false);verify(c,never()).basicAck(anyLong(),anyBoolean());
++    }
++    @Test void authorityFailureBacksOffBeforeRequeueInsteadOfAck() throws Exception {
++        ScoreboardTransactions t=mock(ScoreboardTransactions.class);Channel c=mock(Channel.class);when(t.project(anyString(),any())).thenThrow(new IllegalStateException("DB_UNAVAILABLE"));long[] delay={0};
++        ScoreboardConsumer consumer=new ScoreboardConsumer(t) { @Override protected void pause(long millis) { delay[0]=millis; } };
++        consumer.receive(message(event()),c);assertEquals(2000,delay[0]);verify(c).basicNack(123,false,true);verify(c,never()).basicAck(anyLong(),anyBoolean());
++    }
++    @Test void interruptionLeavesDeliveryUnacknowledgedAndPreservesInterrupt() throws Exception {
++        ScoreboardTransactions t=mock(ScoreboardTransactions.class);Channel c=mock(Channel.class);when(t.project(anyString(),any())).thenThrow(new IllegalStateException("DB_UNAVAILABLE"));
++        ScoreboardConsumer consumer=new ScoreboardConsumer(t) { @Override protected void pause(long millis) throws InterruptedException { throw new InterruptedException(); } };
++        try { assertThrows(InterruptedException.class,()->consumer.receive(message(event()),c));assertTrue(Thread.currentThread().isInterrupted());verifyNoInteractions(c); }finally { Thread.interrupted(); }
++    }
++    @Test void relayUsesSeparatePersistentMandatoryTransportAndCapturesReturn() {
++        OutboxStore store=mock(OutboxStore.class);RabbitTemplate rabbit=mock(RabbitTemplate.class);OutboxStore.Publication p=new OutboxStore.Publication();p.setEventId("event");p.setToken("attempt");p.setPayload("{}");
++        when(store.due("JUDGE_RESULT")).thenReturn(Collections.singletonList("event"));when(store.claim("event","JUDGE_RESULT")).thenReturn(p);
++        doAnswer(invocation->{Message message=invocation.getArgument(2);assertEquals(MessageDeliveryMode.PERSISTENT,message.getMessageProperties().getDeliveryMode());CorrelationData correlation=invocation.getArgument(3);
++            correlation.setReturned(new ReturnedMessage(message,312,"NO_ROUTE",ScoreboardMessaging.EXCHANGE,"result"));correlation.getFuture().set(new CorrelationData.Confirm(true,null));return null;
++        }).when(rabbit).send(eq(ScoreboardMessaging.EXCHANGE),eq("result"),any(Message.class),any(CorrelationData.class));
++        new ScoreboardMessaging.Relay(mock(ScoreboardTransactions.class),store,rabbit).tick();verify(store).record("event","attempt","ACK",true,"UNROUTABLE");
++    }
++    @Test void sendExceptionIsUnknownAndNeverAReasonToReleaseCapacity() {
++        OutboxStore store=mock(OutboxStore.class);RabbitTemplate rabbit=mock(RabbitTemplate.class);OutboxStore.Publication p=new OutboxStore.Publication();p.setEventId("event");p.setToken("attempt");p.setPayload("{}");
++        doThrow(new IllegalStateException("CONNECTION_LOST")).when(rabbit).send(anyString(),anyString(),any(Message.class),any(CorrelationData.class));
++        OutboxDelivery.publish(store,rabbit,p,ScoreboardMessaging.EXCHANGE,"result");verify(store).record("event","attempt","UNKNOWN",false,"SEND_RESULT_UNKNOWN");verifyNoMoreInteractions(store);
++    }
++    @Test void corruptAuthoritativeFactIsQuarantinedInsteadOfHotRequeued() throws Exception {
++        ScoreboardTransactions t=mock(ScoreboardTransactions.class);Channel c=mock(Channel.class);
++        when(t.project(anyString(),any())).thenThrow(new com.codeoj.codeojbackendquestionservice.submission.SubmissionConflictException("INVALID_RESULT_VERDICT"));
++        new ScoreboardConsumer(t).receive(message(event()),c);verify(c).basicReject(123,false);verify(c,never()).basicNack(anyLong(),anyBoolean(),anyBoolean());verify(c,never()).basicAck(anyLong(),anyBoolean());
++    }
++
++}
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardTest.java b/codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardTest.java
+new file mode 100644
+index 0000000..e4bfa5d
+--- /dev/null
++++ b/codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardTest.java
+@@ -0,0 +1,252 @@
++package com.codeoj.codeojbackendquestionservice.scoreboard;
++
++import cn.hutool.json.JSONUtil;
++import com.codeoj.codeojbackendcommon.exception.BusinessException;
++import com.codeoj.codeojbackendmodel.model.codesandbox.JudgeInfo;
++import com.codeoj.codeojbackendmodel.model.dto.question.*;
++import com.codeoj.codeojbackendmodel.model.entity.User;
++import com.codeoj.codeojbackendmodel.model.enums.JudgeVerdict;
++import com.codeoj.codeojbackendmodel.model.reliability.*;
++import com.codeoj.codeojbackendquestionservice.contest.*;
++import com.codeoj.codeojbackendquestionservice.submission.*;
++import com.codeoj.codeojbackendquestionservice.submission.outbox.*;
++import com.codeoj.codeojbackendserviceclient.service.UserFeignClient;
++import org.junit.jupiter.api.*;
++import org.junit.jupiter.api.extension.ExtendWith;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.context.annotation.*;
++import org.springframework.core.io.ByteArrayResource;
++import org.springframework.jdbc.core.JdbcTemplate;
++import org.springframework.jdbc.datasource.*;
++import org.springframework.jdbc.datasource.init.ScriptUtils;
++import org.springframework.test.context.ContextConfiguration;
++import org.springframework.test.context.junit.jupiter.SpringExtension;
++import org.springframework.test.web.servlet.MockMvc;
++import org.springframework.test.web.servlet.setup.MockMvcBuilders;
++import org.springframework.transaction.PlatformTransactionManager;
++import org.springframework.transaction.annotation.EnableTransactionManagement;
++import javax.sql.DataSource;
++import java.nio.charset.StandardCharsets;
++import java.nio.file.*;
++import java.sql.Connection;
++import java.time.*;
++import java.util.*;
++import java.util.concurrent.*;
++import static org.junit.jupiter.api.Assertions.*;
++import static org.mockito.Mockito.*;
++import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
++import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
++
++/** Functional concurrency tests with real Spring transactions and H2; not MySQL/MQ acceptance. */
++@ExtendWith(SpringExtension.class) @ContextConfiguration(classes=ScoreboardTest.Config.class) @Timeout(20)
++class ScoreboardTest {
++    @Configuration @EnableTransactionManagement
++    static class Config {
++        @Bean DataSource ds() { return new DriverManagerDataSource("jdbc:h2:mem:scoreboard-tests;MODE=MySQL;DB_CLOSE_DELAY=-1;LOCK_TIMEOUT=4000","sa",""); }
++        @Bean JdbcTemplate jdbc(DataSource ds) { return new JdbcTemplate(ds); }
++        @Bean PlatformTransactionManager transactionManager(DataSource ds) { return new DataSourceTransactionManager(ds); }
++        @Bean ExecutionRepository repo(JdbcTemplate j) { return new ExecutionRepository(j); }
++        @Bean SubmissionAcceptance acceptance(ExecutionRepository r) { return new SubmissionAcceptance(r); }
++        @Bean ExecutionCommands commands(ExecutionRepository r) { return new ExecutionCommands(r); }
++        @Bean ContestTransactions contests(JdbcTemplate j,ExecutionRepository r,SubmissionAcceptance a) { return new ContestTransactions(j,r,a); }
++        @Bean ContestService facade(ContestTransactions t,ExecutionRepository r) { return new ContestService(t,r); }
++        @Bean ScoreboardTransactions scores(JdbcTemplate j,ExecutionRepository r) { return new ScoreboardTransactions(j,r); }
++        @Bean ScoreboardService service(ScoreboardTransactions s) { return new ScoreboardService(s); }
++        @Bean OutboxStore outbox(JdbcTemplate j,ExecutionRepository r) { return new OutboxStore(j,r); }
++    }
++    public static class Clock { static volatile LocalDateTime now;public static LocalDateTime utcTimestamp(int precision) { return now; } }
++    @Autowired DataSource ds;@Autowired JdbcTemplate jdbc;@Autowired ContestTransactions contests;@Autowired ContestService facade;
++    @Autowired ExecutionCommands executions;@Autowired ExecutionRepository repo;@Autowired ScoreboardTransactions scores;
++    @Autowired SubmissionAcceptance acceptance;@Autowired ScoreboardService service;@Autowired OutboxStore outbox;
++    static final LocalDateTime BASE=LocalDateTime.of(2026,10,20,0,0);
++    long contest;Map<String,Long> problems;int sequence;
++    @BeforeEach void schema() throws Exception {
++        Clock.now=BASE;jdbc.execute("DROP ALL OBJECTS");jdbc.execute("CREATE ALIAS UTC_TIMESTAMP FOR '"+Clock.class.getName()+".utcTimestamp'");
++        jdbc.execute("CREATE TABLE `user`(id BIGINT PRIMARY KEY,userRole VARCHAR(32),isDelete INT DEFAULT 0)");
++        jdbc.update("INSERT INTO `user` VALUES(10,'user',0),(11,'user',0),(12,'user',0),(13,'user',0),(14,'user',0),(99,'admin',0)");
++        jdbc.execute("CREATE TABLE question(id BIGINT PRIMARY KEY,title VARCHAR(120),content TEXT,judgeConfig TEXT,judgeCase TEXT,submitNum INT DEFAULT 0,acceptedNum INT DEFAULT 0,isDelete INT DEFAULT 0)");
++        jdbc.execute("CREATE TABLE question_submit(id BIGINT PRIMARY KEY,language VARCHAR(128),code TEXT,judgeInfo TEXT,status INT,questionId BIGINT,userId BIGINT,isDelete INT)");
++        for(String name:Arrays.asList("V001__reliable_judging.sql","V002__contest_core.sql","V003__async_registration.sql","V004__contest_scoreboard.sql")) {
++            String sql=new String(Files.readAllBytes(Paths.get("..","mysql-init","migrations",name)),StandardCharsets.UTF_8)
++                    .replace(" CHARACTER SET ascii COLLATE ascii_bin","").replace(" DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci","");
++            try(Connection c=ds.getConnection()) { ScriptUtils.executeSqlScript(c,new ByteArrayResource(sql.getBytes(StandardCharsets.UTF_8))); }
++        }
++        ContestDraft d=new ContestDraft();d.setTitle("Scoreboard fixture");d.setContestType("PRIVATE");d.setCapacity(4);
++        d.setRegistrationOpenAt(utc(1));d.setRegistrationCloseAt(utc(2));d.setStartAt(utc(3));d.setEndAt(utc(63));
++        List<ContestDraft.Problem> ps=new ArrayList<>();for(String code:Arrays.asList("A","B")) {
++            ContestDraft.Problem p=new ContestDraft.Problem();p.setProblemCode(code);p.setTitle("Secret "+code);p.setContent("hidden statement");
++            JudgeConfig limits=new JudgeConfig();limits.setTimeLimit(1000L);limits.setMemoryLimit(131072L);p.setLimits(limits);
++            JudgeCase sample=new JudgeCase();sample.setInput("hidden input");sample.setOutput("hidden answer");p.setCases(Collections.singletonList(sample));ps.add(p);
++        }d.setProblems(ps);contest=Long.parseLong((String)contests.create(d,99).get("id"));
++        ContestCommand publish=new ContestCommand();publish.setExpectedVersion(0L);contests.publish(contest,publish,99);
++        Clock.now=BASE.plusMinutes(1);for(long user=10;user<14;user++) { contests.register(contest,"registration-key-"+user,user); }
++        problems=new HashMap<>();jdbc.query("SELECT problemCode,id FROM contest_problem_snapshot WHERE contestId=?",rs->{problems.put(rs.getString(1),rs.getLong(2));},contest);
++    }
++    String utc(int minute) { return BASE.plusMinutes(minute).toInstant(ZoneOffset.UTC).toString(); }
++    long submit(long user,String problem,int minutes) {
++        return submitAt(user,problem,BASE.plusMinutes(3+minutes));
++    }
++    long submitAt(long user,String problem,LocalDateTime now) {
++        Clock.now=now;ContestSubmission r=new ContestSubmission();r.setProblemSnapshotId(problems.get(problem));r.setPublishedVersion(1L);r.setLanguage("java");r.setCode("public class Main {} // private source");
++        return facade.submit(contest,r,"submission-key-"+(++sequence),user);
++    }
++    JudgeLease claim(long id) { ExecutionRecord e=repo.find(id,false);return executions.claim(repo.dispatch(id,e.getDispatchGeneration(),e.getDispatchEventId())); }
++    void complete(JudgeLease lease,JudgeVerdict verdict) {
++        assertTrue(lease.isClaimed());ExecutionCommand c=new ExecutionCommand();c.setSubmissionId(lease.getSubmissionId());c.setAttemptNo(lease.getAttemptNo());c.setExecutionToken(lease.getExecutionToken());
++        JudgeInfo result=new JudgeInfo();result.setVerdict(verdict);result.setTime(1L);result.setMemory(1L);c.setResult(result);assertTrue(executions.complete(c));
++    }
++    String result(long user,String problem,int minutes,JudgeVerdict verdict) {
++        long id=submit(user,problem,minutes);complete(claim(id),verdict);
++        return jdbc.queryForObject("SELECT eventId FROM reliable_outbox WHERE eventType='JUDGE_RESULT' AND aggregateId=?",String.class,id);
++    }
++    boolean apply(String event) { String payload=jdbc.queryForObject("SELECT payload FROM reliable_outbox WHERE eventId=?",String.class,event);return scores.project(event,JSONUtil.toBean(payload,ScoreResultEvent.class)); }
++    Map<String,Object> view() { return scores.snapshot(contest,0,20,null,14,true); }
++    @SuppressWarnings("unchecked") List<Map<String,Object>> entries(Map<String,Object> view) { return (List<Map<String,Object>>)view.get("entries"); }
++    ScoreboardCommand command() {
++        Map<String,Object> view=view();ScoreboardCommand c=new ScoreboardCommand();c.setExpectedVersion(((Number)view.get("contestVersion")).longValue());c.setExpectedProjectionVersion(((Number)view.get("projectionVersion")).longValue());c.setExpectedRevision(((Number)view.get("revision")).longValue());c.setReason("checked independent score fixture");return c;
++    }
++    void ended() { Clock.now=BASE.plusMinutes(63);contests.finalizeIfDue(contest); }
++    void assertRanks(long... ranks) { List<Map<String,Object>> entries=entries(view());assertEquals(ranks.length,entries.size());for(int i=0;i<ranks.length;i++) { assertEquals(ranks[i],entries.get(i).get("rank")); } }
++    @Test void zeroRowsAreCreatedInConfirmationTransactionAndAllTie() {
++        assertEquals(4,jdbc.queryForObject("SELECT COUNT(*) FROM contest_score_user",Integer.class));assertRanks(1,1,1,1);
++        assertFalse(JSONUtil.toJsonStr(view()).contains("hidden"));
++    }
++    @Test void handCalculatedTieAndEarlierAcDeliveredLastChangeAchievedAt() {
++        String a=result(10,"A",10,JudgeVerdict.AC),b=result(10,"B",20,JudgeVerdict.AC),earlier=result(10,"B",12,JudgeVerdict.AC);
++        String c=result(11,"A",15,JudgeVerdict.AC),d=result(11,"B",20,JudgeVerdict.AC);
++        for(String e:Arrays.asList(d,b,c,a)) { assertTrue(apply(e)); }assertRanks(1,1,3,3);
++        assertTrue(apply(earlier));assertTrue(apply(earlier));assertRanks(1,2,3,3);
++        assertEquals(utc(15),entries(view()).get(0).get("achievedAt")); // start+12 minutes = BASE+15
++        assertEquals(2,entries(view()).get(0).get("solvedCount"));
++    }
++    @Test void competitionRanksCrossPageAndZeroTiesDoNotRestart() {
++        apply(result(10,"A",1,JudgeVerdict.AC));apply(result(11,"A",1,JudgeVerdict.AC));assertRanks(1,1,3,3);
++        List<Map<String,Object>> page=entries(scores.snapshot(contest,1,1,null,14,true));assertEquals(1L,page.get(0).get("rank"));assertEquals("11",page.get(0).get("userId"));
++        assertEquals(3L,entries(scores.snapshot(contest,3,1,null,14,true)).get(0).get("rank"));
++    }
++    @Test void userIdOnlyStabilizesDisplayAndNeverBreaksTie() {
++        apply(result(11,"A",2,JudgeVerdict.AC));apply(result(10,"A",2,JudgeVerdict.AC));assertRanks(1,1,3,3);assertEquals("10",entries(view()).get(0).get("userId"));
++    }
++    @Test void duplicateAndSameProblemAcNeverAddPoints() {
++        String e=result(10,"A",1,JudgeVerdict.AC);for(int i=0;i<5;i++) { assertTrue(apply(e)); }apply(result(10,"A",3,JudgeVerdict.AC));
++        assertEquals(1,entries(view()).get(0).get("solvedCount"));assertEquals(1,jdbc.queryForObject("SELECT COUNT(*) FROM contest_score_problem",Integer.class));
++    }
++    @Test void nonAcIsZeroAndMalformedEventCannotChangeScores() {
++        String e=result(10,"A",1,JudgeVerdict.WA);assertTrue(apply(e));ScoreResultEvent wrong=new ScoreResultEvent();wrong.setSubmissionId(1L);wrong.setResultVersion(1);
++        assertFalse(scores.project(e,wrong));assertFalse(scores.project("not-a-uuid",wrong));assertRanks(1,1,1,1);
++    }
++    @Test void concurrentDifferentProblemsForSameUserCannotLoseAggregate() throws Exception {
++        String a=result(10,"A",1,JudgeVerdict.AC),b=result(10,"B",2,JudgeVerdict.AC);ExecutorService pool=Executors.newFixedThreadPool(4);CountDownLatch latch=new CountDownLatch(1);
++        try { List<Future<Boolean>> work=new ArrayList<>();for(String event:Arrays.asList(a,b,a,b)) { work.add(pool.submit(()->{latch.await();return apply(event);})); }latch.countDown();for(Future<Boolean> f:work) { assertTrue(f.get(10,TimeUnit.SECONDS)); } }
++        finally { pool.shutdownNow(); }assertEquals(2,entries(view()).get(0).get("solvedCount"));assertEquals(2,jdbc.queryForObject("SELECT COUNT(*) FROM scoreboard_result_receipt",Integer.class));
++    }
++    @Test void postDeadlineCompletionCountsByAcceptanceTimeAndBlocksPrematureFinish() {
++        long id=submit(10,"A",59);Clock.now=BASE.plusMinutes(63).minusSeconds(1);JudgeLease lease=claim(id);ended();
++        assertThrows(SubmissionConflictException.class,()->scores.rebuild(contest,command(),99,false));assertEquals(1L,view().get("pendingCount"));
++        complete(lease,JudgeVerdict.AC);String e=jdbc.queryForObject("SELECT eventId FROM reliable_outbox WHERE eventType='JUDGE_RESULT' AND aggregateId=?",String.class,id);apply(e);
++        scores.rebuild(contest,command(),99,false);scores.finish(contest,command(),99);assertEquals(true,view().get("final"));assertEquals("FINISHED",view().get("status"));assertRanks(1,2,2,2);
++    }
++    @Test void platformNeedsAttentionIsNeverConvertedToWa() {
++        long id=submit(10,"A",1);JudgeLease lease=claim(id);ExecutionCommand fail=new ExecutionCommand();fail.setSubmissionId(id);fail.setAttemptNo(lease.getAttemptNo());fail.setExecutionToken(lease.getExecutionToken());fail.setErrorCode("SANDBOX_UNAVAILABLE");
++        jdbc.update("UPDATE submission_execution SET maxAttempts=1 WHERE submissionId=?",id);assertTrue(executions.fail(fail));ended();assertEquals("NEEDS_ATTENTION",repo.find(id,false).getExecutionStatus().name());
++        assertThrows(SubmissionConflictException.class,()->scores.rebuild(contest,command(),99,false));assertRanks(1,1,1,1);
++    }
++    @Test void finishRequiresRebuildAndDriftCannotBeSilentlyFinalized() {
++        apply(result(10,"A",1,JudgeVerdict.AC));ended();assertThrows(SubmissionConflictException.class,()->scores.finish(contest,command(),99));
++        scores.rebuild(contest,command(),99,false);jdbc.update("UPDATE contest_score_user SET solvedCount=7 WHERE contestId=? AND userId=10 AND projectionVersion=2",contest);
++        assertThrows(SubmissionConflictException.class,()->scores.finish(contest,command(),99));Map<String,Object> rebuilt=scores.rebuild(contest,command(),99,false);assertEquals(false,rebuilt.get("matchedPrevious"));scores.finish(contest,command(),99);assertEquals(1,entries(view()).get(0).get("solvedCount"));
++    }
++    @Test void rebuildFromAllFactsDoesNotRequireBrokerDeliveryAndLateReplayIsHarmless() {
++        String e=result(10,"A",1,JudgeVerdict.AC);ended();assertEquals(1L,view().get("projectionPendingCount"));scores.rebuild(contest,command(),99,false);
++        assertEquals(1,entries(view()).get(0).get("solvedCount"));assertTrue(apply(e));scores.finish(contest,command(),99);Map<String,Object> finalView=view();assertTrue(apply(e));assertEquals(finalView,view());
++    }
++    @Test void rebuildOnlyInFinalizingAndOldVersionRemainsQueryable() {
++        apply(result(10,"A",1,JudgeVerdict.AC));assertThrows(SubmissionConflictException.class,()->scores.rebuild(contest,command(),99,false));ended();
++        scores.rebuild(contest,command(),99,false);Map<String,Object> old=scores.snapshot(contest,0,20,1L,14,true);assertEquals("RETIRED",old.get("versionState"));assertEquals(1L,old.get("projectionVersion"));assertEquals(1,entries(old).get(0).get("solvedCount"));
++    }
++    @Test void finalRevisionKeepsPreviousFinalImmutableAndAudited() {
++        apply(result(10,"A",1,JudgeVerdict.AC));ended();scores.rebuild(contest,command(),99,false);scores.finish(contest,command(),99);
++        List<Map<String,Object>> original=entries(scores.snapshot(contest,0,20,2L,14,true));ScoreboardCommand stale=command();scores.rebuild(contest,stale,99,true);
++        assertEquals(original,entries(scores.snapshot(contest,0,20,2L,14,true)));assertEquals("FINAL",scores.snapshot(contest,0,20,2L,14,true).get("versionState"));assertEquals(true,scores.snapshot(contest,0,20,2L,14,true).get("final"));assertEquals(3L,view().get("finalVersion"));
++        assertThrows(SubmissionConflictException.class,()->scores.rebuild(contest,stale,99,true));assertEquals(1,jdbc.queryForObject("SELECT COUNT(*) FROM operation_audit WHERE action='SCOREBOARD_FINAL_REVISION'",Integer.class));
++    }
++    @Test void cacheInvalidationChangesNamespaceAndRequiresFreshRoleVersionsAndReason() {
++        ScoreboardCommand c=command();Map<String,Object> before=view();scores.clearCache(contest,c,99);assertEquals(((Number)before.get("cacheEpoch")).longValue()+1,view().get("cacheEpoch"));
++        assertThrows(SubmissionConflictException.class,()->scores.clearCache(contest,c,99));ScoreboardCommand current=command();current.setReason(" ");assertThrows(BusinessException.class,()->scores.clearCache(contest,current,99));
++        jdbc.update("UPDATE `user` SET userRole='user' WHERE id=99");assertThrows(BusinessException.class,()->scores.clearCache(contest,command(),99));
++    }
++    @Test void pendingRegistrationAndCapacityMismatchBlockSettlement() {
++        ended();jdbc.update("UPDATE contest_registration_request SET status='MANUAL_REVIEW' WHERE contestId=? AND userId=10",contest);
++        assertThrows(SubmissionConflictException.class,()->scores.rebuild(contest,command(),99,false));jdbc.update("UPDATE contest_registration_request SET status='CONFIRMED' WHERE contestId=?",contest);
++        jdbc.update("UPDATE contest SET remainingCapacity=1 WHERE id=?",contest);assertThrows(SubmissionConflictException.class,()->scores.rebuild(contest,command(),99,false));
++    }
++    @Test void redisModeRequiresFinalizingReconciliationAndCompletedSynchronization() {
++        ended();jdbc.update("UPDATE contest SET registrationMode='REDIS_READY' WHERE id=?",contest);assertThrows(SubmissionConflictException.class,()->scores.rebuild(contest,command(),99,false));
++        jdbc.update("UPDATE contest SET registrationReconciledAt=? WHERE id=?",Clock.now,contest);scores.rebuild(contest,command(),99,false);scores.finish(contest,command(),99);
++    }
++    @Test void tamperedResultDigestAndWrongSnapshotCannotBecomeFinalFacts() {
++        String e=result(10,"A",1,JudgeVerdict.AC);long id=jdbc.queryForObject("SELECT aggregateId FROM reliable_outbox WHERE eventId=?",Long.class,e);
++        jdbc.update("UPDATE question_submit SET judgeInfo='{}' WHERE id=?",id);assertThrows(SubmissionConflictException.class,()->apply(e));ended();assertThrows(SubmissionConflictException.class,()->scores.rebuild(contest,command(),99,false));
++    }
++    @Test void cancellationKeepsScoreHistoryAndRejectsFinalization() {
++        String e=result(10,"A",1,JudgeVerdict.AC);ContestCommand c=new ContestCommand();c.setExpectedVersion(1L);c.setReason("cancel fixture");contests.cancel(contest,c,99);assertTrue(apply(e));assertRanks(1,1,1,1);ended();assertThrows(SubmissionConflictException.class,()->scores.rebuild(contest,command(),99,false));
++    }
++    @Test void missingBusinessReceiptRepublishesOriginalEventWithFiniteBudget() {
++        String e=result(10,"A",1,JudgeVerdict.AC);assertTrue(outbox.due("JUDGE_RESULT").contains(e));OutboxStore.Publication p=outbox.claim(e,"JUDGE_RESULT");outbox.record(e,p.getToken(),"ACK",false,null);
++        Clock.now=Clock.now.plusSeconds(46);scores.recoverPublications();assertEquals(e,outbox.due("JUDGE_RESULT").get(0));assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM scoreboard_result_receipt",Integer.class));
++        jdbc.update("UPDATE reliable_outbox SET attempts=20 WHERE eventId=?",e);assertNull(outbox.claim(e,"JUDGE_RESULT"));ScoreboardCommand c=command();assertThrows(SubmissionConflictException.class,()->scores.replay(contest,c,99));
++        c.setAdditionalPublishAttempts(2);assertEquals(1,scores.replay(contest,c,99));assertNotNull(outbox.claim(e,"JUDGE_RESULT"));apply(e);assertFalse(outbox.due("JUDGE_RESULT").contains(e));
++    }
++    @Test void loggedInNonParticipantCanReadButCannotMutateAndNoHiddenFieldsLeak() throws Exception {
++        UserFeignClient users=mock(UserFeignClient.class);User user=new User();user.setId(14L);when(users.getLoginUser(any())).thenReturn(user);
++        MockMvc http=MockMvcBuilders.standaloneSetup(new ScoreboardController(service,scores,users)).setControllerAdvice(new SubmissionConflictAdvice(),new ExecutionRpcAdvice()).build();
++        String body=http.perform(get("/contests/"+contest+"/scoreboard")).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
++        assertFalse(body.contains("hidden"));assertFalse(body.contains("judgeSpec"));assertFalse(body.contains("private source"));
++        http.perform(post("/contests/"+contest+"/scoreboard/cache-clear").contentType("application/json").content(JSONUtil.toJsonStr(command()))).andExpect(status().isForbidden());
++        when(users.getLoginUser(any())).thenThrow(new BusinessException(com.codeoj.codeojbackendcommon.common.ErrorCode.NOT_LOGIN_ERROR));
++        http.perform(get("/contests/"+contest+"/scoreboard")).andExpect(status().isUnauthorized());
++    }
++    public static class RejectRebuiltProblem implements org.h2.api.Trigger {
++        public void fire(java.sql.Connection connection,Object[] oldRow,Object[] newRow) throws java.sql.SQLException {
++            if(((Number)newRow[1]).longValue()>1) { throw new java.sql.SQLException("CONTROLLED_REBUILD_WRITE_FAILURE"); }
++        }
++    }
++    @Test void midRebuildFailureRollsBackNewRowsAndKeepsReadVersion() {
++        apply(result(10,"A",1,JudgeVerdict.AC));ended();Map<String,Object> original=view();
++        jdbc.execute("CREATE TRIGGER fail_rebuilt_problem BEFORE INSERT ON contest_score_problem FOR EACH ROW CALL '"+RejectRebuiltProblem.class.getName()+"'");
++        assertThrows(org.springframework.dao.DataAccessException.class,()->scores.rebuild(contest,command(),99,false));
++        assertEquals(original,view());assertEquals(1,jdbc.queryForObject("SELECT COUNT(*) FROM contest_scoreboard_version WHERE contestId=?",Integer.class,contest));
++    }
++    @Test void delayedProjectionAndRebuildRaceEitherConflictsExplicitlyOrProducesSameFacts() throws Exception {
++        String event=result(10,"A",1,JudgeVerdict.AC);ended();ScoreboardCommand command=command();ExecutorService pool=Executors.newFixedThreadPool(2);CountDownLatch start=new CountDownLatch(1);
++        try {
++            Future<?> projection=pool.submit(()->{try { start.await();assertTrue(apply(event)); }catch(InterruptedException e) { throw new RuntimeException(e); }});
++            Future<?> rebuilding=pool.submit(()->{try { start.await();scores.rebuild(contest,command,99,false); }catch(SubmissionConflictException freshReadRequired) { }catch(InterruptedException e) { throw new RuntimeException(e); }});
++            start.countDown();projection.get(10,TimeUnit.SECONDS);rebuilding.get(10,TimeUnit.SECONDS);
++        } finally { pool.shutdownNow(); }
++        if(((Number)view().get("projectionVersion")).longValue()==1) { scores.rebuild(contest,command(),99,false); }
++        scores.finish(contest,command(),99);assertRanks(1,2,2,2);assertEquals(1,entries(view()).get(0).get("solvedCount"));
++    }
++
++    @Test void deletingAllScoreRowsCanBeRebuiltFromFactsIncludingZeroParticipants() {
++        apply(result(10,"A",1,JudgeVerdict.AC));ended();
++        jdbc.update("DELETE FROM contest_score_problem WHERE contestId=?",contest);jdbc.update("DELETE FROM contest_score_user WHERE contestId=?",contest);
++        Map<String,Object> repaired=scores.rebuild(contest,command(),99,false);assertEquals(false,repaired.get("matchedPrevious"));scores.finish(contest,command(),99);assertRanks(1,2,2,2);
++    }
++    @Test void microsecondAcceptanceTimeBreaksOnlyActualTimeTies() {
++        long a=submitAt(10,"A",BASE.plusMinutes(4));complete(claim(a),JudgeVerdict.AC);
++        long b=submitAt(11,"A",BASE.plusMinutes(4).plusNanos(1000));complete(claim(b),JudgeVerdict.AC);
++        String ea=jdbc.queryForObject("SELECT eventId FROM reliable_outbox WHERE eventType='JUDGE_RESULT' AND aggregateId=?",String.class,a);
++        String eb=jdbc.queryForObject("SELECT eventId FROM reliable_outbox WHERE eventType='JUDGE_RESULT' AND aggregateId=?",String.class,b);
++        apply(eb);apply(ea);assertRanks(1,2,3,3);assertEquals("10",entries(view()).get(0).get("userId"));
++    }
++    @Test void practiceResultIsReceiptedWithoutChangingAnyContestScore() {
++        jdbc.update("INSERT INTO question(id,title,content,judgeConfig,judgeCase) VALUES(1,'public','public','{\"timeLimit\":1000,\"memoryLimit\":131072}','[{\"input\":\"1\",\"output\":\"1\"}]')");
++        com.codeoj.codeojbackendmodel.model.dto.questionsubmit.QuestionSubmitAddRequest request=new com.codeoj.codeojbackendmodel.model.dto.questionsubmit.QuestionSubmitAddRequest();
++        request.setQuestionId(1L);request.setRequestKey("practice-stable-key");request.setLanguage("java");request.setCode("public class Main {}");User u=new User();u.setId(10L);
++        long id=acceptance.accept(request,u);complete(claim(id),JudgeVerdict.AC);
++        String event=jdbc.queryForObject("SELECT eventId FROM reliable_outbox WHERE eventType='JUDGE_RESULT' AND aggregateId=?",String.class,id);assertTrue(apply(event));assertTrue(apply(event));assertRanks(1,1,1,1);
++        assertEquals(1,jdbc.queryForObject("SELECT COUNT(*) FROM scoreboard_result_receipt WHERE contestId IS NULL",Integer.class));assertEquals(0L,view().get("projectionPendingCount"));
++    }
++
++}
+diff --git a/codeoj-backend/mysql-init/migrations/V004__contest_scoreboard.sql b/codeoj-backend/mysql-init/migrations/V004__contest_scoreboard.sql
+new file mode 100644
+index 0000000..a0b8dd9
+--- /dev/null
++++ b/codeoj-backend/mysql-init/migrations/V004__contest_scoreboard.sql
+@@ -0,0 +1,52 @@
++-- Apply after V003. Existing JUDGE_RESULT outbox events remain replayable.
++ALTER TABLE reliable_outbox ADD maxPublishAttempts INT NOT NULL DEFAULT 20;
++ALTER TABLE contest ADD registrationReconciledAt DATETIME(6) NULL;
++
++CREATE TABLE contest_scoreboard_state (
++    contestId BIGINT PRIMARY KEY,
++    activeVersion BIGINT NOT NULL,
++    revision BIGINT NOT NULL,
++    cacheEpoch BIGINT NOT NULL,
++    finalVersion BIGINT NULL,
++    asOf DATETIME(6) NOT NULL,
++    FOREIGN KEY(contestId) REFERENCES contest(id)
++) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
++CREATE TABLE contest_scoreboard_version (
++    contestId BIGINT NOT NULL,
++    projectionVersion BIGINT NOT NULL,
++    state VARCHAR(16) NOT NULL,
++    digest CHAR(64) NULL,
++    createdAt DATETIME(6) NOT NULL,
++    asOf DATETIME(6) NOT NULL,
++    PRIMARY KEY(contestId,projectionVersion),
++    FOREIGN KEY(contestId) REFERENCES contest(id)
++) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
++CREATE TABLE contest_score_user (
++    contestId BIGINT NOT NULL,
++    projectionVersion BIGINT NOT NULL,
++    userId BIGINT NOT NULL,
++    solvedCount INT NOT NULL,
++    achievedAt DATETIME(6) NULL,
++    PRIMARY KEY(contestId,projectionVersion,userId),
++    INDEX ix_score_order(contestId,projectionVersion,solvedCount,achievedAt,userId),
++    FOREIGN KEY(contestId,projectionVersion) REFERENCES contest_scoreboard_version(contestId,projectionVersion)
++) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
++CREATE TABLE contest_score_problem (
++    contestId BIGINT NOT NULL,
++    projectionVersion BIGINT NOT NULL,
++    userId BIGINT NOT NULL,
++    problemSnapshotId BIGINT NOT NULL,
++    firstAcSubmittedAt DATETIME(6) NOT NULL,
++    PRIMARY KEY(contestId,projectionVersion,userId,problemSnapshotId),
++    FOREIGN KEY(contestId,projectionVersion,userId) REFERENCES contest_score_user(contestId,projectionVersion,userId),
++    FOREIGN KEY(problemSnapshotId) REFERENCES contest_problem_snapshot(id)
++) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
++CREATE TABLE scoreboard_result_receipt (
++    eventId CHAR(36) PRIMARY KEY,
++    submissionId BIGINT NOT NULL,
++    resultVersion INT NOT NULL,
++    contestId BIGINT NULL,
++    projectionVersion BIGINT NULL,
++    processedAt DATETIME(6) NOT NULL,
++    FOREIGN KEY(eventId) REFERENCES reliable_outbox(eventId)
++) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+diff --git a/codeoj-frontend/src/components/ScoreboardPanel.vue b/codeoj-frontend/src/components/ScoreboardPanel.vue
+new file mode 100644
+index 0000000..b6658bc
+--- /dev/null
++++ b/codeoj-frontend/src/components/ScoreboardPanel.vue
+@@ -0,0 +1,313 @@
++<template>
++  <section class="app-card scoreboard-panel">
++    <a-space
++      ><h3>比赛榜单</h3>
++      <a-button :loading="busy" @click="load">刷新榜单</a-button></a-space
++    >
++    <a-alert v-if="error" type="warning">{{ error }}</a-alert>
++    <template v-if="board">
++      <p>
++        {{
++          board.final
++            ? "最终榜单"
++            : board.status === "CANCELLED"
++            ? "比赛已取消，成绩仅供查看"
++            : "临时榜单"
++        }}
++        · 投影版本 {{ board.projectionVersion }} · 规则 {{ board.ruleVersion }}
++      </p>
++      <p>
++        数据时间 {{ localTime(board.asOf) }} · 待判定 {{ board.pendingCount }} ·
++        待更新成绩 {{ board.projectionPendingCount }}
++      </p>
++      <p class="muted">
++        按解题数降序、各题最早 AC
++        受理时间中的最晚时间升序排列。同分同时间并列，零分并列；用户 ID
++        只用于稳定展示。
++      </p>
++      <a-table :data="board.entries" :pagination="false" row-key="userId">
++        <template #columns>
++          <a-table-column title="名次" data-index="rank" />
++          <a-table-column title="用户 ID" data-index="userId" />
++          <a-table-column title="解题数" data-index="solvedCount" />
++          <a-table-column title="达到当前成绩的受理时间"
++            ><template #cell="{ record }">{{
++              localTime(record.achievedAt)
++            }}</template></a-table-column
++          >
++        </template>
++      </a-table>
++      <a-space class="page-controls">
++        <a-button
++          :disabled="page === 0 || busy"
++          @click="
++            page--;
++            load();
++          "
++          >上一页榜单</a-button
++        >
++        <span>第 {{ page + 1 }} 页，共 {{ board.total }} 人</span>
++        <a-button
++          :disabled="(page + 1) * 20 >= board.total || busy"
++          @click="
++            page++;
++            load();
++          "
++          >下一页榜单</a-button
++        >
++      </a-space>
++      <a-space class="version-controls">
++        <a-input
++          v-model="selectedVersion"
++          placeholder="历史投影版本（留空为当前版本）"
++          style="width: 290px"
++        />
++        <a-button
++          :disabled="busy"
++          @click="
++            page = 0;
++            load();
++          "
++          >查看榜单版本</a-button
++        >
++      </a-space>
++      <template v-if="admin">
++        <h4>成绩核查与结算</h4>
++        <a-alert
++          >先解决待判定和报名异常，再重建校验并固定最终版本。旧榜单会保留。</a-alert
++        >
++        <a-input
++          v-model="reason"
++          :max-length="500"
++          placeholder="成绩操作原因（必填，保留审计）"
++        />
++        <a-space class="page-controls">
++          <a-button :disabled="busy || !current" @click="act('cache-clear')"
++            >清除榜单缓存</a-button
++          >
++          <a-button
++            :disabled="busy || !current || board.status !== 'FINALIZING'"
++            @click="act('rebuild')"
++            >从提交重建成绩</a-button
++          >
++          <a-popconfirm
++            content="确认已核查成绩？校验通过后固定最终版本。"
++            @ok="act('finish')"
++            ><a-button
++              :disabled="busy || !current || board.status !== 'FINALIZING'"
++              >完成结算</a-button
++            ></a-popconfirm
++          >
++          <a-popconfirm
++            content="将从权威记录生成新的最终榜单版本，保留原最终榜单。"
++            @ok="act('revise')"
++            ><a-button
++              :disabled="busy || !current || board.status !== 'FINISHED'"
++              >修订最终榜单</a-button
++            ></a-popconfirm
++          >
++        </a-space>
++        <a-space
++          ><span>追加发布次数（每事件）</span
++          ><a-input-number
++            v-model="additionalPublishAttempts"
++            :min="0"
++            :max="20"
++          /><a-button
++            :disabled="
++              busy ||
++              !current ||
++              ['FINISHED', 'CANCELLED'].includes(board.status)
++            "
++            @click="act('replay')"
++            >重放待更新成绩事件</a-button
++          ></a-space
++        >
++        <p v-if="operationResult">{{ operationResult }}</p>
++        <template v-if="operations">
++          <h4>待判定提交</h4>
++          <a-table
++            :data="operations.pending"
++            :pagination="false"
++            row-key="submissionId"
++            ><template #columns
++              ><a-table-column
++                title="提交 ID"
++                data-index="submissionId" /><a-table-column
++                title="状态"
++                data-index="executionStatus" /><a-table-column
++                title="诊断码"
++                data-index="errorCode" /></template
++          ></a-table>
++          <h4>待更新成绩事件</h4>
++          <a-table
++            :data="operations.publications"
++            :pagination="false"
++            row-key="eventId"
++            ><template #columns
++              ><a-table-column
++                title="提交 ID"
++                data-index="submissionId" /><a-table-column
++                title="发布状态"
++                data-index="publishState" /><a-table-column
++                title="发送次数"
++                data-index="attempts" /><a-table-column
++                title="诊断码"
++                data-index="errorCode" /></template
++          ></a-table>
++          <a-space class="page-controls"
++            ><a-button
++              :disabled="operationsPage === 0 || busy"
++              @click="
++                operationsPage--;
++                load();
++              "
++              >上一页待处理</a-button
++            ><span>待处理第 {{ operationsPage + 1 }} 页</span
++            ><a-button
++              :disabled="
++                busy ||
++                (operations.pending.length < 20 &&
++                  operations.publications.length < 20)
++              "
++              @click="
++                operationsPage++;
++                load();
++              "
++              >下一页待处理</a-button
++            ></a-space
++          >
++        </template>
++      </template>
++    </template>
++  </section>
++</template>
++<script setup lang="ts">
++import { computed, onMounted, ref, watch, defineProps, defineEmits } from "vue";
++import { contestRequest, errorText, localTime } from "@/api/contest";
++interface Board {
++  contestVersion: number;
++  projectionVersion: number;
++  activeProjectionVersion: number;
++  revision: number;
++  ruleVersion: string;
++  status: string;
++  final: boolean;
++  asOf: string;
++  pendingCount: number;
++  projectionPendingCount: number;
++  total: number;
++  entries: Array<{
++    userId: string;
++    rank: number;
++    solvedCount: number;
++    achievedAt: string | null;
++  }>;
++}
++interface Operations {
++  pending: Array<Record<string, unknown>>;
++  publications: Array<Record<string, unknown>>;
++}
++const props = defineProps<{
++  contestId: string;
++  admin?: boolean;
++  version?: number;
++}>();
++const emit = defineEmits<{ (event: "changed"): void }>();
++const board = ref<Board>(),
++  operations = ref<Operations>(),
++  busy = ref(false),
++  error = ref("");
++const page = ref(0),
++  operationsPage = ref(0),
++  selectedVersion = ref(""),
++  reason = ref(""),
++  additionalPublishAttempts = ref(0),
++  operationResult = ref("");
++const current = computed(
++  () => board.value?.projectionVersion === board.value?.activeProjectionVersion
++);
++const base = computed(
++  () => `/${encodeURIComponent(props.contestId)}/scoreboard`
++);
++async function load() {
++  if (busy.value) return;
++  busy.value = true;
++  error.value = "";
++  try {
++    if (
++      selectedVersion.value &&
++      !/^[1-9][0-9]{0,8}$/.test(selectedVersion.value)
++    )
++      throw new Error("请输入有效的榜单版本号");
++    board.value = await contestRequest<Board>(
++      `${base.value}?page=${page.value}&size=20${
++        selectedVersion.value ? `&version=${selectedVersion.value}` : ""
++      }`
++    );
++    if (props.admin)
++      operations.value = await contestRequest<Operations>(
++        `${base.value}/operations?page=${operationsPage.value}`
++      );
++  } catch (e) {
++    error.value = `榜单暂不可用：${errorText(e)}`;
++    board.value = undefined;
++    operations.value = undefined;
++  } finally {
++    busy.value = false;
++  }
++}
++async function act(action: string) {
++  if (busy.value || !board.value || !current.value) return;
++  if (!reason.value.trim()) {
++    error.value = "请填写成绩操作原因";
++    return;
++  }
++  busy.value = true;
++  error.value = "";
++  operationResult.value = "";
++  try {
++    const result = await contestRequest<
++      { matchedPrevious?: boolean } | number | boolean
++    >(`${base.value}/${action}`, "POST", {
++      expectedVersion: board.value.contestVersion,
++      expectedProjectionVersion: board.value.projectionVersion,
++      expectedRevision: board.value.revision,
++      reason: reason.value,
++      additionalPublishAttempts: additionalPublishAttempts.value,
++    });
++    operationResult.value =
++      typeof result === "object" && result.matchedPrevious === false
++        ? "已重建新版本，发现原投影与权威记录不一致，请核查后结算。"
++        : "成绩操作已完成";
++    emit("changed");
++  } catch (e) {
++    error.value = errorText(e);
++  } finally {
++    busy.value = false;
++    const failure = error.value;
++    await load();
++    if (failure) error.value = failure;
++  }
++}
++watch(() => props.version, load);
++onMounted(load);
++</script>
++<style scoped>
++.scoreboard-panel {
++  padding: 24px;
++  margin-bottom: 20px;
++}
++.page-controls,
++.version-controls {
++  display: flex;
++  margin: 16px 0;
++}
++.muted {
++  color: var(--color-text-3);
++}
++.arco-alert,
++.arco-input-wrapper {
++  margin: 10px 0;
++}
++</style>
+diff --git a/docs/contest/j5-local.md b/docs/contest/j5-local.md
+new file mode 100644
+index 0000000..d8f18cc
+--- /dev/null
++++ b/docs/contest/j5-local.md
+@@ -0,0 +1,90 @@
++# J5 成绩、榜单与结算本机开发记录
++
++日期：2026-10-18。基线提交 `71d6898519447ab89bbf48428f37bd55e4f486dc`。本轮用户确认：登录用户可查看已发布比赛的榜单，只展示用户 ID、成绩和名次。继续采用本机功能闭环范围，不部署、不压测、不安装 Docker；原有 `output/` 不读写。
++
++## 权威事实与计分
++
++J2 的 `ExecutionCommands.complete` 已在同一事务保存最终判定及 `JUDGE_RESULT` Outbox，J5 接入既有事件，不再生成第二套判题结果。事件载荷继续使用 submissionId/resultVersion，AMQP messageId 使用原 Outbox eventId；消费者还会核验数据库原事件、当前结果版本、最终状态及结果摘要。消息不携带代码、用例和答案。
++
++新增 `scoreboard` 包、V004 增量迁移和可选 `SCOREBOARD_ENABLED` 开关。启用时必须同时启用可靠判题，并先应用 V001→V002→V003→V004；三个业务开关均默认关闭。V004 不改写旧判定，既有 JUDGE_RESULT 可以按原身份投递。旧库未迁移时禁止先打开开关。
++
++计分规则 `FIRST_AC_V1`：每题所有有效 AC 的最早 acceptedAt；solvedCount 为有 AC 的题数，achievedAt 为这些时间的最大值。解题数降序、achievedAt 升序，竞赛名次 1、1、3；零分全部并列。数据库保留微秒时间，userId 只稳定展示顺序。SQL 从整个投影计数严格领先者，跨页不重置名次。普通练习 AC 只保存忽略回执，不进入任何比赛成绩。
++
++报名确认时，在同一数据库事务初始化成绩版本及零分行；查询也补齐遗漏零分行。消费者先锁比赛，再锁当前投影下的用户成绩行，再更新题目最早 AC 并重算总分。更早的 AC 晚到会更新 firstAcSubmittedAt；重复事件不重复加分。当前实现额外以比赛行锁串行化同场计分、资格和版本切换，优先保证本机一致性，未宣称高吞吐。
++
++投影事务采用 READ_COMMITTED，防止在等待版本切换锁之前建立的旧一致性快照影响切换后的读取。所有 Redis、Feign 和 MQ 调用均在数据库事务外。
++
++## 事件投递与恢复
++
++独立拓扑 `codeoj.scoreboard.v1.exchange/queue/dlx/quarantine`；持久消息、mandatory、Correlated Confirm/Return、手动 ACK、prefetch=10、单消费者。数据库投影及回执提交后才 ACK，格式/身份不匹配或权威事实损坏进入隔离路径，暂时数据库故障有界退避后 requeue，中断不 ACK。
++
++复用 OutboxStore/OutboxDelivery；发布确认不代表计分完成。缺少业务回执的已确认消息在等待窗口后按原 eventId 再发，自动发布预算20次。耗尽后保持 ATTENTION，管理界面暴露未更新事件。受控 replay 每批最多20事件、单次追加每事件最多20次、累计上限100；要求原因及比赛版本、投影版本、revision，不删除历史发送 attempt 或 UNKNOWN 证据。
++
++## 查询与缓存
++
++`GET /api/contests/{id}/scoreboard?page=0&size=20&version=...`：登录且数据库账户有效的用户均可查看已发布比赛；草稿不可见。返回 ruleVersion、projectionVersion、activeProjectionVersion、revision、asOf、pendingCount、projectionPendingCount、finalVersion、版本状态和榜单条目。用户 ID 为字符串，避免浏览器大整数精度丢失。
++
++- pendingCount：尚未 COMPLETED 的比赛提交，包含 NEEDS_ATTENTION。
++- projectionPendingCount：尚无投影业务回执的结果事件；重建可以直接从权威结果恢复，不能把 MQ ACK 当成此数为0。
++- asOf：所选版本的最后投影时间。旧版本保持自己的时间，页面明确临时/最终和版本。
++
++Redis 仅缓存页条目15秒，键包含比赛 hash tag、projectionVersion、revision、cacheEpoch、页和页大小；每次查询仍从数据库选择版本并获取新鲜状态及待定数量。缓存不可用或被清空时按当前数据库投影恢复。管理员清缓存递增 cacheEpoch，无需 KEYS/全量删除。旧命名空间自然过期。缓存内不存代码、判题配置或隐藏用例。
++
++## 重建、结算和修订
++
++生命周期到 endAt 后进入 FINALIZING，拒绝新受理，截止前已受理的提交继续判题。管理员先解决 NEEDS_ATTENTION 或报名异常，不将平台错误转换成 WA。
++
++完整重建只允许 FINALIZING 且所有提交已有最终判定、报名无未决、有效资格不重复且容量守恒。Redis 模式还要求在 FINALIZING 完成一次关闭闸门的全账本对账，恢复 Redis→DB 窗口中的原预留，且所有请求确认/释放标记同步完成。成功对账记录 registrationReconciledAt；未决预留、旧对账或全局暂停都会阻止结算。
++
++重建有本机边界：最多10000参赛者、50000提交，超限明确拒绝。锁住比赛，阻止计分与资格并发变动；由于到期后禁止新提交且 COMPLETED 结果不可变，确认无待定后可以从稳定权威事实构建新版本。先写新版本全部用户/题目成绩、校验，再原子切换读取指针。中途失败整笔回滚，用户继续读旧版本。赛中完整在线重建尚未实现。
++
++重建返回 matchedPrevious，明确披露旧投影与权威事实是否一致；不一致不会自动完赛。finish 再独立核对权威题目最早 AC、所有用户总分、零分行、资格、容量和待定项，才固定 finalVersion 并置 FINISHED。最终版本不会被迟到重投修改。
++
++FINISHED 后只能走明确的 revise 生成新最终版本，保留原 FINAL 版本和审计；历史版本可查询。首版修订是按当前权威事实重新生成投影，不提供直接覆写已完成判定、赛后自动重判或更改已冻结赛制的入口。
++
++## 管理接口与页面
++
++下列接口均位于 `/api/contests/{id}/scoreboard` 下，管理员身份来自会话且再次查询当前数据库角色。
++
++| 方法/后缀 | 行为 |
++| --- | --- |
++| GET `/operations?page=0` | 分页查看待定提交与缺少回执的结果发布，不含私有代码 |
++| POST `/rebuild` | FINALIZING 中从权威事实重建并切换新版本 |
++| POST `/finish` | 重建校验后固定最终版本 |
++| POST `/revise` | FINISHED 后修订为新最终版本，保留旧榜单 |
++| POST `/cache-clear` | 递增版本化缓存命名空间 |
++| POST `/replay` | 有限重放原结果事件，可显式追加有限次数 |
++
++所有 POST 要求 expectedVersion（比赛）、expectedProjectionVersion、expectedRevision 和 reason；旧界面请求409并要求刷新。榜单面板随父页面比赛版本变化刷新，管理操作之后重读权威元数据。参赛详情加入榜单，管理页加入待定提交、事件、重建、结算、修订和历史版本入口；查看历史版本时禁用当前版本变更操作。
++
++## 复现与验证边界
++
++```bash
++# 固定 Redis 版本/摘要，临时编译后自动清理；Java8完整本机功能回归
++BUILD_TEST_REDIS=true scripts/test-registration-local.sh
++# 已有 Redis 可执行文件时使用 REDIS_SERVER=/absolute/path/to/redis-server
++
++# H2 + 受控原生 Java 样例：普通报名→真实 javac/java→AC→计分→重建→最终榜单
++scripts/demo-local-contest.sh
++
++npm --prefix codeoj-frontend run build
++PLAYWRIGHT_MODULE=/absolute/path/to/playwright PLAYWRIGHT_BROWSER_CHANNEL=chrome \
++  node scripts/validation/contest-browser-smoke.cjs
++```
++
++测试发现与修复：重建中的 nullable finalVersion 曾触发 Java 三元表达式自动拆箱，已改为显式包装类型；浏览器检查发现报名操作改变比赛版本后榜单持有旧元数据，已补版本监听刷新。受限执行环境禁止 `ps` 时原生样例正确返回 RESOURCE_METRICS_UNAVAILABLE；不把未知 RSS 伪装为0或 AC，在允许观察受控进程的环境复验通过。回环监听被禁止时浏览器启动记环境失败，在可绑定随机回环端口的环境复验。前端遵循现有 ESLint/Prettier 和 Vue 宏导入约定。
++
++| 结果 | 本轮范围 |
++| --- | --- |
++| 后端179项，0失败/错误/跳过 | Java8完整reactor打包；21个实际执行测试类，四个基础设施空上下文仍按既有tag策略排除 |
++| J5新增37项 | 25项成绩/HTTP/H2事务、8项mock消息、3项mock缓存、1项真实Redis→报名补建→结算串联 |
++| 真实Redis共30项通过 | 独立随机端口、随机密码、私有AOF目录，含原29项报名回归；完成后清理 |
++| 前端构建通过 | 既有依赖、lint警告和包体积警告保留 |
++| 浏览器15项通过，0页面异常 | mock HTTP；含并列/跨页、大整数ID、版本刷新、重建不一致提示、最终结算、历史版本只读 |
++| 原生演示通过 | H2、真实javac/java及RSS采样；最终1人1题、名次1，pendingCount=0，projectionPendingCount=0 |
++
++最终结果见 [本轮证据目录](../../outputs/validation/j5-local-20261018/)。测试使用真实 Spring/JDBC/H2 事务、真实独立 Redis 和受控原生 Java；MQ/Channel、缓存故障及浏览器 HTTP 各自明确使用 mock，不能合并为真实基础设施联合验收。
++
++UNTESTED：MySQL8 V004迁移、InnoDB锁/隔离/死锁、多实例实际消费者、真实MQ持久/Confirm/DLX、真实会话/网关/Feign/Redis/MySQL/MQ联合链；既有提交隔离、跨重启执行回收限制不变。未部署、未压测，未新增容量指标或生产可用性承诺。
++
++实现核验参考：[Spring5.3事务代理与隔离](https://docs.spring.io/spring-framework/docs/5.3.x/reference/html/data-access.html)、[MySQL8锁定读取](https://dev.mysql.com/doc/refman/8.0/en/innodb-locking-reads.html)、[RabbitMQ发布确认与消费确认](https://www.rabbitmq.com/docs/confirms)、[Spring AMQP官方示例](https://github.com/spring-projects/spring-amqp-samples)。这些文档用于核对语义，不替代本机或真实基础设施运行证据。
+diff --git a/docs/contest/source-reading.md b/docs/contest/source-reading.md
+new file mode 100644
+index 0000000..a57d089
+--- /dev/null
++++ b/docs/contest/source-reading.md
+@@ -0,0 +1,25 @@
++# 赛事模块源码阅读地图
++
++从本轮已实现的业务链阅读，配合各阶段测试核对边界；原方案中的部署、压测和尚无运行证据的功能不可当成已验收事实。
++
++| 业务链 | 按调用顺序阅读 | 对应验证 |
++| --- | --- | --- |
++| 受理与固定规格 | `ContestController.submit` → `ContestService` → `ContestTransactions.submit` → `SubmissionAcceptance.write` → `reliable_outbox` | ContestCoreTest、ReliableExecutionTest |
++| 原生判题 | `ReliableJudgeConsumer` → `ReliableJudgeWorker` → claim/heartbeat → `JavaNativeCodeSandbox` → `BoundedProcessRunner` → `SandboxResultMapper`/严格比较 → complete/fail | JavaNativeCodeSandboxTest、ReliableJudgeWorkerTest；demo-local-contest.sh |
++| 名额竞争 | `RegistrationService.register` → `RedisRegistrationLedger.reserve` → `lua/contest-registration.lua` → persist+Outbox → `RegistrationConsumer` → confirmRegistration → synchronize | RegistrationRedisIntegrationTest；独立Redis+H2，MQ为手动消费/替身 |
++| 未知与恢复 | `OutboxStore.claim/record` → 每次 publish_attempt → `RegistrationMaintenance` → `recover`/`reconcile` → 人工 review | RegistrationMessagingTest、RegistrationRedisIntegrationTest |
++| 乱序计分 | `ExecutionCommands.complete` → JUDGE_RESULT → `ScoreboardMessaging.Relay` → `ScoreboardConsumer` → `ScoreboardTransactions.project` → 用户锁+题目最早AC+重算 → 业务回执 | ScoreboardTest、ScoreboardMessagingTest |
++| 并列/缓存 | `ScoreboardController.page` → `ScoreboardService.page` → snapshot元数据 → 版本化页缓存/SQL排序 → 严格领先人数+1 | ScoreboardCacheTest、ScoreboardTest；mock浏览器检查 |
++| 最终结算 | `ContestLifecycle.tick` → FINALIZING → 报名关闭对账/待定解决 → scoreboard rebuild → 新版本校验/切换 → finish → finalVersion | ScoreboardTest、RegistrationRedisIntegrationTest；原生演示 |
++
++后端包根目录：`codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/`。测试位于同模块 `src/test/java/`；判题服务、沙箱、模型协议分别在各自 Maven 模块。迁移按 `mysql-init/migrations/V001` 到 `V004` 阅读。
++
++建议亲自解释并运行三个用例：
++
++1. 8用户争2名额：为什么资格以数据库确认而非Redis返回成功为准，超时后为何不能直接回收。
++2. 租约过期和旧token回写：为什么原事件可重复投递，但旧执行器不能覆盖新结果。
++3. 四人两题手算基准：为什么 1、1、3、3 会因更早AC晚到改为 1、2、3、3，且只依据 acceptedAt。
++
++J5最终版本与历史版本是投影；有效提交、结果摘要、发布快照和资格是重建依据。最终榜单修订新增版本，不静默覆盖旧版本。当前同场计分采用较粗的比赛锁，不能据此推断吞吐能力。
++
++本机入口与证据见 [J5记录](j5-local.md)、[J4记录](j4-local.md)。真实MySQL/MQ联合链、完整会话API浏览器链、部署和压测仍需独立证据。

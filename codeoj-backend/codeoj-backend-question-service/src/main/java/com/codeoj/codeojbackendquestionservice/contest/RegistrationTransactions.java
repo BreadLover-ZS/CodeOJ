@@ -13,6 +13,7 @@ import java.util.*;
 /** DB only. Contest is always locked first. All Redis/MQ work is outside this proxy. */
 @Service
 public class RegistrationTransactions {
+    @org.springframework.beans.factory.annotation.Value("${codeoj.scoreboard.enabled:false}") private boolean scoreboardEnabled;
     private final JdbcTemplate jdbc;private final ContestTransactions contests;private final ExecutionRepository executions;
     @org.springframework.beans.factory.annotation.Value("${codeoj.registration.max-clock-skew-ms:2000}") private long clockSkewMs=2000;
     @javax.annotation.PostConstruct public void validateClockPolicy() { if(clockSkewMs<0 || clockSkewMs>60000) { throw new IllegalArgumentException("INVALID_REGISTRATION_CLOCK_POLICY"); } }
@@ -185,6 +186,7 @@ public class RegistrationTransactions {
         int allConfirmed=jdbc.queryForObject("SELECT COUNT(*) FROM contest_registration WHERE contestId=? AND status='CONFIRMED'",Integer.class,contest);
         if(ids.size()!=rows.size() || allConfirmed+c.remaining!=c.capacity || c.remaining!=s.getInitialCapacity()-confirmed || stock!=s.getInitialCapacity()-active) { throw new SubmissionConflictException("CAPACITY_LEDGER_MISMATCH"); }
         jdbc.update("UPDATE contest SET registrationMode='REDIS_READY',registrationReady=true,registrationIssue=NULL,version=version+1 WHERE id=?",contest);
+        if(scoreboardEnabled && "FINALIZING".equals(c.status)) { jdbc.update("UPDATE contest SET registrationReconciledAt=? WHERE id=?",executions.now(),contest); }
         audit(contest,actor,"REGISTRATION_RECONCILE_COMPLETE",reason,c.version,c.version+1,"No stock overwrite");return settings(contest);
     }
 }

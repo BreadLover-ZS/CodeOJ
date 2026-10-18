@@ -41,6 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ContestCoreTest {
     @Configuration @EnableTransactionManagement
     static class Config {
+        @Bean static org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor repositoryProxies() { return new org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor(); }
         @Bean DataSource ds() { return new DriverManagerDataSource("jdbc:h2:mem:contest-tests;MODE=MySQL;DB_CLOSE_DELAY=-1;LOCK_TIMEOUT=4000","sa",""); }
         @Bean JdbcTemplate jdbc(DataSource ds) { return new JdbcTemplate(ds); }
         @Bean PlatformTransactionManager transactionManager(DataSource ds) { return new DataSourceTransactionManager(ds); }

@@ -1,0 +1,13 @@
+2026-10-18 10:13:54.273  WARN 23252 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'userMapper' and 'com.codeoj.codeojbackenduserservice.mapper.UserMapper' mapperInterface. Bean already defined with the same name!
+2026-10-18 10:13:54.278  WARN 23252 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackenduserservice.mapper]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-18 10:13:55.723  WARN 23252 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-18 10:15:01.591  WARN 23252 --- [ioEventLoop-4-4] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:50909]: Connection refused: /127.0.0.1:50909
+2026-10-18 10:15:01.591  WARN 23252 --- [ioEventLoop-4-3] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:50909]: Connection refused: /127.0.0.1:50909
+2026-10-18 10:15:10.689  WARN 23252 --- [ioEventLoop-4-8] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:50909]: Connection refused: /127.0.0.1:50909
+2026-10-18 10:15:10.689  WARN 23252 --- [ioEventLoop-4-7] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:50909]: Connection refused: /127.0.0.1:50909
+2026-10-18 10:15:18.992  WARN 23252 --- [ioEventLoop-4-9] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:50909]: Connection refused: /127.0.0.1:50909
+2026-10-18 10:15:18.992  WARN 23252 --- [oEventLoop-4-10] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:50909]: Connection refused: /127.0.0.1:50909

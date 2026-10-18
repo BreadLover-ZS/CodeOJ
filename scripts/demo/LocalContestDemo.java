@@ -9,6 +9,7 @@ import com.codeoj.codeojbackendmodel.model.enums.JudgeVerdict;
 import com.codeoj.codeojbackendmodel.model.reliability.*;
 import com.codeoj.codeojbackendquestionservice.contest.*;
 import com.codeoj.codeojbackendquestionservice.submission.*;
+import com.codeoj.codeojbackendquestionservice.scoreboard.*;
 import org.springframework.context.annotation.*;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -39,6 +40,7 @@ public class LocalContestDemo {
         @Bean SubmissionAcceptance acceptance(ExecutionRepository r) { return new SubmissionAcceptance(r); }
         @Bean ExecutionCommands commands(ExecutionRepository r) { return new ExecutionCommands(r); }
         @Bean ContestTransactions contests(JdbcTemplate j,ExecutionRepository r,SubmissionAcceptance a) { return new ContestTransactions(j,r,a); }
+        @Bean ScoreboardTransactions scores(JdbcTemplate j,ExecutionRepository r) { return new ScoreboardTransactions(j,r); }
         @Bean ContestService service(ContestTransactions c,ExecutionRepository r) { return new ContestService(c,r); }
     }
     public static void main(String[] args) throws Exception {
@@ -49,7 +51,7 @@ public class LocalContestDemo {
             jdbc.execute("CREATE TABLE `user`(id BIGINT PRIMARY KEY,userRole VARCHAR(32),isDelete INT DEFAULT 0)");jdbc.update("INSERT INTO `user` VALUES(10,'user',0),(99,'admin',0)");
             jdbc.execute("CREATE TABLE question(id BIGINT PRIMARY KEY,title VARCHAR(120),content TEXT,judgeConfig TEXT,judgeCase TEXT,submitNum INT DEFAULT 0,acceptedNum INT DEFAULT 0,isDelete INT DEFAULT 0)");
             jdbc.execute("CREATE TABLE question_submit(id BIGINT PRIMARY KEY,language VARCHAR(128),code TEXT,judgeInfo TEXT,status INT,questionId BIGINT,userId BIGINT,isDelete INT)");
-            for(String name:Arrays.asList("V001__reliable_judging.sql","V002__contest_core.sql")) {
+            for(String name:Arrays.asList("V001__reliable_judging.sql","V002__contest_core.sql","V003__async_registration.sql","V004__contest_scoreboard.sql")) {
                 String sql=new String(Files.readAllBytes(Paths.get(args[0],"codeoj-backend","mysql-init","migrations",name)),StandardCharsets.UTF_8)
                         .replace(" CHARACTER SET ascii COLLATE ascii_bin","").replace(" DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci","");
                 try(Connection c=ds.getConnection()) { ScriptUtils.executeSqlScript(c,new ByteArrayResource(sql.getBytes(StandardCharsets.UTF_8))); }
@@ -81,12 +83,24 @@ public class LocalContestDemo {
             if(verdict.getVerdict()!=JudgeVerdict.AC) { throw new AssertionError("Expected AC: "+verdict.getVerdict()); }
             ExecutionCommand completed=new ExecutionCommand();completed.setSubmissionId(id);completed.setAttemptNo(lease.getAttemptNo());completed.setExecutionToken(lease.getExecutionToken());completed.setResult(verdict);
             if(!commands.complete(completed) || !commands.complete(completed)) { throw new AssertionError("Completion replay failed"); }
+            ScoreboardTransactions scores=context.getBean(ScoreboardTransactions.class);
+            String resultEvent=jdbc.queryForObject("SELECT eventId FROM reliable_outbox WHERE eventType='JUDGE_RESULT' AND aggregateId=?",String.class,id);
+            ScoreResultEvent resultMessage=JSONUtil.toBean(jdbc.queryForObject("SELECT payload FROM reliable_outbox WHERE eventId=?",String.class,resultEvent),ScoreResultEvent.class);
+            if(!scores.project(resultEvent,resultMessage)) { throw new AssertionError("Projection rejected result event"); }
+            Clock.now=LocalDateTime.ofInstant(Instant.parse(draft.getEndAt()),ZoneOffset.UTC);contests.finalizeIfDue(contest);
+            scores.rebuild(contest,scoreCommand(scores,contest),99,false);scores.finish(contest,scoreCommand(scores,contest),99);
+            Map<String,Object> scoreboard=scores.snapshot(contest,0,20,null,10,true);
+            if(!Boolean.TRUE.equals(scoreboard.get("final"))) { throw new AssertionError("Final scoreboard missing"); }
             Map<String,Object> evidence=new LinkedHashMap<>();evidence.put("scope","H2 transactions + native javac/java; manual outbox dispatch; not MySQL/MQ/HTTP acceptance");
-            evidence.put("registration",registration.get("status"));evidence.put("executionStatus",repo.find(id,false).getExecutionStatus());evidence.put("verdict",verdict.getVerdict());
+            evidence.put("scoreboard",scoreboard);evidence.put("registration",registration.get("status"));evidence.put("executionStatus",repo.find(id,false).getExecutionStatus());evidence.put("verdict",verdict.getVerdict());
             evidence.put("submissions",jdbc.queryForObject("SELECT COUNT(*) FROM submission_execution",Integer.class));evidence.put("attempts",jdbc.queryForObject("SELECT COUNT(*) FROM judge_attempt",Integer.class));
             evidence.put("resultEvents",jdbc.queryForObject("SELECT COUNT(*) FROM reliable_outbox WHERE eventType='JUDGE_RESULT'",Integer.class));evidence.put("remainingCapacity",jdbc.queryForObject("SELECT remainingCapacity FROM contest WHERE id=?",Integer.class,contest));
             evidence.put("wallMs",verdict.getTime());evidence.put("memoryKiB",verdict.getMemory());evidence.put("memoryMeasurement",verdict.getMemoryMeasurement());System.out.println(JSONUtil.toJsonStr(evidence));
         }
+    }
+    static ScoreboardCommand scoreCommand(ScoreboardTransactions scores,long contest) {
+        Map<String,Object> view=scores.snapshot(contest,0,20,null,99,true);ScoreboardCommand c=new ScoreboardCommand();
+        c.setExpectedVersion(((Number)view.get("contestVersion")).longValue());c.setExpectedProjectionVersion(((Number)view.get("projectionVersion")).longValue());c.setExpectedRevision(((Number)view.get("revision")).longValue());c.setReason("verified local native contest result");return c;
     }
     static String utc(LocalDateTime time) { return time.toInstant(ZoneOffset.UTC).toString(); }
 }
