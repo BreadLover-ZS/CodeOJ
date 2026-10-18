@@ -1,0 +1,10 @@
+# Java 8 selected explicitly. Repository root.
+mvn -o -B -f codeoj-backend/pom.xml -Dcodeoj.native-observation=true test
+# Script includes mvn -B -q -DskipTests package, then real javac/java sample execution.
+./scripts/demo-local-judge.sh
+# From codeoj-frontend:
+npm run build
+# Read-only whitespace and script syntax checks:
+git diff --check
+bash -n scripts/demo-local-judge.sh
+# No deployment, Docker, real database migration or load test executed.

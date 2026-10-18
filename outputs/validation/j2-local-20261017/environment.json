@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-17T22:40:55.126758+08:00",
+  "os": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "architecture": "arm64",
+  "buildJdk": "Amazon Corretto 1.8.0_504",
+  "maven": "3.9.16",
+  "node": "26.0.0",
+  "springBoot": "2.6.13",
+  "springAmqp": "2.4.7",
+  "h2": "2.2.224 test scope; class major version 52",
+  "databaseTests": "H2 MySQL compatibility mode; collation clauses removed and UTC_TIMESTAMP test alias added",
+  "featureFlagDefault": false,
+  "deploymentAndLoadTesting": "not performed, outside current scope"
+}

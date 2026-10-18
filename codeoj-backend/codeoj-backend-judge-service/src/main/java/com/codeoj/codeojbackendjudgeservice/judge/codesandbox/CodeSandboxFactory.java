@@ -1,9 +1,9 @@
 package com.codeoj.codeojbackendjudgeservice.judge.codesandbox;
 
-import com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.ExampleCodeSandbox;
 import com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox;
-import com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.ThirdPartyCodeSandbox;
 import org.springframework.stereotype.Component;
+import com.codeoj.codeojbackendcommon.common.ErrorCode;
+import com.codeoj.codeojbackendcommon.exception.BusinessException;
 
 import javax.annotation.Resource;
 
@@ -24,14 +24,10 @@ public class CodeSandboxFactory {
      */
     public CodeSandbox newInstance(String type) {
         switch (type) {
-            case "example":
-                return new ExampleCodeSandbox();
             case "remote":
                 return remoteCodeSandbox;
-            case "thirdParty":
-                return new ThirdPartyCodeSandbox();
             default:
-                return new ExampleCodeSandbox();
+                throw new BusinessException(ErrorCode.SYSTEM_ERROR, "UNSUPPORTED_SANDBOX_TYPE");
         }
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.session.SessionAutoConfiguration;
  * <p>负责接收判题服务的代码执行请求，在临时目录中编译并运行用户代码，返回执行结果。
  * 沙箱无数据库/Redis 依赖，排除父 pom 引入的相关自动配置。
  */
+@org.springframework.scheduling.annotation.EnableScheduling
 @SpringBootApplication(exclude = {
         DataSourceAutoConfiguration.class,
         RedisAutoConfiguration.class,

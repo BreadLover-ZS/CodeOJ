@@ -1,0 +1,37 @@
+{
+  "scope": "real native executor and judge strategy method calls; no business database, broker, browser or production acceptance",
+  "samples": [
+    {
+      "case": "AC",
+      "verdict": "AC",
+      "wallMs": 144,
+      "memoryKiB": 31984,
+      "memoryMeasurement": "NATIVE_RSS_SAMPLED"
+    },
+    {
+      "case": "WA",
+      "verdict": "WA",
+      "wallMs": 134,
+      "memoryKiB": 29520,
+      "memoryMeasurement": "NATIVE_RSS_SAMPLED"
+    },
+    {
+      "case": "CE",
+      "verdict": "CE"
+    },
+    {
+      "case": "TLE",
+      "verdict": "TLE",
+      "wallMs": 1002,
+      "memoryKiB": 29648,
+      "memoryMeasurement": "NATIVE_RSS_SAMPLED"
+    },
+    {
+      "case": "OUTPUT_LIMIT",
+      "verdict": "OUTPUT_LIMIT",
+      "wallMs": 46,
+      "memoryKiB": 30960,
+      "memoryMeasurement": "NATIVE_RSS_SAMPLED"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "scope": "mocked HTTP browser smoke",
+  "passed": [
+    "contest list",
+    "registration confirmation",
+    "prestart editor hidden",
+    "contest editor",
+    "unknown submission retried with original key and payload after end",
+    "admin draft form"
+  ],
+  "pageErrors": []
+}

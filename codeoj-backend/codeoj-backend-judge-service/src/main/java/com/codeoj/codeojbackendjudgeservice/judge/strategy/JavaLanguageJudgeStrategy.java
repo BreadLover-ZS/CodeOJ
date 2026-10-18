@@ -1,71 +1,63 @@
 package com.codeoj.codeojbackendjudgeservice.judge.strategy;
 
 import cn.hutool.json.JSONUtil;
+import com.codeoj.codeojbackendcommon.common.ErrorCode;
+import com.codeoj.codeojbackendcommon.exception.BusinessException;
 import com.codeoj.codeojbackendmodel.model.codesandbox.JudgeInfo;
+import com.codeoj.codeojbackendmodel.model.codesandbox.TextOutputComparator;
 import com.codeoj.codeojbackendmodel.model.dto.question.JudgeCase;
 import com.codeoj.codeojbackendmodel.model.dto.question.JudgeConfig;
-import com.codeoj.codeojbackendmodel.model.entity.Question;
-import com.codeoj.codeojbackendmodel.model.enums.JudgeInfoMessageEnum;
+import com.codeoj.codeojbackendmodel.model.enums.JudgeVerdict;
 
 import java.util.List;
-import java.util.Optional;
 
-/**
- * Java 程序的判题策略
- */
+/** Java v1: wall time includes startup; unknown resource metrics never imply AC. */
 public class JavaLanguageJudgeStrategy implements JudgeStrategy {
-
-    /**
-     * 执行判题
-     * @param judgeContext
-     * @return
-     */
     @Override
-    public JudgeInfo doJudge(JudgeContext judgeContext) {
-        JudgeInfo judgeInfo = judgeContext.getJudgeInfo();
-        Long memory = Optional.ofNullable(judgeInfo.getMemory()).orElse(0L);
-        Long time = Optional.ofNullable(judgeInfo.getTime()).orElse(0L);
-        List<String> inputList = judgeContext.getInputList();
-        List<String> outputList = judgeContext.getOutputList();
-        Question question = judgeContext.getQuestion();
-        List<JudgeCase> judgeCaseList = judgeContext.getJudgeCaseList();
-        JudgeInfoMessageEnum judgeInfoMessageEnum = JudgeInfoMessageEnum.ACCEPTED;
-        JudgeInfo judgeInfoResponse = new JudgeInfo();
-        judgeInfoResponse.setMemory(memory);
-        judgeInfoResponse.setTime(time);
-        // 先判断沙箱执行的结果输出数量是否和预期输出数量相等
-        if (outputList.size() != inputList.size()) {
-            judgeInfoMessageEnum = JudgeInfoMessageEnum.WRONG_ANSWER;
-            judgeInfoResponse.setMessage(judgeInfoMessageEnum.getValue());
-            return judgeInfoResponse;
+    public JudgeInfo doJudge(JudgeContext context) {
+        JudgeInfo metrics = context.getJudgeInfo();
+        if (metrics == null || metrics.getTime() == null || metrics.getMemory() == null
+                || metrics.getTime() < 0 || metrics.getMemory() < 0) {
+            throw platformError("RESOURCE_METRICS_UNAVAILABLE");
         }
-        // 依次判断每一项输出和预期输出是否相等
-        for (int i = 0; i < judgeCaseList.size(); i++) {
-            JudgeCase judgeCase = judgeCaseList.get(i);
-            if (!judgeCase.getOutput().equals(outputList.get(i))) {
-                judgeInfoMessageEnum = JudgeInfoMessageEnum.WRONG_ANSWER;
-                judgeInfoResponse.setMessage(judgeInfoMessageEnum.getValue());
-                return judgeInfoResponse;
+        List<String> output = context.getOutputList();
+        List<JudgeCase> cases = context.getJudgeCaseList();
+        if (cases == null || cases.isEmpty() || output == null || output.size() != cases.size()) {
+            throw platformError("SANDBOX_OUTPUT_COUNT_MISMATCH");
+        }
+        JudgeConfig limits = JSONUtil.toBean(context.getQuestion().getJudgeConfig(), JudgeConfig.class);
+        if (limits == null || limits.getTimeLimit() == null || limits.getTimeLimit() <= 0
+                || limits.getMemoryLimit() == null || limits.getMemoryLimit() <= 0) {
+            throw platformError("INVALID_JUDGE_LIMITS");
+        }
+        JudgeInfo result = new JudgeInfo();
+        result.setTime(metrics.getTime());
+        result.setMemory(metrics.getMemory());
+        result.setMemoryMeasurement(metrics.getMemoryMeasurement());
+        if (metrics.getTime() > limits.getTimeLimit()) {
+            return verdict(result, JudgeVerdict.TLE);
+        }
+        if (metrics.getMemory() > limits.getMemoryLimit()) {
+            return verdict(result, JudgeVerdict.MLE);
+        }
+        for (int i = 0; i < cases.size(); i++) {
+            if (cases.get(i) == null || cases.get(i).getOutput() == null || output.get(i) == null) {
+                throw platformError("MISSING_JUDGE_OUTPUT");
+            }
+            if (!TextOutputComparator.matches(cases.get(i).getOutput(), output.get(i))) {
+                return verdict(result, JudgeVerdict.WA);
             }
         }
-        // 判断题目限制
-        String judgeConfigStr = question.getJudgeConfig();
-        JudgeConfig judgeConfig = JSONUtil.toBean(judgeConfigStr, JudgeConfig.class);
-        Long needMemoryLimit = judgeConfig.getMemoryLimit();
-        Long needTimeLimit = judgeConfig.getTimeLimit();
-        if (memory > needMemoryLimit) {
-            judgeInfoMessageEnum = JudgeInfoMessageEnum.MEMORY_LIMIT_EXCEEDED;
-            judgeInfoResponse.setMessage(judgeInfoMessageEnum.getValue());
-            return judgeInfoResponse;
-        }
-        // Java 程序本身需要额外执行 10 秒钟
-        long JAVA_PROGRAM_TIME_COST = 10000L;
-        if ((time - JAVA_PROGRAM_TIME_COST) > needTimeLimit) {
-            judgeInfoMessageEnum = JudgeInfoMessageEnum.TIME_LIMIT_EXCEEDED;
-            judgeInfoResponse.setMessage(judgeInfoMessageEnum.getValue());
-            return judgeInfoResponse;
-        }
-        judgeInfoResponse.setMessage(judgeInfoMessageEnum.getValue());
-        return judgeInfoResponse;
+        return verdict(result, JudgeVerdict.AC);
+    }
+
+    private JudgeInfo verdict(JudgeInfo info, JudgeVerdict verdict) {
+        info.setVerdict(verdict);
+        info.setMessage(verdict.getMessage());
+        return info;
+    }
+
+    private BusinessException platformError(String errorCode) {
+        return new BusinessException(ErrorCode.SYSTEM_ERROR, errorCode);
     }
 }

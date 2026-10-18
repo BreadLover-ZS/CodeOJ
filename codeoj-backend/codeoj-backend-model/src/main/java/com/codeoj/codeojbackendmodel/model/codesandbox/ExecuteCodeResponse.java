@@ -29,4 +29,10 @@ public class ExecuteCodeResponse {
      * 判题信息
      */
     private JudgeInfo judgeInfo;
+
+    /** Structured protocol; absence is a protocol error, never an implicit success. */
+    private SandboxOutcome outcome;
+
+    /** Safe machine-readable error, without source code or hidden inputs. */
+    private String errorCode;
 }

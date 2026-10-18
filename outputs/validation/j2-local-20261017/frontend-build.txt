@@ -1,0 +1,4 @@
+ WARNING  Compiled with 3 warnings10:22:13 PM
+✖ 21 problems (0 errors, 21 warnings)
+  Build at: 2026-10-17T14:22:14.007Z - Hash: 7c8cecc25fb2d2af - Time: 12153ms
+ DONE  Build complete. The dist directory is ready to be deployed.

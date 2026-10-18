@@ -1,0 +1,5 @@
+Explicit infrastructure-tests profile selected and executed the original question-service contextLoads test.
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0
+Cause: Redis localhost:6379 connection refused.
+Status: BLOCKED by unavailable local infrastructure; not part of 35 passing functional tests.
+No MySQL/RabbitMQ/business-chain success is inferred.

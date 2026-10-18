@@ -1,0 +1,130 @@
+{
+  "totals": {
+    "tests": 83,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "suites": [
+    {
+      "name": "com.codeoj.codeojbackendmodel.model.codesandbox.TextOutputComparatorTest",
+      "scope": "unit_contract",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.submission.outbox.OutboxRelayTest",
+      "scope": "rabbit_template_double",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.submission.SubmissionStatusAccessTest",
+      "scope": "authorization_and_http_contract",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.submission.ReliableExecutionTest",
+      "scope": "h2_transaction_and_concurrency",
+      "tests": 25,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.submission.QuestionSubmitPrivacyTest",
+      "scope": "authorization_and_http_contract",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcContractTest",
+      "scope": "authorization_and_http_contract",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendjudgeservice.rabbitmq.ReliableJudgeConsumerTest",
+      "scope": "amqp_channel_double",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendjudgeservice.judge.SandboxResultMapperTest",
+      "scope": "unit_contract",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandboxTest",
+      "scope": "loopback_http_contract",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendjudgeservice.judge.ReliableJudgeWorkerTest",
+      "scope": "feign_and_sandbox_doubles",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImplTest",
+      "scope": "unit_contract",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendjudgeservice.judge.strategy.JavaLanguageJudgeStrategyTest",
+      "scope": "unit_contract",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandboxTest",
+      "scope": "native_executor_functional",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendcodesandbox.service.impl.NativeExecutionIdentityTest",
+      "scope": "native_executor_functional",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "excludedInfrastructureContexts": 4,
+  "nativeObservationEnabled": true,
+  "notVerified": [
+    "real MySQL",
+    "real RabbitMQ",
+    "old queue migration",
+    "browser with real API"
+  ]
+}

@@ -1,0 +1,192 @@
+{
+  "date": "2026-10-18",
+  "totals": {
+    "tests": 106,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "modules": {
+    "codeoj-backend-codesandbox": {
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "codeoj-backend-gateway": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "codeoj-backend-judge-service": {
+      "tests": 27,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "codeoj-backend-model": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "codeoj-backend-question-service": {
+      "tests": 59,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "suites": [
+    {
+      "module": "codeoj-backend-codesandbox",
+      "suite": "com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandboxTest",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "codeoj-backend-codesandbox",
+      "suite": "com.codeoj.codeojbackendcodesandbox.service.impl.NativeExecutionIdentityTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "codeoj-backend-gateway",
+      "suite": "com.codeoj.codeojbackendgateway.ContestRouteTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "codeoj-backend-judge-service",
+      "suite": "com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImplTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "codeoj-backend-judge-service",
+      "suite": "com.codeoj.codeojbackendjudgeservice.judge.ReliableJudgeWorkerTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "codeoj-backend-judge-service",
+      "suite": "com.codeoj.codeojbackendjudgeservice.judge.SandboxResultMapperTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "codeoj-backend-judge-service",
+      "suite": "com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandboxTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "codeoj-backend-judge-service",
+      "suite": "com.codeoj.codeojbackendjudgeservice.judge.strategy.JavaLanguageJudgeStrategyTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "codeoj-backend-judge-service",
+      "suite": "com.codeoj.codeojbackendjudgeservice.rabbitmq.ReliableJudgeConsumerTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "codeoj-backend-model",
+      "suite": "com.codeoj.codeojbackendmodel.model.codesandbox.TextOutputComparatorTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "suite": "com.codeoj.codeojbackendquestionservice.contest.ContestCoreTest",
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "suite": "com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcContractTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "suite": "com.codeoj.codeojbackendquestionservice.submission.QuestionSubmitPrivacyTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "suite": "com.codeoj.codeojbackendquestionservice.submission.ReliableExecutionTest",
+      "tests": 25,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "suite": "com.codeoj.codeojbackendquestionservice.submission.SubmissionStatusAccessTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "suite": "com.codeoj.codeojbackendquestionservice.submission.outbox.OutboxRelayTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "scope": "Full reactor 105 plus new gateway contract 1; final contest core 22 rerun after confirmation extraction. H2 is not MySQL acceptance.",
+  "excludedInfrastructurePolicy": "Four infrastructure Spring contexts excluded by the existing infrastructure tag policy.",
+  "staleReportsNotRunInCurrentSuite": [
+    {
+      "module": "codeoj-backend-gateway",
+      "suite": "com.codeoj.codeojbackendgateway.CodeojBackendGatewayApplicationTests",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "suite": "com.codeoj.codeojbackendquestionservice.CodeojBackendQuestionServiceApplicationTests",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "skipped": 0
+    }
+  ],
+  "aggregation": "Only suite names actually present in the current command logs; stale infrastructure XML files retained, not counted as current execution."
+}

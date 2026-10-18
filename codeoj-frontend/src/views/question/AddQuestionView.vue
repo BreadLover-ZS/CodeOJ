@@ -39,20 +39,24 @@
             <a-form-item field="judgeConfig.timeLimit" label="时间限制 (ms)">
               <a-input-number
                 v-model="form.judgeConfig.timeLimit"
-                :min="0"
+                :min="1"
                 mode="button"
               />
             </a-form-item>
-            <a-form-item field="judgeConfig.memoryLimit" label="内存限制 (MB)">
+            <a-form-item field="judgeConfig.memoryLimit" label="内存限制 (KiB)">
               <a-input-number
                 v-model="form.judgeConfig.memoryLimit"
-                :min="0"
+                :min="1"
                 mode="button"
               />
             </a-form-item>
-            <a-form-item field="judgeConfig.stackLimit" label="堆栈限制 (KB)">
+            <a-form-item
+              field="judgeConfig.stackLimit"
+              label="堆栈限制（暂未支持）"
+            >
               <a-input-number
                 v-model="form.judgeConfig.stackLimit"
+                disabled
                 :min="0"
                 mode="button"
               />
@@ -121,7 +125,7 @@ let form = ref<any>({
   tags: [],
   answer: "",
   content: "",
-  judgeConfig: { memoryLimit: 1000, stackLimit: 1000, timeLimit: 1000 },
+  judgeConfig: { memoryLimit: 131072, stackLimit: 1000, timeLimit: 1000 },
   judgeCase: [{ input: "", output: "" }],
 });
 
@@ -138,7 +142,7 @@ const loadData = async () => {
       : [{ input: "", output: "" }];
     form.value.judgeConfig = form.value.judgeConfig
       ? JSON.parse(form.value.judgeConfig)
-      : { memoryLimit: 1000, stackLimit: 1000, timeLimit: 1000 };
+      : { memoryLimit: 131072, stackLimit: 1000, timeLimit: 1000 };
     form.value.tags = form.value.tags ? JSON.parse(form.value.tags) : [];
   } else {
     Message.error("加载失败，" + res.message);

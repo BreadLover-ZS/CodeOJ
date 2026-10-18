@@ -1,0 +1,13 @@
+{
+  "capturedAt": "2026-10-18T03:17:03.912766+00:00",
+  "system": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "java": "openjdk version \"1.8.0_504\"\nOpenJDK Runtime Environment Corretto-8.504.01.1 (build 1.8.0_504-b01)\nOpenJDK 64-Bit Server VM Corretto-8.504.01.1 (build 25.504-b01, mixed mode)",
+  "node": "v26.0.0",
+  "h2": "2.2.224",
+  "databaseClock": "controlled UTC alias in H2 fixtures",
+  "browser": "installed Google Chrome via Playwright, headless",
+  "services": "No actual MySQL, Redis, RabbitMQ, Nacos or remote sandbox started; native javac/java only",
+  "deployment": false,
+  "loadTest": false
+}

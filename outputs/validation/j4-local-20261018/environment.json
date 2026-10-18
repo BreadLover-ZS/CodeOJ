@@ -1,0 +1,17 @@
+{
+  "capturedAt": "2026-10-18T03:46:02.927179+00:00",
+  "system": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "java": "openjdk version \"1.8.0_504\"\nOpenJDK Runtime Environment Corretto-8.504.01.1 (build 1.8.0_504-b01)\nOpenJDK 64-Bit Server VM Corretto-8.504.01.1 (build 25.504-b01, mixed mode)",
+  "node": "v26.0.0",
+  "redis": "Redis server v=6.2.24 sha=00000000:0 malloc=libc bits=64 build=ec547951fef23d9c",
+  "redisSource": "https://download.redis.io/releases/redis-6.2.24.tar.gz",
+  "redisSourceSha256": "c3f112749c7cb108597713469cc9beed305e91f036fba313ce8dcbad829f5821",
+  "redisScope": "Per-test-context private random loopback port, appendonly=yes, appendfsync=always, isolated temporary directory; no existing Redis used. Test contexts shut down and clean their own Redis.",
+  "h2": "2.2.224 MySQL mode; real Spring/JDBC transactions; controlled DB UTC clock",
+  "browser": "Installed Google Chrome through Playwright; explicitly mocked HTTP",
+  "services": "No actual MySQL/RabbitMQ/Nacos/remote-sandbox business services started or accepted",
+  "deployment": false,
+  "loadTest": false,
+  "redisIsolation": "Random per-context password prevents modifying an unrelated Redis instance if an ephemeral port is claimed concurrently."
+}

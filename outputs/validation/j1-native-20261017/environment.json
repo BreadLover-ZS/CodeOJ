@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-10-17T21:43:57.907869+08:00",
+  "os": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "architecture": "arm64",
+  "buildJdk": "Amazon Corretto 1.8.0_504 arm64",
+  "defaultSystemJava": "Temurin 26.0.1",
+  "maven": "3.9.16",
+  "node": "26.0.0",
+  "springBoot": "2.6.13",
+  "hutool": "5.8.8",
+  "surefire": "3.5.4",
+  "infrastructure": "MySQL/Redis/RabbitMQ/Nacos not running on inspected default ports",
+  "deploymentAndLoadTesting": "out of current development scope"
+}

@@ -38,6 +38,9 @@ import java.util.List;
 @Slf4j
 public class QuestionController {
 
+    @org.springframework.beans.factory.annotation.Value("${codeoj.reliable-judge.enabled:false}")
+    private boolean reliableEnabled;
+
     @Resource
     private QuestionService questionService;
 
@@ -303,12 +306,21 @@ public class QuestionController {
      */
     @PostMapping("/question_submit/do")
     public BaseResponse<Long> doQuestionSubmit(@RequestBody QuestionSubmitAddRequest questionSubmitAddRequest,
-                                               HttpServletRequest request) {
-        if (questionSubmitAddRequest == null || questionSubmitAddRequest.getQuestionId() <= 0) {
+                                               HttpServletRequest request,
+                                               javax.servlet.http.HttpServletResponse response,
+                                               @RequestHeader(value="Idempotency-Key", required=false) String requestKey) {
+        if (requestKey != null && questionSubmitAddRequest != null) {
+            if (questionSubmitAddRequest.getRequestKey() != null && !requestKey.equals(questionSubmitAddRequest.getRequestKey())) {
+                throw new com.codeoj.codeojbackendquestionservice.submission.SubmissionConflictException("REQUEST_KEY_CONFLICT");
+            }
+            questionSubmitAddRequest.setRequestKey(requestKey);
+        }
+        if (questionSubmitAddRequest == null || questionSubmitAddRequest.getQuestionId() == null || questionSubmitAddRequest.getQuestionId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         final User loginUser = userFeignClient.getLoginUser(request);
         long questionSubmitId = questionSubmitService.doQuestionSubmit(questionSubmitAddRequest, loginUser);
+        if (reliableEnabled) { response.setStatus(202); }
         return ResultUtils.success(questionSubmitId);
     }
 

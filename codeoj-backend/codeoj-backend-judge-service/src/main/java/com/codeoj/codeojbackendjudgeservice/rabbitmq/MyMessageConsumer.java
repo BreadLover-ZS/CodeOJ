@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
+@org.springframework.boot.autoconfigure.condition.ConditionalOnProperty(name="codeoj.reliable-judge.enabled",havingValue="false",matchIfMissing=true)
 @Component
 @Slf4j
 public class MyMessageConsumer {
@@ -47,6 +48,7 @@ public class MyMessageConsumer {
                 QuestionSubmit update = new QuestionSubmit();
                 update.setId(questionSubmitId);
                 update.setStatus(QuestionSubmitStatusEnum.FAILED.getValue());
+                update.setJudgeInfo("{\"message\":\"平台判题异常，等待处理\"}");
                 try {
                     questionFeignClient.updateQuestionSubmitById(update);
                 } catch (Exception ex) {

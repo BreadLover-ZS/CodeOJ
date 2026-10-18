@@ -1,5 +1,6 @@
 package com.codeoj.codeojbackendmodel.model.codesandbox;
 
+import com.codeoj.codeojbackendmodel.model.enums.JudgeVerdict;
 import lombok.Data;
 
 /**
@@ -14,12 +15,17 @@ public class JudgeInfo {
     private String message;
 
     /**
-     * 消耗内存
+     * Peak memory in KiB; null means unavailable, never zero by default.
      */
     private Long memory;
 
     /**
-     * 消耗时间（KB）
+     * Maximum per-case wall time in milliseconds, including JVM startup.
      */
     private Long time;
+
+    private JudgeVerdict verdict;
+
+    /** Measurement method; NATIVE_RSS_SAMPLED is approximate and excludes descendants. */
+    private String memoryMeasurement;
 }

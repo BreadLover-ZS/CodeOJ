@@ -1,0 +1,18 @@
+# cwd=/Users/zzds/Workspace/gitStore/CodeOJ
+# Redis6.2.24 was downloaded from the official archive and compiled in /private/tmp, not installed globally.
+# JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-8.jdk/Contents/Home; PATH=$JAVA_HOME/bin:$PATH
+REDIS_SERVER=/absolute/temp/path/redis-6.2.24/src/redis-server scripts/test-registration-local.sh
+# Equivalent full command: mvn -B -f codeoj-backend/pom.xml -Dcodeoj.real-redis=true -Dcodeoj.redis-server=/absolute/path/redis-server -Dcodeoj.native-observation=true package
+# Final focused registration package after sync-error/backoff refinement:
+mvn -o -B -f codeoj-backend/pom.xml -pl codeoj-backend-question-service -am -Dtest=RegistrationRedisIntegrationTest,RegistrationMessagingTest -Dsurefire.failIfNoSpecifiedTests=false -Dcodeoj.real-redis=true -Dcodeoj.redis-server=/absolute/path/redis-server package
+scripts/demo-local-contest.sh
+# cwd=codeoj-frontend
+./node_modules/.bin/prettier --write src/components/RegistrationOperations.vue src/views/contest/ManageContestsView.vue
+npm run build
+# cwd=repository root; already-installed Playwright/Chrome, no browser download
+PLAYWRIGHT_BROWSER_CHANNEL=chrome PLAYWRIGHT_MODULE=/Users/zzds/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright node scripts/validation/contest-browser-smoke.cjs
+bash -n scripts/test-registration-local.sh
+git apply --reverse --check outputs/validation/j4-local-20261018/workspace.patch
+git diff --check
+shasum -a 256 -c outputs/validation/j4-local-20261018/source-manifest.sha256
+# Escalation only for test TCP/RSS/browser and official temporary Redis build; no Docker/deployment/load tests/commit/push.

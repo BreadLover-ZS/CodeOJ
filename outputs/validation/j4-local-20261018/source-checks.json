@@ -1,0 +1,10 @@
+{
+  "workspacePatchReverseCheck": "PASS",
+  "gitDiffCheck": "PASS",
+  "sourceManifestCheck": "PASS",
+  "sourceFiles": 127,
+  "cumulativePatchBytes": 594453,
+  "originalOutput": "not read or modified",
+  "committed": false,
+  "pushed": false
+}

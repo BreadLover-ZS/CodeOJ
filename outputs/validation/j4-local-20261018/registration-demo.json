@@ -1,0 +1,8 @@
+{
+  "scope": "real isolated Redis/Lua + H2; manual consumer invocation; no MySQL/RabbitMQ acceptance",
+  "status": "CONFIRMED",
+  "remainingRedis": 0,
+  "requests": 1,
+  "qualifications": 1,
+  "outboxEvents": 1
+}

@@ -4,6 +4,8 @@ CodeOJ 是我基于 **Spring Cloud + Vue 3** 实现的微服务在线判题系�
 
 我梳理了提交、消息消费与判题执行三条核心源码流程，并绘制了对应流程图。
 
+赛事平台二次开发正在进行，实施范围与证据见 [赛事开发记录](docs/contest/README.md)。已加入可靠判题、比赛快照/资格、[秒杀报名与恢复对账](docs/contest/j4-local.md)，业务开关默认关闭，真实 MySQL/MQ 联合链尚未验证。可运行 `./scripts/demo-local-contest.sh` 查看 H2 与真实 Java 判题样例；`BUILD_TEST_REDIS=true ./scripts/test-registration-local.sh` 会临时编译 Redis 并运行本机功能回归，不安装全局服务。榜单与结算在 J5 实施；开发阶段不处理部署与压测。
+
 ## 核心功能
 
 - 用户注册、登录、Spring Session Redis 共享登录态和角色鉴权；

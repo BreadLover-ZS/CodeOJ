@@ -1,0 +1,1 @@
+{"scope":"H2 transactions + native javac/java; manual outbox dispatch; not MySQL/MQ/HTTP acceptance","registration":"CONFIRMED","executionStatus":"COMPLETED","verdict":"AC","submissions":1,"attempts":1,"resultEvents":1,"remainingCapacity":0,"wallMs":143,"memoryKiB":31968,"memoryMeasurement":"NATIVE_RSS_SAMPLED"}

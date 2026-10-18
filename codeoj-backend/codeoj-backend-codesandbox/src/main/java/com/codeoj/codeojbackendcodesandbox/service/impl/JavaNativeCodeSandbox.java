@@ -2,260 +2,222 @@ package com.codeoj.codeojbackendcodesandbox.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.codeoj.codeojbackendcodesandbox.service.CodeSandboxService;
-import com.codeoj.codeojbackendmodel.model.codesandbox.ExecuteCodeRequest;
-import com.codeoj.codeojbackendmodel.model.codesandbox.ExecuteCodeResponse;
-import com.codeoj.codeojbackendmodel.model.codesandbox.JudgeInfo;
+import com.codeoj.codeojbackendmodel.model.codesandbox.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.nio.file.*;
+import java.util.*;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import java.util.regex.*;
 import java.util.stream.Stream;
 
-/**
- * Java 原生代码沙箱实现
- *
- * <p>流程：临时目录写入源码 → javac 编译 → 逐用例 java 运行（stdin 喂入）→ 采集 stdout。
- * 包含鉴权、代码/输出大小限制、编译与运行超时、临时目录清理等防护。
- *
- * <p>安全说明：本实现为进程级隔离（超时 + 资源回收），适合本地开发与内网演示；
- * 生产环境建议部署在独立容器/独立宿主机中（如 docker run 限制 CPU/内存/网络），
- * 并仅允许判题服务内网访问。
- */
+/** Native runner for trusted local samples only. Isolation validation is deferred. */
 @Slf4j
 @Service
 public class JavaNativeCodeSandbox implements CodeSandboxService {
-
-    /**
-     * 鉴权请求头约定值（判题服务 RemoteCodeSandbox 同名常量）
-     */
-    private static final String AUTH_HEADER = "auth";
-
-    /**
-     * 与判题服务一致的执行状态值：1 成功 / 2 失败
-     */
-    private static final int STATUS_SUCCESS = 1;
-    private static final int STATUS_FAILED = 2;
-
-    /**
-     * 单个用例最大输出字符数（防止刷屏式输出占满内存/磁盘）
-     */
-    private static final int MAX_OUTPUT_LENGTH = 64 * 1024;
-
-    /**
-     * 用户代码最大字符数
-     */
-    private static final int MAX_CODE_LENGTH = 256 * 1024;
-
-    /**
-     * 从代码中提取主类名（public class Xxx），未匹配到时默认 Main
-     */
-    private static final Pattern CLASS_NAME_PATTERN = Pattern.compile("public\\s+class\\s+([A-Za-z_]\\w*)");
+    private static final int MAX_CODE_BYTES = 256 * 1024;
+    private static final int MAX_INPUT_BYTES = 1024 * 1024;
+    private static final int MAX_CASES = 20;
+    private static final Pattern CLASS_NAME = Pattern.compile("public\\s+class\\s+([A-Za-z_$][A-Za-z0-9_$]*)");
+    private final BoundedProcessRunner runner = new BoundedProcessRunner();
+    private final Semaphore slots;
+    private final NativeExecutionRegistry executions = new NativeExecutionRegistry();
 
     @Value("${codesandbox.auth-secret:secretKey}")
     private String authSecret;
-
-    /**
-     * 单个用例运行超时（毫秒）
-     */
     @Value("${codesandbox.run-timeout-ms:5000}")
-    private long runTimeoutMs;
-
-    /**
-     * 编译超时（毫秒）
-     */
+    private long runTimeoutMs = 5000;
     @Value("${codesandbox.compile-timeout-ms:15000}")
-    private long compileTimeoutMs;
+    private long compileTimeoutMs = 15000;
+    @Value("${codesandbox.attempt-timeout-ms:30000}")
+    private long attemptTimeoutMs = 30000;
+    @Value("${codesandbox.max-output-bytes:65536}")
+    private int maxOutputBytes = 65536;
+
+    public JavaNativeCodeSandbox(@Value("${codesandbox.max-concurrent:2}") int maxConcurrent) {
+        if (maxConcurrent < 1 || maxConcurrent > 16) {
+            throw new IllegalArgumentException("max-concurrent must be between 1 and 16");
+        }
+        slots = new Semaphore(maxConcurrent);
+    }
 
     @Override
     public void checkAuth(String auth) {
-        if (StrUtil.isBlank(auth) || !authSecret.equals(auth)) {
+        if (StrUtil.isBlank(auth) || !auth.equals(authSecret)) {
             throw new SecurityException("无权限访问代码沙箱");
         }
     }
 
     @Override
-    public ExecuteCodeResponse executeCode(ExecuteCodeRequest executeCodeRequest) {
-        String code = executeCodeRequest.getCode();
-        List<String> inputList = executeCodeRequest.getInputList();
-        if (StrUtil.isBlank(code) || code.length() > MAX_CODE_LENGTH) {
-            return fail("代码为空或超过长度限制");
+    public ExecuteCodeResponse executeCode(ExecuteCodeRequest request) {
+        return executions.execute(request, () -> executeOnce(request));
+    }
+
+    @org.springframework.scheduling.annotation.Scheduled(fixedDelay = 60000)
+    public void clearExpiredExecutionTokens() { executions.cleanup(); }
+
+    private ExecuteCodeResponse executeOnce(ExecuteCodeRequest request) {
+        if (!valid(request)) {
+            return response(SandboxOutcome.REJECTED, "INVALID_EXECUTION_REQUEST", null, null);
         }
-        if (inputList == null) {
-            inputList = new ArrayList<>();
+        if (!slots.tryAcquire()) {
+            return response(SandboxOutcome.PLATFORM_ERROR, "EXECUTION_CAPACITY_UNAVAILABLE", null, null);
         }
         Path workDir = null;
         try {
-            // 1. 提取类名并写入临时目录
+            if (runTimeoutMs <= 0 || compileTimeoutMs <= 0 || attemptTimeoutMs <= 0 || maxOutputBytes <= 0) {
+                return response(SandboxOutcome.PLATFORM_ERROR, "INVALID_EXECUTOR_CONFIGURATION", null, null);
+            }
+            if (request.getRunTimeLimitMs() != null && request.getRunTimeLimitMs() > runTimeoutMs) {
+                return response(SandboxOutcome.PLATFORM_ERROR, "CASE_LIMIT_EXCEEDS_EXECUTOR_POLICY", null, null);
+            }
+            long budget = attemptTimeoutMs;
+            if (request.getExecutionDeadlineEpochMs() != null) {
+                budget = Math.min(budget, request.getExecutionDeadlineEpochMs() - System.currentTimeMillis());
+                if (budget <= 0) { return response(SandboxOutcome.PLATFORM_ERROR, "EXECUTION_DEADLINE_EXPIRED", null, null); }
+            }
+            long deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(budget);
             workDir = Files.createTempDirectory("codeoj-sandbox-");
-            String className = resolveClassName(code);
-            // 将相对文件名拼接到目录路径后面，自动处理分隔符
-            Path sourceFile = workDir.resolve(className + ".java");
-            Files.write(sourceFile, code.getBytes(StandardCharsets.UTF_8));
-
-            // 2. 编译
-            /*
-                记开始时间 → 拼好 `javac` 命令并指定工作目录 → 启动子进程
-                        → 先读走错误流防死锁 → 等最多 15s → 超时就杀进程返回 "编译超时"
-                         → 退出码非 0 返回截断的编译错误 → 成功则记日志，进入下一步 "逐用例运行"。
-             */
-            //记录编译开始时间，用于最后统计编译耗时（毫秒）
-            long compileStart = System.currentTimeMillis();
-            /*
-             * `ProcessBuilder` 是 Java 启动外部进程的 API，参数列表 = 命令 + 参数，等价于在命令行执行：
-             * `javac -encoding UTF-8 C:\...\codeoj-sandbox-xxx\Main.java`
-             * `-encoding UTF-8` 是防止 Windows 默认编码（GBK）导致中文注释乱码甚至编译失败。
-             *
-             * directory 设置工作目录
-             */
-            Process compile = new ProcessBuilder("javac", "-encoding", "UTF-8", sourceFile.toAbsolutePath().toString())
-                    .directory(workDir.toFile())
-                    .start();
-            /*
-             * 读取错误流（编译错误信息走 stderr，不是 stdout）。
-             * `readOutput` 是自定义方法，阻塞读到流结束，超过 64KB 截断。
-             * 这里有个容易被忽略的细节：在 `waitFor` 之前读。
-             * 如果 javac 输出的错误信息太多，把管道缓冲区写满，javac 会阻塞在写 stderr 上永远结束不了 —— 先读掉就可以防止这种死锁。
-             */
-            String compileError = readOutput(compile.getErrorStream());
-            boolean compileFinished = compile.waitFor(compileTimeoutMs, TimeUnit.MILLISECONDS);
-            if (!compileFinished) {
-                compile.destroyForcibly();
-                return fail("编译超时");
+            Path classes = Files.createDirectory(workDir.resolve("classes"));
+            Matcher matcher = CLASS_NAME.matcher(request.getCode());
+            String className = matcher.find() ? matcher.group(1) : "Main";
+            Path source = workDir.resolve(className + ".java");
+            Files.write(source, request.getCode().getBytes(StandardCharsets.UTF_8));
+            List<String> compileCommand = Arrays.asList(jdkTool("javac"), "-J-Duser.language=en",
+                    "-J-Duser.country=US", "-encoding", "UTF-8", "-proc:none", "-d", classes.toString(), source.toString());
+            BoundedProcessRunner.Result compile = runner.run(compileCommand, workDir, "",
+                    remaining(compileTimeoutMs, deadline), maxOutputBytes);
+            if (compile.end != BoundedProcessRunner.End.EXITED) {
+                return response(SandboxOutcome.PLATFORM_ERROR, "COMPILER_BUDGET_EXCEEDED", null, null);
             }
-            if (compile.exitValue() != 0) {
-                return fail("编译错误：" + StrUtil.sub(compileError, 0, 500));
+            if (compile.exitCode != 0) {
+                boolean diagnostic = compile.stderr.contains(".java:") && compile.stderr.contains("error:");
+                return response(diagnostic ? SandboxOutcome.CE : SandboxOutcome.PLATFORM_ERROR,
+                        diagnostic ? "COMPILATION_FAILED" : "COMPILER_FAILURE", null, null);
             }
-            log.info("沙箱编译完成，className = {}，耗时 {} ms", className, System.currentTimeMillis() - compileStart);
-
-            // 3. 逐用例运行
-            List<String> outputList = new ArrayList<>();
-            long maxCostMs = 0;
-            for (String input : inputList) {
-                long runStart = System.currentTimeMillis();
-                Process run = new ProcessBuilder("java", "-Dfile.encoding=UTF-8", "-XX:+UseSerialGC",
-                                "-cp", workDir.toAbsolutePath().toString(), className)
-                        .directory(workDir.toFile())
-                        .start();
-                // 喂入输入用例
-                try (BufferedWriter writer = new BufferedWriter(
-                        new java.io.OutputStreamWriter(run.getOutputStream(), StandardCharsets.UTF_8))) {
-                    if (StrUtil.isNotBlank(input)) {
-                        writer.write(input);
-                    }
-                    writer.flush();
+            List<String> output = new ArrayList<>();
+            long maxWallTime = 0;
+            Long peakMemory = null;
+            boolean allMeasured = true;
+            long memoryLimit = request.getMemoryLimitKiB() == null ? 131072L : request.getMemoryLimitKiB();
+            long caseLimit = request.getRunTimeLimitMs() == null ? runTimeoutMs
+                    : request.getRunTimeLimitMs();
+            for (int i = 0; i < request.getInputList().size(); i++) {
+                long available = TimeUnit.NANOSECONDS.toMillis(deadline - System.nanoTime());
+                if (available < caseLimit) {
+                    return response(SandboxOutcome.PLATFORM_ERROR, "ATTEMPT_BUDGET_EXHAUSTED", null, null);
                 }
-                String output = readOutput(run.getInputStream());
-                boolean runFinished = run.waitFor(runTimeoutMs, TimeUnit.MILLISECONDS);
-                if (!runFinished) {
-                    run.destroyForcibly();
-                    return fail("运行超时");
+                Path caseDir = Files.createDirectory(workDir.resolve("case-" + i));
+                List<String> command = Arrays.asList(jdkTool("java"), "-Dfile.encoding=UTF-8",
+                        "-XX:+UseSerialGC", "-cp", classes.toString(), className);
+                BoundedProcessRunner.Result run = runner.run(command, caseDir, request.getInputList().get(i),
+                        caseLimit, maxOutputBytes, memoryLimit);
+                maxWallTime = Math.max(maxWallTime, run.wallTimeMs);
+                JudgeInfo metrics = new JudgeInfo();
+                metrics.setTime(maxWallTime);
+                allMeasured &= run.peakMemoryKiB != null;
+                if (run.peakMemoryKiB != null) {
+                    peakMemory = peakMemory == null ? run.peakMemoryKiB : Math.max(peakMemory, run.peakMemoryKiB);
                 }
-                long cost = System.currentTimeMillis() - runStart;
-                maxCostMs = Math.max(maxCostMs, cost);
-                if (run.exitValue() != 0) {
-                    String error = readOutput(run.getErrorStream());
-                    return fail("运行错误（退出码 " + run.exitValue() + "）：" + StrUtil.sub(error, 0, 500));
+                metrics.setMemory(allMeasured ? peakMemory : null);
+                metrics.setMemoryMeasurement(allMeasured ? "NATIVE_RSS_SAMPLED" : null);
+                if (run.end == BoundedProcessRunner.End.MEMORY_LIMIT) {
+                    metrics.setMemory(run.peakMemoryKiB);
+                    metrics.setMemoryMeasurement("NATIVE_RSS_SAMPLED");
+                    return response(SandboxOutcome.MLE, "OBSERVED_RSS_LIMIT_EXCEEDED", metrics, null);
                 }
-                outputList.add(normalizeOutput(output));
+                if (run.end == BoundedProcessRunner.End.TIMEOUT) {
+                    return response(SandboxOutcome.TLE, "CASE_WALL_TIME_EXCEEDED", metrics, null);
+                }
+                if (run.end == BoundedProcessRunner.End.OUTPUT_LIMIT) {
+                    return response(SandboxOutcome.OUTPUT_LIMIT, "CASE_OUTPUT_EXCEEDED", metrics, null);
+                }
+                if (run.exitCode != 0) {
+                    // No reliable memory/termination attribution in native mode.
+                    return response(SandboxOutcome.PLATFORM_ERROR,
+                            "UNCLASSIFIED_PROCESS_EXIT", metrics, null);
+                }
+                output.add(run.stdout);
             }
-
-            // 4. 组装结果
-            JudgeInfo judgeInfo = new JudgeInfo();
-            judgeInfo.setTime(maxCostMs);
-            judgeInfo.setMemory(0L);
-            return ExecuteCodeResponse.builder()
-                    .outputList(outputList)
-                    .message("ok")
-                    .status(STATUS_SUCCESS)
-                    .judgeInfo(judgeInfo)
-                    .build();
-        } catch (IOException e) {
-            log.error("沙箱执行 IO 异常", e);
-            return fail("沙箱执行异常：" + e.getMessage());
+            JudgeInfo metrics = new JudgeInfo();
+            metrics.setTime(maxWallTime);
+            metrics.setMemory(allMeasured ? peakMemory : null);
+            metrics.setMemoryMeasurement(allMeasured ? "NATIVE_RSS_SAMPLED" : null);
+            return response(SandboxOutcome.EXECUTED, null, metrics, output);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            return fail("沙箱执行被中断");
-        } catch (Exception e) {
-            log.error("沙箱执行异常", e);
-            return fail("沙箱执行异常：" + e.getMessage());
+            return response(SandboxOutcome.PLATFORM_ERROR, "EXECUTOR_INTERRUPTED", null, null);
+        } catch (IOException | RuntimeException e) {
+            log.warn("Native executor failed: {}", e.getClass().getSimpleName());
+            return response(SandboxOutcome.PLATFORM_ERROR, "EXECUTOR_IO_FAILURE", null, null);
         } finally {
             cleanup(workDir);
+            slots.release();
         }
     }
 
-    /**
-     * 从代码中提取主类名
-     */
-    private String resolveClassName(String code) {
-        Matcher matcher = CLASS_NAME_PATTERN.matcher(code);
-        if (matcher.find()) {
-            return matcher.group(1);
+    private boolean valid(ExecuteCodeRequest request) {
+        if (request == null || !"java".equals(request.getLanguage()) || StrUtil.isBlank(request.getCode())
+                || request.getCode().getBytes(StandardCharsets.UTF_8).length > MAX_CODE_BYTES
+                || request.getInputList() == null || request.getInputList().isEmpty()
+                || request.getInputList().size() > MAX_CASES
+                || (request.getRunTimeLimitMs() != null && request.getRunTimeLimitMs() <= 0)) {
+            return false;
         }
-        return "Main";
-    }
-
-    /**
-     * 读取流内容，超过上限即截断
-     */
-    private String readOutput(java.io.InputStream stream) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
-            StringBuilder sb = new StringBuilder();
-            char[] buffer = new char[1024];
-            int n;
-            while ((n = reader.read(buffer)) != -1) {
-                sb.append(buffer, 0, n);
-                if (sb.length() > MAX_OUTPUT_LENGTH) {
-                    return sb.substring(0, MAX_OUTPUT_LENGTH);
-                }
+        if (request.getMemoryLimitKiB() != null
+                && (request.getMemoryLimitKiB() <= 0 || request.getMemoryLimitKiB() > 1048576)) {
+            return false;
+        }
+        long bytes = 0;
+        for (String input : request.getInputList()) {
+            if (input == null) {
+                return false;
             }
-            return sb.toString();
+            bytes += input.getBytes(StandardCharsets.UTF_8).length;
         }
+        return bytes <= MAX_INPUT_BYTES;
     }
 
-    /**
-     * 归一化输出：去除首尾空白与行尾 \r，保证判题比对不受平台换行符影响
-     */
-    private String normalizeOutput(String output) {
-        if (StrUtil.isEmpty(output)) {
-            return "";
+    private long remaining(long budget, long deadline) throws IOException {
+        long left = TimeUnit.NANOSECONDS.toMillis(deadline - System.nanoTime());
+        if (left <= 0) {
+            throw new IOException("ATTEMPT_DEADLINE");
         }
-        return output.replace("\r\n", "\n").trim();
+        return Math.min(budget, left);
     }
 
-    /**
-     * 递归删除临时目录
-     */
-    private void cleanup(Path dir) {
-        if (dir == null || !Files.exists(dir)) {
+    private String jdkTool(String name) {
+        Path javaHome = Paths.get(System.getProperty("java.home"));
+        if (!Files.isExecutable(javaHome.resolve("bin").resolve("javac")) && javaHome.getParent() != null) {
+            javaHome = javaHome.getParent(); // Java 8 java.home points at jre/.
+        }
+        return javaHome.resolve("bin").resolve(name).toString();
+    }
+
+    private ExecuteCodeResponse response(SandboxOutcome outcome, String error, JudgeInfo metrics, List<String> output) {
+        int status = outcome == SandboxOutcome.EXECUTED ? 1
+                : outcome == SandboxOutcome.PLATFORM_ERROR || outcome == SandboxOutcome.REJECTED ? 3 : 2;
+        return ExecuteCodeResponse.builder().outcome(outcome).errorCode(error).status(status)
+                .message(error == null ? "ok" : error).judgeInfo(metrics)
+                .outputList(output == null ? Collections.emptyList() : output).build();
+    }
+
+    private void cleanup(Path directory) {
+        if (directory == null) {
             return;
         }
-        try (Stream<Path> paths = Files.walk(dir)) {
-            paths.sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+        try (Stream<Path> paths = Files.walk(directory)) { // No FOLLOW_LINKS.
+            Iterator<Path> iterator = paths.sorted(Comparator.reverseOrder()).iterator();
+            while (iterator.hasNext()) {
+                Files.deleteIfExists(iterator.next());
+            }
         } catch (IOException e) {
-            log.warn("清理沙箱临时目录失败：{}", dir, e);
+            log.warn("Native executor cleanup failed: {}", directory.getFileName());
         }
-    }
-
-    private ExecuteCodeResponse fail(String message) {
-        return ExecuteCodeResponse.builder()
-                .outputList(new ArrayList<>())
-                .message(message)
-                .status(STATUS_FAILED)
-                .build();
     }
 }

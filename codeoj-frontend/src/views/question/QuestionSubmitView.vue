@@ -50,31 +50,31 @@
         <template #judgeInfo="{ record }">
           <span v-if="record.judgeInfo?.message" class="judge-msg">
             {{ record.judgeInfo.message }}
-            <span v-if="record.judgeInfo.time" class="judge-detail">
+            <span v-if="record.judgeInfo.time != null" class="judge-detail">
               · {{ record.judgeInfo.time }}ms
             </span>
-            <span v-if="record.judgeInfo.memory" class="judge-detail">
-              · {{ record.judgeInfo.memory }}KB
+            <span v-if="record.judgeInfo.memory != null" class="judge-detail">
+              · {{ record.judgeInfo.memory }}KiB
             </span>
+            <span v-else class="judge-detail"> · 内存未知</span>
           </span>
           <span v-else>-</span>
         </template>
         <template #status="{ record }">
-          <a-tag
-            :color="statusMap[record.status]?.color ?? 'gray'"
-            class="status-tag"
-          >
+          <a-tag :color="submissionStatus(record).color" class="status-tag">
             <span
               class="status-dot"
               :style="{
-                background: statusMap[record.status]?.dot ?? '#c9cdd4',
+                background: submissionStatus(record).dot,
               }"
             ></span>
-            {{ statusMap[record.status]?.text ?? record.status }}
+            {{ submissionStatus(record).text }}
           </a-tag>
         </template>
         <template #createTime="{ record }">
-          {{ moment(record.createTime).format("MM-DD HH:mm") }}
+          {{
+            moment(record.acceptedAt ?? record.createTime).format("MM-DD HH:mm")
+          }}
         </template>
       </a-table>
     </div>
@@ -159,8 +159,23 @@ const statusMap: Record<number, { text: string; color: string; dot: string }> =
     0: { text: "待判题", color: "orange", dot: "#ffa600" },
     1: { text: "判题中", color: "arcoblue", dot: "#165dff" },
     2: { text: "判题完成", color: "green", dot: "#00b42a" },
-    3: { text: "判题失败", color: "red", dot: "#f53f3f" },
+    3: { text: "平台判题异常", color: "red", dot: "#f53f3f" },
   };
+
+const executionStatusMap: Record<
+  string,
+  { text: string; color: string; dot: string }
+> = {
+  QUEUED: { text: "等待判题", color: "orange", dot: "#ffa600" },
+  RUNNING: { text: "判题中", color: "arcoblue", dot: "#165dff" },
+  RETRY_WAIT: { text: "等待重试", color: "orange", dot: "#ffa600" },
+  COMPLETED: { text: "判题完成", color: "green", dot: "#00b42a" },
+  NEEDS_ATTENTION: { text: "需管理员处理", color: "red", dot: "#f53f3f" },
+};
+
+const submissionStatus = (record: any) =>
+  executionStatusMap[record.executionStatus] ??
+  statusMap[record.status] ?? { text: "未知", color: "gray", dot: "#c9cdd4" };
 
 const onPageChange = (page: number) => {
   searchParams.value = { ...searchParams.value, current: page };

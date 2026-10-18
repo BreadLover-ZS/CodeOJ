@@ -26,5 +26,8 @@ public class QuestionSubmitAddRequest implements Serializable {
      */
     private Long questionId;
 
+    /** Stable across network retries; required by the reliable submission path. */
+    private String requestKey;
+
     private static final long serialVersionUID = 1L;
 }

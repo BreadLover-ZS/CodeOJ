@@ -36,6 +36,11 @@ spring:
       discovery:
         server-addr: ${NACOS_ADDR:127.0.0.1:8848}
   rabbitmq:
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    listener:
+      simple:
+        prefetch: 2
     host: ${RABBITMQ_HOST:localhost}
     port: 5672
     password: ${RABBITMQ_PASSWORD:guest}
@@ -53,7 +58,7 @@ server:
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
   global-config:
     db-config:
       logic-delete-field: isDelete # 全局逻辑删除的实体字段名
@@ -66,4 +71,11 @@ knife4j:
   enable: true
 # 内部接口（/inner/**）鉴权密钥，服务间调用使用，生产环境务必通过环境变量 INNER_AUTH_SECRET 覆盖
 codeoj:
+  registration:
+    enabled: ${ASYNC_REGISTRATION_ENABLED:false}
+    max-clock-skew-ms: ${REGISTRATION_MAX_CLOCK_SKEW_MS:2000}
+  reliable-judge:
+    enabled: ${RELIABLE_JUDGE_ENABLED:false}
+    worker-slots: ${RELIABLE_JUDGE_WORKER_SLOTS:2}
   inner-auth-secret: ${INNER_AUTH_SECRET:codeoj-default-inner-secret}
+# Reliable judging needs V001/V002 and old-queue cutover; async registration additionally needs V003 and per-contest cutover.

@@ -1,0 +1,12 @@
+# Repository root; Java 8 selected via JAVA_HOME and PATH.
+# Functional suite (35 tests, real local loopback ports and native RSS permissions):
+mvn -o -B -f codeoj-backend/pom.xml -Dcodeoj.native-observation=true test
+# Script builds all modules with -DskipTests and runs actual native executor + judge strategy:
+./scripts/demo-local-judge.sh
+# Frontend build, from codeoj-frontend:
+npm run build
+# Syntax and whitespace:
+bash -n scripts/demo-local-judge.sh
+git diff --check
+# Explicit infrastructure profile discovery check; environment failure expected:
+mvn -o -B -f codeoj-backend/pom.xml -pl codeoj-backend-question-service -am -Pinfrastructure-tests -Dtest=CodeojBackendQuestionServiceApplicationTests -Dsurefire.failIfNoSpecifiedTests=false test

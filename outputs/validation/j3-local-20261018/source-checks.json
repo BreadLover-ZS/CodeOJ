@@ -1,0 +1,9 @@
+{
+  "workspacePatchReverseCheck": "PASS",
+  "gitDiffCheck": "PASS",
+  "sourceManifestCheck": "PASS",
+  "sourceFiles": 107,
+  "originalOutputDirectory": "not read or modified",
+  "committed": false,
+  "pushed": false
+}

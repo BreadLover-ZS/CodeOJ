@@ -9,7 +9,15 @@
 
 <script setup lang="ts">
 import * as monaco from "monaco-editor";
-import { onMounted, ref, toRaw, withDefaults, defineProps, watch } from "vue";
+import {
+  onMounted,
+  onUnmounted,
+  ref,
+  toRaw,
+  withDefaults,
+  defineProps,
+  watch,
+} from "vue";
 
 /**
  * 定义组件属性类型
@@ -78,6 +86,9 @@ onMounted(() => {
   codeEditor.value.onDidChangeModelContent(() => {
     props.handleChange(toRaw(codeEditor.value).getValue());
   });
+});
+onUnmounted(() => {
+  if (codeEditor.value) toRaw(codeEditor.value).dispose();
 });
 </script>
 

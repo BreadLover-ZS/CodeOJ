@@ -15,6 +15,23 @@ import AdminUserManageView from "@/views/user/AdminUserManageView.vue";
 
 export const routes: Array<RouteRecordRaw> = [
   {
+    path: "/contests",
+    name: "比赛",
+    component: () => import("@/views/contest/ContestsView.vue"),
+  },
+  {
+    path: "/contests/:id",
+    name: "参赛",
+    component: () => import("@/views/contest/ContestDetailView.vue"),
+    meta: { access: ACCESS_ENUM.USER, hideInMenu: true },
+  },
+  {
+    path: "/manage/contests",
+    name: "比赛管理",
+    component: () => import("@/views/contest/ManageContestsView.vue"),
+    meta: { access: ACCESS_ENUM.ADMIN },
+  },
+  {
     path: "/user",
     name: "用户",
     component: UserLayout,

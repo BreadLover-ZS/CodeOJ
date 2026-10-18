@@ -11,6 +11,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AAlert: typeof import('@arco-design/web-vue')['Alert']
     AButton: typeof import('@arco-design/web-vue')['Button']
     ACol: typeof import('@arco-design/web-vue')['Col']
     ADivider: typeof import('@arco-design/web-vue')['Divider']
@@ -25,16 +26,20 @@ declare module 'vue' {
     AInputTag: typeof import('@arco-design/web-vue')['InputTag']
     AOption: typeof import('@arco-design/web-vue')['Option']
     APagination: typeof import('@arco-design/web-vue')['Pagination']
+    APopconfirm: typeof import('@arco-design/web-vue')['Popconfirm']
     ARow: typeof import('@arco-design/web-vue')['Row']
     ASelect: typeof import('@arco-design/web-vue')['Select']
     ASpace: typeof import('@arco-design/web-vue')['Space']
     ATable: typeof import('@arco-design/web-vue')['Table']
+    ATableColumn: typeof import('@arco-design/web-vue')['TableColumn']
     ATag: typeof import('@arco-design/web-vue')['Tag']
+    ATextarea: typeof import('@arco-design/web-vue')['Textarea']
     CodeEditor: typeof import('./src/components/CodeEditor.vue')['default']
     GlobalHeader: typeof import('./src/components/GlobalHeader.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     MdEditor: typeof import('./src/components/MdEditor.vue')['default']
     MdViewer: typeof import('./src/components/MdViewer.vue')['default']
+    RegistrationOperations: typeof import('./src/components/RegistrationOperations.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

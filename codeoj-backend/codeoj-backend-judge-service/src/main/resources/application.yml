@@ -36,6 +36,11 @@ spring:
       discovery:
         server-addr: ${NACOS_ADDR:127.0.0.1:8848}
   rabbitmq:
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    listener:
+      simple:
+        prefetch: 2
     host: ${RABBITMQ_HOST:localhost}
     port: 5672
     password: ${RABBITMQ_PASSWORD:guest}
@@ -53,7 +58,7 @@ server:
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
   global-config:
     db-config:
       logic-delete-field: isDelete # 全局逻辑删除的实体字段名
@@ -66,8 +71,22 @@ codesandbox:
     # 远程代码沙箱服务地址（需单独部署，通过环境变量注入，生产环境务必显式指定）
     url: ${CODESANDBOX_REMOTE_URL:http://localhost:8090/executeCode}
     auth-secret: ${CODESANDBOX_REMOTE_AUTH_SECRET:secretKey}
+    connect-timeout-ms: ${CODESANDBOX_CONNECT_TIMEOUT_MS:2000}
+    read-timeout-ms: ${CODESANDBOX_READ_TIMEOUT_MS:35000}
+    total-timeout-ms: ${CODESANDBOX_TOTAL_TIMEOUT_MS:38000}
 knife4j:
   enable: true
 # 内部接口（/inner/**）鉴权密钥，服务间调用使用，生产环境务必通过环境变量 INNER_AUTH_SECRET 覆盖
 codeoj:
+  reliable-judge:
+    enabled: ${RELIABLE_JUDGE_ENABLED:false}
+    worker-slots: ${RELIABLE_JUDGE_WORKER_SLOTS:2}
   inner-auth-secret: ${INNER_AUTH_SECRET:codeoj-default-inner-secret}
+
+# Enable only after V001 migration and the old queue cutover procedure.
+feign:
+  client:
+    config:
+      codeoj-backend-question-service:
+        connectTimeout: 2000
+        readTimeout: 5000

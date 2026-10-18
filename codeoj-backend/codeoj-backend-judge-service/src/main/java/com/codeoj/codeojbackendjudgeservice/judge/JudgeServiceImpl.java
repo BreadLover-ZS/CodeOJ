@@ -12,6 +12,7 @@ import com.codeoj.codeojbackendmodel.model.codesandbox.ExecuteCodeRequest;
 import com.codeoj.codeojbackendmodel.model.codesandbox.ExecuteCodeResponse;
 import com.codeoj.codeojbackendmodel.model.codesandbox.JudgeInfo;
 import com.codeoj.codeojbackendmodel.model.dto.question.JudgeCase;
+import com.codeoj.codeojbackendmodel.model.dto.question.JudgeConfig;
 import com.codeoj.codeojbackendmodel.model.entity.Question;
 import com.codeoj.codeojbackendmodel.model.entity.QuestionSubmit;
 import com.codeoj.codeojbackendmodel.model.enums.JudgeInfoMessageEnum;
@@ -38,7 +39,7 @@ public class JudgeServiceImpl implements JudgeService {
     @Resource
     private CodeSandboxFactory codeSandboxFactory;
 
-    @Value("${codesandbox.type:example}")
+    @Value("${codesandbox.type:remote}")
     private String type;
 
 
@@ -71,6 +72,9 @@ public class JudgeServiceImpl implements JudgeService {
         CodeSandbox codeSandbox = codeSandboxFactory.newInstance(type);
         codeSandbox = new CodeSandboxProxy(codeSandbox);
         String language = questionSubmit.getLanguage();
+        if (!"java".equals(language)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "首版仅支持 Java 判题");
+        }
         String code = questionSubmit.getCode();
         // 获取输入用例
         String judgeCaseStr = question.getJudgeCase();
@@ -80,8 +84,11 @@ public class JudgeServiceImpl implements JudgeService {
                 .code(code)
                 .language(language)
                 .inputList(inputList)
+                .runTimeLimitMs(JSONUtil.toBean(question.getJudgeConfig(), JudgeConfig.class).getTimeLimit())
+                .memoryLimitKiB(JSONUtil.toBean(question.getJudgeConfig(), JudgeConfig.class).getMemoryLimit())
                 .build();
         ExecuteCodeResponse executeCodeResponse = codeSandbox.executeCode(executeCodeRequest);
+        JudgeInfo directVerdict = SandboxResultMapper.userVerdict(executeCodeResponse);
         List<String> outputList = executeCodeResponse.getOutputList();
         // 5）根据沙箱的执行结果，设置题目的判题状态和信息
         JudgeContext judgeContext = new JudgeContext();
@@ -91,7 +98,7 @@ public class JudgeServiceImpl implements JudgeService {
         judgeContext.setJudgeCaseList(judgeCaseList);
         judgeContext.setQuestion(question);
         judgeContext.setQuestionSubmit(questionSubmit);
-        JudgeInfo judgeInfo = judgeManager.doJudge(judgeContext);
+        JudgeInfo judgeInfo = directVerdict != null ? directVerdict : judgeManager.doJudge(judgeContext);
         // 6）修改数据库中的判题结果
         questionSubmitUpdate = new QuestionSubmit();
         questionSubmitUpdate.setId(questionSubmitId);

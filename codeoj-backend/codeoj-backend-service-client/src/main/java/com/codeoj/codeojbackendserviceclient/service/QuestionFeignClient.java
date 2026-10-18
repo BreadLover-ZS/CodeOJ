@@ -2,6 +2,7 @@ package com.codeoj.codeojbackendserviceclient.service;
 
 
 import com.codeoj.codeojbackendmodel.model.entity.Question;
+import com.codeoj.codeojbackendmodel.model.reliability.*;
 import com.codeoj.codeojbackendmodel.model.entity.QuestionSubmit;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,5 +34,20 @@ public interface QuestionFeignClient {
     boolean updateQuestionStats(@RequestParam("questionId") long questionId,
                                 @RequestParam("submitNumDelta") int submitNumDelta,
                                 @RequestParam("acceptedNumDelta") int acceptedNumDelta);
+
+    @PostMapping("/execution/claim")
+    JudgeLease claimExecution(@RequestBody JudgeDispatch message);
+
+    @PostMapping("/execution/heartbeat")
+    boolean heartbeatExecution(@RequestBody ExecutionCommand command);
+
+    @PostMapping("/execution/complete")
+    boolean completeExecution(@RequestBody ExecutionCommand command);
+
+    @PostMapping("/execution/fail")
+    boolean failExecution(@RequestBody ExecutionCommand command);
+
+    @PostMapping("/execution/defer")
+    boolean deferExecution(@RequestBody JudgeDispatch message);
 
 }

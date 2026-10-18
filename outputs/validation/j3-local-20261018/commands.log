@@ -1,0 +1,16 @@
+# cwd=/Users/zzds/Workspace/gitStore/CodeOJ
+# JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-8.jdk/Contents/Home; PATH=$JAVA_HOME/bin:$PATH
+mvn -o -B -f codeoj-backend/pom.xml -Dcodeoj.native-observation=true package
+mvn -o -B -f codeoj-backend/pom.xml -pl codeoj-backend-gateway -am -Dtest=ContestRouteTest -Dsurefire.failIfNoSpecifiedTests=false test
+mvn -o -B -f codeoj-backend/pom.xml -pl codeoj-backend-question-service -am -Dtest=ContestCoreTest -Dsurefire.failIfNoSpecifiedTests=false test
+scripts/demo-local-contest.sh
+# cwd=codeoj-frontend
+./node_modules/.bin/prettier --write src/api/contest.ts src/views/contest/*.vue src/components/CodeEditor.vue
+npm run build
+# cwd=repository root; installed Playwright and Chrome, no browser download
+PLAYWRIGHT_BROWSER_CHANNEL=chrome PLAYWRIGHT_MODULE=/Users/zzds/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright node scripts/validation/contest-browser-smoke.cjs
+# escalation only for functional TCP/RSS/browser access; no deployment, Docker or load testing
+# source snapshot check (read-only)
+git apply --reverse --check outputs/validation/j3-local-20261018/workspace.patch
+git diff --check
+shasum -a 256 -c outputs/validation/j3-local-20261018/source-manifest.sha256

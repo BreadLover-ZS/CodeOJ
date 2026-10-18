@@ -31,11 +31,7 @@
             >
             <span
               ><icon-book /> 内存
-              {{ question?.judgeConfig?.memoryLimit ?? 0 }}MB</span
-            >
-            <span
-              ><icon-layers /> 堆栈
-              {{ question?.judgeConfig?.stackLimit ?? 0 }}KB</span
+              {{ question?.judgeConfig?.memoryLimit ?? "unknown" }} KiB</span
             >
           </div>
 
@@ -54,8 +50,6 @@
             <span class="editor-label">代码</span>
             <a-select v-model="form.language" style="width: 180px" size="small">
               <a-option>java</a-option>
-              <a-option>cpp</a-option>
-              <a-option>go</a-option>
             </a-select>
           </div>
           <CodeEditor
@@ -122,21 +116,62 @@ const form = ref<QuestionSubmitAddRequest>({
   code: "",
 });
 
+let pendingSubmission: { fingerprint: string; key: string } | undefined;
+
 const doSubmit = async () => {
-  if (!question.value?.id) {
+  if (!question.value?.id || submitting.value) {
     return;
   }
   submitting.value = true;
+  const storageKey = `codeoj:practice-pending:${question.value.id}`;
   try {
-    const res = await QuestionControllerService.doQuestionSubmitUsingPost({
-      ...form.value,
-      questionId: question.value.id,
-    });
+    const payload = { ...form.value, questionId: question.value.id };
+    const digest = await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(JSON.stringify(payload))
+    );
+    const fingerprint = Array.from(new Uint8Array(digest))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+    try {
+      const stored = sessionStorage.getItem(storageKey);
+      if (stored) pendingSubmission = JSON.parse(stored);
+    } catch {
+      // Keep the in-memory identity if browser storage is unavailable.
+    }
+    if (pendingSubmission?.fingerprint !== fingerprint) {
+      const key = Array.from(crypto.getRandomValues(new Uint8Array(16)))
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("");
+      pendingSubmission = { fingerprint, key };
+    }
+    try {
+      sessionStorage.setItem(storageKey, JSON.stringify(pendingSubmission));
+    } catch {
+      // Network retries on this page still use the same identity.
+    }
+    const res = await QuestionControllerService.doQuestionSubmitUsingPost(
+      { ...payload, requestKey: pendingSubmission.key },
+      pendingSubmission.key
+    );
     if (res.code === 0) {
+      pendingSubmission = undefined;
+      try {
+        sessionStorage.removeItem(storageKey);
+      } catch {
+        // The accepted submission ID remains authoritative.
+      }
       Message.success("提交成功，正在判题");
       router.push("/question_submit");
     } else {
       Message.error("提交失败，" + res.message);
+    }
+  } catch (error) {
+    const failure = error as { status?: number; body?: { message?: string } };
+    if (failure.status === 409) {
+      Message.error(failure.body?.message ?? "提交标识冲突，请先核查提交记录");
+    } else {
+      Message.error("提交结果暂未确认，请保留当前代码并重试");
     }
   } finally {
     submitting.value = false;

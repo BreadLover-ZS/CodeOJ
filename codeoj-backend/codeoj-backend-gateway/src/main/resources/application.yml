@@ -5,6 +5,12 @@ spring:
         server-addr: ${NACOS_ADDR:127.0.0.1:8848}
     gateway:
       routes:
+        - id: codeoj-contest-api
+          uri: lb://codeoj-backend-question-service
+          predicates:
+            - Path=/api/contests/**,/api/submissions/**,/api/admin/operations/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /api/question/$\{segment}
         - id: codeoj-backend-user-service
           uri: lb://codeoj-backend-user-service
           predicates:

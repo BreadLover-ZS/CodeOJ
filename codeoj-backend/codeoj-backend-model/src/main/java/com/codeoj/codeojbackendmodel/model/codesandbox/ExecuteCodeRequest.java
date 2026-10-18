@@ -18,4 +18,13 @@ public class ExecuteCodeRequest {
     private String code;
 
     private String language;
+
+    /** Per-case wall time including JVM startup; server caps this value. */
+    private Long runTimeLimitMs;
+
+    private Long memoryLimitKiB;
+
+    private String executionToken;
+
+    private Long executionDeadlineEpochMs;
 }

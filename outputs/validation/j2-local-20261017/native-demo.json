@@ -1,0 +1,37 @@
+{
+  "scope": "real native executor and judge strategy only; no full DB/MQ/browser chain",
+  "results": [
+    {
+      "case": "AC",
+      "verdict": "AC",
+      "wallMs": 145,
+      "memoryKiB": 31968,
+      "memoryMeasurement": "NATIVE_RSS_SAMPLED"
+    },
+    {
+      "case": "WA",
+      "verdict": "WA",
+      "wallMs": 133,
+      "memoryKiB": 29472,
+      "memoryMeasurement": "NATIVE_RSS_SAMPLED"
+    },
+    {
+      "case": "CE",
+      "verdict": "CE"
+    },
+    {
+      "case": "TLE",
+      "verdict": "TLE",
+      "wallMs": 1003,
+      "memoryKiB": 29648,
+      "memoryMeasurement": "NATIVE_RSS_SAMPLED"
+    },
+    {
+      "case": "OUTPUT_LIMIT",
+      "verdict": "OUTPUT_LIMIT",
+      "wallMs": 43,
+      "memoryKiB": 30544,
+      "memoryMeasurement": "NATIVE_RSS_SAMPLED"
+    }
+  ]
+}

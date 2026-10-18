@@ -1,0 +1,8 @@
+Base HEAD: b2f43551a4929babe6f5b8be22007670f18767b9
+Original working tree: untracked output/; not read or modified.
+Pre-change online mvn test: JUnit 5 discovered, question-service contextLoads ran 1 test and errored on unavailable Redis localhost:6379.
+Initial offline Maven attempts failed because required build plugin artifacts were not cached; resolved by downloading missing artifacts.
+Restricted functional test attempt: 4 loopback HTTP tests could not bind due to execution sandbox policy; rerun unchanged with required local permissions succeeded.
+Final functional result: 35 tests, 0 failures, 0 errors, 0 skips.
+Frontend formatting error from unsupported-stack label: fixed; final npm run build exit 0.
+Final Java 8 package and 5-case native executor/judge demo: exit 0.

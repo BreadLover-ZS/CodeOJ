@@ -9,6 +9,11 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import com.codeoj.codeojbackendmodel.model.reliability.*;
+import com.codeoj.codeojbackendquestionservice.submission.*;
+import com.codeoj.codeojbackendcommon.common.ErrorCode;
+import com.codeoj.codeojbackendcommon.exception.BusinessException;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * 该服务仅内部调用，不是给前端的
@@ -22,6 +27,10 @@ public class QuestionInnerController implements QuestionFeignClient {
 
     @Resource
     private QuestionSubmitService questionSubmitService;
+
+    @Resource private ExecutionCommands executionCommands;
+    @Resource private ExecutionRepository executionRepository;
+    @Value("${codeoj.reliable-judge.enabled:false}") private boolean reliableEnabled;
 
     @GetMapping("/get/id")
     @Override
@@ -38,6 +47,9 @@ public class QuestionInnerController implements QuestionFeignClient {
     @PostMapping("/question_submit/update")
     @Override
     public boolean updateQuestionSubmitById(@RequestBody QuestionSubmit questionSubmit) {
+        if (reliableEnabled && executionRepository.find(questionSubmit.getId(), false) != null) {
+            return false; // New authority may only be changed by explicit execution commands.
+        }
         return questionSubmitService.updateById(questionSubmit);
     }
 
@@ -61,4 +73,17 @@ public class QuestionInnerController implements QuestionFeignClient {
         return questionService.update(updateWrapper);
     }
 
+    private void requireReliable() {
+        if (!reliableEnabled) { throw new BusinessException(ErrorCode.OPERATION_ERROR,"RELIABLE_EXECUTION_DISABLED"); }
+    }
+    @Override @PostMapping("/execution/claim")
+    public JudgeLease claimExecution(@RequestBody JudgeDispatch message) { requireReliable(); return executionCommands.claim(message); }
+    @Override @PostMapping("/execution/heartbeat")
+    public boolean heartbeatExecution(@RequestBody ExecutionCommand command) { requireReliable(); return executionCommands.heartbeat(command); }
+    @Override @PostMapping("/execution/complete")
+    public boolean completeExecution(@RequestBody ExecutionCommand command) { requireReliable(); return executionCommands.complete(command); }
+    @Override @PostMapping("/execution/fail")
+    public boolean failExecution(@RequestBody ExecutionCommand command) { requireReliable(); return executionCommands.fail(command); }
+    @Override @PostMapping("/execution/defer")
+    public boolean deferExecution(@RequestBody JudgeDispatch message) { requireReliable(); return executionCommands.defer(message); }
 }

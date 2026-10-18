@@ -40,6 +40,14 @@ public class QuestionSubmitVO implements Serializable {
      */
     private Integer status;
 
+    /** Populated only for new reliable submissions. */
+    private String executionStatus;
+
+    /** UTC ISO-8601, including accepted microseconds. */
+    private String acceptedAt;
+
+    private Integer activeAttempt;
+
     /**
      * 题目 id
      */

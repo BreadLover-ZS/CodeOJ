@@ -29,6 +29,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import com.codeoj.codeojbackendquestionservice.submission.ReliableSubmissionService;
+import org.springframework.beans.factory.annotation.Value;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -58,6 +60,10 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     @Resource
     private MyMessageProducer myMessageProducer;
 
+    @Resource private ReliableSubmissionService reliableSubmissionService;
+    @Resource private com.codeoj.codeojbackendquestionservice.submission.ExecutionRepository executionRepository;
+    @Value("${codeoj.reliable-judge.enabled:false}") private boolean reliableEnabled;
+
     /**
      * 提交题目
      *
@@ -67,11 +73,12 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
      */
     @Override
     public long doQuestionSubmit(QuestionSubmitAddRequest questionSubmitAddRequest, User loginUser) {
+        if (reliableEnabled) { return reliableSubmissionService.accept(questionSubmitAddRequest, loginUser); }
         // 校验编程语言是否合法
         String language = questionSubmitAddRequest.getLanguage();
         QuestionSubmitLanguageEnum languageEnum = QuestionSubmitLanguageEnum.getEnumByValue(language);
-        if (languageEnum == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "编程语言错误");
+        if (languageEnum == null || !"java".equals(language)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "首版仅支持 Java 判题");
         }
         long questionId = questionSubmitAddRequest.getQuestionId();
         // 判断实体是否存在，根据类别获取实体
@@ -118,6 +125,9 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     @Override
     public QueryWrapper<QuestionSubmit> getQueryWrapper(QuestionSubmitQueryRequest questionSubmitQueryRequest) {
         QueryWrapper<QuestionSubmit> queryWrapper = new QueryWrapper<>();
+        if (reliableEnabled) {
+            queryWrapper.notInSql("id", "SELECT submissionId FROM submission_execution WHERE contestId IS NOT NULL");
+        }
         if (questionSubmitQueryRequest == null) {
             return queryWrapper;
         }
@@ -142,11 +152,27 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     @Override
     public QuestionSubmitVO getQuestionSubmitVO(QuestionSubmit questionSubmit, User loginUser) {
         QuestionSubmitVO questionSubmitVO = QuestionSubmitVO.objToVo(questionSubmit);
+        if (reliableEnabled) {
+            com.codeoj.codeojbackendquestionservice.submission.ExecutionRecord execution = executionRepository.find(questionSubmit.getId(), false);
+            if (execution != null) {
+                questionSubmitVO.setExecutionStatus(execution.getExecutionStatus().name());
+                questionSubmitVO.setAcceptedAt(execution.getAcceptedAt().toInstant(java.time.ZoneOffset.UTC).toString());
+                questionSubmitVO.setActiveAttempt(execution.getActiveAttempt());
+            }
+        }
         // 脱敏：仅本人和管理员能看见自己（提交 userId 和登录用户 id 不同）提交的代码
         long userId = loginUser.getId();
         // 处理脱敏
-        if (userId != questionSubmit.getUserId() && !userFeignClient.isAdmin(loginUser)) {
-            questionSubmitVO.setCode(null);
+        if (userId != questionSubmit.getUserId()) {
+            boolean admin = userFeignClient.isAdmin(loginUser);
+            if (admin && reliableEnabled) {
+                try {
+                    executionRepository.requireAccount(userId, "admin", false);
+                } catch (BusinessException inactiveRole) {
+                    admin = false;
+                }
+            }
+            if (!admin) { questionSubmitVO.setCode(null); }
         }
         return questionSubmitVO;
     }
