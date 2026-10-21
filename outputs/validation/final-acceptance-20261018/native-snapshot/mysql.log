@@ -1,0 +1,10 @@
+2026-10-18T11:40:29.514259Z 0 [System] [MY-010116] [Server] /private/tmp/codeoj-final-acceptance-p3f4rsrl/runtimes/mysql/mysql-8.0.46-macos15-arm64/bin/mysqld (mysqld 8.0.46) starting as process 41047
+2026-10-18T11:40:29.515060Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /private/tmp/codeoj-native-stack-u7zrzh1w/mysql-data/ is case insensitive
+2026-10-18T11:40:29.516457Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2026-10-18T11:40:29.534044Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2026-10-18T11:40:29.574856Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2026-10-18T11:40:29.574868Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+2026-10-18T11:40:29.575512Z 0 [Warning] [MY-011810] [Server] Insecure configuration for --pid-file: Location '/private/tmp' in the path is accessible to all OS users. Consider choosing a different directory.
+2026-10-18T11:40:29.584492Z 0 [System] [MY-010931] [Server] /private/tmp/codeoj-final-acceptance-p3f4rsrl/runtimes/mysql/mysql-8.0.46-macos15-arm64/bin/mysqld: ready for connections. Version: '8.0.46'  socket: '/private/tmp/codeoj-native-stack-u7zrzh1w/mysql.sock'  port: 62179  MySQL Community Server - GPL.
+2026-10-18T11:41:07.192439Z 0 [System] [MY-013172] [Server] Received SHUTDOWN from user <via user signal>. Shutting down mysqld (Version: 8.0.46).
+2026-10-18T11:41:07.817598Z 0 [System] [MY-010910] [Server] /private/tmp/codeoj-final-acceptance-p3f4rsrl/runtimes/mysql/mysql-8.0.46-macos15-arm64/bin/mysqld: Shutdown complete (mysqld 8.0.46)  MySQL Community Server - GPL.

@@ -1,0 +1,27 @@
+{
+  "mysql": {
+    "url": "https://cdn.mysql.com/Downloads/MySQL-8.0/mysql-8.0.46-macos15-arm64.tar.gz",
+    "verification": "sha256:6ca4a361a45f5019fbf6d500997986b4aaf6f0e30ff9c41179d1e8ecd635f3db",
+    "sha256": "6ca4a361a45f5019fbf6d500997986b4aaf6f0e30ff9c41179d1e8ecd635f3db"
+  },
+  "rabbitmq": {
+    "url": "https://github.com/rabbitmq/rabbitmq-server/releases/download/v4.3.6/rabbitmq-server-generic-unix-4.3.6.tar.xz",
+    "verification": "sha256:aa0ff5de9ff0136dc42eba21dc3a973cc3b286437cdba0f45556e890509c1614",
+    "sha256": "aa0ff5de9ff0136dc42eba21dc3a973cc3b286437cdba0f45556e890509c1614"
+  },
+  "erlang": {
+    "url": "https://ghcr.io/v2/homebrew/core/erlang/28/blobs/sha256:e37b0ce944f1e772767bb7b2fa8844076c3069754ce44c224f15d76fd39aed67",
+    "verification": "sha256:e37b0ce944f1e772767bb7b2fa8844076c3069754ce44c224f15d76fd39aed67",
+    "sha256": "e37b0ce944f1e772767bb7b2fa8844076c3069754ce44c224f15d76fd39aed67"
+  },
+  "openssl": {
+    "url": "https://ghcr.io/v2/homebrew/core/openssl/4/blobs/sha256:39fb74d25429fbb9794cf4327530ba458b97d0000406715270d3b0715bd6ba35",
+    "verification": "sha256:39fb74d25429fbb9794cf4327530ba458b97d0000406715270d3b0715bd6ba35",
+    "sha256": "39fb74d25429fbb9794cf4327530ba458b97d0000406715270d3b0715bd6ba35"
+  },
+  "redis": {
+    "url": "https://download.redis.io/releases/redis-6.2.24.tar.gz",
+    "verification": "sha256:c3f112749c7cb108597713469cc9beed305e91f036fba313ce8dcbad829f5821",
+    "sha256": "c3f112749c7cb108597713469cc9beed305e91f036fba313ce8dcbad829f5821"
+  }
+}

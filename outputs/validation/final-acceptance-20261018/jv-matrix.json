@@ -1,0 +1,299 @@
+[
+  {
+    "id": "JV01",
+    "requirement": "相同提交键回原ID，不同内容409",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "实际 HTTP 相同键同 ID、改代码 409，MySQL 仅一条受理事实。",
+    "evidence": [
+      "extended-results.json#submission-idempotency"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV02",
+    "requirement": "提交事务前/后杀API",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "真实 API 在提交前/后 SIGKILL；前者事务回滚，后者持久 Outbox 在恢复后完成。",
+    "evidence": [
+      "extended-results.json#api-crash-commit-windows"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV03",
+    "requirement": "MQ断连、Confirm丢失、不可路由",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "真实不可路由 Return、代理丢 Confirm 帧、Broker 断连均记录并恢复；UNKNOWN 不冒充失败。",
+    "evidence": [
+      "extended-results.json#real-publisher-return-confirm-loss-disconnect"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV04",
+    "requirement": "两个消费者同时领取同一消息",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "两个真实 judge 进程、重复 Broker 投递；观察到 InnoDB 锁等待，最终一个有效 attempt。以 SLEEP(2) 纠正首轮 SLEEP(5) 超过 Feign 超时的夹具问题。",
+    "evidence": [
+      "followup-results.json#two-consumer-overlap-precise-observer"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV05",
+    "requirement": "RUNNING杀worker后接管，拒绝旧token",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "RUNNING worker SIGKILL，真实租约过期接管；旧 token 心跳/结果均 false；总计两个 attempt。",
+    "evidence": [
+      "extended-results.json#running-worker-sigkill-stale-token"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV06",
+    "requirement": "结果提交后ACK前杀worker",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "结果已提交，代理丢消费者 ACK，Broker 确认仍 unacked 后杀 worker；重投终态不重判/不多建结果事件。等效验证 Broker 未收到 ACK 的窗口，未声称断在 basicAck 调用之前。",
+    "evidence": [
+      "extended-results.json#result-commit-before-consumer-ack-loss"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV07",
+    "requirement": "死循环、stderr刷屏、stdin不读",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "本轮真实 javac/java 测试覆盖死循环、stderr 刷屏、阻塞 stdin、双流与工作目录清理；范围为直接 JVM，非任意进程树。",
+    "evidence": [
+      "backend-test-summary.json"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV08",
+    "requirement": "内存、PID、网络、文件限制",
+    "realScenarioStatus": "UNTESTED",
+    "evidenceAndGap": "仅 RSS 观测/超限有本轮实际测试；PID、网络、文件与容器级硬隔离未实现，本机可信输入边界后置。",
+    "evidence": [
+      "backend-test-summary.json"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV09",
+    "requirement": "N>M并发报名与重复混合",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "8 个真实用户并发争 2 名额；MySQL 资格 2、剩余 0、原键请求身份稳定，Redis 账本确认。属于功能竞争，不是压测。",
+    "evidence": [
+      "extended-results.json#eight-users-two-slots"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV10",
+    "requirement": "Redis预留后DB前杀API",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "Redis 已预留、DB 插入受阻时杀 API；重启以原 requestId/eventId 补建并确认。",
+    "evidence": [
+      "extended-results.json#redis-reservation-api-crash-before-db"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV11",
+    "requirement": "DB确认后标记失败、回收时Redis失败",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "实际停 Redis，确认事务已提交且标记未完成；另在 FAILED 提交前停 Redis，释放待办持久保留；恢复后仅确认/释放一次。",
+    "evidence": [
+      "extended-results.json#confirmed-marker-write-failure",
+      "followup-results.json#redis-failure-after-confirm-and-before-release"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV12",
+    "requirement": "关闭前预留，关闭后确认",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "真实绑定控制消费晚于关闭时间；原有效预留确认，新请求 409。",
+    "evidence": [
+      "extended-results.json#reservation-before-close-consumption-after"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV13",
+    "requirement": "取消与确认/提交竞争",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "真实 MySQL 取消与报名 HTTP/提交竞争；本次取消获胜，取消后无新资格/受理，新键 409。未声称穷举全部调度顺序。",
+    "evidence": [
+      "extended-results.json#registration-cancel-race",
+      "extended-results.json#submit-cancel-race"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV14",
+    "requirement": "权限、他人代码、私有赛题与旧接口",
+    "realScenarioStatus": "FAIL",
+    "evidenceAndGap": "私有题面、他人提交、admin=true、内部入口均拒绝越权；扩展撤权检查发现 F03：旧 Session 仍可读取普通题隐藏用例并更新题目，因此权限项保守记 FAIL。",
+    "evidence": [
+      "permission-results.json",
+      "findings.json"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV15",
+    "requirement": "编辑原题后仍按发布快照判题",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "独立实例如实时钟赛中受理，暂停 judge 后编辑源题，再启动执行：比赛固定快照 AC、新普通练习 WA；标题/hash 不变，练习 acceptedNum 未受比赛影响。",
+    "evidence": [
+      "snapshot-results.json",
+      "diagnostic-results.json"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV16",
+    "requirement": "重复AC、较早提交迟到",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "真实投影与 Broker 消费验证重复 AC、较早提交迟到；用于精确并列的五条 acceptedAt 由隔离 DB 显式塑形，非自然 HTTP 时间证据。",
+    "evidence": [
+      "extended-results.json#multiuser-score-race-rebuild-settlement"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV17",
+    "requirement": "截止前受理、截止后完成与最终结算",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "一条自然 acceptedAt 在截止前受理、真实判题跨截止；pending 时结束 409；终态后最终版本 2。另基线验证原键重放和新键拒绝。",
+    "evidence": [
+      "extended-results.json#multiuser-score-race-rebuild-settlement",
+      "native/database-facts.json"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV18",
+    "requirement": "清缓存与权威重建一致",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "真实缓存 epoch 清理，MySQL 权威重建与手算一致；零分、并列样本时间使用显式夹具。",
+    "evidence": [
+      "extended-results.json#multiuser-score-race-rebuild-settlement"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV19",
+    "requirement": "平台失败到有限上限和人工审计",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "真实沙箱停机耗尽 3 次预算进入 NEEDS_ATTENTION；未加额度重试 409，显式 +1 审计后第 4 次 AC。",
+    "evidence": [
+      "extended-results.json#platform-budget-exhaustion-manual-recovery"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV20",
+    "requirement": "旧调度代次迟到",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "真实旧调度消息在新代次执行后再投递，旧 token/代次不能领取或覆盖；有效 attempt 未增加。",
+    "evidence": [
+      "extended-results.json#running-worker-sigkill-stale-token"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV21",
+    "requirement": "已Confirm但长期QUEUED",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "真实 Broker 已 ACK 而 judge 停止超过扫描阈值；业务恢复增加代次后完成一次有效执行。",
+    "evidence": [
+      "extended-results.json#confirmed-unclaimed-business-recovery"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV22",
+    "requirement": "终止回收与迟到确认竞争",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "DB FAILED 先提交、Redis 释放后投原迟到事件及重复事件不确认；Redis 故障窗口待释放状态恢复后收敛。",
+    "evidence": [
+      "extended-results.json#late-confirm-after-release",
+      "followup-results.json#redis-failure-after-confirm-and-before-release"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV23",
+    "requirement": "取消已提交而Redis关闸失败",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "真实取消事务提交前停 Redis；DB CANCELLED 时迟到消费者不发新资格；恢复后关闸/释放完成，新报名 409。",
+    "evidence": [
+      "followup-results.json#cancel-committed-redis-gate-unavailable"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV24",
+    "requirement": "重复初始化、未决预留、时钟偏差",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "重复 reconcile 不重置；部分/全部账本丢失返回 503 保持暂停；实际 MySQL 连接时钟正负 10 秒偏差均暂停预留（未改宿主/Redis 时钟）。",
+    "evidence": [
+      "extended-results.json#initialization-and-ledger-loss",
+      "followup-results.json#mysql-session-clock-skew-both-directions",
+      "followup-results.json#complete-redis-ledger-loss"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV25",
+    "requirement": "slot耗尽、失联旧沙箱、残留回收",
+    "realScenarioStatus": "UNTESTED",
+    "evidenceAndGap": "本轮旧 token、worker SIGKILL 有据；跨沙箱管理器/重启的持久运行登记与任意残留进程树回收未实现，完整物理执行约束后置。",
+    "evidence": [],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV26",
+    "requirement": "同用户两题同时AC、跨页并列与零分",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "真实同用户两题同时 RUNNING 并完成，积分不丢；4 用户并列/零分跨页名次正确。精确并列时间为显式 DB 夹具。",
+    "evidence": [
+      "extended-results.json#multiuser-score-race-rebuild-settlement"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV27",
+    "requirement": "重建遇迟到消息与旧缓存",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "真实重建中 SQL 失败回滚版本 1；首次迟到成绩投递与重建竞争，读者仅见完整版本 2；终态/收据一致。",
+    "evidence": [
+      "extended-results.json#multiuser-score-race-rebuild-settlement"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV28",
+    "requirement": "未决账本不受普通缓存TTL清空",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "本轮持久账本 TTL=-1；基线真实 Redis AOF 重启恢复。非 TTL 等待演示，保留策略不自动归档。",
+    "evidence": [
+      "extended-results.json#initialization-and-ledger-loss",
+      "native/run.json"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  },
+  {
+    "id": "JV29",
+    "requirement": "普通练习排队后编辑原题",
+    "realScenarioStatus": "PASS",
+    "evidenceAndGap": "真实 API 排队旧普通练习后改原题，新旧提交分别 WA/AC，私有判题 hash 不同。",
+    "evidence": [
+      "extended-results.json#practice-edit-after-acceptance"
+    ],
+    "scope": "本轮已执行的本机功能验收范围；不等于生产或任意恶意程序安全验收"
+  }
+]

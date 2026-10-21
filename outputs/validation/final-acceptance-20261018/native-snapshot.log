@@ -1,0 +1,24 @@
+{"at": "2026-10-18T11:40:28.151837+00:00", "action": "PACKAGED_ARTIFACTS_MATCH_CURRENT_BUILD"}
+{"at": "2026-10-18T11:40:29.746212+00:00", "action": "MIGRATION_APPLIED", "name": "V001__reliable_judging.sql"}
+{"at": "2026-10-18T11:40:29.780388+00:00", "action": "MIGRATION_APPLIED", "name": "V002__contest_core.sql"}
+{"at": "2026-10-18T11:40:29.826597+00:00", "action": "MIGRATION_APPLIED", "name": "V003__async_registration.sql"}
+{"at": "2026-10-18T11:40:29.852713+00:00", "action": "MIGRATION_APPLIED", "name": "V004__contest_scoreboard.sql"}
+{"at": "2026-10-18T11:40:31.871471+00:00", "action": "INFRASTRUCTURE_READY", "mysql": "8.0.46", "rabbitmq": "4.3.6", "erlang": "28.5.0.8", "redis": "6.2.24"}
+{"at": "2026-10-18T11:40:33.415857+00:00", "action": "SERVICE_READY", "service": "sandbox"}
+{"at": "2026-10-18T11:40:36.166079+00:00", "action": "SERVICE_READY", "service": "user"}
+{"at": "2026-10-18T11:40:39.220511+00:00", "action": "SERVICE_READY", "service": "question"}
+{"at": "2026-10-18T11:40:42.275587+00:00", "action": "SERVICE_READY", "service": "judge"}
+{"at": "2026-10-18T11:40:44.425719+00:00", "action": "SERVICE_READY", "service": "gateway"}
+{"at": "2026-10-18T11:40:44.425816+00:00", "action": "REAL_AMQP_FAULT_PROXY_READY"}
+{"at": "2026-10-18T11:40:45.330832+00:00", "action": "REAL_SESSION_LOGIN_PASSED"}
+{"at": "2026-10-18T11:40:50.538878+00:00", "action": "PROCESS_STOPPED", "service": "judge"}
+{"at": "2026-10-18T11:41:00.561841+00:00", "action": "PROCESS_RESTARTED", "service": "judge"}
+{"at": "2026-10-18T11:41:04.202044+00:00", "action": "PROCESS_STOPPED", "service": "gateway"}
+{"at": "2026-10-18T11:41:04.660608+00:00", "action": "PROCESS_STOPPED", "service": "judge"}
+{"at": "2026-10-18T11:41:05.743540+00:00", "action": "PROCESS_STOPPED", "service": "question"}
+{"at": "2026-10-18T11:41:05.937912+00:00", "action": "PROCESS_STOPPED", "service": "user"}
+{"at": "2026-10-18T11:41:05.984735+00:00", "action": "PROCESS_STOPPED", "service": "sandbox"}
+{"at": "2026-10-18T11:41:07.051983+00:00", "action": "PROCESS_STOPPED", "service": "rabbitmq"}
+{"at": "2026-10-18T11:41:07.053727+00:00", "action": "PROCESS_STOPPED", "service": "epmd"}
+{"at": "2026-10-18T11:41:07.192095+00:00", "action": "PROCESS_STOPPED", "service": "redis"}
+{"at": "2026-10-18T11:41:07.855454+00:00", "action": "PROCESS_STOPPED", "service": "mysql"}

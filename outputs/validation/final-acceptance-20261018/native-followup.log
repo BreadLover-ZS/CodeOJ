@@ -1,0 +1,48 @@
+{"at": "2026-10-18T11:34:33.978202+00:00", "action": "PACKAGED_ARTIFACTS_MATCH_CURRENT_BUILD"}
+{"at": "2026-10-18T11:34:35.584107+00:00", "action": "MIGRATION_APPLIED", "name": "V001__reliable_judging.sql"}
+{"at": "2026-10-18T11:34:35.618583+00:00", "action": "MIGRATION_APPLIED", "name": "V002__contest_core.sql"}
+{"at": "2026-10-18T11:34:35.664229+00:00", "action": "MIGRATION_APPLIED", "name": "V003__async_registration.sql"}
+{"at": "2026-10-18T11:34:35.689802+00:00", "action": "MIGRATION_APPLIED", "name": "V004__contest_scoreboard.sql"}
+{"at": "2026-10-18T11:34:37.730648+00:00", "action": "INFRASTRUCTURE_READY", "mysql": "8.0.46", "rabbitmq": "4.3.6", "erlang": "28.5.0.8", "redis": "6.2.24"}
+{"at": "2026-10-18T11:34:39.266467+00:00", "action": "SERVICE_READY", "service": "sandbox"}
+{"at": "2026-10-18T11:34:41.726021+00:00", "action": "SERVICE_READY", "service": "user"}
+{"at": "2026-10-18T11:34:45.092852+00:00", "action": "SERVICE_READY", "service": "question"}
+{"at": "2026-10-18T11:34:48.166130+00:00", "action": "SERVICE_READY", "service": "judge"}
+{"at": "2026-10-18T11:34:50.318576+00:00", "action": "SERVICE_READY", "service": "gateway"}
+{"at": "2026-10-18T11:34:50.318682+00:00", "action": "REAL_AMQP_FAULT_PROXY_READY"}
+{"at": "2026-10-18T11:34:51.164182+00:00", "action": "REAL_SESSION_LOGIN_PASSED"}
+{"at": "2026-10-18T11:34:51.164241+00:00", "action": "ACCEPTANCE_CASE_START", "case": "fixtures", "jv": []}
+{"at": "2026-10-18T11:34:52.232571+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-18T11:34:52.232603+00:00", "action": "ACCEPTANCE_CASE_START", "case": "two-consumer-overlap-precise-observer", "jv": ["JV04"]}
+{"at": "2026-10-18T11:34:58.264219+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-18T11:34:58.264250+00:00", "action": "ACCEPTANCE_CASE_START", "case": "mysql-session-clock-skew-both-directions", "jv": ["JV24"]}
+{"at": "2026-10-18T11:35:02.346545+00:00", "action": "PROCESS_STOPPED", "service": "question"}
+{"at": "2026-10-18T11:35:06.802448+00:00", "action": "PROCESS_STOPPED", "service": "question"}
+{"at": "2026-10-18T11:35:11.312978+00:00", "action": "PROCESS_STOPPED", "service": "question"}
+{"at": "2026-10-18T11:35:15.702460+00:00", "action": "PROCESS_STOPPED", "service": "question"}
+{"at": "2026-10-18T11:35:20.267504+00:00", "action": "PROCESS_STOPPED", "service": "question"}
+{"at": "2026-10-18T11:35:23.918917+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-18T11:35:23.918952+00:00", "action": "ACCEPTANCE_CASE_START", "case": "published-public-snapshot-edit", "jv": ["JV15"]}
+{"at": "2026-10-18T11:35:36.993754+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "FAIL"}
+{"at": "2026-10-18T11:35:36.993783+00:00", "action": "ACCEPTANCE_CASE_START", "case": "redis-failure-after-confirm-and-before-release", "jv": ["JV11", "JV22"]}
+{"at": "2026-10-18T11:35:40.790426+00:00", "action": "PROCESS_STOPPED", "service": "redis"}
+{"at": "2026-10-18T11:35:47.014001+00:00", "action": "PROCESS_RESTARTED", "service": "redis"}
+{"at": "2026-10-18T11:35:55.163847+00:00", "action": "PROCESS_STOPPED", "service": "redis"}
+{"at": "2026-10-18T11:36:16.506231+00:00", "action": "PROCESS_RESTARTED", "service": "redis"}
+{"at": "2026-10-18T11:36:30.039819+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-18T11:36:30.039851+00:00", "action": "ACCEPTANCE_CASE_START", "case": "cancel-committed-redis-gate-unavailable", "jv": ["JV23"]}
+{"at": "2026-10-18T11:36:33.406410+00:00", "action": "PROCESS_STOPPED", "service": "redis"}
+{"at": "2026-10-18T11:36:55.731745+00:00", "action": "PROCESS_RESTARTED", "service": "redis"}
+{"at": "2026-10-18T11:37:07.169976+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-18T11:37:07.170009+00:00", "action": "ACCEPTANCE_CASE_START", "case": "complete-redis-ledger-loss", "jv": ["JV24"]}
+{"at": "2026-10-18T11:37:11.341986+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-18T11:37:11.536349+00:00", "action": "PROCESS_STOPPED", "service": "judge2"}
+{"at": "2026-10-18T11:37:14.152582+00:00", "action": "PROCESS_STOPPED", "service": "gateway"}
+{"at": "2026-10-18T11:37:14.736775+00:00", "action": "PROCESS_STOPPED", "service": "judge"}
+{"at": "2026-10-18T11:37:15.433767+00:00", "action": "PROCESS_STOPPED", "service": "question"}
+{"at": "2026-10-18T11:37:15.627322+00:00", "action": "PROCESS_STOPPED", "service": "user"}
+{"at": "2026-10-18T11:37:15.669226+00:00", "action": "PROCESS_STOPPED", "service": "sandbox"}
+{"at": "2026-10-18T11:37:16.741158+00:00", "action": "PROCESS_STOPPED", "service": "rabbitmq"}
+{"at": "2026-10-18T11:37:16.745622+00:00", "action": "PROCESS_STOPPED", "service": "epmd"}
+{"at": "2026-10-18T11:37:16.756540+00:00", "action": "PROCESS_STOPPED", "service": "redis"}
+{"at": "2026-10-18T11:37:17.614138+00:00", "action": "PROCESS_STOPPED", "service": "mysql"}

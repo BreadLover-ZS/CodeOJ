@@ -1,0 +1,86 @@
+{"at": "2026-10-18T11:39:30.166630+00:00", "action": "PACKAGED_ARTIFACTS_MATCH_CURRENT_BUILD"}
+{"at": "2026-10-18T11:39:31.730656+00:00", "action": "MIGRATION_APPLIED", "name": "V001__reliable_judging.sql"}
+{"at": "2026-10-18T11:39:31.765304+00:00", "action": "MIGRATION_APPLIED", "name": "V002__contest_core.sql"}
+{"at": "2026-10-18T11:39:31.810523+00:00", "action": "MIGRATION_APPLIED", "name": "V003__async_registration.sql"}
+{"at": "2026-10-18T11:39:31.836773+00:00", "action": "MIGRATION_APPLIED", "name": "V004__contest_scoreboard.sql"}
+{"at": "2026-10-18T11:39:33.872909+00:00", "action": "INFRASTRUCTURE_READY", "mysql": "8.0.46", "rabbitmq": "4.3.6", "erlang": "28.5.0.8", "redis": "6.2.24"}
+{"at": "2026-10-18T11:39:35.410075+00:00", "action": "SERVICE_READY", "service": "sandbox"}
+{"at": "2026-10-18T11:39:38.179475+00:00", "action": "SERVICE_READY", "service": "user"}
+{"at": "2026-10-18T11:39:41.560817+00:00", "action": "SERVICE_READY", "service": "question"}
+{"at": "2026-10-18T11:39:44.628224+00:00", "action": "SERVICE_READY", "service": "judge"}
+{"at": "2026-10-18T11:39:46.790277+00:00", "action": "SERVICE_READY", "service": "gateway"}
+{"at": "2026-10-18T11:39:46.790380+00:00", "action": "REAL_AMQP_FAULT_PROXY_READY"}
+{"at": "2026-10-18T11:39:47.663066+00:00", "action": "REAL_SESSION_LOGIN_PASSED"}
+[
+  {
+    "case": "anonymous scoreboard denied",
+    "status": "PASS",
+    "httpStatus": 401
+  },
+  {
+    "case": "logged-in observer scoreboard allowed",
+    "status": "PASS",
+    "httpStatus": 200
+  },
+  {
+    "case": "private statement absent for unregistered user",
+    "status": "PASS",
+    "httpStatus": 200
+  },
+  {
+    "case": "admin query flag cannot grant role",
+    "status": "PASS",
+    "httpStatus": 403
+  },
+  {
+    "case": "gateway internal endpoint refused",
+    "status": "PASS",
+    "httpStatus": 403
+  },
+  {
+    "case": "direct service internal endpoint refused",
+    "status": "PASS",
+    "httpStatus": 403
+  },
+  {
+    "case": "another users submission refused",
+    "status": "PASS",
+    "httpStatus": 403
+  },
+  {
+    "case": "fixture administrator initially has full question permission",
+    "status": "PASS",
+    "httpStatus": 200
+  },
+  {
+    "case": "revoked cached admin denied contest management",
+    "status": "PASS",
+    "httpStatus": 403
+  },
+  {
+    "case": "revoked cached admin denied legacy full question",
+    "status": "FAIL",
+    "httpStatus": 200,
+    "businessCode": 0,
+    "privateFieldNamesExposed": [
+      "judgeCase"
+    ]
+  },
+  {
+    "case": "revoked cached admin denied legacy question update",
+    "status": "FAIL",
+    "httpStatus": 200,
+    "businessCode": 0,
+    "sameValueWriteOnly": true,
+    "updateReportedSuccess": true
+  }
+]
+{"at": "2026-10-18T11:40:04.917188+00:00", "action": "PROCESS_STOPPED", "service": "gateway"}
+{"at": "2026-10-18T11:40:05.912007+00:00", "action": "PROCESS_STOPPED", "service": "judge"}
+{"at": "2026-10-18T11:40:06.867203+00:00", "action": "PROCESS_STOPPED", "service": "question"}
+{"at": "2026-10-18T11:40:07.052262+00:00", "action": "PROCESS_STOPPED", "service": "user"}
+{"at": "2026-10-18T11:40:07.098805+00:00", "action": "PROCESS_STOPPED", "service": "sandbox"}
+{"at": "2026-10-18T11:40:08.160548+00:00", "action": "PROCESS_STOPPED", "service": "rabbitmq"}
+{"at": "2026-10-18T11:40:08.162248+00:00", "action": "PROCESS_STOPPED", "service": "epmd"}
+{"at": "2026-10-18T11:40:08.250065+00:00", "action": "PROCESS_STOPPED", "service": "redis"}
+{"at": "2026-10-18T11:40:08.850050+00:00", "action": "PROCESS_STOPPED", "service": "mysql"}

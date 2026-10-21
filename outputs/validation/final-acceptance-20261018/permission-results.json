@@ -1,0 +1,64 @@
+[
+  {
+    "case": "anonymous scoreboard denied",
+    "status": "PASS",
+    "httpStatus": 401
+  },
+  {
+    "case": "logged-in observer scoreboard allowed",
+    "status": "PASS",
+    "httpStatus": 200
+  },
+  {
+    "case": "private statement absent for unregistered user",
+    "status": "PASS",
+    "httpStatus": 200
+  },
+  {
+    "case": "admin query flag cannot grant role",
+    "status": "PASS",
+    "httpStatus": 403
+  },
+  {
+    "case": "gateway internal endpoint refused",
+    "status": "PASS",
+    "httpStatus": 403
+  },
+  {
+    "case": "direct service internal endpoint refused",
+    "status": "PASS",
+    "httpStatus": 403
+  },
+  {
+    "case": "another users submission refused",
+    "status": "PASS",
+    "httpStatus": 403
+  },
+  {
+    "case": "fixture administrator initially has full question permission",
+    "status": "PASS",
+    "httpStatus": 200
+  },
+  {
+    "case": "revoked cached admin denied contest management",
+    "status": "PASS",
+    "httpStatus": 403
+  },
+  {
+    "case": "revoked cached admin denied legacy full question",
+    "status": "FAIL",
+    "httpStatus": 200,
+    "businessCode": 0,
+    "privateFieldNamesExposed": [
+      "judgeCase"
+    ]
+  },
+  {
+    "case": "revoked cached admin denied legacy question update",
+    "status": "FAIL",
+    "httpStatus": 200,
+    "businessCode": 0,
+    "sameValueWriteOnly": true,
+    "updateReportedSuccess": true
+  }
+]

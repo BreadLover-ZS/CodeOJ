@@ -1,0 +1,156 @@
+2026-10-18 19:23:46.834318+08:00 [warning] <0.143.0> Overriding Erlang cookie using the value set in the environment
+2026-10-18 19:23:47.158424+08:00 [notice] <0.45.0> Application syslog exited with reason: stopped
+2026-10-18 19:23:47.158448+08:00 [notice] <0.208.0> Logging: switching to configured handler(s); following messages may not be visible in this log output
+
+  ##  ##      RabbitMQ 4.3.6
+  ##  ##
+  ##########  Copyright (c) 2007-2026 Broadcom Inc and/or its subsidiaries
+  ######  ##
+  ##########  Licensed under the MPL 2.0. Website: https://rabbitmq.com
+
+  Erlang:      28.5.0.8 [jit]
+  TLS Library: OpenSSL - OpenSSL 4.0.3 29 Sep 2026
+  Release series support status: see https://www.rabbitmq.com/release-information
+
+  Doc guides:  https://www.rabbitmq.com/docs
+  Support:     https://www.rabbitmq.com/docs/contact
+  Tutorials:   https://www.rabbitmq.com/tutorials
+  Monitoring:  https://www.rabbitmq.com/docs/monitoring
+  Upgrading:   https://www.rabbitmq.com/docs/upgrade
+
+  Logs: /private/tmp/codeoj-native-stack-g7c9lllz/rabbit/logs/codeoj_codeoj_native_stack_g7c9lllz@localhost.log
+        <stdout>
+
+  Config file(s): /private/tmp/codeoj-native-stack-g7c9lllz/rabbit/rabbitmq.conf
+
+  Starting broker...[38;5;214m2026-10-18 19:23:47.403531+08:00 [warning] <0.208.0> Classic peer discovery backend: list of nodes does not contain the local node [][0m
+[38;5;214m2026-10-18 19:23:47.471577+08:00 [warning] <0.840.0> Message store "628WB79CIFDYO9LJI6DKMI09L/msg_store_persistent": rebuilding indices from scratch[0m
+[38;5;214m2026-10-18 19:23:47.485770+08:00 [warning] <0.892.0> Deprecated features: `management_metrics_collection`: Feature `management_metrics_collection` is deprecated.[0m
+[38;5;214m2026-10-18 19:23:47.485770+08:00 [warning] <0.892.0> By default, this feature can still be used for now.[0m
+[38;5;214m2026-10-18 19:23:47.485770+08:00 [warning] <0.892.0> Its use will not be permitted by default in a future minor RabbitMQ version and the feature will be removed from a future major RabbitMQ version; actual versions to be determined.[0m
+[38;5;214m2026-10-18 19:23:47.485770+08:00 [warning] <0.892.0> To continue using this feature when it is not permitted by default, set the following parameter in your configuration:[0m
+[38;5;214m2026-10-18 19:23:47.485770+08:00 [warning] <0.892.0>     "deprecated_features.permit.management_metrics_collection = true"[0m
+[38;5;214m2026-10-18 19:23:47.485770+08:00 [warning] <0.892.0> To test RabbitMQ as if the feature was removed, set this in your configuration:[0m
+[38;5;214m2026-10-18 19:23:47.485770+08:00 [warning] <0.892.0>     "deprecated_features.permit.management_metrics_collection = false"[0m
+ completed with 3 plugins.
+[38;5;214m2026-10-18 19:24:45.928913+08:00 [warning] <0.887.0> HTTP listener registry could not find context rabbitmq_management_tls[0m
+[38;5;214m2026-10-18 19:24:45.936487+08:00 [warning] <0.992.0> Closing AMQP connection <0.992.0> (127.0.0.1:57599 -> 127.0.0.1:57519 - rabbitConnectionFactory#1e44b638:0, vhost: '/', user: 'codeoj_fixture'): broker forced connection closure with reason 'shutdown'[0m
+[38;5;214m2026-10-18 19:24:45.949684+08:00 [warning] <0.531.0> RabbitMQ metadata store: worker exited with shutdown[0m
+2026-10-18 19:24:47.418238+08:00 [warning] <0.143.0> Overriding Erlang cookie using the value set in the environment
+2026-10-18 19:24:47.688264+08:00 [notice] <0.45.0> Application syslog exited with reason: stopped
+2026-10-18 19:24:47.688290+08:00 [notice] <0.208.0> Logging: switching to configured handler(s); following messages may not be visible in this log output
+
+  ##  ##      RabbitMQ 4.3.6
+  ##  ##
+  ##########  Copyright (c) 2007-2026 Broadcom Inc and/or its subsidiaries
+  ######  ##
+  ##########  Licensed under the MPL 2.0. Website: https://rabbitmq.com
+
+  Erlang:      28.5.0.8 [jit]
+  TLS Library: OpenSSL - OpenSSL 4.0.3 29 Sep 2026
+  Release series support status: see https://www.rabbitmq.com/release-information
+
+  Doc guides:  https://www.rabbitmq.com/docs
+  Support:     https://www.rabbitmq.com/docs/contact
+  Tutorials:   https://www.rabbitmq.com/tutorials
+  Monitoring:  https://www.rabbitmq.com/docs/monitoring
+  Upgrading:   https://www.rabbitmq.com/docs/upgrade
+
+  Logs: /private/tmp/codeoj-native-stack-g7c9lllz/rabbit/logs/codeoj_codeoj_native_stack_g7c9lllz@localhost.log
+        <stdout>
+
+  Config file(s): /private/tmp/codeoj-native-stack-g7c9lllz/rabbit/rabbitmq.conf
+
+  Starting broker...[38;5;214m2026-10-18 19:24:48.429055+08:00 [warning] <0.835.0> Deprecated features: `management_metrics_collection`: Feature `management_metrics_collection` is deprecated.[0m
+[38;5;214m2026-10-18 19:24:48.429055+08:00 [warning] <0.835.0> By default, this feature can still be used for now.[0m
+[38;5;214m2026-10-18 19:24:48.429055+08:00 [warning] <0.835.0> Its use will not be permitted by default in a future minor RabbitMQ version and the feature will be removed from a future major RabbitMQ version; actual versions to be determined.[0m
+[38;5;214m2026-10-18 19:24:48.429055+08:00 [warning] <0.835.0> To continue using this feature when it is not permitted by default, set the following parameter in your configuration:[0m
+[38;5;214m2026-10-18 19:24:48.429055+08:00 [warning] <0.835.0>     "deprecated_features.permit.management_metrics_collection = true"[0m
+[38;5;214m2026-10-18 19:24:48.429055+08:00 [warning] <0.835.0> To test RabbitMQ as if the feature was removed, set this in your configuration:[0m
+[38;5;214m2026-10-18 19:24:48.429055+08:00 [warning] <0.835.0>     "deprecated_features.permit.management_metrics_collection = false"[0m
+ completed with 3 plugins.
+[38;5;214m2026-10-18 19:24:52.251788+08:00 [warning] <0.968.0> AMQP 0-9-1 client call timeout was 70000 ms, is updated to a safe effective value of 130000 ms[0m
+[38;5;214m2026-10-18 19:28:40.804573+08:00 [warning] <0.951.0> closing AMQP connection <0.951.0> (127.0.0.1:57806 -> 127.0.0.1:57519 - rabbitConnectionFactory#1e44b638:3, vhost: '/', user: 'codeoj_fixture', duration: '3M, 49s'):[0m
+[38;5;214m2026-10-18 19:28:40.804573+08:00 [warning] <0.951.0> client unexpectedly closed TCP connection[0m
+[38;5;214m2026-10-18 19:28:49.877159+08:00 [warning] <0.830.0> HTTP listener registry could not find context rabbitmq_management_tls[0m
+[38;5;214m2026-10-18 19:28:49.883071+08:00 [warning] <0.1031.0> Closing AMQP connection <0.1031.0> (127.0.0.1:58193 -> 127.0.0.1:57519 - rabbitConnectionFactory#1e44b638:0, vhost: '/', user: 'codeoj_fixture'): broker forced connection closure with reason 'shutdown'[0m
+[38;5;214m2026-10-18 19:28:49.891290+08:00 [warning] <0.532.0> RabbitMQ metadata store: worker exited with shutdown[0m
+2026-10-18 19:28:51.442859+08:00 [warning] <0.143.0> Overriding Erlang cookie using the value set in the environment
+2026-10-18 19:28:51.765406+08:00 [notice] <0.45.0> Application syslog exited with reason: stopped
+2026-10-18 19:28:51.765427+08:00 [notice] <0.208.0> Logging: switching to configured handler(s); following messages may not be visible in this log output
+
+  ##  ##      RabbitMQ 4.3.6
+  ##  ##
+  ##########  Copyright (c) 2007-2026 Broadcom Inc and/or its subsidiaries
+  ######  ##
+  ##########  Licensed under the MPL 2.0. Website: https://rabbitmq.com
+
+  Erlang:      28.5.0.8 [jit]
+  TLS Library: OpenSSL - OpenSSL 4.0.3 29 Sep 2026
+  Release series support status: see https://www.rabbitmq.com/release-information
+
+  Doc guides:  https://www.rabbitmq.com/docs
+  Support:     https://www.rabbitmq.com/docs/contact
+  Tutorials:   https://www.rabbitmq.com/tutorials
+  Monitoring:  https://www.rabbitmq.com/docs/monitoring
+  Upgrading:   https://www.rabbitmq.com/docs/upgrade
+
+  Logs: /private/tmp/codeoj-native-stack-g7c9lllz/rabbit/logs/codeoj_codeoj_native_stack_g7c9lllz@localhost.log
+        <stdout>
+
+  Config file(s): /private/tmp/codeoj-native-stack-g7c9lllz/rabbit/rabbitmq.conf
+
+  Starting broker...[38;5;214m2026-10-18 19:28:52.160886+08:00 [warning] <0.835.0> Deprecated features: `management_metrics_collection`: Feature `management_metrics_collection` is deprecated.[0m
+[38;5;214m2026-10-18 19:28:52.160886+08:00 [warning] <0.835.0> By default, this feature can still be used for now.[0m
+[38;5;214m2026-10-18 19:28:52.160886+08:00 [warning] <0.835.0> Its use will not be permitted by default in a future minor RabbitMQ version and the feature will be removed from a future major RabbitMQ version; actual versions to be determined.[0m
+[38;5;214m2026-10-18 19:28:52.160886+08:00 [warning] <0.835.0> To continue using this feature when it is not permitted by default, set the following parameter in your configuration:[0m
+[38;5;214m2026-10-18 19:28:52.160886+08:00 [warning] <0.835.0>     "deprecated_features.permit.management_metrics_collection = true"[0m
+[38;5;214m2026-10-18 19:28:52.160886+08:00 [warning] <0.835.0> To test RabbitMQ as if the feature was removed, set this in your configuration:[0m
+[38;5;214m2026-10-18 19:28:52.160886+08:00 [warning] <0.835.0>     "deprecated_features.permit.management_metrics_collection = false"[0m
+ completed with 3 plugins.
+[38;5;214m2026-10-18 19:29:24.832891+08:00 [warning] <0.830.0> HTTP listener registry could not find context rabbitmq_management_tls[0m
+[38;5;214m2026-10-18 19:29:24.836782+08:00 [warning] <0.1021.0> Closing AMQP connection <0.1021.0> (127.0.0.1:58430 -> 127.0.0.1:57519 - rabbitConnectionFactory#7db82169:0, vhost: '/', user: 'codeoj_fixture'): broker forced connection closure with reason 'shutdown'[0m
+[38;5;214m2026-10-18 19:29:24.836821+08:00 [warning] <0.930.0> Closing AMQP connection <0.930.0> (127.0.0.1:58243 -> 127.0.0.1:57519 - rabbitConnectionFactory#1e44b638:0, vhost: '/', user: 'codeoj_fixture'): broker forced connection closure with reason 'shutdown'[0m
+[38;5;214m2026-10-18 19:29:24.845486+08:00 [warning] <0.532.0> RabbitMQ metadata store: worker exited with shutdown[0m
+2026-10-18 19:29:26.893546+08:00 [warning] <0.143.0> Overriding Erlang cookie using the value set in the environment
+2026-10-18 19:29:27.167984+08:00 [notice] <0.45.0> Application syslog exited with reason: stopped
+2026-10-18 19:29:27.168012+08:00 [notice] <0.208.0> Logging: switching to configured handler(s); following messages may not be visible in this log output
+
+  ##  ##      RabbitMQ 4.3.6
+  ##  ##
+  ##########  Copyright (c) 2007-2026 Broadcom Inc and/or its subsidiaries
+  ######  ##
+  ##########  Licensed under the MPL 2.0. Website: https://rabbitmq.com
+
+  Erlang:      28.5.0.8 [jit]
+  TLS Library: OpenSSL - OpenSSL 4.0.3 29 Sep 2026
+  Release series support status: see https://www.rabbitmq.com/release-information
+
+  Doc guides:  https://www.rabbitmq.com/docs
+  Support:     https://www.rabbitmq.com/docs/contact
+  Tutorials:   https://www.rabbitmq.com/tutorials
+  Monitoring:  https://www.rabbitmq.com/docs/monitoring
+  Upgrading:   https://www.rabbitmq.com/docs/upgrade
+
+  Logs: /private/tmp/codeoj-native-stack-g7c9lllz/rabbit/logs/codeoj_codeoj_native_stack_g7c9lllz@localhost.log
+        <stdout>
+
+  Config file(s): /private/tmp/codeoj-native-stack-g7c9lllz/rabbit/rabbitmq.conf
+
+  Starting broker...[38;5;214m2026-10-18 19:29:27.987641+08:00 [warning] <0.835.0> Deprecated features: `management_metrics_collection`: Feature `management_metrics_collection` is deprecated.[0m
+[38;5;214m2026-10-18 19:29:27.987641+08:00 [warning] <0.835.0> By default, this feature can still be used for now.[0m
+[38;5;214m2026-10-18 19:29:27.987641+08:00 [warning] <0.835.0> Its use will not be permitted by default in a future minor RabbitMQ version and the feature will be removed from a future major RabbitMQ version; actual versions to be determined.[0m
+[38;5;214m2026-10-18 19:29:27.987641+08:00 [warning] <0.835.0> To continue using this feature when it is not permitted by default, set the following parameter in your configuration:[0m
+[38;5;214m2026-10-18 19:29:27.987641+08:00 [warning] <0.835.0>     "deprecated_features.permit.management_metrics_collection = true"[0m
+[38;5;214m2026-10-18 19:29:27.987641+08:00 [warning] <0.835.0> To test RabbitMQ as if the feature was removed, set this in your configuration:[0m
+[38;5;214m2026-10-18 19:29:27.987641+08:00 [warning] <0.835.0>     "deprecated_features.permit.management_metrics_collection = false"[0m
+ completed with 3 plugins.
+[38;5;214m2026-10-18 19:29:32.090950+08:00 [warning] <0.979.0> AMQP 0-9-1 client call timeout was 70000 ms, is updated to a safe effective value of 130000 ms[0m
+[38;5;214m2026-10-18 19:30:32.905690+08:00 [warning] <0.1072.0> closing AMQP connection <0.1072.0> (127.0.0.1:59218 -> 127.0.0.1:57519 - rabbitConnectionFactory#7db82169:0, vhost: '/', user: 'codeoj_fixture', duration: '345ms'):[0m
+[38;5;214m2026-10-18 19:30:32.905690+08:00 [warning] <0.1072.0> client unexpectedly closed TCP connection[0m
+[38;5;214m2026-10-18 19:31:03.085531+08:00 [warning] <0.1144.0> closing AMQP connection <0.1144.0> (127.0.0.1:59388 -> 127.0.0.1:57519 - rabbitConnectionFactory#7db82169:0, vhost: '/', user: 'codeoj_fixture', duration: '5s'):[0m
+[38;5;214m2026-10-18 19:31:03.085531+08:00 [warning] <0.1144.0> client unexpectedly closed TCP connection[0m
+[38;5;214m2026-10-18 19:31:21.668409+08:00 [warning] <0.929.0> closing AMQP connection <0.929.0> (127.0.0.1:58480 -> 127.0.0.1:57519 - rabbitConnectionFactory#1e44b638:6, vhost: '/', user: 'codeoj_fixture', duration: '1M, 53s'):[0m
+[38;5;214m2026-10-18 19:31:21.668409+08:00 [warning] <0.929.0> client unexpectedly closed TCP connection[0m
+[38;5;214m2026-10-18 19:34:06.834543+08:00 [warning] <0.830.0> HTTP listener registry could not find context rabbitmq_management_tls[0m
+[38;5;214m2026-10-18 19:34:06.854501+08:00 [warning] <0.532.0> RabbitMQ metadata store: worker exited with shutdown[0m

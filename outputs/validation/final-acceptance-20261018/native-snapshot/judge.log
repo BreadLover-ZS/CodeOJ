@@ -1,0 +1,13 @@
+2026-10-18 11:40:40.421  WARN 41116 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendjudgeservice]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-18 11:40:42.119  WARN 41116 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-18 11:40:58.586  WARN 41195 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendjudgeservice]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-18 11:41:00.258  WARN 41195 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-18 11:41:00.508  WARN 41195 --- [ntContainer#0-1] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.

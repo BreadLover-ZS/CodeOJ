@@ -1,0 +1,29 @@
+{
+  "commit": "0b8115cb3bd7ab334c8fa8cba5f485b4659edc57",
+  "result": "FAIL",
+  "reason": "F03 P1 revoked administrator session remains authorized on legacy question APIs",
+  "backend": {
+    "tests": 208,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "classes": 24
+  },
+  "frontendBuild": "PASS (21 lint warnings and bundle-size warnings)",
+  "browser": {
+    "passedChecks": 8,
+    "pageErrors": []
+  },
+  "jvMatrix": {
+    "PASS": 26,
+    "UNTESTED": 2,
+    "FAIL": 1
+  },
+  "openFindings": 1,
+  "failedPermissionChecks": 2,
+  "sourceModified": false,
+  "committedOrPushed": false,
+  "cleanup": "PASS",
+  "scope": "本机真实依赖功能/故障/权限验收；不涉及部署、压测；不等于完整生产验收",
+  "timestampUtc": "2026-10-18T11:43:12.166883+00:00"
+}

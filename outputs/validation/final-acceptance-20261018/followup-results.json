@@ -1,0 +1,112 @@
+[
+  {
+    "case": "fixtures",
+    "jv": [],
+    "status": "PASS",
+    "facts": {
+      "users": 8,
+      "practiceQuestionId": "2111783064147804162",
+      "fixtureOnly": true
+    },
+    "elapsedSeconds": 1.07
+  },
+  {
+    "case": "two-consumer-overlap-precise-observer",
+    "jv": [
+      "JV04"
+    ],
+    "status": "PASS",
+    "facts": {
+      "actualInnoDbLockWaitObserved": true,
+      "triggerWindowObserved": true,
+      "judgeProcesses": 2,
+      "effectiveAttempts": 1,
+      "brokerDuplicateDeliveries": 2,
+      "claimGateSeconds": 2,
+      "actualFeignReadTimeoutMs": 5000,
+      "replacesMisconfiguredPrimaryFaultGate": true
+    },
+    "elapsedSeconds": 6.03
+  },
+  {
+    "case": "mysql-session-clock-skew-both-directions",
+    "jv": [
+      "JV24"
+    ],
+    "status": "PASS",
+    "facts": {
+      "mysqlSessionOnlyClockOffsetsSeconds": [
+        10,
+        -10
+      ],
+      "positiveAndNegativeSkewPause": true,
+      "reservationsCreated": 0,
+      "stockNotReset": true,
+      "hostClockUnchanged": true
+    },
+    "elapsedSeconds": 25.65
+  },
+  {
+    "case": "published-public-snapshot-edit",
+    "jv": [
+      "JV15"
+    ],
+    "status": "FAIL",
+    "errorType": "AssertionError",
+    "error": "",
+    "elapsedSeconds": 13.07
+  },
+  {
+    "case": "redis-failure-after-confirm-and-before-release",
+    "jv": [
+      "JV11",
+      "JV22"
+    ],
+    "status": "PASS",
+    "facts": {
+      "dbConfirmationCommittedWhileRedisUnavailable": true,
+      "confirmedMarkRecovered": true,
+      "capacityDeductedOnce": true,
+      "dbTerminalCommittedBeforeRedisRelease": true,
+      "releasePendingDurableDuringOutage": true,
+      "releasedExactlyOnceAfterRecovery": true,
+      "unknownApiStatusesRecorded": [
+        202,
+        503
+      ]
+    },
+    "elapsedSeconds": 53.05
+  },
+  {
+    "case": "cancel-committed-redis-gate-unavailable",
+    "jv": [
+      "JV23"
+    ],
+    "status": "PASS",
+    "facts": {
+      "cancellationCommittedWhileRedisDown": true,
+      "lateRealConsumerCannotConfirm": true,
+      "newQualificationCount": 0,
+      "redisGateClosedAfterRecovery": true,
+      "reclaimRecovered": true,
+      "newRequestHttp": 409,
+      "cancelResponseMayBeUnknown": 503
+    },
+    "elapsedSeconds": 37.13
+  },
+  {
+    "case": "complete-redis-ledger-loss",
+    "jv": [
+      "JV24"
+    ],
+    "status": "PASS",
+    "facts": {
+      "completeLedgerLossDetected": true,
+      "unknownNeverBecomesEmptyStock": true,
+      "stockNotReinitialized": true,
+      "authorityQualificationRetained": true,
+      "reconcileHttp": 503
+    },
+    "elapsedSeconds": 4.17
+  }
+]

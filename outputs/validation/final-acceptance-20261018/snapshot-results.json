@@ -1,0 +1,17 @@
+{
+  "case": "source-edited-during-contest-after-acceptance",
+  "jv": [
+    "JV15"
+  ],
+  "status": "PASS",
+  "facts": {
+    "acceptedBeforeEditWhileContestRunning": true,
+    "judgeStoppedUntilAfterEdit": true,
+    "originalSnapshotTitleAndHashRetained": true,
+    "contestVerdict": "AC",
+    "newPracticeVerdict": "WA",
+    "practiceAcceptedNumBefore": 0,
+    "practiceAcceptedNumAfter": 0,
+    "noAcceptedAtFixtureEdits": true
+  }
+}

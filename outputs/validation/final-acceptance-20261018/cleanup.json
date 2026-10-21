@@ -1,0 +1,334 @@
+{
+  "ports": [
+    {
+      "fixture": "native",
+      "service": "mysql",
+      "port": 57517,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native",
+      "service": "redis",
+      "port": 57518,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native",
+      "service": "amqp",
+      "port": 57519,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native",
+      "service": "management",
+      "port": 57520,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native",
+      "service": "epmd",
+      "port": 57521,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native",
+      "service": "distribution",
+      "port": 57522,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native",
+      "service": "user",
+      "port": 57523,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native",
+      "service": "question",
+      "port": 57524,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native",
+      "service": "judge",
+      "port": 57525,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native",
+      "service": "sandbox",
+      "port": 57526,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native",
+      "service": "gateway",
+      "port": 57527,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native",
+      "service": "frontend",
+      "port": 57528,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native",
+      "service": "amqpProxy",
+      "port": 57564,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native",
+      "service": "judge2",
+      "port": 58544,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-followup",
+      "service": "mysql",
+      "port": 60662,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-followup",
+      "service": "redis",
+      "port": 60663,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-followup",
+      "service": "amqp",
+      "port": 60664,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-followup",
+      "service": "management",
+      "port": 60665,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-followup",
+      "service": "epmd",
+      "port": 60666,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-followup",
+      "service": "distribution",
+      "port": 60667,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-followup",
+      "service": "user",
+      "port": 60668,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-followup",
+      "service": "question",
+      "port": 60669,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-followup",
+      "service": "judge",
+      "port": 60670,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-followup",
+      "service": "sandbox",
+      "port": 60671,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-followup",
+      "service": "gateway",
+      "port": 60672,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-followup",
+      "service": "frontend",
+      "port": 60673,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-followup",
+      "service": "amqpProxy",
+      "port": 60703,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-followup",
+      "service": "judge2",
+      "port": 60835,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-diagnostics",
+      "service": "mysql",
+      "port": 61905,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-diagnostics",
+      "service": "redis",
+      "port": 61906,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-diagnostics",
+      "service": "amqp",
+      "port": 61907,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-diagnostics",
+      "service": "management",
+      "port": 61908,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-diagnostics",
+      "service": "epmd",
+      "port": 61909,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-diagnostics",
+      "service": "distribution",
+      "port": 61910,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-diagnostics",
+      "service": "user",
+      "port": 61911,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-diagnostics",
+      "service": "question",
+      "port": 61912,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-diagnostics",
+      "service": "judge",
+      "port": 61913,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-diagnostics",
+      "service": "sandbox",
+      "port": 61914,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-diagnostics",
+      "service": "gateway",
+      "port": 61915,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-diagnostics",
+      "service": "frontend",
+      "port": 61916,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-diagnostics",
+      "service": "amqpProxy",
+      "port": 61946,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-snapshot",
+      "service": "mysql",
+      "port": 62179,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-snapshot",
+      "service": "redis",
+      "port": 62180,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-snapshot",
+      "service": "amqp",
+      "port": 62181,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-snapshot",
+      "service": "management",
+      "port": 62182,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-snapshot",
+      "service": "epmd",
+      "port": 62183,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-snapshot",
+      "service": "distribution",
+      "port": 62184,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-snapshot",
+      "service": "user",
+      "port": 62185,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-snapshot",
+      "service": "question",
+      "port": 62186,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-snapshot",
+      "service": "judge",
+      "port": 62187,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-snapshot",
+      "service": "sandbox",
+      "port": 62188,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-snapshot",
+      "service": "gateway",
+      "port": 62189,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-snapshot",
+      "service": "frontend",
+      "port": 62190,
+      "listeningAfterCleanup": false
+    },
+    {
+      "fixture": "native-snapshot",
+      "service": "amqpProxy",
+      "port": 62222,
+      "listeningAfterCleanup": false
+    }
+  ],
+  "allPortsClosed": true,
+  "fixtureRunRecords": 4,
+  "temporaryFixtureDataRemoved": true,
+  "temporaryRuntimeRootRemoved": true,
+  "originalOutputDirectoryUntouched": true,
+  "businessSourceUnchanged": true
+}

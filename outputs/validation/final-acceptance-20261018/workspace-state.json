@@ -1,0 +1,10 @@
+{
+  "head": "0b8115cb3bd7ab334c8fa8cba5f485b4659edc57",
+  "trackedDiffEmpty": true,
+  "status": [
+    "?? output/",
+    "?? outputs/validation/final-acceptance-20261018/"
+  ],
+  "originalOutputDirectory": "preexisting untracked; never read or traversed by acceptance",
+  "acceptanceEvidenceCommitted": false
+}

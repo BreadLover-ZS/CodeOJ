@@ -1,0 +1,41 @@
+[
+  {
+    "step": "runtime-preparation",
+    "command": [
+      "python3",
+      "scripts/local/prepare-runtimes.py",
+      "--root",
+      "/private/tmp/codeoj-final-acceptance-p3f4rsrl/runtimes"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 34.53
+  },
+  {
+    "step": "backend-regression",
+    "command": [
+      "mvn",
+      "-o",
+      "-B",
+      "-f",
+      "codeoj-backend/pom.xml",
+      "-Dcodeoj.real-redis=true",
+      "-Dcodeoj.redis-server=/private/tmp/codeoj-final-acceptance-p3f4rsrl/runtimes/redis/redis-6.2.24/src/redis-server",
+      "-Dcodeoj.native-observation=true",
+      "package"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 21.66
+  },
+  {
+    "step": "frontend-build",
+    "command": [
+      "npm",
+      "--prefix",
+      "codeoj-frontend",
+      "run",
+      "build"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 12.76
+  }
+]

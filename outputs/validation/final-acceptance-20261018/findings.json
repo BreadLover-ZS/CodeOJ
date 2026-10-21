@@ -1,0 +1,49 @@
+[
+  {
+    "id": "F03",
+    "priority": "P1",
+    "status": "OPEN",
+    "title": "管理员撤权后，普通题目接口仍信任旧 Session 角色",
+    "trigger": "真实管理员登录；在本轮私有 MySQL 将其 userRole 从 admin 改为 user；不重新登录，复用原 Session。该用户不是目标题目所有者。",
+    "observed": [
+      {
+        "endpoint": "GET /api/question/get?id=<fixture-question>",
+        "http": 200,
+        "businessCode": 0,
+        "exposedFieldNames": [
+          "judgeCase"
+        ]
+      },
+      {
+        "endpoint": "POST /api/question/update",
+        "http": 200,
+        "businessCode": 0,
+        "updateReportedSuccess": true,
+        "probeWrite": "仅将题目标题写回原值"
+      }
+    ],
+    "control": "同一已撤权 Session 查询 GET /api/contests/<id>?admin=true 返回 403。",
+    "rootCause": "UserFeignClient.getLoginUser 默认方法直接返回 Session User，isAdmin 使用其旧角色；AuthInterceptor 同样只读 Session。旧题目接口缺少现时 DB 角色校验。",
+    "locations": [
+      {
+        "path": "codeoj-backend/codeoj-backend-service-client/src/main/java/com/codeoj/codeojbackendserviceclient/service/UserFeignClient.java",
+        "line": 48
+      },
+      {
+        "path": "codeoj-backend/codeoj-backend-service-client/src/main/java/com/codeoj/codeojbackendserviceclient/aop/AuthInterceptor.java",
+        "line": 38
+      },
+      {
+        "path": "codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/controller/QuestionController.java",
+        "line": 170
+      },
+      {
+        "path": "codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/controller/QuestionController.java",
+        "line": 125
+      }
+    ],
+    "evidence": "permission-results.json",
+    "scope": "已实测旧题目读取和更新；其他依赖同一缓存角色的管理接口需修复时一并审计，未声称逐个复现。",
+    "sourceModified": false
+  }
+]

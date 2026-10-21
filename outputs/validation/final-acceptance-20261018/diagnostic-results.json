@@ -1,0 +1,24 @@
+[
+  {
+    "case": "published-public-snapshot-edit-independent",
+    "jv": [
+      "JV15"
+    ],
+    "status": "PASS",
+    "facts": {
+      "originalTitleRetained": true,
+      "contestVerdict": "AC",
+      "newPracticeVerdict": "WA",
+      "frozenSpecHashRetained": true,
+      "practiceAcceptedNumBefore": 0,
+      "practiceAcceptedNumAfterContest": 0,
+      "practiceAcceptedNumAfterWA": 0,
+      "correctedOriginalAssumption": "Compare acceptedNum before and after; do not assume zero after previous AC cases."
+    }
+  },
+  {
+    "case": "real-http-permission-probe",
+    "status": "FAIL",
+    "checks": 11
+  }
+]

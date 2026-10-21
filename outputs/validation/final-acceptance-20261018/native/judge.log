@@ -1,0 +1,212 @@
+2026-10-18 11:23:56.820  WARN 36619 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendjudgeservice]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-18 11:23:58.544  WARN 36619 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-18 11:24:37.841  WARN 36619 --- [ntContainer#0-1] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-18 11:24:49.603  WARN 36855 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendjudgeservice]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-18 11:24:51.289  WARN 36855 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-18 11:24:51.532  WARN 36855 --- [ntContainer#0-2] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-18 11:24:59.777  WARN 36855 --- [ioEventLoop-4-4] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:57518]: Connection refused: /127.0.0.1:57518
+2026-10-18 11:24:59.777  WARN 36855 --- [ioEventLoop-4-3] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:57518]: Connection refused: /127.0.0.1:57518
+2026-10-18 11:25:05.011 ERROR 36855 --- [pool-7-thread-1] o.s.s.s.TaskUtils$LoggingErrorHandler    : Unexpected error occurred in scheduled task
+
+org.springframework.dao.QueryTimeoutException: Redis command timed out; nested exception is io.lettuce.core.RedisCommandTimeoutException: Command timed out after 5 second(s)
+	at org.springframework.data.redis.connection.lettuce.LettuceExceptionConverter.convert(LettuceExceptionConverter.java:70) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceExceptionConverter.convert(LettuceExceptionConverter.java:41) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.PassThroughExceptionTranslationStrategy.translate(PassThroughExceptionTranslationStrategy.java:44) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.FallbackExceptionTranslationStrategy.translate(FallbackExceptionTranslationStrategy.java:42) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceConnection.convertLettuceAccessException(LettuceConnection.java:272) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceConnection.await(LettuceConnection.java:1063) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceConnection.lambda$doInvoke$4(LettuceConnection.java:920) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceInvoker$Synchronizer.invoke(LettuceInvoker.java:665) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceInvoker.just(LettuceInvoker.java:94) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceSetCommands.sMembers(LettuceSetCommands.java:163) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.DefaultedRedisConnection.sMembers(DefaultedRedisConnection.java:865) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.DefaultSetOperations.lambda$members$11(DefaultSetOperations.java:244) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.RedisTemplate.execute(RedisTemplate.java:223) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.RedisTemplate.execute(RedisTemplate.java:190) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.AbstractOperations.execute(AbstractOperations.java:97) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.DefaultSetOperations.members(DefaultSetOperations.java:244) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.DefaultBoundSetOperations.members(DefaultBoundSetOperations.java:162) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.session.data.redis.RedisSessionExpirationPolicy.cleanExpiredSessions(RedisSessionExpirationPolicy.java:132) ~[spring-session-data-redis-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.data.redis.RedisIndexedSessionRepository.cleanupExpiredSessions(RedisIndexedSessionRepository.java:424) ~[spring-session-data-redis-2.6.3.jar!/:2.6.3]
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54) ~[spring-context-5.3.23.jar!/:5.3.23]
+	at org.springframework.scheduling.concurrent.ReschedulingRunnable.run(ReschedulingRunnable.java:95) [spring-context-5.3.23.jar!/:5.3.23]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511) [na:1.8.0_504]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266) [na:1.8.0_504]
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180) [na:1.8.0_504]
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293) [na:1.8.0_504]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149) [na:1.8.0_504]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624) [na:1.8.0_504]
+	at java.lang.Thread.run(Thread.java:750) [na:1.8.0_504]
+Caused by: io.lettuce.core.RedisCommandTimeoutException: Command timed out after 5 second(s)
+	at io.lettuce.core.internal.ExceptionFactory.createTimeoutException(ExceptionFactory.java:59) ~[lettuce-core-6.1.10.RELEASE.jar!/:6.1.10.RELEASE]
+	at io.lettuce.core.protocol.CommandExpiryWriter.lambda$potentiallyExpire$0(CommandExpiryWriter.java:176) ~[lettuce-core-6.1.10.RELEASE.jar!/:6.1.10.RELEASE]
+	at io.netty.util.concurrent.PromiseTask.runTask(PromiseTask.java:98) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.util.concurrent.ScheduledFutureTask.run(ScheduledFutureTask.java:153) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.util.concurrent.AbstractEventExecutor.runTask(AbstractEventExecutor.java:174) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.util.concurrent.DefaultEventExecutor.run(DefaultEventExecutor.java:66) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+	... 1 common frames omitted
+
+2026-10-18 11:25:08.876  WARN 36855 --- [ioEventLoop-4-8] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:57518]: Connection refused: /127.0.0.1:57518
+2026-10-18 11:25:08.876  WARN 36855 --- [ioEventLoop-4-7] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:57518]: Connection refused: /127.0.0.1:57518
+2026-10-18 11:28:56.630  WARN 37780 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendjudgeservice]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-18 11:28:58.247  WARN 37780 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-18 11:28:58.485  WARN 37780 --- [ntContainer#0-1] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-18 11:29:00.095 ERROR 37780 --- [pool-7-thread-1] o.s.s.s.TaskUtils$LoggingErrorHandler    : Unexpected error occurred in scheduled task
+
+org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis; nested exception is io.lettuce.core.RedisConnectionException: Unable to connect to 127.0.0.1:57518
+	at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.translateException(LettuceConnectionFactory.java:1689) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1597) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getNativeConnection(LettuceConnectionFactory.java:1383) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$SharedConnection.getConnection(LettuceConnectionFactory.java:1366) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getSharedConnection(LettuceConnectionFactory.java:1093) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory.getConnection(LettuceConnectionFactory.java:421) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.RedisConnectionUtils.fetchConnection(RedisConnectionUtils.java:193) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.RedisConnectionUtils.doGetConnection(RedisConnectionUtils.java:144) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.RedisConnectionUtils.getConnection(RedisConnectionUtils.java:105) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.RedisTemplate.execute(RedisTemplate.java:210) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.RedisTemplate.execute(RedisTemplate.java:190) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.AbstractOperations.execute(AbstractOperations.java:97) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.DefaultSetOperations.members(DefaultSetOperations.java:244) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.DefaultBoundSetOperations.members(DefaultBoundSetOperations.java:162) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.session.data.redis.RedisSessionExpirationPolicy.cleanExpiredSessions(RedisSessionExpirationPolicy.java:132) ~[spring-session-data-redis-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.data.redis.RedisIndexedSessionRepository.cleanupExpiredSessions(RedisIndexedSessionRepository.java:424) ~[spring-session-data-redis-2.6.3.jar!/:2.6.3]
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54) ~[spring-context-5.3.23.jar!/:5.3.23]
+	at org.springframework.scheduling.concurrent.ReschedulingRunnable.run(ReschedulingRunnable.java:95) [spring-context-5.3.23.jar!/:5.3.23]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511) [na:1.8.0_504]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266) [na:1.8.0_504]
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180) [na:1.8.0_504]
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293) [na:1.8.0_504]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149) [na:1.8.0_504]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624) [na:1.8.0_504]
+	at java.lang.Thread.run(Thread.java:750) [na:1.8.0_504]
+Caused by: io.lettuce.core.RedisConnectionException: Unable to connect to 127.0.0.1:57518
+	at io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:78) ~[lettuce-core-6.1.10.RELEASE.jar!/:6.1.10.RELEASE]
+	at io.lettuce.core.RedisConnectionException.create(RedisConnectionException.java:56) ~[lettuce-core-6.1.10.RELEASE.jar!/:6.1.10.RELEASE]
+	at io.lettuce.core.AbstractRedisClient.getConnection(AbstractRedisClient.java:330) ~[lettuce-core-6.1.10.RELEASE.jar!/:6.1.10.RELEASE]
+	at io.lettuce.core.RedisClient.connect(RedisClient.java:216) ~[lettuce-core-6.1.10.RELEASE.jar!/:6.1.10.RELEASE]
+	at org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.lambda$getConnection$1(StandaloneConnectionProvider.java:115) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at java.util.Optional.orElseGet(Optional.java:267) ~[na:1.8.0_504]
+	at org.springframework.data.redis.connection.lettuce.StandaloneConnectionProvider.getConnection(StandaloneConnectionProvider.java:115) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.getConnection(LettuceConnectionFactory.java:1595) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	... 23 common frames omitted
+Caused by: java.lang.IllegalStateException: executor not accepting a task
+	at io.netty.resolver.AddressResolverGroup.getResolver(AddressResolverGroup.java:61) ~[netty-resolver-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.bootstrap.Bootstrap.doResolveAndConnect0(Bootstrap.java:194) ~[netty-transport-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.bootstrap.Bootstrap.access$000(Bootstrap.java:46) ~[netty-transport-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.bootstrap.Bootstrap$1.operationComplete(Bootstrap.java:180) ~[netty-transport-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.bootstrap.Bootstrap$1.operationComplete(Bootstrap.java:166) ~[netty-transport-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.util.concurrent.DefaultPromise.notifyListener0(DefaultPromise.java:578) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.util.concurrent.DefaultPromise.notifyListenersNow(DefaultPromise.java:552) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.util.concurrent.DefaultPromise.notifyListeners(DefaultPromise.java:491) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.util.concurrent.DefaultPromise.setValue0(DefaultPromise.java:616) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.util.concurrent.DefaultPromise.setSuccess0(DefaultPromise.java:605) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.util.concurrent.DefaultPromise.trySuccess(DefaultPromise.java:104) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.channel.DefaultChannelPromise.trySuccess(DefaultChannelPromise.java:84) ~[netty-transport-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.safeSetSuccess(AbstractChannel.java:990) ~[netty-transport-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.register0(AbstractChannel.java:516) ~[netty-transport-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.access$200(AbstractChannel.java:429) ~[netty-transport-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.channel.AbstractChannel$AbstractUnsafe$1.run(AbstractChannel.java:486) ~[netty-transport-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.util.concurrent.AbstractEventExecutor.runTask(AbstractEventExecutor.java:174) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java:167) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:470) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:569) ~[netty-transport-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+	... 1 common frames omitted
+
+2026-10-18 11:29:02.326  WARN 37821 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendjudgeservice]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-18 11:29:03.934  WARN 37821 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-18 11:29:04.166  WARN 37821 --- [ntContainer#0-2] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-18 11:29:22.488  WARN 37976 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendjudgeservice]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-18 11:29:24.111  WARN 37976 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-18 11:29:24.354  WARN 37976 --- [ntContainer#0-2] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-18 11:29:24.839  WARN 37976 --- [127.0.0.1:57564] c.r.c.impl.ForgivingExceptionHandler     : An unexpected connection driver error occurred (Exception message: Connection reset)
+2026-10-18 11:29:25.282  WARN 37976 --- [127.0.0.1:57564] c.r.c.impl.ForgivingExceptionHandler     : An unexpected connection driver error occurred (Exception message: Connection reset)
+2026-10-18 11:29:25.798  WARN 37976 --- [127.0.0.1:57564] c.r.c.impl.ForgivingExceptionHandler     : An unexpected connection driver error occurred (Exception message: Connection reset)
+2026-10-18 11:29:33.189  WARN 38063 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendjudgeservice]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-18 11:29:34.834  WARN 38063 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-18 11:29:35.075  WARN 38063 --- [ntContainer#0-2] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-18 11:30:30.829  WARN 38248 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendjudgeservice]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-18 11:30:32.435  WARN 38248 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-18 11:30:32.759  WARN 38248 --- [ntContainer#0-1] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-18 11:30:48.892  WARN 38453 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendjudgeservice]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-18 11:30:50.499  WARN 38453 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-18 11:30:50.735  WARN 38453 --- [ntContainer#0-2] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-18 11:30:56.000  WARN 38543 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendjudgeservice]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-18 11:30:57.596  WARN 38543 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-18 11:30:57.902  WARN 38543 --- [ntContainer#0-1] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-18 11:31:04.187  WARN 38583 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendjudgeservice]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-18 11:31:05.827  WARN 38583 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-18 11:31:06.064  WARN 38583 --- [ntContainer#0-2] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-18 11:32:49.852  WARN 39206 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendjudgeservice]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-18 11:32:51.521  WARN 39206 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-18 11:32:51.771  WARN 39206 --- [ntContainer#0-1] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-18 11:32:54.530  WARN 39237 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendjudgeservice]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-18 11:32:56.144  WARN 39237 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-18 11:32:56.388  WARN 39237 --- [ntContainer#0-1] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-18 11:33:20.901  WARN 39403 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendjudgeservice]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-18 11:33:22.522  WARN 39403 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-18 11:33:22.775  WARN 39403 --- [ntContainer#0-2] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-18 11:33:55.657  WARN 39670 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendjudgeservice]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-18 11:33:57.379  WARN 39670 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-18 11:33:57.631  WARN 39670 --- [ntContainer#0-2] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
