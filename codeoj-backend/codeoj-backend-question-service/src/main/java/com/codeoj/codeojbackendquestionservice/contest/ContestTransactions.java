@@ -57,7 +57,7 @@ public class ContestTransactions {
     private static void conflict(String code) { throw new SubmissionConflictException(code); }
     private void validate(ContestDraft d) {
         if(d==null || d.getTitle()==null || d.getTitle().trim().isEmpty() || d.getTitle().length()>120
-                || d.getCapacity()==null || d.getCapacity()<1 || d.getCapacity()>1000000
+                || d.getCapacity()==null || d.getCapacity()<1 || d.getCapacity()>RedisRegistrationLedger.MAX_LEDGER_ENTRIES
                 || !("PRIVATE".equals(d.getContestType()) || "PUBLIC_TRAINING".equals(d.getContestType()))
                 || d.getProblems()==null || d.getProblems().isEmpty() || d.getProblems().size()>20) { invalid("INVALID_CONTEST_DRAFT"); }
         LocalDateTime open=instant(d.getRegistrationOpenAt()),close=instant(d.getRegistrationCloseAt()),start=instant(d.getStartAt()),end=instant(d.getEndAt());

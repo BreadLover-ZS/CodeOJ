@@ -1,0 +1,246 @@
+{
+  "date": "2026-10-22",
+  "baselineCommit": "f10341721a1d8c5c7342bab671b607063338222e",
+  "scope": "CodeOJ limited contest registration review; real private Redis 6.2.24 + Spring/H2; manual consumer calls; MQ transport mocked",
+  "baselineTests": 37,
+  "reviewProbes": 3,
+  "suites": [
+    {
+      "suite": "RegistrationRedisIntegrationTest",
+      "tests": 30,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "lateRecoveryCannotGrantANewAutomaticDeadlineToAnOldReservation",
+          "status": "PASS"
+        },
+        {
+          "name": "clockSkewInEitherDirectionPausesBeforeAnyReservation",
+          "status": "PASS"
+        },
+        {
+          "name": "delayedConfirmationUsesOriginalReservationTimeEvenAfterContestEnd",
+          "status": "PASS"
+        },
+        {
+          "name": "confirmedRequestCannotBeManuallyReleased",
+          "status": "PASS"
+        },
+        {
+          "name": "finalizationFindsUndurableReservationAndRequiresClosedReconciledLedger",
+          "status": "PASS"
+        },
+        {
+          "name": "adminHttpContractUsesFreshRolesAndExposesEvidenceWithoutPrivateProblemData",
+          "status": "PASS"
+        },
+        {
+          "name": "forgedEventCannotConfirmAnotherRequestOrPublicationVersion",
+          "status": "PASS"
+        },
+        {
+          "name": "completeRedisLossCannotBeMisreportedAsNoReservationOrSilentlyReinitialized",
+          "status": "PASS"
+        },
+        {
+          "name": "releaseMarkerFailureDoesNotIncreaseStockTwice",
+          "status": "PASS"
+        },
+        {
+          "name": "staleAccountAndStaleAdminAreCheckedAgainstCurrentDatabase",
+          "status": "PASS"
+        },
+        {
+          "name": "manualPublishExtensionPreservesAllOldAttemptEvidence",
+          "status": "PASS"
+        },
+        {
+          "name": "internallyConsistentOldRedisSnapshotStillCannotOmitKnownDatabaseRequests",
+          "status": "PASS"
+        },
+        {
+          "name": "outboxWriteFailureRollsBackDatabaseButNeverReleasesAnUnknownReservation",
+          "status": "PASS"
+        },
+        {
+          "name": "reservationAndOutboxAreDurableBeforeQualificationAndDuplicateConfirmationIsHarmless",
+          "status": "PASS"
+        },
+        {
+          "name": "initializationRetryNeverResetsStockAndReconcileSubtractsPendingReservations",
+          "status": "PASS"
+        },
+        {
+          "name": "partialLedgerLossPausesGloballyAndCannotResetStock",
+          "status": "PASS"
+        },
+        {
+          "name": "terminalStatePrecedesReleaseAndLateConsumerCannotConfirmReleasedRequest",
+          "status": "PASS"
+        },
+        {
+          "name": "cutoverPreservesExistingSynchronousQualificationsAndClosesOldAllocator",
+          "status": "PASS"
+        },
+        {
+          "name": "cancellationAndConfirmationRaceNeverResellsConfirmedQualification",
+          "status": "PASS"
+        },
+        {
+          "name": "eightUsersContendingForTwoSlotsProduceOnlyTwoRequestsAndQualifications",
+          "status": "PASS"
+        },
+        {
+          "name": "cancellationRecoversPreviouslyUnknownReservationAsCancelledAndReleasesOnce",
+          "status": "PASS"
+        },
+        {
+          "name": "lateGateOpenCannotOverrideNewerCancellationFence",
+          "status": "PASS"
+        },
+        {
+          "name": "reservedBeforeDatabaseCrashIsRebuiltWithOriginalIdentity",
+          "status": "PASS"
+        },
+        {
+          "name": "exhaustedConfirmationNeedsExplicitFiniteAdminExtensionAndKeepsOriginalEvent",
+          "status": "PASS"
+        },
+        {
+          "name": "unknownEarlierPublishAndLaterNackCannotFreeReservation",
+          "status": "PASS"
+        },
+        {
+          "name": "wrongUserMappingCannotReturnAnotherUsersReservationOrPassReconciliation",
+          "status": "PASS"
+        },
+        {
+          "name": "luaRejectsBothBeforeOpenAndAtOrAfterCloseWithoutChangingInventory",
+          "status": "PASS"
+        },
+        {
+          "name": "requestKeysArePerContestAndTerminalMappingsHaveNoExpiry",
+          "status": "PASS"
+        },
+        {
+          "name": "redisCompletionMarkerCanRetryAfterDatabaseMarkerWriteFails",
+          "status": "PASS"
+        },
+        {
+          "name": "redisAofRestartPreservesAnUnpersistedReservation",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "suite": "RegistrationMessagingTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "interruptionLeavesDeliveryUnacknowledgedAndPreservesInterrupt",
+          "status": "PASS"
+        },
+        {
+          "name": "authorityFailureBacksOffBeforeRequeueInsteadOfAck",
+          "status": "PASS"
+        },
+        {
+          "name": "relayUsesSeparatePersistentMandatoryTransportAndCapturesReturn",
+          "status": "PASS"
+        },
+        {
+          "name": "mismatchedIdentityIsQuarantined",
+          "status": "PASS"
+        },
+        {
+          "name": "onlyDurablyHandledRequestsAreAcknowledged",
+          "status": "PASS"
+        },
+        {
+          "name": "sendExceptionIsUnknownAndNeverAReasonToReleaseCapacity",
+          "status": "PASS"
+        },
+        {
+          "name": "unsupportedPayloadIsQuarantinedWithoutTouchingAuthority",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "suite": "RegistrationAuditProbeTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "rollbackWithOrphanMasksMissingConfirmedIdentity",
+          "status": "PASS"
+        },
+        {
+          "name": "slowRequestIsClassifiedAsClockSkewWithoutClockDrift",
+          "status": "PASS"
+        },
+        {
+          "name": "admittedLedgerCanExceedReconciliationBound",
+          "status": "PASS"
+        }
+      ]
+    }
+  ],
+  "observations": [
+    {
+      "name": "rollback-orphan-cardinality",
+      "earlyRequest": "2113268689846431746",
+      "earlyStatus": "MANUAL_REVIEW",
+      "laterStatus": "CONFIRMED",
+      "capacity": 2,
+      "qualifications": 2,
+      "result": "DEFECT_REPRODUCED"
+    },
+    {
+      "name": "stale-clock-sample",
+      "delayMs": 2300,
+      "code": "CLOCK_SKEW",
+      "gate": "0",
+      "result": "CONSERVATIVE_HOLD_OBSERVED",
+      "scope": "settings clock frozen by H2 fixture; latency and drift indistinguishable in current predicate"
+    },
+    {
+      "name": "admission-versus-reconcile-bound",
+      "capacity": 10001,
+      "ledgerEntries": 10001,
+      "mode": "REDIS_PAUSED",
+      "result": "BOUND_MISMATCH_REPRODUCED",
+      "scope": "real Lua reservations; no 10001 DB/account or MQ acceptance claim"
+    }
+  ],
+  "findings": [
+    {
+      "id": "R1",
+      "priority": "P1",
+      "state": "REPRODUCED_UNFIXED",
+      "title": "Old Redis snapshot with orphan reservation masks missing confirmed identity"
+    },
+    {
+      "id": "R2",
+      "priority": "P2",
+      "state": "REPRODUCED_UNFIXED",
+      "title": "Admission permits ledger size that reconciliation cannot handle"
+    }
+  ],
+  "notValidated": [
+    "Real MySQL fault reproduction",
+    "Real Redis failover/Cluster",
+    "Real RabbitMQ fault replay in this review",
+    "Load/capacity performance"
+  ],
+  "reproductionScriptVerified": true,
+  "uniqueBaselineTests": 37,
+  "uniqueReviewProbes": 3
+}

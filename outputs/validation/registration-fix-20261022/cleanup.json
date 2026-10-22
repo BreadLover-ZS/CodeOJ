@@ -1,0 +1,21 @@
+{
+  "privateRuntimeRootRemoved": true,
+  "remainingOwnedProcessIds": [],
+  "remainingTestHarnessDirectories": [],
+  "nativeRuns": {
+    "real-integration": {
+      "temporaryWorkRemoved": true,
+      "remainingOpenOwnedPorts": []
+    },
+    "real-integration-02": {
+      "temporaryWorkRemoved": true,
+      "remainingOpenOwnedPorts": []
+    },
+    "real-integration-final": {
+      "temporaryWorkRemoved": true,
+      "remainingOpenOwnedPorts": []
+    }
+  },
+  "globalServicesInstalled": false,
+  "retained": "Task reports, source/test changes, normal Maven/project build outputs; historical validation artifacts unchanged"
+}

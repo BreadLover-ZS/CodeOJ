@@ -11,6 +11,7 @@ import java.util.*;
 
 @Component
 public class RedisRegistrationLedger {
+    public static final int MAX_LEDGER_ENTRIES=10000;
     private final StringRedisTemplate redis;
     private final DefaultRedisScript<String> script=new DefaultRedisScript<>();
     @Value("${codeoj.registration.max-clock-skew-ms:2000}") private long skew=2000;
@@ -31,16 +32,22 @@ public class RedisRegistrationLedger {
     public static class LedgerException extends RuntimeException {
         private final String code;public LedgerException(String code) { super(code);this.code=code; }public String getCode() { return code; }
     }
+    public void repair(RegistrationSettings s) { call(s.getContestId(),"repair",Long.toString(s.getPublishedVersion()),Long.toString(s.getEpoch())); }
+    public void check(RegistrationSettings s) { call(s.getContestId(),"check",Long.toString(s.getDurableSequence()),Long.toString(s.getPublishedVersion()),Long.toString(s.getEpoch())); }
+    public void upgrade(RegistrationSettings s,List<RegistrationReservation> rows) {
+        Map<String,String> assignments=new LinkedHashMap<>();for(RegistrationReservation r:rows) { assignments.put(r.getEventId(),Long.toString(r.getSequence())); }
+        call(s.getContestId(),"upgrade",Long.toString(s.getRevision()),JSONUtil.toJsonStr(assignments));
+    }
     public void initialize(RegistrationSettings s) {
         call(s.getContestId(),"init",Long.toString(s.getPublishedVersion()),Long.toString(s.getEpoch()),Integer.toString(s.getInitialCapacity()),
                 Long.toString(micros(s.getOpen())),Long.toString(micros(s.getClose())),Long.toString(s.getRevision()),s.isInitialized()?"0":"1");
     }
     public void gate(RegistrationSettings s,boolean open,boolean clearClockHold) {
-        call(s.getContestId(),"gate",Long.toString(s.getRevision()),open?"1":"0",Long.toString(epoch(s.getNow())),Long.toString(skew),clearClockHold?"1":"0");
+        call(s.getContestId(),"gate",Long.toString(s.getRevision()),open?"1":"0",Long.toString(epoch(s.getNow())),Long.toString(skew),clearClockHold?"1":"0",Long.toString(s.getDurableSequence()));
     }
     public RegistrationReservation reserve(RegistrationSettings s,long user,long request,String event,String key,String hash) {
         return call(s.getContestId(),"reserve",Long.toString(s.getContestId()),Long.toString(s.getPublishedVersion()),Long.toString(s.getEpoch()),
-                Long.toString(user),Long.toString(request),event,key,hash,Long.toString(epoch(s.getNow())),Long.toString(skew)).getBean("reservation",RegistrationReservation.class);
+                Long.toString(user),Long.toString(request),event,key,hash,Long.toString(epoch(s.getNow())),Long.toString(skew),Long.toString(s.getDurableSequence())).getBean("reservation",RegistrationReservation.class);
     }
     public RegistrationReservation user(long contest,long user) { return call(contest,"user",Long.toString(user)).getBean("reservation",RegistrationReservation.class); }
     public RegistrationReservation event(long contest,String event) { return call(contest,"event",event).getBean("reservation",RegistrationReservation.class); }
@@ -54,11 +61,11 @@ public class RedisRegistrationLedger {
     public JSONObject stats(long contest) { return call(contest,"stats"); }
     /** Gate must already be closed. Bounded HSCAN; never overwrite stock with a DB counter. */
     public List<RegistrationReservation> snapshot(long contest) {
-        JSONObject before=stats(contest);if(!"0".equals(before.getStr("open")) || before.getInt("count")>10000) { throw new LedgerException("RECONCILIATION_BOUND_EXCEEDED_OR_OPEN"); }
+        JSONObject before=stats(contest);if(!"0".equals(before.getStr("open")) || before.getInt("count")>MAX_LEDGER_ENTRIES) { throw new LedgerException("RECONCILIATION_BOUND_EXCEEDED_OR_OPEN"); }
         Map<String,RegistrationReservation> rows=new LinkedHashMap<>();long deadline=System.nanoTime()+5000000000L;
         try(Cursor<Map.Entry<Object,Object>> cursor=redis.opsForHash().scan(keys(contest).get(3),ScanOptions.scanOptions().count(200).build())) {
             while(cursor.hasNext()) {
-                if(System.nanoTime()>deadline || rows.size()>10000) { throw new LedgerException("RECONCILIATION_BOUND_EXCEEDED_OR_OPEN"); }
+                if(System.nanoTime()>deadline || rows.size()>MAX_LEDGER_ENTRIES) { throw new LedgerException("RECONCILIATION_BOUND_EXCEEDED_OR_OPEN"); }
                 Map.Entry<Object,Object> entry=cursor.next();RegistrationReservation r=JSONUtil.toBean(String.valueOf(entry.getValue()),RegistrationReservation.class);
                 if(!r.valid() || !String.valueOf(entry.getKey()).equals(r.getEventId())) { throw new LedgerException("LEDGER_IDENTITY_INVALID"); }rows.put(r.getEventId(),r);
             }

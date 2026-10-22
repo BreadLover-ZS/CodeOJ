@@ -24,12 +24,13 @@ public class RegistrationTransactions {
             RegistrationSettings r=new RegistrationSettings();r.setEpoch(rs.getLong(1));r.setInitialized(rs.getBoolean(2));r.setInitialCapacity(rs.getInt(3));r.setIssue(rs.getString(4));return r;
         },id);
         s.setContestId(id);s.setPublishedVersion(c.publishedVersion==null?0:c.publishedVersion);s.setRevision(c.version);s.setMode(c.mode);s.setStatus(c.status);
+        s.setDurableSequence(jdbc.queryForObject("SELECT COALESCE(MAX(reservationSequence),0) FROM contest_registration_request WHERE contestId=? AND reservationEpoch=?",Long.class,id,s.getEpoch()));
         s.setReady(c.ready);s.setOpen(c.open);s.setClose(c.close);s.setNow(executions.now());return s;
     }
     public RegistrationRequest request(long contest,long id,boolean lock) {
         List<RegistrationRequest> rows=jdbc.query("SELECT * FROM contest_registration_request WHERE contestId=? AND id=?"+(lock?" FOR UPDATE":""),(rs,n)->{
             RegistrationRequest q=new RegistrationRequest();RegistrationReservation r=new RegistrationReservation();r.setContestId(rs.getLong("contestId"));r.setRequestId(rs.getLong("id"));r.setUserId(rs.getLong("userId"));
-            r.setPublishedVersion(rs.getLong("publishedVersion"));r.setEpoch(rs.getObject("reservationEpoch")==null?null:rs.getLong("reservationEpoch"));r.setEventId(rs.getString("eventId"));r.setRequestKey(rs.getString("requestKey"));r.setRequestHash(rs.getString("requestHash"));
+            r.setSequence(rs.getObject("reservationSequence")==null?null:rs.getLong("reservationSequence"));r.setPublishedVersion(rs.getLong("publishedVersion"));r.setEpoch(rs.getObject("reservationEpoch")==null?null:rs.getLong("reservationEpoch"));r.setEventId(rs.getString("eventId"));r.setRequestKey(rs.getString("requestKey"));r.setRequestHash(rs.getString("requestHash"));
             r.setReservedAtMs(RedisRegistrationLedger.epoch(rs.getObject("reservedAt",LocalDateTime.class)));r.setReservedAtMicros(RedisRegistrationLedger.micros(rs.getObject("reservedAt",LocalDateTime.class)));r.setState("PROCESSING");q.setReservation(r);
             q.setStatus(rs.getString("status"));q.setReclaimState(rs.getString("reclaimState"));q.setLastError(rs.getString("lastError"));q.setVersion(rs.getLong("stateVersion"));q.setMaxPublishAttempts(rs.getInt("maxPublishAttempts"));
             q.setNextActionAt(rs.getObject("nextActionAt",LocalDateTime.class));q.setDeadline(rs.getObject("confirmationDeadlineAt",LocalDateTime.class));return q;
@@ -74,7 +75,8 @@ public class RegistrationTransactions {
         jdbc.update("UPDATE contest SET registrationMode='REDIS_PAUSED',registrationReady=false,registrationIssue=?,version=version+1 WHERE id=?",issue,id);
         audit(id,null,"REGISTRATION_HOLD",issue,c.version,c.version+1,null);
     }
-    private boolean same(RegistrationReservation a,RegistrationReservation b) {
+    private boolean same(RegistrationReservation a,RegistrationReservation b) { return sameIdentity(a,b) && Objects.equals(a.getSequence(),b.getSequence()); }
+    private boolean sameIdentity(RegistrationReservation a,RegistrationReservation b) {
         return Objects.equals(a.getRequestId(),b.getRequestId()) && Objects.equals(a.getEventId(),b.getEventId()) && Objects.equals(a.getUserId(),b.getUserId())
                 && Objects.equals(a.getContestId(),b.getContestId()) && Objects.equals(a.getPublishedVersion(),b.getPublishedVersion()) && Objects.equals(a.getEpoch(),b.getEpoch())
                 && Objects.equals(a.getRequestKey(),b.getRequestKey()) && Objects.equals(a.getRequestHash(),b.getRequestHash()) && Objects.equals(a.getReservedAtMicros(),b.getReservedAtMicros());
@@ -90,15 +92,16 @@ public class RegistrationTransactions {
         if(!c.mode.startsWith("REDIS_") || s.getEpoch()!=r.getEpoch() || !Objects.equals(c.publishedVersion,r.getPublishedVersion()) || !hash(c.id,c.publishedVersion).equals(r.getRequestHash())) { throw new SubmissionConflictException("RESERVATION_CONTEXT_CONFLICT"); }
         boolean account=true;try { executions.requireAccount(r.getUserId(),null,true); }catch(BusinessException inactive) { account=false; }
         RegistrationRequest existing=request(c.id,r.getRequestId(),true);
-        if(existing!=null) { if(!same(existing.getReservation(),r)) { throw new SubmissionConflictException("RESERVATION_IDENTITY_CONFLICT"); }return existing; }
+        if(existing!=null) { if(!same(existing.getReservation(),r) && !("REDIS_RECONCILING".equals(c.mode) && sameIdentity(existing.getReservation(),r) && (r.getSequence()==null || existing.getReservation().getSequence()==null))) { throw new SubmissionConflictException("RESERVATION_IDENTITY_CONFLICT"); }return existing; }
+        if(r.getSequence()==null && !"REDIS_RECONCILING".equals(c.mode)) { throw new SubmissionConflictException("LEDGER_FORMAT_UPGRADE_REQUIRED"); }
         LocalDateTime now=executions.now(),reserved=LocalDateTime.ofInstant(Instant.ofEpochSecond(r.getReservedAtMicros()/1000000,(r.getReservedAtMicros()%1000000)*1000),ZoneOffset.UTC);
         String state="PROCESSING",error=null,reclaim="RESERVED";
         if(!"PROCESSING".equals(r.getState()) || reserved.isBefore(c.open) || !reserved.isBefore(c.close) || reserved.isAfter(now.plusNanos(clockSkewMs*1000000))) { state="MANUAL_REVIEW";error="RESERVATION_EVIDENCE_INVALID"; }
         else if("CANCELLED".equals(c.status)) { state="CANCELLED";error="CONTEST_CANCELLED";reclaim="RELEASE_PENDING"; }
         else if(!account) { state="FAILED";error="ACCOUNT_INACTIVE";reclaim="RELEASE_PENDING"; }
         else if(!now.isBefore(reserved.plusMinutes(5))) { state="MANUAL_REVIEW";error="RESERVATION_RECOVERY_EXHAUSTED"; }
-        jdbc.update("INSERT INTO contest_registration_request(id,contestId,publishedVersion,userId,eventId,requestKey,requestHash,reservedAt,status,stateVersion,reclaimState,lastError,createdAt,reservationEpoch,confirmationChecks,maxPublishAttempts,nextActionAt,confirmationDeadlineAt) VALUES(?,?,?,?,?,?,?,?,?,0,?,?,?,?,0,20,?,?)",
-                r.getRequestId(),c.id,r.getPublishedVersion(),r.getUserId(),r.getEventId(),r.getRequestKey(),r.getRequestHash(),reserved,state,reclaim,error,now,r.getEpoch(),now,reserved.plusMinutes(5));
+        jdbc.update("INSERT INTO contest_registration_request(id,contestId,publishedVersion,userId,eventId,requestKey,requestHash,reservedAt,status,stateVersion,reclaimState,lastError,createdAt,reservationEpoch,reservationSequence,confirmationChecks,maxPublishAttempts,nextActionAt,confirmationDeadlineAt) VALUES(?,?,?,?,?,?,?,?,?,0,?,?,?,?,?,0,20,?,?)",
+                r.getRequestId(),c.id,r.getPublishedVersion(),r.getUserId(),r.getEventId(),r.getRequestKey(),r.getRequestHash(),reserved,state,reclaim,error,now,r.getEpoch(),r.getSequence(),now,reserved.plusMinutes(5));
         RegistrationRequest q=request(c.id,r.getRequestId(),false);if("PROCESSING".equals(state) || "RESERVATION_RECOVERY_EXHAUSTED".equals(error)) { event(q,now); }
         else { audit(r.getRequestId(),null,"REGISTRATION_RECOVER",error,0,0,null); }return q;
     }
@@ -116,6 +119,7 @@ public class RegistrationTransactions {
         LocalDateTime now=executions.now();RegistrationSettings s=settings(c.id);
         if("CANCELLED".equals(c.status)) { state(q,"CANCELLED","RELEASE_PENDING","CONTEST_CANCELLED",now);return true; }
         if(!account) { state(q,"FAILED","RELEASE_PENDING","ACCOUNT_INACTIVE",now);return true; }
+        if(q.getReservation().getSequence()==null && !"REDIS_RECONCILING".equals(c.mode)) { issue(c.id,"LEDGER_FORMAT_UPGRADE_REQUIRED");return true; }
         if("REDIS_RECONCILING".equals(c.mode) || s.getIssue()!=null) { jdbc.update("UPDATE contest_registration_request SET nextActionAt=? WHERE id=?",now.plusSeconds(5),message.getRequestId());return true; }
         if(q.getDeadline()==null || !now.isBefore(q.getDeadline())) { state(q,"MANUAL_REVIEW","RESERVED","CONFIRMATION_DEADLINE_EXHAUSTED",now);return true; }
         try { contests.confirmRegistration(c,message.getRequestId(),q.getReservation().getUserId(),now); }
@@ -169,22 +173,40 @@ public class RegistrationTransactions {
         } else { throw new BusinessException(ErrorCode.PARAMS_ERROR,"INVALID_REVIEW_DECISION"); }
         audit(request,actor,"REGISTRATION_ADMIN_"+command.getDecision(),command.getReason(),q.getVersion(),q.getVersion()+1,JSONUtil.toJsonStr(command));
     }
-    @Transactional(rollbackFor=Exception.class)
-    public RegistrationSettings finishReconcile(long contest,long revision,List<RegistrationReservation> rows,int stock,long actor,String reason) {
-        ContestTransactions.Contest c=contests.load(contest,true);executions.requireAccount(actor,"admin",true);RegistrationSettings s=settings(contest);
-        if(c.version!=revision || !"REDIS_RECONCILING".equals(c.mode) || "CANCELLED".equals(c.status)) { throw new SubmissionConflictException("RECONCILIATION_SUPERSEDED"); }
+    private void verifySnapshot(ContestTransactions.Contest c,RegistrationSettings s,List<RegistrationReservation> rows,int stock,boolean withSequence) {
         Map<Long,RegistrationReservation> byId=new HashMap<>();int active=0;
-        for(RegistrationReservation r:rows) { if(!r.valid() || r.getContestId()!=contest || r.getEpoch()!=s.getEpoch() || !Objects.equals(c.publishedVersion,r.getPublishedVersion()) || byId.put(r.getRequestId(),r)!=null) { throw new SubmissionConflictException("LEDGER_IDENTITY_INVALID"); }if(!"RELEASED".equals(r.getState())) { active++; } }
-        List<Long> ids=jdbc.queryForList("SELECT id FROM contest_registration_request WHERE contestId=? AND reservationEpoch=?",Long.class,contest,s.getEpoch());int confirmed=0;
+        for(RegistrationReservation r:rows) { if(!r.valid() || (withSequence && r.getSequence()==null) || r.getContestId()!=c.id || r.getEpoch()!=s.getEpoch() || !Objects.equals(c.publishedVersion,r.getPublishedVersion()) || byId.put(r.getRequestId(),r)!=null) { throw new SubmissionConflictException("LEDGER_IDENTITY_INVALID"); }if(!"RELEASED".equals(r.getState())) { active++; } }
+        List<Long> ids=jdbc.queryForList("SELECT id FROM contest_registration_request WHERE contestId=? AND reservationEpoch=?",Long.class,c.id,s.getEpoch());int confirmed=0;
         for(long id:ids) {
-            RegistrationRequest q=request(contest,id,true);RegistrationReservation r=byId.get(id);
-            if(r==null || !same(q.getReservation(),r) || ("CONFIRMED".equals(q.getStatus()) && "RELEASED".equals(r.getState()))
+            RegistrationRequest q=request(c.id,id,true);RegistrationReservation r=byId.get(id);
+            if(r==null || !(withSequence?same(q.getReservation(),r):sameIdentity(q.getReservation(),r)) || ("CONFIRMED".equals(q.getStatus()) && "RELEASED".equals(r.getState()))
                     || (!"CONFIRMED".equals(q.getStatus()) && "CONFIRMED".equals(r.getState()))
                     || (Arrays.asList("PROCESSING","MANUAL_REVIEW").contains(q.getStatus()) && "RELEASED".equals(r.getState()))) { throw new SubmissionConflictException("LEDGER_DATABASE_MISMATCH"); }
             if("CONFIRMED".equals(q.getStatus())) { confirmed++; }
         }
-        int allConfirmed=jdbc.queryForObject("SELECT COUNT(*) FROM contest_registration WHERE contestId=? AND status='CONFIRMED'",Integer.class,contest);
+        int allConfirmed=jdbc.queryForObject("SELECT COUNT(*) FROM contest_registration WHERE contestId=? AND status='CONFIRMED'",Integer.class,c.id);
         if(ids.size()!=rows.size() || allConfirmed+c.remaining!=c.capacity || c.remaining!=s.getInitialCapacity()-confirmed || stock!=s.getInitialCapacity()-active) { throw new SubmissionConflictException("CAPACITY_LEDGER_MISMATCH"); }
+    }
+    /** Only after a closed-gate full identity/stock check; no Redis call belongs in this transaction. */
+    @Transactional(rollbackFor=Exception.class)
+    public void assignLegacySequences(long id,long revision,List<RegistrationReservation> rows,int stock) {
+        ContestTransactions.Contest c=contests.load(id,true);RegistrationSettings s=settings(id);
+        if(c.version!=revision || !"REDIS_RECONCILING".equals(c.mode) || "CANCELLED".equals(c.status) || rows.size()>RedisRegistrationLedger.MAX_LEDGER_ENTRIES) { throw new SubmissionConflictException("RECONCILIATION_SUPERSEDED"); }
+        verifySnapshot(c,s,rows,stock,false);
+        rows.sort(Comparator.comparing(RegistrationReservation::getReservedAtMicros).thenComparing(RegistrationReservation::getEventId));
+        long next=0;
+        for(RegistrationReservation r:rows) {
+            long sequence=++next;RegistrationRequest q=request(id,r.getRequestId(),true);
+            if((q.getReservation().getSequence()!=null && q.getReservation().getSequence()!=sequence) || (r.getSequence()!=null && r.getSequence()!=sequence)) { throw new SubmissionConflictException("RESERVATION_SEQUENCE_CONFLICT"); }
+            jdbc.update("UPDATE contest_registration_request SET reservationSequence=? WHERE id=?",sequence,r.getRequestId());r.setSequence(sequence);
+        }
+        audit(id,null,"REGISTRATION_LEDGER_UPGRADE","Closed-gate identity and capacity verification",c.version,c.version,null);
+    }
+    @Transactional(rollbackFor=Exception.class)
+    public RegistrationSettings finishReconcile(long contest,long revision,List<RegistrationReservation> rows,int stock,long actor,String reason) {
+        ContestTransactions.Contest c=contests.load(contest,true);executions.requireAccount(actor,"admin",true);RegistrationSettings s=settings(contest);
+        if(c.version!=revision || !"REDIS_RECONCILING".equals(c.mode) || "CANCELLED".equals(c.status)) { throw new SubmissionConflictException("RECONCILIATION_SUPERSEDED"); }
+        verifySnapshot(c,s,rows,stock,true);
         jdbc.update("UPDATE contest SET registrationMode='REDIS_READY',registrationReady=true,registrationIssue=NULL,version=version+1 WHERE id=?",contest);
         if(scoreboardEnabled && "FINALIZING".equals(c.status)) { jdbc.update("UPDATE contest SET registrationReconciledAt=? WHERE id=?",executions.now(),contest); }
         audit(contest,actor,"REGISTRATION_RECONCILE_COMPLETE",reason,c.version,c.version+1,"No stock overwrite");return settings(contest);

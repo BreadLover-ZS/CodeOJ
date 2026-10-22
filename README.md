@@ -54,6 +54,7 @@ MySQL       用户、题目、提交和判题结果
 Mac arm64 的完整本机入口：`./scripts/local-stack.sh verify` 自动构建、启动真实依赖与隔离判题、验证后清理；`serve` 前台运行至 Ctrl+C。前提、就绪检查和范围见[完整启动方案](docs/contest/local-startup.md)。
 
 - [运行、演示与交接](docs/contest/handoff.md)：固定开发版本、可信样例、真实依赖/浏览器、完整隔离复验及清理边界。
+- [报名恢复修复](docs/contest/registration-recovery.md)：Lua 中断/丢响应、旧快照预留序号、V005 与累计报名上限。
 - [源码阅读与成果测试](docs/learning/03-链路.md)：受理、状态、Outbox/租约、隔离回收，以及赛事报名/榜单和鉴权。
 - [项目讲解与面试追问](docs/learning/04-面试.md)：当前实现、源码依据、追问和可陈述边界。
 

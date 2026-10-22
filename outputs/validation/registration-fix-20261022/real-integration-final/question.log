@@ -1,0 +1,58 @@
+2026-10-22 14:36:59.673  WARN 67017 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionSubmitMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionSubmitMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 14:36:59.674  WARN 67017 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 14:36:59.674  WARN 67017 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendquestionservice.mapper]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-22 14:37:01.686  WARN 67017 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-22 14:37:08.596  WARN 67017 --- [.1-58776-exec-3] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-22 14:37:17.494  WARN 67095 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionSubmitMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionSubmitMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 14:37:17.495  WARN 67095 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 14:37:17.495  WARN 67095 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendquestionservice.mapper]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-22 14:37:19.385  WARN 67095 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-22 14:37:20.475  WARN 67095 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113278500473864193
+2026-10-22 14:37:20.794  WARN 67095 --- [.1-58776-exec-1] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-22 14:37:23.508  WARN 67095 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113278500473864193
+2026-10-22 14:37:26.059  WARN 67132 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionSubmitMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionSubmitMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 14:37:26.060  WARN 67132 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 14:37:26.061  WARN 67132 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendquestionservice.mapper]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-22 14:37:27.979  WARN 67132 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-22 14:37:28.322  WARN 67132 --- [.1-58776-exec-2] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-22 14:37:28.858  WARN 67132 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113278500473864193
+2026-10-22 14:37:31.904  WARN 67132 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113278500473864193
+2026-10-22 14:37:34.229  WARN 67177 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionSubmitMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionSubmitMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 14:37:34.230  WARN 67177 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 14:37:34.230  WARN 67177 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendquestionservice.mapper]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-22 14:37:36.074  WARN 67177 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-22 14:37:37.128  WARN 67177 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113278500473864193
+2026-10-22 14:37:37.213  WARN 67177 --- [.1-58776-exec-2] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-22 14:37:39.163  WARN 67177 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113278500473864193
+2026-10-22 14:37:41.203  WARN 67177 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113278500473864193
+2026-10-22 14:37:43.226  WARN 67177 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113278500473864193
+2026-10-22 14:37:44.652  WARN 67214 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionSubmitMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionSubmitMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 14:37:44.653  WARN 67214 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 14:37:44.653  WARN 67214 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendquestionservice.mapper]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-22 14:37:46.483  WARN 67214 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-22 14:37:47.515  WARN 67214 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113278500473864193
+2026-10-22 14:37:47.537  WARN 67214 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113278610880507905
+2026-10-22 14:37:47.629  WARN 67214 --- [.1-58776-exec-2] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-22 14:37:49.559  WARN 67214 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113278500473864193
+2026-10-22 14:37:51.599  WARN 67214 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113278500473864193
+2026-10-22 14:37:53.630  WARN 67214 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113278500473864193

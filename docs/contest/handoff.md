@@ -1,6 +1,6 @@
 # 运行、演示与交接
 
-开发与验收版本：`bc3514261767d07cc3be7c3ab681afc894e25c02`（2026-10-22，已推送）。后续学习/交接文档更新不改变该版本的运行证据。原报告中“尚未提交”描述的是验收当时状态；历史文件与指纹保留原样。
+开发与验收版本：`bc3514261767d07cc3be7c3ab681afc894e25c02`（2026-10-22，已推送）。该历史运行证据保留原样。当前源码另有[报名恢复修复](registration-recovery.md)，需要 V005，运行结果按[对应新报告](../../outputs/validation/registration-fix-20261022/report.md)判断。原报告中“尚未提交”描述的是验收当时状态；历史文件与指纹保留原样。
 
 完整启动的新入口见 [Mac 完整本机启动](local-startup.md)：`./scripts/local-stack.sh verify`，或 `serve` 前台演示。下文保留各层单独复验入口。
 
@@ -90,7 +90,7 @@ env JAVA_HOME="$CODEOJ_JAVA8_HOME" PATH="$CODEOJ_JAVA8_HOME/bin:$PATH" mvn -B -f
 
 | 检查点 | 要求 |
 | --- | --- |
-| 业务版本 | 初始化业务表并按顺序应用 V001—V004；question/judge 同时启用 RELIABLE_JUDGE_ENABLED；ASYNC_REGISTRATION_ENABLED、SCOREBOARD_ENABLED 按迁移契约启用。临时夹具自行处理这些配置，不能照搬为在线切换步骤 |
+| 业务版本 | 初始化业务表并按顺序应用 V001—V005；question/judge 同时启用 RELIABLE_JUDGE_ENABLED；ASYNC_REGISTRATION_ENABLED、SCOREBOARD_ENABLED 按迁移契约启用。临时夹具自行处理这些配置，不能照搬为在线切换步骤 |
 | 默认行为 | 三个业务开关默认 false，但沙箱默认 isolated；旧无 token/deadline 的调用不兼容 isolated，不能仅启动默认 YAML 就期待旧链可用 |
 | 执行池 | CODESANDBOX_ISOLATION_IMAGE 固定摘要、CODESANDBOX_STATE_DIRECTORY 专用持久本地目录（权限700）；同池同 daemon、同目录、同资源策略；不能 live 删除 journal/锁文件 |
 | 内部调用 | INNER_AUTH_SECRET、沙箱远程密钥在调用两端一致；业务凭据只在受信服务，不能进入用户容器 |

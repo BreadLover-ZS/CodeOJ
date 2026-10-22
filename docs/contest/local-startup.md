@@ -39,7 +39,7 @@ Lima 使用专用 LIMA_HOME。先将云镜像下载到私有目录并校验，�
 1. 预检查、创建专用临时目录，准备并校验原生依赖。
 2. Java 8 多模块 package、npm ci、同源前端构建；对运行 jar 的 class 和嵌入依赖进行字节核验。
 3. 启动私有 Lima/VZ VM；静态 Docker engine 经 systemd 启动，检查 Linux/cgroup v2；以固定基础镜像构建隔离镜像并记录最终 image ID。
-4. 新建私有 MySQL，顺序应用基础表和 V001—V004，再启动独立 Redis/MQ；不借用已有实例，不删除既有业务表。
+4. 新建私有 MySQL，顺序应用基础表和 V001—V005，再启动独立 Redis/MQ；不借用已有实例，不删除既有业务表。
 5. 生成权限 600 的私有服务配置，显式 isolated 与三个业务开关 true、内部密钥一致、UTC、静态服务发现；同池使用专用持久目录。创建服务期间不能删除该目录或锁文件。
 6. 启动 sandbox/user/question/judge/gateway；TCP 只作为早期等待条件，随后真实 Gateway API、注册登录/共享会话、Redis+MQ 报名和隔离 AC/WA/CE 才能完成业务就绪验证。
 7. 独立回环静态服务器提供 Vue 页面并透明代理 `/api`，验证同源 API、幂等返回、一次有效 attempt、cgroup 内存指标、榜单投影与未参赛者题面边界。
@@ -65,7 +65,7 @@ Lima 使用专用 LIMA_HOME。先将云镜像下载到私有目录并校验，�
 
 ## 已验证结果与实现检查
 
-2026-10-22，默认全构建 `verify --browser` 与默认全构建 `serve` 实际 Ctrl+C 均通过；真实判题、报名、榜单和 23 项编排/下载契约检查完成，全部所属临时环境清理。完整范围与原失败记录见[报告](../../outputs/validation/startup-20261022/report.md)。
+2026-10-22，默认全构建 `verify --browser` 与默认全构建 `serve` 实际 Ctrl+C 均通过；真实判题、报名、榜单和 23 项编排/下载契约检查完成，全部所属临时环境清理。完整范围与原失败记录见[报告](../../outputs/validation/startup-20261022/report.md)。该记录对应 f103417；后续[报名恢复修复](registration-recovery.md)另有后端及真实依赖证据，未把历史浏览器/隔离结果当作新版重新执行。
 
 
 清理失败保留控制数据、停止失败不删除 VM、删除后独立核验以及不影响其他目录等约束测试：

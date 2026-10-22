@@ -1,0 +1,162 @@
+{
+  "passed": true,
+  "scope": "Real private MySQL/Redis/RabbitMQ/Session/Gateway; explicit direct SQL/Redis fault setup for rollback/release; normal and restart-recovered confirmation used actual MQ consumer; no user code execution, Nacos or load test",
+  "mysqlVersion": "8.0.46",
+  "requestStates": [
+    "CONFIRMED\tCOMPLETE\t6",
+    "FAILED\tRELEASED\t1"
+  ],
+  "ordinals": [
+    "7\t7"
+  ],
+  "qualificationCounts": [
+    "2113278486372614145\t1",
+    "2113278500473864193\t1",
+    "2113278537870237697\t1",
+    "2113278571781201922\t1",
+    "2113278610880507905\t2"
+  ],
+  "publishAttempts": [
+    "ACK\t5"
+  ],
+  "events": [
+    {
+      "at": "2026-10-22T14:36:48.430183+00:00",
+      "action": "PACKAGED_ARTIFACTS_MATCH_CURRENT_BUILD"
+    },
+    {
+      "at": "2026-10-22T14:36:50.261411+00:00",
+      "action": "MIGRATION_APPLIED",
+      "name": "V001__reliable_judging.sql"
+    },
+    {
+      "at": "2026-10-22T14:36:50.423938+00:00",
+      "action": "MIGRATION_APPLIED",
+      "name": "V002__contest_core.sql"
+    },
+    {
+      "at": "2026-10-22T14:36:50.604910+00:00",
+      "action": "MIGRATION_APPLIED",
+      "name": "V003__async_registration.sql"
+    },
+    {
+      "at": "2026-10-22T14:36:50.645734+00:00",
+      "action": "MIGRATION_APPLIED",
+      "name": "V004__contest_scoreboard.sql"
+    },
+    {
+      "at": "2026-10-22T14:36:50.670787+00:00",
+      "action": "MIGRATION_APPLIED",
+      "name": "V005__registration_recovery_fence.sql"
+    },
+    {
+      "at": "2026-10-22T14:36:52.970234+00:00",
+      "action": "INFRASTRUCTURE_READY",
+      "mysql": "8.0.46",
+      "rabbitmq": "4.3.6",
+      "erlang": "28.5.0.8",
+      "redis": "6.2.24"
+    },
+    {
+      "at": "2026-10-22T14:36:55.105323+00:00",
+      "action": "SERVICE_READY",
+      "service": "sandbox"
+    },
+    {
+      "at": "2026-10-22T14:36:58.446070+00:00",
+      "action": "SERVICE_READY",
+      "service": "user"
+    },
+    {
+      "at": "2026-10-22T14:37:01.788068+00:00",
+      "action": "SERVICE_READY",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-22T14:37:05.131030+00:00",
+      "action": "SERVICE_READY",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-22T14:37:07.562302+00:00",
+      "action": "SERVICE_READY",
+      "service": "gateway"
+    },
+    {
+      "at": "2026-10-22T14:37:08.545606+00:00",
+      "action": "REAL_SESSION_LOGIN_PASSED"
+    },
+    {
+      "at": "2026-10-22T14:37:08.558817+00:00",
+      "action": "REAL_MYSQL_V005_AND_UNIQUE_INDEX_PASSED"
+    },
+    {
+      "at": "2026-10-22T14:37:11.976760+00:00",
+      "action": "REAL_HTTP_MQ_REGISTRATION_AND_ORDINAL_PASSED"
+    },
+    {
+      "at": "2026-10-22T14:37:16.239997+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-22T14:37:19.728412+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-22T14:37:20.880617+00:00",
+      "action": "REAL_OLD_SNAPSHOT_FENCE_AND_MYSQL_1062_PASSED"
+    },
+    {
+      "at": "2026-10-22T14:37:24.848994+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-22T14:37:28.232215+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-22T14:37:28.976664+00:00",
+      "action": "REAL_LUA_PARTIAL_RESERVE_PROCESS_RESTART_AND_MQ_CONFIRM_PASSED"
+    },
+    {
+      "at": "2026-10-22T14:37:33.085979+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-22T14:37:36.169127+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-22T14:37:38.298224+00:00",
+      "action": "REAL_INTERRUPTED_RELEASE_AND_SINGLE_RESOLD_SLOT_PASSED"
+    },
+    {
+      "at": "2026-10-22T14:37:43.534949+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-22T14:37:46.590976+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-22T14:37:48.797814+00:00",
+      "action": "REAL_LEGACY_IDENTITY_UPGRADE_AND_NEW_REGISTRATION_PASSED"
+    },
+    {
+      "at": "2026-10-22T14:37:48.820731+00:00",
+      "action": "REAL_HTTP_OVERSIZED_CAPACITY_REJECTED"
+    },
+    {
+      "at": "2026-10-22T14:37:49.840992+00:00",
+      "action": "REAL_TERMINAL_MARKERS_SETTLED"
+    }
+  ]
+}

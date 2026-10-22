@@ -3,7 +3,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 @Data
 public class RegistrationSettings {
-    private long contestId,publishedVersion,epoch,revision;
+    private long contestId,publishedVersion,epoch,revision,durableSequence;
     private int initialCapacity;
     private boolean initialized,ready;
     private String mode,status,issue;

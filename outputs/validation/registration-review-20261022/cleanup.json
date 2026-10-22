@@ -1,0 +1,9 @@
+{
+  "privateRuntimeRootRemoved": true,
+  "remainingOwnedProcessIds": [],
+  "remainingHarnessDirectoriesCreatedDuringReview": [],
+  "temporaryProbeSourceRemoved": true,
+  "temporaryProbeClassRemoved": true,
+  "globalServicesInstalled": false,
+  "redisSourceSha256": "c3f112749c7cb108597713469cc9beed305e91f036fba313ce8dcbad829f5821"
+}

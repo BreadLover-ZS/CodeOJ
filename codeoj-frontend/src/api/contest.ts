@@ -99,11 +99,14 @@ export async function submissionStatus(id: string): Promise<SubmissionStatus> {
 }
 export function errorText(error: unknown): string {
   const failure = error as { body?: { message?: string }; message?: string };
-  return (
+  const message =
     failure?.body?.message ??
     failure?.message ??
-    "服务暂不可用，请保留原请求重试"
-  );
+    "服务暂不可用，请保留原请求重试";
+  if (message === "REGISTRATION_LEDGER_LIMIT") {
+    return "本场报名受理已达上限，已有报名仍可查询和确认";
+  }
+  return message;
 }
 const memory = new Map<string, { fingerprint: string; key: string }>();
 /** Store request identity only. Never put source code or hidden judge data in browser storage. */

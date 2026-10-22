@@ -67,11 +67,12 @@
                 ></a-select
               ></a-form-item
             ><a-form-item label="名额"
-              ><a-input-number
-                v-model="form.capacity"
-                :min="1"
-                :max="1000000" /></a-form-item
-          ></a-space>
+              ><a-input-number v-model="form.capacity" :min="1" :max="10000" />
+              <p class="muted">
+                每场最多 10000 个名额，累计报名受理上限为 10000 次。
+              </p></a-form-item
+            ></a-space
+          >
           <a-alert v-if="form.contestType === 'PUBLIC_TRAINING'"
             >此类型使用已公开的练习题，不属于未见题比赛。</a-alert
           >

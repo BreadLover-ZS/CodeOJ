@@ -1,0 +1,37 @@
+2026-10-22 22:32:19.570381+08:00 [warning] <0.143.0> Overriding Erlang cookie using the value set in the environment
+2026-10-22 22:32:19.930344+08:00 [notice] <0.45.0> Application syslog exited with reason: stopped
+2026-10-22 22:32:19.930368+08:00 [notice] <0.208.0> Logging: switching to configured handler(s); following messages may not be visible in this log output
+
+  ##  ##      RabbitMQ 4.3.6
+  ##  ##
+  ##########  Copyright (c) 2007-2026 Broadcom Inc and/or its subsidiaries
+  ######  ##
+  ##########  Licensed under the MPL 2.0. Website: https://rabbitmq.com
+
+  Erlang:      28.5.0.8 [jit]
+  TLS Library: OpenSSL - OpenSSL 4.0.3 29 Sep 2026
+  Release series support status: see https://www.rabbitmq.com/release-information
+
+  Doc guides:  https://www.rabbitmq.com/docs
+  Support:     https://www.rabbitmq.com/docs/contact
+  Tutorials:   https://www.rabbitmq.com/tutorials
+  Monitoring:  https://www.rabbitmq.com/docs/monitoring
+  Upgrading:   https://www.rabbitmq.com/docs/upgrade
+
+  Logs: /private/tmp/codeoj-native-stack-ycpf5bdq/rabbit/logs/codeoj_codeoj_native_stack_ycpf5bdq@localhost.log
+        <stdout>
+
+  Config file(s): /private/tmp/codeoj-native-stack-ycpf5bdq/rabbit/rabbitmq.conf
+
+  Starting broker...[38;5;214m2026-10-22 22:32:20.177656+08:00 [warning] <0.208.0> Classic peer discovery backend: list of nodes does not contain the local node [][0m
+[38;5;214m2026-10-22 22:32:20.246469+08:00 [warning] <0.840.0> Message store "628WB79CIFDYO9LJI6DKMI09L/msg_store_persistent": rebuilding indices from scratch[0m
+[38;5;214m2026-10-22 22:32:20.261214+08:00 [warning] <0.892.0> Deprecated features: `management_metrics_collection`: Feature `management_metrics_collection` is deprecated.[0m
+[38;5;214m2026-10-22 22:32:20.261214+08:00 [warning] <0.892.0> By default, this feature can still be used for now.[0m
+[38;5;214m2026-10-22 22:32:20.261214+08:00 [warning] <0.892.0> Its use will not be permitted by default in a future minor RabbitMQ version and the feature will be removed from a future major RabbitMQ version; actual versions to be determined.[0m
+[38;5;214m2026-10-22 22:32:20.261214+08:00 [warning] <0.892.0> To continue using this feature when it is not permitted by default, set the following parameter in your configuration:[0m
+[38;5;214m2026-10-22 22:32:20.261214+08:00 [warning] <0.892.0>     "deprecated_features.permit.management_metrics_collection = true"[0m
+[38;5;214m2026-10-22 22:32:20.261214+08:00 [warning] <0.892.0> To test RabbitMQ as if the feature was removed, set this in your configuration:[0m
+[38;5;214m2026-10-22 22:32:20.261214+08:00 [warning] <0.892.0>     "deprecated_features.permit.management_metrics_collection = false"[0m
+ completed with 3 plugins.
+[38;5;214m2026-10-22 22:32:47.811681+08:00 [warning] <0.887.0> HTTP listener registry could not find context rabbitmq_management_tls[0m
+[38;5;214m2026-10-22 22:32:47.828108+08:00 [warning] <0.531.0> RabbitMQ metadata store: worker exited with shutdown[0m

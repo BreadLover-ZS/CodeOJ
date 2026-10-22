@@ -1,0 +1,1364 @@
+diff --git a/README.md b/README.md
+index 027aaa3..3d3fc03 100644
+--- a/README.md
++++ b/README.md
+@@ -54,6 +54,7 @@ MySQL       用户、题目、提交和判题结果
+ Mac arm64 的完整本机入口：`./scripts/local-stack.sh verify` 自动构建、启动真实依赖与隔离判题、验证后清理；`serve` 前台运行至 Ctrl+C。前提、就绪检查和范围见[完整启动方案](docs/contest/local-startup.md)。
+ 
+ - [运行、演示与交接](docs/contest/handoff.md)：固定开发版本、可信样例、真实依赖/浏览器、完整隔离复验及清理边界。
++- [报名恢复修复](docs/contest/registration-recovery.md)：Lua 中断/丢响应、旧快照预留序号、V005 与累计报名上限。
+ - [源码阅读与成果测试](docs/learning/03-链路.md)：受理、状态、Outbox/租约、隔离回收，以及赛事报名/榜单和鉴权。
+ - [项目讲解与面试追问](docs/learning/04-面试.md)：当前实现、源码依据、追问和可陈述边界。
+ 
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/ContestTransactions.java b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/ContestTransactions.java
+index 02c5e87..7e22123 100644
+--- a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/ContestTransactions.java
++++ b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/ContestTransactions.java
+@@ -57,7 +57,7 @@ public class ContestTransactions {
+     private static void conflict(String code) { throw new SubmissionConflictException(code); }
+     private void validate(ContestDraft d) {
+         if(d==null || d.getTitle()==null || d.getTitle().trim().isEmpty() || d.getTitle().length()>120
+-                || d.getCapacity()==null || d.getCapacity()<1 || d.getCapacity()>1000000
++                || d.getCapacity()==null || d.getCapacity()<1 || d.getCapacity()>RedisRegistrationLedger.MAX_LEDGER_ENTRIES
+                 || !("PRIVATE".equals(d.getContestType()) || "PUBLIC_TRAINING".equals(d.getContestType()))
+                 || d.getProblems()==null || d.getProblems().isEmpty() || d.getProblems().size()>20) { invalid("INVALID_CONTEST_DRAFT"); }
+         LocalDateTime open=instant(d.getRegistrationOpenAt()),close=instant(d.getRegistrationCloseAt()),start=instant(d.getStartAt()),end=instant(d.getEndAt());
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RedisRegistrationLedger.java b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RedisRegistrationLedger.java
+index 54daef5..19d35b6 100644
+--- a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RedisRegistrationLedger.java
++++ b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RedisRegistrationLedger.java
+@@ -11,6 +11,7 @@ import java.util.*;
+ 
+ @Component
+ public class RedisRegistrationLedger {
++    public static final int MAX_LEDGER_ENTRIES=10000;
+     private final StringRedisTemplate redis;
+     private final DefaultRedisScript<String> script=new DefaultRedisScript<>();
+     @Value("${codeoj.registration.max-clock-skew-ms:2000}") private long skew=2000;
+@@ -31,16 +32,22 @@ public class RedisRegistrationLedger {
+     public static class LedgerException extends RuntimeException {
+         private final String code;public LedgerException(String code) { super(code);this.code=code; }public String getCode() { return code; }
+     }
++    public void repair(RegistrationSettings s) { call(s.getContestId(),"repair",Long.toString(s.getPublishedVersion()),Long.toString(s.getEpoch())); }
++    public void check(RegistrationSettings s) { call(s.getContestId(),"check",Long.toString(s.getDurableSequence()),Long.toString(s.getPublishedVersion()),Long.toString(s.getEpoch())); }
++    public void upgrade(RegistrationSettings s,List<RegistrationReservation> rows) {
++        Map<String,String> assignments=new LinkedHashMap<>();for(RegistrationReservation r:rows) { assignments.put(r.getEventId(),Long.toString(r.getSequence())); }
++        call(s.getContestId(),"upgrade",Long.toString(s.getRevision()),JSONUtil.toJsonStr(assignments));
++    }
+     public void initialize(RegistrationSettings s) {
+         call(s.getContestId(),"init",Long.toString(s.getPublishedVersion()),Long.toString(s.getEpoch()),Integer.toString(s.getInitialCapacity()),
+                 Long.toString(micros(s.getOpen())),Long.toString(micros(s.getClose())),Long.toString(s.getRevision()),s.isInitialized()?"0":"1");
+     }
+     public void gate(RegistrationSettings s,boolean open,boolean clearClockHold) {
+-        call(s.getContestId(),"gate",Long.toString(s.getRevision()),open?"1":"0",Long.toString(epoch(s.getNow())),Long.toString(skew),clearClockHold?"1":"0");
++        call(s.getContestId(),"gate",Long.toString(s.getRevision()),open?"1":"0",Long.toString(epoch(s.getNow())),Long.toString(skew),clearClockHold?"1":"0",Long.toString(s.getDurableSequence()));
+     }
+     public RegistrationReservation reserve(RegistrationSettings s,long user,long request,String event,String key,String hash) {
+         return call(s.getContestId(),"reserve",Long.toString(s.getContestId()),Long.toString(s.getPublishedVersion()),Long.toString(s.getEpoch()),
+-                Long.toString(user),Long.toString(request),event,key,hash,Long.toString(epoch(s.getNow())),Long.toString(skew)).getBean("reservation",RegistrationReservation.class);
++                Long.toString(user),Long.toString(request),event,key,hash,Long.toString(epoch(s.getNow())),Long.toString(skew),Long.toString(s.getDurableSequence())).getBean("reservation",RegistrationReservation.class);
+     }
+     public RegistrationReservation user(long contest,long user) { return call(contest,"user",Long.toString(user)).getBean("reservation",RegistrationReservation.class); }
+     public RegistrationReservation event(long contest,String event) { return call(contest,"event",event).getBean("reservation",RegistrationReservation.class); }
+@@ -54,11 +61,11 @@ public class RedisRegistrationLedger {
+     public JSONObject stats(long contest) { return call(contest,"stats"); }
+     /** Gate must already be closed. Bounded HSCAN; never overwrite stock with a DB counter. */
+     public List<RegistrationReservation> snapshot(long contest) {
+-        JSONObject before=stats(contest);if(!"0".equals(before.getStr("open")) || before.getInt("count")>10000) { throw new LedgerException("RECONCILIATION_BOUND_EXCEEDED_OR_OPEN"); }
++        JSONObject before=stats(contest);if(!"0".equals(before.getStr("open")) || before.getInt("count")>MAX_LEDGER_ENTRIES) { throw new LedgerException("RECONCILIATION_BOUND_EXCEEDED_OR_OPEN"); }
+         Map<String,RegistrationReservation> rows=new LinkedHashMap<>();long deadline=System.nanoTime()+5000000000L;
+         try(Cursor<Map.Entry<Object,Object>> cursor=redis.opsForHash().scan(keys(contest).get(3),ScanOptions.scanOptions().count(200).build())) {
+             while(cursor.hasNext()) {
+-                if(System.nanoTime()>deadline || rows.size()>10000) { throw new LedgerException("RECONCILIATION_BOUND_EXCEEDED_OR_OPEN"); }
++                if(System.nanoTime()>deadline || rows.size()>MAX_LEDGER_ENTRIES) { throw new LedgerException("RECONCILIATION_BOUND_EXCEEDED_OR_OPEN"); }
+                 Map.Entry<Object,Object> entry=cursor.next();RegistrationReservation r=JSONUtil.toBean(String.valueOf(entry.getValue()),RegistrationReservation.class);
+                 if(!r.valid() || !String.valueOf(entry.getKey()).equals(r.getEventId())) { throw new LedgerException("LEDGER_IDENTITY_INVALID"); }rows.put(r.getEventId(),r);
+             }
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationMaintenance.java b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationMaintenance.java
+index f12b370..96c6f40 100644
+--- a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationMaintenance.java
++++ b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationMaintenance.java
+@@ -22,10 +22,11 @@ public class RegistrationMaintenance {
+     public void maintain(long contest) {
+         RegistrationSettings s=transactions.settings(contest);if(!s.isInitialized()) { return; }
+         try {
++            ledger.repair(s);ledger.check(s);
+             int known=jdbc.queryForObject("SELECT COUNT(*) FROM contest_registration_request WHERE contestId=? AND reservationEpoch=?",Integer.class,contest,s.getEpoch());
+             if(known>ledger.stats(contest).getInt("count")) { throw new RedisRegistrationLedger.LedgerException("LEDGER_DATABASE_MISMATCH"); }
+             ledger.gate(s,s.gateOpen(),false);
+-            for(RegistrationReservation r:ledger.due(contest)) { service.persist(r); }
++            for(RegistrationReservation r:ledger.due(contest)) { service.synchronize(service.persist(r)); }
+             for(long id:jdbc.queryForList("SELECT id FROM contest_registration_request WHERE contestId=? AND reservationEpoch IS NOT NULL AND (nextActionAt IS NULL OR nextActionAt<=?) AND status IN ('PROCESSING','CONFIRMED','FAILED','CANCELLED'"
+                     +("CANCELLED".equals(s.getStatus())?",'MANUAL_REVIEW'":"")+") AND reclaimState NOT IN ('COMPLETE','RELEASED') ORDER BY nextActionAt,id LIMIT 20",Long.class,contest,s.getNow())) {
+                 transactions.recover(contest,id);service.synchronize(transactions.request(contest,id,false));
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationReservation.java b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationReservation.java
+index b767df3..ba1e2ae 100644
+--- a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationReservation.java
++++ b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationReservation.java
+@@ -2,12 +2,13 @@ package com.codeoj.codeojbackendquestionservice.contest;
+ import lombok.Data;
+ @Data
+ public class RegistrationReservation {
+-    private Long contestId,publishedVersion,epoch,userId,requestId,reservedAtMs,reservedAtMicros;
++    private Long contestId,publishedVersion,epoch,userId,requestId,reservedAtMs,reservedAtMicros,sequence;
+     private String eventId,requestKey,requestHash,state;
+     public boolean valid() {
+         return contestId!=null && contestId>0 && publishedVersion!=null && publishedVersion>0 && epoch!=null && epoch>0
+                 && userId!=null && userId>0 && requestId!=null && requestId>0 && reservedAtMs!=null && reservedAtMs>0 && reservedAtMs<=9007199254740L
+                 && reservedAtMicros!=null && reservedAtMicros<=9007199254740991L && reservedAtMicros>=reservedAtMs*1000 && reservedAtMicros-reservedAtMs*1000<1000
++                && (sequence==null || (sequence>0 && sequence<=10000))
+                 && eventId!=null && eventId.matches("[a-f0-9-]{36}") && requestKey!=null && requestKey.matches("[A-Za-z0-9._:-]{8,128}")
+                 && requestHash!=null && requestHash.matches("[a-f0-9]{64}")
+                 && ("PROCESSING".equals(state)||"CONFIRMED".equals(state)||"RELEASED".equals(state));
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationService.java b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationService.java
+index bff24cf..c033a93 100644
+--- a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationService.java
++++ b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationService.java
+@@ -47,6 +47,7 @@ public class RegistrationService {
+         requireEnabled();RegistrationSettings s=transactions.settings(contest);
+         try {
+             if(!s.isInitialized()) { throw new SubmissionConflictException("REGISTRATION_PAUSED"); }
++            ledger.repair(s);ledger.check(s);
+             RegistrationReservation r=ledger.user(contest,user);
+             if(r!=null) {
+                 if(!key.equals(r.getRequestKey()) || !RegistrationTransactions.hash(contest,s.getPublishedVersion()).equals(r.getRequestHash())) { throw new SubmissionConflictException("REGISTRATION_ALREADY_HAS_ANOTHER_KEY"); }
+@@ -57,19 +58,31 @@ public class RegistrationService {
+             if(r==null || !r.valid()) { throw unavailable(); }persist(r);return contests.registration(contest,user);
+         } catch(RedisRegistrationLedger.LedgerException error) { handleLedger(contest,error);throw error; }
+         catch(SubmissionConflictException | BusinessException known) { throw known; }
+-        catch(RuntimeException unknown) { throw unavailable(); } // Preserve Redis reservation on DB/transport uncertainty.
++        catch(RuntimeException unknown) { return recoverUnknown(s,user,key); } // Never infer a failed reservation from a lost response.
+     }
+     public Map<String,Object> status(long contest,long user) {
+         executions.requireAccount(user,null,false);ContestTransactions.Contest c=contests.load(contest,false);
+         if(byUser(contest,user)!=null || "DB_SYNC".equals(c.mode)) { return contests.registration(contest,user); }
+         RegistrationSettings s=transactions.settings(contest);if(!s.isInitialized()) { return contests.registration(contest,user); }
+         try {
++            ledger.repair(s);ledger.check(s);
+             RegistrationReservation r=ledger.user(contest,user);if(r!=null) { persist(r);return contests.registration(contest,user); }
+             return contests.registration(contest,user);
+         } catch(RuntimeException unknown) { if(unknown instanceof RedisRegistrationLedger.LedgerException) { hold(contest,((RedisRegistrationLedger.LedgerException)unknown).getCode()); }throw unavailable(); }
+     }
++    private Map<String,Object> recoverUnknown(RegistrationSettings s,long user,String key) {
++        try {
++            // A recorded intent is completed with its original identity and exact target values.
++            ledger.repair(s);ledger.check(transactions.settings(s.getContestId()));
++            RegistrationReservation r=ledger.user(s.getContestId(),user);
++            if(r!=null && r.valid() && key.equals(r.getRequestKey()) && RegistrationTransactions.hash(s.getContestId(),s.getPublishedVersion()).equals(r.getRequestHash())) {
++                persist(r);return contests.registration(s.getContestId(),user);
++            }
++        } catch(RuntimeException stillUnknown) { hold(s.getContestId(),"RESERVATION_EXECUTION_UNKNOWN"); }
++        throw unavailable();
++    }
+     private void handleLedger(long contest,RedisRegistrationLedger.LedgerException error) {
+-        String code=error.getCode();if(Arrays.asList("CONTEST_FULL","REGISTRATION_WINDOW_CLOSED","REGISTRATION_PAUSED","IDEMPOTENCY_CONFLICT").contains(code)) { throw new SubmissionConflictException(code); }
++        String code=error.getCode();if(Arrays.asList("CONTEST_FULL","REGISTRATION_WINDOW_CLOSED","REGISTRATION_PAUSED","IDEMPOTENCY_CONFLICT","REGISTRATION_LEDGER_LIMIT").contains(code)) { throw new SubmissionConflictException(code); }
+         hold(contest,code);throw unavailable();
+     }
+     public void hold(long contest,String code) { transactions.issue(contest,code.matches("[A-Z_]{1,128}")?code:"REGISTRATION_EVIDENCE_UNKNOWN"); }
+@@ -77,11 +90,16 @@ public class RegistrationService {
+     public RegistrationSettings reconcile(long id,ContestCommand command,long actor) {
+         requireEnabled();RegistrationSettings s=retry(()->transactions.beginReconcile(id,command,actor));
+         try {
+-            ledger.initialize(s);if(!s.isInitialized()) { transactions.initialized(id,s.getEpoch(),s.getRevision()); }
++            ledger.repair(s);ledger.initialize(s);if(!s.isInitialized()) { transactions.initialized(id,s.getEpoch(),s.getRevision()); }
+             s=transactions.settings(id);ledger.gate(s,false,false);List<RegistrationReservation> rows=ledger.snapshot(id);
+             for(RegistrationReservation r:rows) { persist(r); }
+             int stock=ledger.stats(id).getInt("stock");long revision=s.getRevision();
+-            retry(()->transactions.finishReconcile(id,revision,rows,stock,actor,command.getReason()));
++            if(!"2".equals(ledger.stats(id).getStr("format"))) {
++                transactions.assignLegacySequences(id,revision,rows,stock);ledger.upgrade(s,rows);
++            }
++            for(RegistrationReservation r:rows) { synchronize(transactions.request(id,r.getRequestId(),false)); }
++            List<RegistrationReservation> verifiedRows=ledger.snapshot(id);int verifiedStock=ledger.stats(id).getInt("stock");
++            retry(()->transactions.finishReconcile(id,revision,verifiedRows,verifiedStock,actor,command.getReason()));
+             RegistrationSettings current=transactions.settings(id);ledger.gate(current,current.gateOpen(),true);return current;
+         } catch(RuntimeException error) { hold(id,"RECONCILIATION_INCOMPLETE");throw error instanceof BusinessException?error:unavailable(); }
+     }
+@@ -89,8 +107,8 @@ public class RegistrationService {
+     public void synchronize(RegistrationRequest q) {
+         if(q==null || q.getReservation().getEpoch()==null) { return; }
+         try {
+-            if("CONFIRMED".equals(q.getStatus()) && !"COMPLETE".equals(q.getReclaimState())) { ledger.finish(q.getReservation(),"CONFIRMED");transactions.marked(q.getReservation().getContestId(),q.getReservation().getRequestId(),"COMPLETE"); }
+-            else if(("FAILED".equals(q.getStatus())||"CANCELLED".equals(q.getStatus())) && "RELEASE_PENDING".equals(q.getReclaimState())) { ledger.finish(q.getReservation(),"RELEASED");transactions.marked(q.getReservation().getContestId(),q.getReservation().getRequestId(),"RELEASED"); }
++            if("CONFIRMED".equals(q.getStatus())) { ledger.finish(q.getReservation(),"CONFIRMED");transactions.marked(q.getReservation().getContestId(),q.getReservation().getRequestId(),"COMPLETE"); }
++            else if(("FAILED".equals(q.getStatus())||"CANCELLED".equals(q.getStatus())) && Arrays.asList("RELEASE_PENDING","RELEASED").contains(q.getReclaimState())) { ledger.finish(q.getReservation(),"RELEASED");transactions.marked(q.getReservation().getContestId(),q.getReservation().getRequestId(),"RELEASED"); }
+         } catch(RuntimeException unknown) {
+             try { transactions.synchronizationFailed(q.getReservation().getContestId(),q.getReservation().getRequestId()); }
+             catch(RuntimeException authorityUnknown) { /* Durable pending state still proves recovery is required. */ }
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationSettings.java b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationSettings.java
+index 1e65adf..c454afe 100644
+--- a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationSettings.java
++++ b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationSettings.java
+@@ -3,7 +3,7 @@ import lombok.Data;
+ import java.time.LocalDateTime;
+ @Data
+ public class RegistrationSettings {
+-    private long contestId,publishedVersion,epoch,revision;
++    private long contestId,publishedVersion,epoch,revision,durableSequence;
+     private int initialCapacity;
+     private boolean initialized,ready;
+     private String mode,status,issue;
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationTransactions.java b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationTransactions.java
+index 7286cf1..453ab9d 100644
+--- a/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationTransactions.java
++++ b/codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationTransactions.java
+@@ -24,12 +24,13 @@ public class RegistrationTransactions {
+             RegistrationSettings r=new RegistrationSettings();r.setEpoch(rs.getLong(1));r.setInitialized(rs.getBoolean(2));r.setInitialCapacity(rs.getInt(3));r.setIssue(rs.getString(4));return r;
+         },id);
+         s.setContestId(id);s.setPublishedVersion(c.publishedVersion==null?0:c.publishedVersion);s.setRevision(c.version);s.setMode(c.mode);s.setStatus(c.status);
++        s.setDurableSequence(jdbc.queryForObject("SELECT COALESCE(MAX(reservationSequence),0) FROM contest_registration_request WHERE contestId=? AND reservationEpoch=?",Long.class,id,s.getEpoch()));
+         s.setReady(c.ready);s.setOpen(c.open);s.setClose(c.close);s.setNow(executions.now());return s;
+     }
+     public RegistrationRequest request(long contest,long id,boolean lock) {
+         List<RegistrationRequest> rows=jdbc.query("SELECT * FROM contest_registration_request WHERE contestId=? AND id=?"+(lock?" FOR UPDATE":""),(rs,n)->{
+             RegistrationRequest q=new RegistrationRequest();RegistrationReservation r=new RegistrationReservation();r.setContestId(rs.getLong("contestId"));r.setRequestId(rs.getLong("id"));r.setUserId(rs.getLong("userId"));
+-            r.setPublishedVersion(rs.getLong("publishedVersion"));r.setEpoch(rs.getObject("reservationEpoch")==null?null:rs.getLong("reservationEpoch"));r.setEventId(rs.getString("eventId"));r.setRequestKey(rs.getString("requestKey"));r.setRequestHash(rs.getString("requestHash"));
++            r.setSequence(rs.getObject("reservationSequence")==null?null:rs.getLong("reservationSequence"));r.setPublishedVersion(rs.getLong("publishedVersion"));r.setEpoch(rs.getObject("reservationEpoch")==null?null:rs.getLong("reservationEpoch"));r.setEventId(rs.getString("eventId"));r.setRequestKey(rs.getString("requestKey"));r.setRequestHash(rs.getString("requestHash"));
+             r.setReservedAtMs(RedisRegistrationLedger.epoch(rs.getObject("reservedAt",LocalDateTime.class)));r.setReservedAtMicros(RedisRegistrationLedger.micros(rs.getObject("reservedAt",LocalDateTime.class)));r.setState("PROCESSING");q.setReservation(r);
+             q.setStatus(rs.getString("status"));q.setReclaimState(rs.getString("reclaimState"));q.setLastError(rs.getString("lastError"));q.setVersion(rs.getLong("stateVersion"));q.setMaxPublishAttempts(rs.getInt("maxPublishAttempts"));
+             q.setNextActionAt(rs.getObject("nextActionAt",LocalDateTime.class));q.setDeadline(rs.getObject("confirmationDeadlineAt",LocalDateTime.class));return q;
+@@ -74,7 +75,8 @@ public class RegistrationTransactions {
+         jdbc.update("UPDATE contest SET registrationMode='REDIS_PAUSED',registrationReady=false,registrationIssue=?,version=version+1 WHERE id=?",issue,id);
+         audit(id,null,"REGISTRATION_HOLD",issue,c.version,c.version+1,null);
+     }
+-    private boolean same(RegistrationReservation a,RegistrationReservation b) {
++    private boolean same(RegistrationReservation a,RegistrationReservation b) { return sameIdentity(a,b) && Objects.equals(a.getSequence(),b.getSequence()); }
++    private boolean sameIdentity(RegistrationReservation a,RegistrationReservation b) {
+         return Objects.equals(a.getRequestId(),b.getRequestId()) && Objects.equals(a.getEventId(),b.getEventId()) && Objects.equals(a.getUserId(),b.getUserId())
+                 && Objects.equals(a.getContestId(),b.getContestId()) && Objects.equals(a.getPublishedVersion(),b.getPublishedVersion()) && Objects.equals(a.getEpoch(),b.getEpoch())
+                 && Objects.equals(a.getRequestKey(),b.getRequestKey()) && Objects.equals(a.getRequestHash(),b.getRequestHash()) && Objects.equals(a.getReservedAtMicros(),b.getReservedAtMicros());
+@@ -90,15 +92,16 @@ public class RegistrationTransactions {
+         if(!c.mode.startsWith("REDIS_") || s.getEpoch()!=r.getEpoch() || !Objects.equals(c.publishedVersion,r.getPublishedVersion()) || !hash(c.id,c.publishedVersion).equals(r.getRequestHash())) { throw new SubmissionConflictException("RESERVATION_CONTEXT_CONFLICT"); }
+         boolean account=true;try { executions.requireAccount(r.getUserId(),null,true); }catch(BusinessException inactive) { account=false; }
+         RegistrationRequest existing=request(c.id,r.getRequestId(),true);
+-        if(existing!=null) { if(!same(existing.getReservation(),r)) { throw new SubmissionConflictException("RESERVATION_IDENTITY_CONFLICT"); }return existing; }
++        if(existing!=null) { if(!same(existing.getReservation(),r) && !("REDIS_RECONCILING".equals(c.mode) && sameIdentity(existing.getReservation(),r) && (r.getSequence()==null || existing.getReservation().getSequence()==null))) { throw new SubmissionConflictException("RESERVATION_IDENTITY_CONFLICT"); }return existing; }
++        if(r.getSequence()==null && !"REDIS_RECONCILING".equals(c.mode)) { throw new SubmissionConflictException("LEDGER_FORMAT_UPGRADE_REQUIRED"); }
+         LocalDateTime now=executions.now(),reserved=LocalDateTime.ofInstant(Instant.ofEpochSecond(r.getReservedAtMicros()/1000000,(r.getReservedAtMicros()%1000000)*1000),ZoneOffset.UTC);
+         String state="PROCESSING",error=null,reclaim="RESERVED";
+         if(!"PROCESSING".equals(r.getState()) || reserved.isBefore(c.open) || !reserved.isBefore(c.close) || reserved.isAfter(now.plusNanos(clockSkewMs*1000000))) { state="MANUAL_REVIEW";error="RESERVATION_EVIDENCE_INVALID"; }
+         else if("CANCELLED".equals(c.status)) { state="CANCELLED";error="CONTEST_CANCELLED";reclaim="RELEASE_PENDING"; }
+         else if(!account) { state="FAILED";error="ACCOUNT_INACTIVE";reclaim="RELEASE_PENDING"; }
+         else if(!now.isBefore(reserved.plusMinutes(5))) { state="MANUAL_REVIEW";error="RESERVATION_RECOVERY_EXHAUSTED"; }
+-        jdbc.update("INSERT INTO contest_registration_request(id,contestId,publishedVersion,userId,eventId,requestKey,requestHash,reservedAt,status,stateVersion,reclaimState,lastError,createdAt,reservationEpoch,confirmationChecks,maxPublishAttempts,nextActionAt,confirmationDeadlineAt) VALUES(?,?,?,?,?,?,?,?,?,0,?,?,?,?,0,20,?,?)",
+-                r.getRequestId(),c.id,r.getPublishedVersion(),r.getUserId(),r.getEventId(),r.getRequestKey(),r.getRequestHash(),reserved,state,reclaim,error,now,r.getEpoch(),now,reserved.plusMinutes(5));
++        jdbc.update("INSERT INTO contest_registration_request(id,contestId,publishedVersion,userId,eventId,requestKey,requestHash,reservedAt,status,stateVersion,reclaimState,lastError,createdAt,reservationEpoch,reservationSequence,confirmationChecks,maxPublishAttempts,nextActionAt,confirmationDeadlineAt) VALUES(?,?,?,?,?,?,?,?,?,0,?,?,?,?,?,0,20,?,?)",
++                r.getRequestId(),c.id,r.getPublishedVersion(),r.getUserId(),r.getEventId(),r.getRequestKey(),r.getRequestHash(),reserved,state,reclaim,error,now,r.getEpoch(),r.getSequence(),now,reserved.plusMinutes(5));
+         RegistrationRequest q=request(c.id,r.getRequestId(),false);if("PROCESSING".equals(state) || "RESERVATION_RECOVERY_EXHAUSTED".equals(error)) { event(q,now); }
+         else { audit(r.getRequestId(),null,"REGISTRATION_RECOVER",error,0,0,null); }return q;
+     }
+@@ -116,6 +119,7 @@ public class RegistrationTransactions {
+         LocalDateTime now=executions.now();RegistrationSettings s=settings(c.id);
+         if("CANCELLED".equals(c.status)) { state(q,"CANCELLED","RELEASE_PENDING","CONTEST_CANCELLED",now);return true; }
+         if(!account) { state(q,"FAILED","RELEASE_PENDING","ACCOUNT_INACTIVE",now);return true; }
++        if(q.getReservation().getSequence()==null && !"REDIS_RECONCILING".equals(c.mode)) { issue(c.id,"LEDGER_FORMAT_UPGRADE_REQUIRED");return true; }
+         if("REDIS_RECONCILING".equals(c.mode) || s.getIssue()!=null) { jdbc.update("UPDATE contest_registration_request SET nextActionAt=? WHERE id=?",now.plusSeconds(5),message.getRequestId());return true; }
+         if(q.getDeadline()==null || !now.isBefore(q.getDeadline())) { state(q,"MANUAL_REVIEW","RESERVED","CONFIRMATION_DEADLINE_EXHAUSTED",now);return true; }
+         try { contests.confirmRegistration(c,message.getRequestId(),q.getReservation().getUserId(),now); }
+@@ -169,22 +173,40 @@ public class RegistrationTransactions {
+         } else { throw new BusinessException(ErrorCode.PARAMS_ERROR,"INVALID_REVIEW_DECISION"); }
+         audit(request,actor,"REGISTRATION_ADMIN_"+command.getDecision(),command.getReason(),q.getVersion(),q.getVersion()+1,JSONUtil.toJsonStr(command));
+     }
+-    @Transactional(rollbackFor=Exception.class)
+-    public RegistrationSettings finishReconcile(long contest,long revision,List<RegistrationReservation> rows,int stock,long actor,String reason) {
+-        ContestTransactions.Contest c=contests.load(contest,true);executions.requireAccount(actor,"admin",true);RegistrationSettings s=settings(contest);
+-        if(c.version!=revision || !"REDIS_RECONCILING".equals(c.mode) || "CANCELLED".equals(c.status)) { throw new SubmissionConflictException("RECONCILIATION_SUPERSEDED"); }
++    private void verifySnapshot(ContestTransactions.Contest c,RegistrationSettings s,List<RegistrationReservation> rows,int stock,boolean withSequence) {
+         Map<Long,RegistrationReservation> byId=new HashMap<>();int active=0;
+-        for(RegistrationReservation r:rows) { if(!r.valid() || r.getContestId()!=contest || r.getEpoch()!=s.getEpoch() || !Objects.equals(c.publishedVersion,r.getPublishedVersion()) || byId.put(r.getRequestId(),r)!=null) { throw new SubmissionConflictException("LEDGER_IDENTITY_INVALID"); }if(!"RELEASED".equals(r.getState())) { active++; } }
+-        List<Long> ids=jdbc.queryForList("SELECT id FROM contest_registration_request WHERE contestId=? AND reservationEpoch=?",Long.class,contest,s.getEpoch());int confirmed=0;
++        for(RegistrationReservation r:rows) { if(!r.valid() || (withSequence && r.getSequence()==null) || r.getContestId()!=c.id || r.getEpoch()!=s.getEpoch() || !Objects.equals(c.publishedVersion,r.getPublishedVersion()) || byId.put(r.getRequestId(),r)!=null) { throw new SubmissionConflictException("LEDGER_IDENTITY_INVALID"); }if(!"RELEASED".equals(r.getState())) { active++; } }
++        List<Long> ids=jdbc.queryForList("SELECT id FROM contest_registration_request WHERE contestId=? AND reservationEpoch=?",Long.class,c.id,s.getEpoch());int confirmed=0;
+         for(long id:ids) {
+-            RegistrationRequest q=request(contest,id,true);RegistrationReservation r=byId.get(id);
+-            if(r==null || !same(q.getReservation(),r) || ("CONFIRMED".equals(q.getStatus()) && "RELEASED".equals(r.getState()))
++            RegistrationRequest q=request(c.id,id,true);RegistrationReservation r=byId.get(id);
++            if(r==null || !(withSequence?same(q.getReservation(),r):sameIdentity(q.getReservation(),r)) || ("CONFIRMED".equals(q.getStatus()) && "RELEASED".equals(r.getState()))
+                     || (!"CONFIRMED".equals(q.getStatus()) && "CONFIRMED".equals(r.getState()))
+                     || (Arrays.asList("PROCESSING","MANUAL_REVIEW").contains(q.getStatus()) && "RELEASED".equals(r.getState()))) { throw new SubmissionConflictException("LEDGER_DATABASE_MISMATCH"); }
+             if("CONFIRMED".equals(q.getStatus())) { confirmed++; }
+         }
+-        int allConfirmed=jdbc.queryForObject("SELECT COUNT(*) FROM contest_registration WHERE contestId=? AND status='CONFIRMED'",Integer.class,contest);
++        int allConfirmed=jdbc.queryForObject("SELECT COUNT(*) FROM contest_registration WHERE contestId=? AND status='CONFIRMED'",Integer.class,c.id);
+         if(ids.size()!=rows.size() || allConfirmed+c.remaining!=c.capacity || c.remaining!=s.getInitialCapacity()-confirmed || stock!=s.getInitialCapacity()-active) { throw new SubmissionConflictException("CAPACITY_LEDGER_MISMATCH"); }
++    }
++    /** Only after a closed-gate full identity/stock check; no Redis call belongs in this transaction. */
++    @Transactional(rollbackFor=Exception.class)
++    public void assignLegacySequences(long id,long revision,List<RegistrationReservation> rows,int stock) {
++        ContestTransactions.Contest c=contests.load(id,true);RegistrationSettings s=settings(id);
++        if(c.version!=revision || !"REDIS_RECONCILING".equals(c.mode) || "CANCELLED".equals(c.status) || rows.size()>RedisRegistrationLedger.MAX_LEDGER_ENTRIES) { throw new SubmissionConflictException("RECONCILIATION_SUPERSEDED"); }
++        verifySnapshot(c,s,rows,stock,false);
++        rows.sort(Comparator.comparing(RegistrationReservation::getReservedAtMicros).thenComparing(RegistrationReservation::getEventId));
++        long next=0;
++        for(RegistrationReservation r:rows) {
++            long sequence=++next;RegistrationRequest q=request(id,r.getRequestId(),true);
++            if((q.getReservation().getSequence()!=null && q.getReservation().getSequence()!=sequence) || (r.getSequence()!=null && r.getSequence()!=sequence)) { throw new SubmissionConflictException("RESERVATION_SEQUENCE_CONFLICT"); }
++            jdbc.update("UPDATE contest_registration_request SET reservationSequence=? WHERE id=?",sequence,r.getRequestId());r.setSequence(sequence);
++        }
++        audit(id,null,"REGISTRATION_LEDGER_UPGRADE","Closed-gate identity and capacity verification",c.version,c.version,null);
++    }
++    @Transactional(rollbackFor=Exception.class)
++    public RegistrationSettings finishReconcile(long contest,long revision,List<RegistrationReservation> rows,int stock,long actor,String reason) {
++        ContestTransactions.Contest c=contests.load(contest,true);executions.requireAccount(actor,"admin",true);RegistrationSettings s=settings(contest);
++        if(c.version!=revision || !"REDIS_RECONCILING".equals(c.mode) || "CANCELLED".equals(c.status)) { throw new SubmissionConflictException("RECONCILIATION_SUPERSEDED"); }
++        verifySnapshot(c,s,rows,stock,true);
+         jdbc.update("UPDATE contest SET registrationMode='REDIS_READY',registrationReady=true,registrationIssue=NULL,version=version+1 WHERE id=?",contest);
+         if(scoreboardEnabled && "FINALIZING".equals(c.status)) { jdbc.update("UPDATE contest SET registrationReconciledAt=? WHERE id=?",executions.now(),contest); }
+         audit(contest,actor,"REGISTRATION_RECONCILE_COMPLETE",reason,c.version,c.version+1,"No stock overwrite");return settings(contest);
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/main/resources/lua/contest-registration.lua b/codeoj-backend/codeoj-backend-question-service/src/main/resources/lua/contest-registration.lua
+index 0447bd4..d1c404e 100644
+--- a/codeoj-backend/codeoj-backend-question-service/src/main/resources/lua/contest-registration.lua
++++ b/codeoj-backend/codeoj-backend-question-service/src/main/resources/lua/contest-registration.lua
+@@ -1,47 +1,138 @@
+--- All five keys share {contestId}: meta, stock, users, ledger, pending. No TTL or dynamic keys.
++-- Five same-slot keys: meta, stock, users, ledger, pending. No TTL.
++-- Script atomicity does not roll back writes on runtime errors. A durable intent
++-- precedes compound mutations; repair writes their deterministic target values.
+ redis.replicate_commands()
+-local op = ARGV[1]
+-local function result(code, record) return cjson.encode({code=code, reservation=record}) end
+-local function nowMs()
+-  local t=redis.call('TIME'); return tonumber(t[1])*1000+math.floor(tonumber(t[2])/1000)
++local op=ARGV[1]
++local LIMIT=10000
++local function result(code,record) return cjson.encode({code=code,reservation=record}) end
++local function nowMs() local t=redis.call('TIME');return tonumber(t[1])*1000+math.floor(tonumber(t[2])/1000) end
++local function integer(v) local n=tonumber(v);return n and n>=0 and n==math.floor(n) end
++local function types()
++  local expected={'hash','string','hash','hash','zset'}
++  for i,t in ipairs(expected) do local actual=redis.call('TYPE',KEYS[i]).ok;if actual~='none' and actual~=t then return false end end
++  return true
+ end
+ local function intact()
+-  return redis.call('EXISTS',KEYS[1])==1 and redis.call('EXISTS',KEYS[2])==1
++  return types() and redis.call('EXISTS',KEYS[1])==1 and redis.call('EXISTS',KEYS[2])==1
++    and not redis.call('HGET',KEYS[1],'mutation')
++    and integer(redis.call('GET',KEYS[2]))
+     and redis.call('HLEN',KEYS[4])==tonumber(redis.call('HGET',KEYS[1],'reservedCount'))
+     and redis.call('HLEN',KEYS[3])==redis.call('HLEN',KEYS[4])
+     and redis.call('ZCARD',KEYS[5])==tonumber(redis.call('HGET',KEYS[1],'pendingCount'))
+ end
++local function same(a,b)
++  for _,f in ipairs({'contestId','publishedVersion','epoch','userId','requestId','eventId','requestKey','requestHash','reservedAtMicros','sequence'}) do
++    if tostring(a[f])~=tostring(b[f]) then return false end
++  end
++  return true
++end
++local function apply(m)
++  if m.op=='init' then
++    redis.call('SET',KEYS[2],m.stock) -- init.write.stock
++  elseif m.op=='reserve' then
++    local r=m.record
++    redis.call('SET',KEYS[2],m.stock-1) -- reserve.write.stock
++    redis.call('HSET',KEYS[3],r.userId,r.eventId) -- reserve.write.user
++    redis.call('HSET',KEYS[4],r.eventId,cjson.encode(r)) -- reserve.write.ledger
++    redis.call('ZADD',KEYS[5],r.reservedAtMs,r.eventId) -- reserve.write.pending
++    redis.call('HSET',KEYS[1],'reservedCount',m.count+1,'pendingCount',m.pending+1) -- reserve.write.counters
++  elseif m.op=='finish' then
++    local r=m.record
++    redis.call('SET',KEYS[2],m.stock+(r.state=='RELEASED' and 1 or 0)) -- finish.write.stock
++    redis.call('HSET',KEYS[4],r.eventId,cjson.encode(r)) -- finish.write.ledger
++    redis.call('ZREM',KEYS[5],r.eventId) -- finish.write.pending
++    redis.call('HSET',KEYS[1],'pendingCount',m.pending-(m.wasPending and 1 or 0)) -- finish.write.counters
++  end
++  redis.call('HDEL',KEYS[1],'mutation') -- mutation.clear
++end
++if op=='repair' then
++  -- Expected publication/epoch. Never infer a refund from an exception.
++  if not types() then return result('LEDGER_INCOMPLETE') end
++  if redis.call('EXISTS',KEYS[1])==0 then return result('ABSENT') end
++  local raw=redis.call('HGET',KEYS[1],'mutation');if not raw then return result('OK') end
++  if redis.call('HGET',KEYS[1],'version')~=ARGV[2] or redis.call('HGET',KEYS[1],'epoch')~=ARGV[3] then return result('VERSION_CONFLICT') end
++  local m=cjson.decode(raw)
++  if not integer(m.stock) or not integer(m.count) or not integer(m.pending) then return result('MUTATION_EVIDENCE_INVALID') end
++  if m.op=='init' then
++    if m.count~=0 or m.pending~=0 or redis.call('HLEN',KEYS[3])~=0 or redis.call('HLEN',KEYS[4])~=0 or redis.call('ZCARD',KEYS[5])~=0 then return result('MUTATION_EVIDENCE_INVALID') end
++    local stock=redis.call('GET',KEYS[2]);if stock and tonumber(stock)~=m.stock then return result('MUTATION_EVIDENCE_INVALID') end
++  elseif m.op=='reserve' or m.op=='finish' then
++    local r=m.record
++    if not r or r.publishedVersion~=ARGV[2] or r.epoch~=ARGV[3] or not integer(r.sequence) or tonumber(r.sequence)<1 or tonumber(r.sequence)>LIMIT then return result('MUTATION_EVIDENCE_INVALID') end
++    local stock=tonumber(redis.call('GET',KEYS[2]));local target=m.stock+(m.op=='reserve' and -1 or (r.state=='RELEASED' and 1 or 0))
++    if stock~=m.stock and stock~=target then return result('MUTATION_EVIDENCE_INVALID') end
++    local mapped=redis.call('HGET',KEYS[3],r.userId)
++    if (mapped and mapped~=r.eventId) or (m.op=='finish' and not mapped) then return result('MUTATION_EVIDENCE_INVALID') end
++    local existing=redis.call('HGET',KEYS[4],r.eventId)
++    if existing then local old=cjson.decode(existing);if not same(old,r) or (old.state~='PROCESSING' and old.state~=r.state) then return result('MUTATION_EVIDENCE_INVALID') end
++    elseif m.op=='finish' then return result('MUTATION_EVIDENCE_INVALID') end
++    local afterCount=m.count+(m.op=='reserve' and 1 or 0)
++    local afterPending=m.pending+(m.op=='reserve' and 1 or -(m.wasPending and 1 or 0))
++    for _,i in ipairs({3,4}) do local n=redis.call('HLEN',KEYS[i]);if n~=m.count and n~=afterCount then return result('MUTATION_EVIDENCE_INVALID') end end
++    local n=redis.call('ZCARD',KEYS[5]);if n~=m.pending and n~=afterPending then return result('MUTATION_EVIDENCE_INVALID') end
++    local count=tonumber(redis.call('HGET',KEYS[1],'reservedCount'));local pending=tonumber(redis.call('HGET',KEYS[1],'pendingCount'))
++    if (count~=m.count and count~=afterCount) or (pending~=m.pending and pending~=afterPending) then return result('MUTATION_EVIDENCE_INVALID') end
++  else return result('MUTATION_EVIDENCE_INVALID') end
++  apply(m);return result('OK',m.record)
++end
+ if op=='init' then
+-  -- version, epoch, original Redis capacity, openUs, closeUs, DB revision, allowCreate
++  if not types() then return result('LEDGER_INCOMPLETE') end
+   if redis.call('EXISTS',KEYS[1])==1 then
+     if not intact() then return result('LEDGER_INCOMPLETE') end
+-    for i,field in ipairs({'version','epoch','capacity','openUs','closeUs'}) do
+-      if redis.call('HGET',KEYS[1],field)~=ARGV[i+1] then return result('INITIALIZATION_CONFLICT') end
+-    end
+-    return result('OK') -- Never reset stock on a publish/initialization retry.
++    for i,field in ipairs({'version','epoch','capacity','openUs','closeUs'}) do if redis.call('HGET',KEYS[1],field)~=ARGV[i+1] then return result('INITIALIZATION_CONFLICT') end end
++    return result('OK')
+   end
+   if ARGV[8]~='1' then return result('LEDGER_MISSING') end
+   for i=2,5 do if redis.call('EXISTS',KEYS[i])==1 then return result('LEDGER_INCOMPLETE') end end
+-  redis.call('HSET',KEYS[1],'version',ARGV[2],'epoch',ARGV[3],'capacity',ARGV[4],
+-    'openUs',ARGV[5],'closeUs',ARGV[6],'revision',ARGV[7],'open','0','reservedCount','0','pendingCount','0')
+-  redis.call('SET',KEYS[2],ARGV[4]); return result('OK')
++  local m={op='init',stock=tonumber(ARGV[4]),count=0,pending=0}
++  local intent=cjson.encode(m)
++  redis.call('HSET',KEYS[1],'version',ARGV[2],'epoch',ARGV[3],'capacity',ARGV[4],'openUs',ARGV[5],'closeUs',ARGV[6],
++    'revision',ARGV[7],'format','2','open','0','reservedCount','0','pendingCount','0','mutation',intent) -- init.write.intent
++  apply(m);return result('OK')
+ end
+ if not intact() then return result('LEDGER_INCOMPLETE') end
+-if op=='gate' then
+-  -- revision, open, DB time, allowed skew, admin clear clock hold
++local function anchored(minimum)
++  if redis.call('HGET',KEYS[1],'format')~='2' then redis.call('HSET',KEYS[1],'open','0');return 'LEDGER_FORMAT_UPGRADE_REQUIRED' end
++  if tonumber(redis.call('HGET',KEYS[1],'reservedCount'))<tonumber(minimum) then
++    redis.call('HSET',KEYS[1],'open','0');return 'LEDGER_ROLLBACK_DETECTED'
++  end
++  return nil
++end
++if op=='check' then
++  if redis.call('HGET',KEYS[1],'version')~=ARGV[3] or redis.call('HGET',KEYS[1],'epoch')~=ARGV[4] then return result('VERSION_CONFLICT') end
++  local error=anchored(ARGV[2]);return result(error or 'OK')
++elseif op=='upgrade' then
++  -- Closed-gate, DB-verified legacy identities -> stable DB-assigned ordinals.
++  if redis.call('HGET',KEYS[1],'open')~='0' or redis.call('HGET',KEYS[1],'revision')~=ARGV[2] then return result('STALE_GATE_REVISION') end
++  local assignments=cjson.decode(ARGV[3]);local prepared={};local used={};local n=0
++  for event,sequence in pairs(assignments) do
++    local seq=tonumber(sequence);if not integer(seq) or seq<1 or seq>LIMIT or used[seq] then return result('LEDGER_IDENTITY_INVALID') end
++    used[seq]=true;n=n+1
++    local raw=redis.call('HGET',KEYS[4],event);if not raw then return result('LEDGER_INCOMPLETE') end
++    local r=cjson.decode(raw);if r.eventId~=event or (r.sequence and tostring(r.sequence)~=tostring(sequence)) then return result('LEDGER_IDENTITY_INVALID') end
++    r.sequence=tostring(sequence);prepared[event]=cjson.encode(r)
++  end
++  if n~=redis.call('HLEN',KEYS[4]) or n>LIMIT then return result('LEDGER_IDENTITY_INVALID') end
++  for i=1,n do if not used[i] then return result('LEDGER_IDENTITY_INVALID') end end
++  -- Legacy format remains closed/non-admitting until every record is upgraded.
++  for event,raw in pairs(prepared) do
++    redis.call('HSET',KEYS[4],event,raw) -- upgrade.write.record
++  end
++  redis.call('HSET',KEYS[1],'format','2');return result('OK')
++elseif op=='gate' then
++  -- revision, open, DB time, skew, admin clear clock hold, durable high-water
+   if tonumber(ARGV[2])<tonumber(redis.call('HGET',KEYS[1],'revision')) then return result('STALE_GATE_REVISION') end
+   redis.call('HSET',KEYS[1],'revision',ARGV[2])
+   if ARGV[3]=='1' then
+-    if math.abs(nowMs()-tonumber(ARGV[4]))>tonumber(ARGV[5]) then
+-      redis.call('HSET',KEYS[1],'open','0','problem','CLOCK_SKEW');return result('CLOCK_SKEW')
+-    end
++    local error=anchored(ARGV[7]);if error then return result(error) end
++    if math.abs(nowMs()-tonumber(ARGV[4]))>tonumber(ARGV[5]) then redis.call('HSET',KEYS[1],'open','0','problem','CLOCK_SKEW');return result('CLOCK_SKEW') end
+     if ARGV[6]=='1' then redis.call('HDEL',KEYS[1],'problem') end
+     if redis.call('HEXISTS',KEYS[1],'problem')==1 then return result('CLOCK_SKEW') end
+   end
+   redis.call('HSET',KEYS[1],'open',ARGV[3]);return result('OK')
+ elseif op=='reserve' then
+-  -- contest, version, epoch, user, proposed request, proposed event, key, hash, DB time, skew
+   if redis.call('HGET',KEYS[1],'version')~=ARGV[3] or redis.call('HGET',KEYS[1],'epoch')~=ARGV[4] then return result('VERSION_CONFLICT') end
++  local error=anchored(ARGV[12]);if error then return result(error) end
+   local mapped=redis.call('HGET',KEYS[3],ARGV[5])
+   if mapped then
+     local raw=redis.call('HGET',KEYS[4],mapped);if not raw then return result('LEDGER_INCOMPLETE') end
+@@ -52,17 +143,16 @@ elseif op=='reserve' then
+   end
+   if redis.call('HGET',KEYS[1],'open')~='1' then return result('REGISTRATION_PAUSED') end
+   local stamp=redis.call('TIME');local micros=tonumber(stamp[1])*1000000+tonumber(stamp[2]);local now=math.floor(micros/1000)
+-  if math.abs(now-tonumber(ARGV[10]))>tonumber(ARGV[11]) then
+-    redis.call('HSET',KEYS[1],'open','0','problem','CLOCK_SKEW');return result('CLOCK_SKEW')
+-  end
++  if math.abs(now-tonumber(ARGV[10]))>tonumber(ARGV[11]) then redis.call('HSET',KEYS[1],'open','0','problem','CLOCK_SKEW');return result('CLOCK_SKEW') end
+   if micros<tonumber(redis.call('HGET',KEYS[1],'openUs')) or micros>=tonumber(redis.call('HGET',KEYS[1],'closeUs')) then return result('REGISTRATION_WINDOW_CLOSED') end
+   if tonumber(redis.call('GET',KEYS[2]))<=0 then return result('CONTEST_FULL') end
++  local count=tonumber(redis.call('HGET',KEYS[1],'reservedCount'))
++  if count>=LIMIT then return result('REGISTRATION_LEDGER_LIMIT') end
+   if redis.call('HEXISTS',KEYS[4],ARGV[7])==1 then return result('EVENT_ID_CONFLICT') end
+-  -- Epoch microseconds use a decimal string: cjson's numeric precision must not round away identity/time bits.
+-  local r={contestId=ARGV[2],publishedVersion=ARGV[3],epoch=ARGV[4],userId=ARGV[5],requestId=ARGV[6],eventId=ARGV[7],requestKey=ARGV[8],requestHash=ARGV[9],reservedAtMs=now,reservedAtMicros=string.format('%.0f',micros),state='PROCESSING'}
+-  redis.call('DECR',KEYS[2]);redis.call('HSET',KEYS[3],ARGV[5],ARGV[7]);redis.call('HSET',KEYS[4],ARGV[7],cjson.encode(r));redis.call('ZADD',KEYS[5],now,ARGV[7])
+-  redis.call('HINCRBY',KEYS[1],'reservedCount',1);redis.call('HINCRBY',KEYS[1],'pendingCount',1)
+-  return result('OK',r)
++  local r={contestId=ARGV[2],publishedVersion=ARGV[3],epoch=ARGV[4],userId=ARGV[5],requestId=ARGV[6],eventId=ARGV[7],requestKey=ARGV[8],requestHash=ARGV[9],reservedAtMs=now,reservedAtMicros=string.format('%.0f',micros),sequence=tostring(count+1),state='PROCESSING'}
++  local m={op='reserve',record=r,stock=tonumber(redis.call('GET',KEYS[2])),count=count,pending=tonumber(redis.call('HGET',KEYS[1],'pendingCount'))}
++  redis.call('HSET',KEYS[1],'mutation',cjson.encode(m)) -- reserve.write.intent
++  apply(m);return result('OK',r)
+ elseif op=='user' or op=='event' then
+   local event=ARGV[2];if op=='user' then event=redis.call('HGET',KEYS[3],ARGV[2]) end
+   if not event then return result('ABSENT') end
+@@ -71,17 +161,18 @@ elseif op=='user' or op=='event' then
+   if r.eventId~=event or (op=='user' and r.userId~=ARGV[2]) then return result('LEDGER_IDENTITY_INVALID') end
+   return result('OK',r)
+ elseif op=='finish' then
+-  -- event, request, user, version, epoch, CONFIRMED/RELEASED
+   local raw=redis.call('HGET',KEYS[4],ARGV[2]);if not raw then return result('LEDGER_INCOMPLETE') end
+   local r=cjson.decode(raw)
+-  if r.requestId~=ARGV[3] or r.userId~=ARGV[4] or r.publishedVersion~=ARGV[5] or r.epoch~=ARGV[6]
++  if r.eventId~=ARGV[2] or r.requestId~=ARGV[3] or r.userId~=ARGV[4] or r.publishedVersion~=ARGV[5] or r.epoch~=ARGV[6]
+     or redis.call('HGET',KEYS[3],ARGV[4])~=ARGV[2] then return result('RESERVATION_IDENTITY_CONFLICT') end
+   if r.state==ARGV[7] then return result('OK',r) end
+   if r.state~='PROCESSING' or (ARGV[7]~='CONFIRMED' and ARGV[7]~='RELEASED') then return result('RESERVATION_TERMINAL_CONFLICT') end
+-  if ARGV[7]=='RELEASED' then redis.call('INCR',KEYS[2]) end
+-  r.state=ARGV[7];redis.call('HSET',KEYS[4],ARGV[2],cjson.encode(r))
+-  if redis.call('ZREM',KEYS[5],ARGV[2])==1 then redis.call('HINCRBY',KEYS[1],'pendingCount',-1) end
+-  return result('OK',r) -- Keep identity/tombstone; FAILED users cannot buy another slot by changing key.
++  -- Old ledgers are upgraded under reconciliation before further mutations.
++  if not r.sequence then return result('LEDGER_FORMAT_UPGRADE_REQUIRED') end
++  local m={op='finish',record=r,stock=tonumber(redis.call('GET',KEYS[2])),count=redis.call('HLEN',KEYS[4]),pending=redis.call('ZCARD',KEYS[5]),wasPending=redis.call('ZSCORE',KEYS[5],ARGV[2])~=false}
++  r.state=ARGV[7]
++  redis.call('HSET',KEYS[1],'mutation',cjson.encode(m)) -- finish.write.intent
++  apply(m);return result('OK',r)
+ elseif op=='due' then
+   local events=redis.call('ZRANGEBYSCORE',KEYS[5],'-inf',nowMs(),'LIMIT',0,20);local records={}
+   for _,event in ipairs(events) do
+@@ -90,6 +181,6 @@ elseif op=='due' then
+   end
+   return cjson.encode({code='OK',records=records})
+ elseif op=='stats' then
+-  return cjson.encode({code='OK',stock=tonumber(redis.call('GET',KEYS[2])),count=redis.call('HLEN',KEYS[4]),open=redis.call('HGET',KEYS[1],'open'),epoch=redis.call('HGET',KEYS[1],'epoch'),version=redis.call('HGET',KEYS[1],'version')})
++  return cjson.encode({code='OK',stock=tonumber(redis.call('GET',KEYS[2])),count=redis.call('HLEN',KEYS[4]),open=redis.call('HGET',KEYS[1],'open'),epoch=redis.call('HGET',KEYS[1],'epoch'),version=redis.call('HGET',KEYS[1],'version'),format=redis.call('HGET',KEYS[1],'format')})
+ end
+ return result('INVALID_OPERATION')
+diff --git a/codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationRedisIntegrationTest.java b/codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationRedisIntegrationTest.java
+index ce148e9..4885f3c 100644
+--- a/codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationRedisIntegrationTest.java
++++ b/codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationRedisIntegrationTest.java
+@@ -52,7 +52,14 @@ class RegistrationRedisIntegrationTest {
+             process=new ProcessBuilder(binary,"--bind","127.0.0.1","--port",Integer.toString(port),"--requirepass",password,"--save","","--appendonly","yes","--appendfsync","always","--dir",dir.toString())
+                     .redirectErrorStream(true).redirectOutput(ProcessBuilder.Redirect.appendTo(dir.resolve("redis.log").toFile())).start();
+             long deadline=System.nanoTime()+5000000000L;
+-            while(System.nanoTime()<deadline) { try(Socket socket=new Socket("127.0.0.1",port)) { return; }catch(java.io.IOException starting) { if(!process.isAlive()) { throw new IllegalStateException(new String(Files.readAllBytes(dir.resolve("redis.log")),StandardCharsets.UTF_8)); }Thread.sleep(10); } }
++            while(System.nanoTime()<deadline) { try(Socket socket=new Socket("127.0.0.1",port)) {
++                socket.setSoTimeout(200);
++                String auth="*2\r\n$4\r\nAUTH\r\n$"+password.length()+"\r\n"+password+"\r\n*1\r\n$4\r\nPING\r\n";
++                socket.getOutputStream().write(auth.getBytes(StandardCharsets.UTF_8));socket.getOutputStream().flush();
++                java.io.BufferedReader input=new java.io.BufferedReader(new java.io.InputStreamReader(socket.getInputStream(),StandardCharsets.UTF_8));
++                if("+OK".equals(input.readLine()) && "+PONG".equals(input.readLine())) { return; }
++                Thread.sleep(10);
++            }catch(java.io.IOException starting) { if(!process.isAlive()) { throw new IllegalStateException(new String(Files.readAllBytes(dir.resolve("redis.log")),StandardCharsets.UTF_8)); }Thread.sleep(10); } }
+             throw new IllegalStateException("TEST_REDIS_START_TIMEOUT");
+         }
+         void stop() throws Exception { if(process!=null) { process.destroy();if(!process.waitFor(2,TimeUnit.SECONDS)) { process.destroyForcibly();process.waitFor(2,TimeUnit.SECONDS); } } }
+@@ -80,6 +87,8 @@ class RegistrationRedisIntegrationTest {
+         ContestCoreTest seed=new ContestCoreTest();seed.ds=ds;seed.jdbc=jdbc;seed.schema();
+         String sql=new String(Files.readAllBytes(Paths.get("..","mysql-init","migrations","V003__async_registration.sql")),StandardCharsets.UTF_8);
+         try(Connection c=ds.getConnection()) { ScriptUtils.executeSqlScript(c,new ByteArrayResource(sql.getBytes(StandardCharsets.UTF_8))); }
++        String fenceSql=new String(Files.readAllBytes(Paths.get("..","mysql-init","migrations","V005__registration_recovery_fence.sql")),StandardCharsets.UTF_8);
++        try(Connection c=ds.getConnection()) { ScriptUtils.executeSqlScript(c,new ByteArrayResource(fenceSql.getBytes(StandardCharsets.UTF_8))); }
+         String scoreSql=new String(Files.readAllBytes(Paths.get("..","mysql-init","migrations","V004__contest_scoreboard.sql")),StandardCharsets.UTF_8).replace(" DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci","");
+         try(Connection c=ds.getConnection()) { ScriptUtils.executeSqlScript(c,new ByteArrayResource(scoreSql.getBytes(StandardCharsets.UTF_8))); }
+         try(RedisConnection c=redis.getConnectionFactory().getConnection()) { c.flushDb(); } // Only this harness's private server.
+@@ -277,4 +286,184 @@ class RegistrationRedisIntegrationTest {
+         Map<String,Object> finalBoard=scores.snapshot(id,0,20,null,99,true);assertEquals(true,finalBoard.get("final"));assertEquals(1L,finalBoard.get("total"));assertEquals("FINISHED",finalBoard.get("status"));
+     }
+ 
++    /** Executes the production Lua with exactly one injected runtime error, never a production fault flag. */
++    class FaultLedger extends RedisRegistrationLedger {
++        final String operation,marker;boolean armed=true;String proposedRequest,proposedEvent;
++        FaultLedger(String operation,String marker) { super(redis);this.operation=operation;this.marker=marker; }
++        @Override cn.hutool.json.JSONObject call(long contest,String... args) {
++            if(armed && operation.equals(args[0])) {
++                armed=false;
++                if("reserve".equals(operation)) { proposedRequest=args[5];proposedEvent=args[6]; }
++                try {
++                    String source=org.springframework.util.StreamUtils.copyToString(new org.springframework.core.io.ClassPathResource("lua/contest-registration.lua").getInputStream(),StandardCharsets.UTF_8);
++                    assertTrue(source.contains(marker));
++                    source=source.replace(marker,marker+"\n error('CONTROLLED_REVIEW_FAULT')");
++                    redis.execute(new org.springframework.data.redis.core.script.DefaultRedisScript<>(source,String.class),RedisRegistrationLedger.keys(contest),(Object[])args);
++                    throw new AssertionError("Fault was not reached");
++                } catch(java.io.IOException error) { throw new java.io.UncheckedIOException(error); }
++            }
++            return super.call(contest,args);
++        }
++    }
++    RegistrationService facade(RedisRegistrationLedger custom) {
++        RegistrationService result=new RegistrationService(contests,transactions,custom,new ExecutionRepository(jdbc),jdbc);
++        ReflectionTestUtils.setField(result,"enabled",true);return result;
++    }
++    Map<String,byte[]> dump(long id) {
++        Map<String,byte[]> snapshot=new LinkedHashMap<>();
++        try(RedisConnection c=redis.getConnectionFactory().getConnection()) { for(String k:RedisRegistrationLedger.keys(id)) { snapshot.put(k,c.dump(k.getBytes(StandardCharsets.UTF_8))); } }return snapshot;
++    }
++    void restore(long id,Map<String,byte[]> snapshot) {
++        try(RedisConnection c=redis.getConnectionFactory().getConnection()) {
++            for(String k:RedisRegistrationLedger.keys(id)) { c.del(k.getBytes(StandardCharsets.UTF_8)); }
++            for(Map.Entry<String,byte[]> e:snapshot.entrySet()) { if(e.getValue()!=null) { c.restore(e.getKey().getBytes(StandardCharsets.UTF_8),0,e.getValue()); } }
++        }
++    }
++    @Test void oldSnapshotWithOrphanCannotMaskMissingConfirmedIdentity() {
++        long id=active(2);RegistrationReservation early=raw(id,10);Map<String,byte[]> snapshot=dump(id);
++        RegistrationRequest b=accept(id,11);transactions.confirm(b.event());service.synchronize(request(id,11));restore(id,snapshot);
++        assertEquals(1,ledger.stats(id).getInt("count"));assertEquals(1,count("contest_registration_request"));
++        RedisRegistrationLedger.LedgerException error=assertThrows(RedisRegistrationLedger.LedgerException.class,()->maintenance().maintain(id));
++        assertEquals("LEDGER_ROLLBACK_DETECTED",error.getCode());assertFalse(transactions.settings(id).isReady());
++        assertThrows(BusinessException.class,()->service.register(id,key,12));
++        assertEquals(early.getEventId(),ledger.user(id,10).getEventId());assertEquals("CONFIRMED",request(id,11).getStatus());assertEquals(1,count("contest_registration"));
++    }
++    @Test void staleDatabaseSampleCannotReuseADurablyAssignedOrdinal() {
++        long id=active(2);raw(id,10);Map<String,byte[]> snapshot=dump(id);RegistrationSettings stale=transactions.settings(id);
++        RegistrationRequest b=accept(id,11);transactions.confirm(b.event());service.synchronize(request(id,11));restore(id,snapshot);
++        RegistrationReservation late=ledger.reserve(stale,12,IdWorker.getId(),UUID.randomUUID().toString(),key,RegistrationTransactions.hash(id,stale.getPublishedVersion()));
++        assertEquals(b.getReservation().getSequence(),late.getSequence());
++        assertThrows(BusinessException.class,()->service.persist(late));assertFalse(transactions.settings(id).isReady());
++        assertEquals(1,count("contest_registration_request"));assertEquals(1,count("contest_registration"));
++    }
++    @Test void newContestCannotExceedTheSupportedClosureCapacity() {
++        assertThrows(BusinessException.class,()->published(10001));assertEquals(0,count("contest"));
++    }
++    @Test @Timeout(60) void ledgerLimitCountsReleasedIdentitiesAndStillAllowsOriginalRetries() {
++        long id=active(1);RegistrationSettings s=transactions.settings(id);RegistrationReservation original=null;
++        // Lua contract fixture: each synthetic reservation is terminally released; not 10000 HTTP/MQ users.
++        for(int i=0;i<10000;i++) {
++            s.setNow(LocalDateTime.now(ZoneOffset.UTC));
++            RegistrationReservation r=ledger.reserve(s,1000L+i,IdWorker.getId(),UUID.randomUUID().toString(),key,RegistrationTransactions.hash(id,s.getPublishedVersion()));
++            if(i==0) { original=r; }ledger.finish(r,"RELEASED");
++        }
++        assertEquals(10000,ledger.stats(id).getInt("count"));assertEquals(1,stock(id));s.setNow(LocalDateTime.now(ZoneOffset.UTC));
++        RedisRegistrationLedger.LedgerException limit=assertThrows(RedisRegistrationLedger.LedgerException.class,()->ledger.reserve(s,99999,IdWorker.getId(),UUID.randomUUID().toString(),key,RegistrationTransactions.hash(id,s.getPublishedVersion())));
++        assertEquals("REGISTRATION_LEDGER_LIMIT",limit.getCode());assertEquals(1,stock(id));
++        assertEquals(original.getEventId(),ledger.reserve(s,1000,IdWorker.getId(),UUID.randomUUID().toString(),key,RegistrationTransactions.hash(id,s.getPublishedVersion())).getEventId());
++        ledger.gate(s,false,false);assertEquals(10000,ledger.snapshot(id).size());
++    }
++    @Test void reservationRecoversEveryPartialWriteAndTheOriginalIdentity() {
++        String[] markers={"-- reserve.write.intent","-- reserve.write.stock","-- reserve.write.user","-- reserve.write.ledger","-- reserve.write.pending","-- reserve.write.counters","-- mutation.clear"};
++        for(String marker:markers) {
++            long id=active(1);FaultLedger fault=new FaultLedger("reserve",marker);
++            Map<String,Object> response=facade(fault).register(id,key,10);RegistrationRequest q=request(id,10);
++            assertEquals("PROCESSING",response.get("status"));assertEquals(fault.proposedRequest,response.get("requestId"));assertEquals(fault.proposedEvent,q.event().getEventId());
++            assertEquals(0,stock(id));assertFalse(redis.opsForHash().hasKey(RedisRegistrationLedger.keys(id).get(0),"mutation"));
++            assertEquals(response.get("requestId"),service.register(id,key,10).get("requestId"));
++            transactions.confirm(q.event());service.synchronize(request(id,10));assertEquals("CONFIRMED",request(id,10).getStatus());assertEquals(0,stock(id));
++        }
++        System.out.println("REGISTRATION_RECOVERY_CASE reservation-write-points=7 original-identity-and-single-allocation=PASS");
++    }
++    @Test void processLostAfterStockWriteCanRecoverThroughMaintenance() {
++        long id=active(1);RegistrationSettings s=transactions.settings(id);FaultLedger fault=new FaultLedger("reserve","-- reserve.write.stock");
++        assertThrows(RuntimeException.class,()->fault.reserve(s,10,IdWorker.getId(),UUID.randomUUID().toString(),key,RegistrationTransactions.hash(id,s.getPublishedVersion())));
++        assertEquals(0,count("contest_registration_request"));maintenance().maintain(id);
++        assertEquals(fault.proposedRequest,request(id,10).getReservation().getRequestId().toString());assertEquals(0,stock(id));
++        assertThrows(SubmissionConflictException.class,()->service.register(id,key,11));
++    }
++    @Test void releaseRecoversEveryPartialWriteWithoutASecondRefund() {
++        String[] markers={"-- finish.write.intent","-- finish.write.stock","-- finish.write.ledger","-- finish.write.pending","-- finish.write.counters","-- mutation.clear"};
++        for(String marker:markers) {
++            long id=active(1);RegistrationRequest q=accept(id,10);transactions.review(id,q.getReservation().getRequestId(),review(q,"FAIL"),99);
++            assertThrows(RuntimeException.class,()->facade(new FaultLedger("finish",marker)).synchronize(request(id,10)));
++            ledger.repair(transactions.settings(id));service.synchronize(request(id,10));
++            assertEquals("RELEASED",request(id,10).getReclaimState());assertEquals(1,stock(id));
++            ledger.repair(transactions.settings(id));service.synchronize(request(id,10));assertEquals(1,stock(id));
++        }
++        System.out.println("REGISTRATION_RECOVERY_CASE release-write-points=6 no-double-refund=PASS");
++    }
++    @Test void confirmedMarkerFailureNeverRefundsAQualification() {
++        long id=active(1);RegistrationRequest q=accept(id,10);transactions.confirm(q.event());
++        assertThrows(RuntimeException.class,()->facade(new FaultLedger("finish","-- finish.write.ledger")).synchronize(request(id,10)));
++        ledger.repair(transactions.settings(id));service.synchronize(request(id,10));assertEquals(0,stock(id));assertEquals("COMPLETE",request(id,10).getReclaimState());assertEquals(1,count("contest_registration"));
++    }
++    @Test void interruptedInitializationResumesWithoutResettingAnAllocatedStock() {
++        for(String marker:new String[]{"-- init.write.intent","-- init.write.stock","-- mutation.clear"}) {
++            long id=published(1);service.prepare(id,command(1),99);RegistrationSettings s=transactions.settings(id);
++            assertThrows(RuntimeException.class,()->new FaultLedger("init",marker).initialize(s));
++            service.reconcile(id,command(s.getRevision()),99);accept(id,10);assertEquals(0,stock(id));ledger.initialize(transactions.settings(id));assertEquals(0,stock(id));
++        }
++    }
++    @Test void lostSuccessfulResponseReturnsTheOriginalRequestInsteadOfAllocatingAgain() {
++        long id=active(1);
++        RedisRegistrationLedger transport=new RedisRegistrationLedger(redis) {
++            boolean once=true;
++            @Override public RegistrationReservation reserve(RegistrationSettings s,long u,long r,String e,String k,String h) {
++                RegistrationReservation accepted=super.reserve(s,u,r,e,k,h);if(once) { once=false;throw new org.springframework.data.redis.RedisConnectionFailureException("CONTROLLED_RESPONSE_LOSS"); }return accepted;
++            }
++        };
++        Map<String,Object> response=facade(transport).register(id,key,10);
++        assertEquals(request(id,10).getReservation().getRequestId().toString(),response.get("requestId"));assertEquals(1,count("contest_registration_request"));assertEquals(0,stock(id));
++    }
++    @Test void exceptionBeforeScriptExecutionDoesNotInventAnAcceptedRequest() {
++        long id=active(1);
++        RedisRegistrationLedger transport=new RedisRegistrationLedger(redis) {
++            @Override public RegistrationReservation reserve(RegistrationSettings s,long u,long r,String e,String k,String h) { throw new org.springframework.data.redis.RedisConnectionFailureException("CONTROLLED_BEFORE_SEND"); }
++        };
++        assertThrows(BusinessException.class,()->facade(transport).register(id,key,10));assertEquals(1,stock(id));assertEquals(0,count("contest_registration_request"));
++        accept(id,10);assertEquals(0,stock(id));assertEquals(1,count("contest_registration_request"));
++    }
++    @Test void missingScriptCacheIsRebuiltByTheRealRedisExecutor() {
++        long id=active(1);try(RedisConnection c=redis.getConnectionFactory().getConnection()) { c.scriptFlush(); }
++        accept(id,10);assertEquals(0,stock(id));assertEquals(1,count("contest_registration_request"));
++    }
++    @Test void wrongKeyTypeFailsBeforeDeductionAndDoesNotFabricateARefund() {
++        long id=active(1);String pending=RedisRegistrationLedger.keys(id).get(4);redis.opsForValue().set(pending,"wrong-type");
++        assertThrows(BusinessException.class,()->service.register(id,key,10));
++        assertEquals("1",redis.opsForValue().get(RedisRegistrationLedger.keys(id).get(1)));assertEquals(0,count("contest_registration_request"));assertFalse(transactions.settings(id).isReady());
++    }
++    @Test void conflictingPartialWriteEvidenceStaysHeldForReview() {
++        long id=active(1);RegistrationSettings s=transactions.settings(id);FaultLedger fault=new FaultLedger("reserve","-- reserve.write.stock");
++        assertThrows(RuntimeException.class,()->fault.reserve(s,10,IdWorker.getId(),UUID.randomUUID().toString(),key,RegistrationTransactions.hash(id,s.getPublishedVersion())));
++        redis.opsForValue().set(RedisRegistrationLedger.keys(id).get(1),"2");
++        assertThrows(BusinessException.class,()->service.status(id,10));assertFalse(transactions.settings(id).isReady());
++        assertTrue(redis.opsForHash().hasKey(RedisRegistrationLedger.keys(id).get(0),"mutation"));assertEquals("2",redis.opsForValue().get(RedisRegistrationLedger.keys(id).get(1)));assertEquals(0,count("contest_registration_request"));
++    }
++    void legacy(long id) {
++        String records=RedisRegistrationLedger.keys(id).get(3);
++        for(Map.Entry<Object,Object> entry:redis.opsForHash().entries(records).entrySet()) {
++            cn.hutool.json.JSONObject r=JSONUtil.parseObj(entry.getValue());r.remove("sequence");redis.opsForHash().put(records,entry.getKey(),r.toString());
++        }
++        redis.opsForHash().delete(RedisRegistrationLedger.keys(id).get(0),"format");jdbc.update("UPDATE contest_registration_request SET reservationSequence=NULL WHERE contestId=?",id);
++    }
++    @Test void legacyLedgerNeedsClosedIdentityReconciliationBeforeNewAdmission() {
++        long id=active(3);RegistrationRequest a=accept(id,10),b=accept(id,11);transactions.confirm(b.event());service.synchronize(request(id,11));legacy(id);
++        assertThrows(BusinessException.class,()->service.register(id,key,12));assertFalse(transactions.settings(id).isReady());
++        service.reconcile(id,command(transactions.settings(id).getRevision()),99);assertTrue(transactions.settings(id).isReady());assertEquals("2",ledger.stats(id).getStr("format"));
++        assertEquals(a.event(),request(id,10).event());assertNotNull(request(id,10).getReservation().getSequence());
++        transactions.confirm(a.event());assertEquals("CONFIRMED",request(id,10).getStatus());accept(id,12);assertEquals(0,stock(id));
++    }
++    @Test void interruptedLegacyUpgradeReusesTheCommittedOrdinalAssignments() {
++        long id=active(2);accept(id,10);accept(id,11);legacy(id);
++        assertThrows(BusinessException.class,()->facade(new FaultLedger("upgrade","-- upgrade.write.record")).reconcile(id,command(transactions.settings(id).getRevision()),99));
++        List<Long> assigned=jdbc.queryForList("SELECT reservationSequence FROM contest_registration_request WHERE contestId=? ORDER BY id",Long.class,id);
++        assertTrue(assigned.stream().allMatch(Objects::nonNull));assertFalse(transactions.settings(id).isReady());
++        service.reconcile(id,command(transactions.settings(id).getRevision()),99);
++        assertEquals(assigned,jdbc.queryForList("SELECT reservationSequence FROM contest_registration_request WHERE contestId=? ORDER BY id",Long.class,id));assertTrue(transactions.settings(id).isReady());assertEquals(0,stock(id));
++    }
++
++    @Test void oldSnapshotCannotLeaveAnAlreadyReleasedDatabaseRequestHoldingStockForever() {
++        long id=active(1);RegistrationRequest q=accept(id,10);Map<String,byte[]> snapshot=dump(id);
++        transactions.review(id,q.getReservation().getRequestId(),review(q,"FAIL"),99);service.synchronize(request(id,10));assertEquals(1,stock(id));
++        restore(id,snapshot);assertEquals(0,stock(id));maintenance().maintain(id);
++        assertEquals(1,stock(id));assertEquals("RELEASED",ledger.user(id,10).getState());assertEquals("RELEASED",request(id,10).getReclaimState());
++        maintenance().maintain(id);assertEquals(1,stock(id));
++    }
++    @Test void oldSnapshotCompletionMarkerCanBeReplayedFromTheDurableQualification() {
++        long id=active(1);RegistrationRequest q=accept(id,10);Map<String,byte[]> snapshot=dump(id);
++        transactions.confirm(q.event());service.synchronize(request(id,10));restore(id,snapshot);maintenance().maintain(id);
++        assertEquals("CONFIRMED",ledger.user(id,10).getState());assertEquals(0,stock(id));assertEquals(1,count("contest_registration"));
++    }
++
+ }
+diff --git a/codeoj-frontend/src/api/contest.ts b/codeoj-frontend/src/api/contest.ts
+index f315183..3c17031 100644
+--- a/codeoj-frontend/src/api/contest.ts
++++ b/codeoj-frontend/src/api/contest.ts
+@@ -99,11 +99,14 @@ export async function submissionStatus(id: string): Promise<SubmissionStatus> {
+ }
+ export function errorText(error: unknown): string {
+   const failure = error as { body?: { message?: string }; message?: string };
+-  return (
++  const message =
+     failure?.body?.message ??
+     failure?.message ??
+-    "服务暂不可用，请保留原请求重试"
+-  );
++    "服务暂不可用，请保留原请求重试";
++  if (message === "REGISTRATION_LEDGER_LIMIT") {
++    return "本场报名受理已达上限，已有报名仍可查询和确认";
++  }
++  return message;
+ }
+ const memory = new Map<string, { fingerprint: string; key: string }>();
+ /** Store request identity only. Never put source code or hidden judge data in browser storage. */
+diff --git a/codeoj-frontend/src/views/contest/ManageContestsView.vue b/codeoj-frontend/src/views/contest/ManageContestsView.vue
+index 7b1092c..e388474 100644
+--- a/codeoj-frontend/src/views/contest/ManageContestsView.vue
++++ b/codeoj-frontend/src/views/contest/ManageContestsView.vue
+@@ -67,11 +67,12 @@
+                 ></a-select
+               ></a-form-item
+             ><a-form-item label="名额"
+-              ><a-input-number
+-                v-model="form.capacity"
+-                :min="1"
+-                :max="1000000" /></a-form-item
+-          ></a-space>
++              ><a-input-number v-model="form.capacity" :min="1" :max="10000" />
++              <p class="muted">
++                每场最多 10000 个名额，累计报名受理上限为 10000 次。
++              </p></a-form-item
++            ></a-space
++          >
+           <a-alert v-if="form.contestType === 'PUBLIC_TRAINING'"
+             >此类型使用已公开的练习题，不属于未见题比赛。</a-alert
+           >
+diff --git a/docs/contest/README.md b/docs/contest/README.md
+index 09ec9c1..bde3d5e 100644
+--- a/docs/contest/README.md
++++ b/docs/contest/README.md
+@@ -47,3 +47,7 @@ F03 在该次验证范围内关闭。当时仅做权限单项回归，尚未重
+ ## 最新本机联合验证
+ 
+ J6使用真实MySQL8.0.46、Redis6.2.24、RabbitMQ4.3.6、五个服务和真实浏览器；网关/Feign使用静态实例发现，未运行Nacos。实际执行注册登录、异步报名、AC/WA/CE、重复消息、Broker/判题/沙箱/Redis重启恢复、管理员对账、浏览器提交与最终结算。详细证据以J6最终成功轮为准；前几轮失败与根因保留。历史阶段文档中的“真实联合链未验证”是当时的证据状态，不应据此忽略J6新增结果，也不应将本轮局部验证提升为全部JV验收或生产可用。
++
++## 2026-10-22 报名恢复补强
++
++[修复说明](registration-recovery.md)：旧快照预留序号约束、Lua 部分写入及丢响应恢复、累计账本准入上限；新增 V005，旧账本关闸核对后升级。[本轮验证](../../outputs/validation/registration-fix-20261022/report.md)与原 JV/启动报告分开记录。
+diff --git a/docs/contest/handoff.md b/docs/contest/handoff.md
+index 7977789..dc0765b 100644
+--- a/docs/contest/handoff.md
++++ b/docs/contest/handoff.md
+@@ -1,6 +1,6 @@
+ # 运行、演示与交接
+ 
+-开发与验收版本：`bc3514261767d07cc3be7c3ab681afc894e25c02`（2026-10-22，已推送）。后续学习/交接文档更新不改变该版本的运行证据。原报告中“尚未提交”描述的是验收当时状态；历史文件与指纹保留原样。
++开发与验收版本：`bc3514261767d07cc3be7c3ab681afc894e25c02`（2026-10-22，已推送）。该历史运行证据保留原样。当前源码另有[报名恢复修复](registration-recovery.md)，需要 V005，运行结果按[对应新报告](../../outputs/validation/registration-fix-20261022/report.md)判断。原报告中“尚未提交”描述的是验收当时状态；历史文件与指纹保留原样。
+ 
+ 完整启动的新入口见 [Mac 完整本机启动](local-startup.md)：`./scripts/local-stack.sh verify`，或 `serve` 前台演示。下文保留各层单独复验入口。
+ 
+@@ -90,7 +90,7 @@ env JAVA_HOME="$CODEOJ_JAVA8_HOME" PATH="$CODEOJ_JAVA8_HOME/bin:$PATH" mvn -B -f
+ 
+ | 检查点 | 要求 |
+ | --- | --- |
+-| 业务版本 | 初始化业务表并按顺序应用 V001—V004；question/judge 同时启用 RELIABLE_JUDGE_ENABLED；ASYNC_REGISTRATION_ENABLED、SCOREBOARD_ENABLED 按迁移契约启用。临时夹具自行处理这些配置，不能照搬为在线切换步骤 |
++| 业务版本 | 初始化业务表并按顺序应用 V001—V005；question/judge 同时启用 RELIABLE_JUDGE_ENABLED；ASYNC_REGISTRATION_ENABLED、SCOREBOARD_ENABLED 按迁移契约启用。临时夹具自行处理这些配置，不能照搬为在线切换步骤 |
+ | 默认行为 | 三个业务开关默认 false，但沙箱默认 isolated；旧无 token/deadline 的调用不兼容 isolated，不能仅启动默认 YAML 就期待旧链可用 |
+ | 执行池 | CODESANDBOX_ISOLATION_IMAGE 固定摘要、CODESANDBOX_STATE_DIRECTORY 专用持久本地目录（权限700）；同池同 daemon、同目录、同资源策略；不能 live 删除 journal/锁文件 |
+ | 内部调用 | INNER_AUTH_SECRET、沙箱远程密钥在调用两端一致；业务凭据只在受信服务，不能进入用户容器 |
+diff --git a/docs/contest/local-startup.md b/docs/contest/local-startup.md
+index 3875caf..017ed25 100644
+--- a/docs/contest/local-startup.md
++++ b/docs/contest/local-startup.md
+@@ -39,7 +39,7 @@ Lima 使用专用 LIMA_HOME。先将云镜像下载到私有目录并校验，
+ 1. 预检查、创建专用临时目录，准备并校验原生依赖。
+ 2. Java 8 多模块 package、npm ci、同源前端构建；对运行 jar 的 class 和嵌入依赖进行字节核验。
+ 3. 启动私有 Lima/VZ VM；静态 Docker engine 经 systemd 启动，检查 Linux/cgroup v2；以固定基础镜像构建隔离镜像并记录最终 image ID。
+-4. 新建私有 MySQL，顺序应用基础表和 V001—V004，再启动独立 Redis/MQ；不借用已有实例，不删除既有业务表。
++4. 新建私有 MySQL，顺序应用基础表和 V001—V005，再启动独立 Redis/MQ；不借用已有实例，不删除既有业务表。
+ 5. 生成权限 600 的私有服务配置，显式 isolated 与三个业务开关 true、内部密钥一致、UTC、静态服务发现；同池使用专用持久目录。创建服务期间不能删除该目录或锁文件。
+ 6. 启动 sandbox/user/question/judge/gateway；TCP 只作为早期等待条件，随后真实 Gateway API、注册登录/共享会话、Redis+MQ 报名和隔离 AC/WA/CE 才能完成业务就绪验证。
+ 7. 独立回环静态服务器提供 Vue 页面并透明代理 `/api`，验证同源 API、幂等返回、一次有效 attempt、cgroup 内存指标、榜单投影与未参赛者题面边界。
+@@ -65,7 +65,7 @@ Lima 使用专用 LIMA_HOME。先将云镜像下载到私有目录并校验，
+ 
+ ## 已验证结果与实现检查
+ 
+-2026-10-22，默认全构建 `verify --browser` 与默认全构建 `serve` 实际 Ctrl+C 均通过；真实判题、报名、榜单和 23 项编排/下载契约检查完成，全部所属临时环境清理。完整范围与原失败记录见[报告](../../outputs/validation/startup-20261022/report.md)。
++2026-10-22，默认全构建 `verify --browser` 与默认全构建 `serve` 实际 Ctrl+C 均通过；真实判题、报名、榜单和 23 项编排/下载契约检查完成，全部所属临时环境清理。完整范围与原失败记录见[报告](../../outputs/validation/startup-20261022/report.md)。该记录对应 f103417；后续[报名恢复修复](registration-recovery.md)另有后端及真实依赖证据，未把历史浏览器/隔离结果当作新版重新执行。
+ 
+ 
+ 清理失败保留控制数据、停止失败不删除 VM、删除后独立核验以及不影响其他目录等约束测试：
+diff --git a/docs/contest/source-reading.md b/docs/contest/source-reading.md
+index 8abf5ff..c26012e 100644
+--- a/docs/contest/source-reading.md
++++ b/docs/contest/source-reading.md
+@@ -8,12 +8,13 @@
+ | 原生判题 | `ReliableJudgeConsumer` → `ReliableJudgeWorker` → claim/heartbeat → `JavaNativeCodeSandbox` → `BoundedProcessRunner` → `SandboxResultMapper`/严格比较 → complete/fail | JavaNativeCodeSandboxTest、ReliableJudgeWorkerTest；demo-local-contest.sh |
+ | 隔离与物理回收 | `ReliableJudgeWorker` → `JavaIsolatedCodeSandbox` → `DurableExecutionRegistry`（token/slot journal 与文件锁）→ `DockerIsolationEngine` → `isolation/supervisor.py` → 降权 Java/namespace 清理 → 私有收据 → 删除物理对象后释放 slot | DurableExecutionRegistryTest、check-isolation.py（实际双 JVM、SIGKILL、cgroup、越界样例） |
+ | 名额竞争 | `RegistrationService.register` → `RedisRegistrationLedger.reserve` → `lua/contest-registration.lua` → persist+Outbox → `RegistrationConsumer` → confirmRegistration → synchronize | RegistrationRedisIntegrationTest；独立Redis+H2，MQ为手动消费/替身 |
++| Lua 部分执行与旧快照 | `RegistrationService.recoverUnknown` → `RedisRegistrationLedger.repair/check` → Lua mutation/apply/repair/anchored；`RegistrationTransactions.persist` + V005 唯一序号 | 48 项 Redis/H2 测试含故障注入；check-registration-recovery.py 的真实 MySQL/Redis/MQ 故障场景 |
+ | 未知与恢复 | `OutboxStore.claim/record` → 每次 publish_attempt → `RegistrationMaintenance` → `recover`/`reconcile` → 人工 review | RegistrationMessagingTest、RegistrationRedisIntegrationTest |
+ | 乱序计分 | `ExecutionCommands.complete` → JUDGE_RESULT → `ScoreboardMessaging.Relay` → `ScoreboardConsumer` → `ScoreboardTransactions.project` → 用户锁+题目最早AC+重算 → 业务回执 | ScoreboardTest、ScoreboardMessagingTest |
+ | 并列/缓存 | `ScoreboardController.page` → `ScoreboardService.page` → snapshot元数据 → 版本化页缓存/SQL排序 → 严格领先人数+1 | ScoreboardCacheTest、ScoreboardTest；mock浏览器检查 |
+ | 最终结算 | `ContestLifecycle.tick` → FINALIZING → 报名关闭对账/待定解决 → scoreboard rebuild → 新版本校验/切换 → finish → finalVersion | ScoreboardTest、RegistrationRedisIntegrationTest；原生演示 |
+ 
+-后端包根目录：`codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/`。测试位于同模块 `src/test/java/`；判题服务、沙箱、模型协议分别在各自 Maven 模块。迁移按 `mysql-init/migrations/V001` 到 `V004` 阅读。
++后端包根目录：`codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/`。测试位于同模块 `src/test/java/`；判题服务、沙箱、模型协议分别在各自 Maven 模块。迁移按 `mysql-init/migrations/V001` 到 `V005` 阅读；V005 的可空历史序号、唯一约束和关闸升级见[报名恢复](registration-recovery.md)。
+ 
+ 建议亲自解释并运行三个用例：
+ 
+@@ -26,3 +27,5 @@ J5最终版本与历史版本是投影；有效提交、结果摘要、发布快
+ 真实服务联调入口为 `scripts/test-native-stack.sh`，运行时与实例均临时隔离；[J6记录](j6-native-local.md)说明真实HTTP范围、代理故障、会话503与恢复边界。
+ 
+ 本机入口与历史证据见 [J5](j5-local.md)、[J4](j4-local.md)。2026-10-22 新增[隔离执行器](isolated-sandbox.md)及[JV01—JV29 全套本机复验](../../outputs/validation/isolation-20261022/jv-matrix.md)；Nacos、部署、压测和本机证据之外的故障场景仍需独立验证。
++
++报名补充自测：画出“扣库存后、用户映射前报错”的状态，解释意图记录如何保留原身份；再画出旧快照中 A 与数据库中 B 条数相等的反例，说明最大持久序号及唯一约束如何分别处理恢复与并发窗口。最后解释为什么小容量比赛也可能触及 10000 条累计账本限制。当前修复与新证据见[报名恢复说明](registration-recovery.md)和[验证报告](../../outputs/validation/registration-fix-20261022/report.md)，不能用历史整套 JV 代替本轮执行范围。
+diff --git "a/docs/learning/01-\346\200\273\350\247\210.md" "b/docs/learning/01-\346\200\273\350\247\210.md"
+index fa11f1e..c0ca07f 100644
+--- "a/docs/learning/01-\346\200\273\350\247\210.md"
++++ "b/docs/learning/01-\346\200\273\350\247\210.md"
+@@ -1,6 +1,6 @@
+ # 01 总览 · CodeOJ 学习路线
+ 
+-当前学习基线是 `bc35142` 的可靠判题、赛事报名/榜单及隔离执行器。先读本篇，再按[链路篇](03-链路.md)逐条追源码，最后用[面试篇](04-面试.md)练习表达。复现与证据入口统一在[运行演示交接](../contest/handoff.md)。
++当前学习主线覆盖 `bc35142` 的可靠判题、赛事报名/榜单及隔离执行器，并补充 2026-10-22 的报名序号约束、Lua 中断恢复及 10000 条账本限制。先读本篇，再按[链路篇](03-链路.md)逐条追源码，最后用[面试篇](04-面试.md)练习表达。复现与证据入口统一在[运行演示交接](../contest/handoff.md)。
+ 
+ ## 1. 项目地图
+ 
+@@ -44,6 +44,8 @@ MySQL 是执行、资格与计分事实的权威；RabbitMQ 传递事件，Redis
+ 
+ 三个业务开关 RELIABLE_JUDGE_ENABLED、ASYNC_REGISTRATION_ENABLED、SCOREBOARD_ENABLED 默认关闭；学习新版必须知道迁移和启用条件。沙箱默认 isolated，旧版无 token/deadline 链路只适用于显式可信 native 演示，不能把不同模式的路径拼成一个默认可运行流程。
+ 
+-本轮已经有完整本机 JV 矩阵、真实依赖与浏览器证据；源码、H2 测试、真实联调、隔离探针仍是不同证据层。部署、Nacos、压测继续后置。
++`bc35142` 有历史完整本机 JV 矩阵、真实依赖和浏览器证据；本次报名恢复修复另有 [248 项后端测试和真实 MySQL/Redis/MQ 故障验证](../../outputs/validation/registration-fix-20261022/report.md)，未重新执行整套 JV、浏览器或容器探针。源码、H2 测试、真实联调、隔离探针属于不同证据层。部署、Nacos、压测继续后置。
++
++报名学习还要掌握 [V005 迁移](../../codeoj-backend/mysql-init/migrations/V005__registration_recovery_fence.sql)：数据库保存预留序号，旧 Redis 账本先关闸核对再升级。比赛容量和累计报名账本均限 10000；释放后的原身份仍计入累计数。
+ 
+ 阅读完成应能脱稿画出主链，解释提交后未发布、并发领取、worker 被杀、结果提交后未 ACK 四个窗口；选一个报名未知或榜单乱序场景解释恢复，最后定位源码及运行证据。能背术语但不能解释事实和身份，不算完成。
+diff --git "a/docs/learning/02-\346\250\241\345\235\227/01-\345\211\215\347\253\257.md" "b/docs/learning/02-\346\250\241\345\235\227/01-\345\211\215\347\253\257.md"
+index 6753b4e..53d3a74 100644
+--- "a/docs/learning/02-\346\250\241\345\235\227/01-\345\211\215\347\253\257.md"
++++ "b/docs/learning/02-\346\250\241\345\235\227/01-\345\211\215\347\253\257.md"
+@@ -4,6 +4,10 @@
+ 
+ > 阅读范围：`codeoj-frontend/`。先读[总览](../01-总览.md)，再沿“路由 → 登录态 → 请求 → 做题页 → 提交记录”走一遍。
+ 
++## 当前报名页面补充
++
++当前报名页面使用 `ContestDetailView.vue`，PROCESSING 只表示待确认，参赛入口检查 qualificationValid。`ManageContestsView.vue` 将比赛名额限制为 10000，并说明累计受理上限；`api/contest.ts#errorText` 对满账本返回明确中文提示。原请求键仍由 stableKey 保留，不能在超时后换键重新抢占。阅读[报名链路](../03-链路.md)和[恢复约束](../../contest/registration-recovery.md)后，再把下文基础页面与当前源码逐一对应。
++
+ ## 1. 前端工程结构
+ 
+ ```text
+diff --git "a/docs/learning/02-\346\250\241\345\235\227/03-\347\275\221\345\205\263\344\270\216\351\242\230\347\233\256\346\234\215\345\212\241.md" "b/docs/learning/02-\346\250\241\345\235\227/03-\347\275\221\345\205\263\344\270\216\351\242\230\347\233\256\346\234\215\345\212\241.md"
+index 8c85851..1663cb3 100644
+--- "a/docs/learning/02-\346\250\241\345\235\227/03-\347\275\221\345\205\263\344\270\216\351\242\230\347\233\256\346\234\215\345\212\241.md"
++++ "b/docs/learning/02-\346\250\241\345\235\227/03-\347\275\221\345\205\263\344\270\216\351\242\230\347\233\256\346\234\215\345\212\241.md"
+@@ -4,6 +4,10 @@
+ 
+ > 阅读范围：`codeoj-backend-gateway`、`codeoj-backend-question-service`。先读[公共层与用户服务](02-公共层与用户服务.md)中的鉴权与 Feign 部分。
+ 
++## 当前报名受理补充
++
++报名入口为 `ContestController.register` → `RegistrationService.register`：检查当前账户、原请求、数据库持久最大预留序号，Redis 准入后以原身份写请求与 Outbox。V005 对比赛/epoch/reservationSequence 唯一，防止旧快照重新分配已落盘的序号；不是只比较数据库和 Redis 的记录条数。Lua 部分执行或丢响应交给 recoverUnknown/repair，不将查不到用户映射当作未扣库存。先读[源码链路第五节](../03-链路.md)和[迁移/恢复说明](../../contest/registration-recovery.md)，下文普通提交属于基础分支。
++
+ ## Part A：网关（gateway，:8101）
+ 
+ ### A1. 路由配置 [application.yml](../../../codeoj-backend/codeoj-backend-gateway/src/main/resources/application.yml)
+diff --git "a/docs/learning/02-\346\250\241\345\235\227/04-\345\210\244\351\242\230\346\234\215\345\212\241\344\270\216\346\266\210\346\201\257\351\230\237\345\210\227.md" "b/docs/learning/02-\346\250\241\345\235\227/04-\345\210\244\351\242\230\346\234\215\345\212\241\344\270\216\346\266\210\346\201\257\351\230\237\345\210\227.md"
+index 34045ed..dda4848 100644
+--- "a/docs/learning/02-\346\250\241\345\235\227/04-\345\210\244\351\242\230\346\234\215\345\212\241\344\270\216\346\266\210\346\201\257\351\230\237\345\210\227.md"
++++ "b/docs/learning/02-\346\250\241\345\235\227/04-\345\210\244\351\242\230\346\234\215\345\212\241\344\270\216\346\266\210\346\201\257\351\230\237\345\210\227.md"
+@@ -4,6 +4,10 @@
+ 
+ > 阅读范围：判题服务的 RabbitMQ、JudgeService 和策略代码，以及题目服务的消息生产者。先读[网关与题目服务](03-网关与题目服务.md)。
+ 
++## 当前报名消息补充
++
++报名有独立 RegistrationMessaging/RegistrationConsumer 拓扑，与判题队列分开；两者复用 Outbox 发布尝试证据，Broker ACK 不代表报名资格已经确认。Lua 报错与 MQ 发布未知是两个窗口：前者依据 mutation 操作意图恢复原 Redis 身份，后者保留预留并按原 eventId 重派。RegistrationMaintenance 也会把数据库持久终态重放到回退的 Redis 标记。对应[报名恢复](../../contest/registration-recovery.md)和[源码/自测链路](../03-链路.md)，不要把下文旧 MyMessageConsumer 当作可靠报名消费者。
++
+ ## Part A：RabbitMQ —— 判题任务的"快递线"
+ 
+ ### A1. 拓扑 [InitRabbitMqBean.java](../../../codeoj-backend/codeoj-backend-judge-service/src/main/java/com/codeoj/codeojbackendjudgeservice/rabbitmq/InitRabbitMqBean.java)
+diff --git "a/docs/learning/02-\346\250\241\345\235\227/06-\351\203\250\347\275\262\344\270\216\350\277\220\350\241\214.md" "b/docs/learning/02-\346\250\241\345\235\227/06-\351\203\250\347\275\262\344\270\216\350\277\220\350\241\214.md"
+index bd9bdcd..4c61d42 100644
+--- "a/docs/learning/02-\346\250\241\345\235\227/06-\351\203\250\347\275\262\344\270\216\350\277\220\350\241\214.md"
++++ "b/docs/learning/02-\346\250\241\345\235\227/06-\351\203\250\347\275\262\344\270\216\350\277\220\350\241\214.md"
+@@ -6,6 +6,12 @@
+ 
+ 部署篇回答三件事：数据落在哪、进程如何互通、启动前怎样发现配置不一致。它不是运行成功报告；本篇结论来自配置和代码阅读。
+ 
++## 当前运行与迁移补充
++
++Mac 本机入口为 `./scripts/local-stack.sh verify`（验证后清理）及 `serve`（前台演示）。当前代码需按顺序应用 V001—V005；旧报名写入者先停止，旧 Redis 账本再经关闸核对升级序号，不能直接清空或让新旧写入协议并行。比赛容量和累计账本均限 10000；超出历史支持范围的数据保持暂停，迁移不自动缩减或删除它们。
++
++[完整启动](../../contest/local-startup.md)、[报名恢复及真实故障验证](../../contest/registration-recovery.md)和[交接](../../contest/handoff.md)是当前操作入口。下文 Compose 是基础配置阅读材料；本轮没有验证目标环境部署或压测。
++
+ ## 1. 数据表与判题数据
+ 
+ | 表 | 关键内容 | 对判题链的作用 |
+diff --git "a/docs/learning/03-\351\223\276\350\267\257.md" "b/docs/learning/03-\351\223\276\350\267\257.md"
+index 777ca7a..927fc83 100644
+--- "a/docs/learning/03-\351\223\276\350\267\257.md"
++++ "b/docs/learning/03-\351\223\276\350\267\257.md"
+@@ -90,9 +90,22 @@ COMPLETED 不等于 AC。执行返回、资源观测或协议缺失不能推断
+ 
+ Redis 原子预留负责快速准入，MySQL 确认才产生参赛资格。预留后 API 崩溃或 DB/MQ 响应未知，不能马上加回库存；保存原预留身份，由补建、确认和对账解决。FAILED/CANCELLED 等持久终态后才按原身份释放；epoch/revision 隔离旧闸门和旧确认。账本丢失/时钟偏差进入暂停与核对，不根据不完整缓存放行。
+ 
+-闭卷成果测试：8 人争 2 名额，插入“预留成功、DB 写入前崩溃”“已确认但 Redis 标记失败”“取消后旧确认到达”。每一步标明 Redis、MySQL、资格及待回收状态。
++补充阅读顺序：先看 [V005](../../codeoj-backend/mysql-init/migrations/V005__registration_recovery_fence.sql) 的 reservationSequence 唯一约束，再读 `RegistrationTransactions#settings/persist`、`RedisRegistrationLedger#check/reserve`，最后追 Lua 的 `anchored`、`apply` 与 `repair`。旧账本升级追 `reconcile` → `assignLegacySequences` → Lua `upgrade`。
+ 
+-通过标准：不超卖、不把 PROCESSING 当资格、不按超时直接回滚；能解释恢复依据和人工介入点。核对 JV09—JV13/JV22—JV24/JV28 与 RegistrationRedisIntegrationTest、RegistrationMessagingTest。
++| 场景 | 必须解释的恢复依据 | 继续定位 |
++| --- | --- | --- |
++| Redis 中 A 未落库，数据库中 B 已确认，两侧各一条 | 条数不是身份完整证明；数据库最大持久序号阻止旧快照放行 | `settings`、Lua `anchored`、`RegistrationMaintenance#maintain` |
++| 查询最大序号后，另一个请求才提交数据库 | 单次查询不能覆盖并发窗口，数据库唯一序号约束仍要拦截身份复用 | `persist`、V005、`staleDatabaseSampleCannotReuseADurablyAssignedOrdinal` |
++| 已扣库存、尚未写用户映射就报错 | 映射不存在不能证明未扣减；扣减前已保存完整 mutation 意图 | Lua `apply/repair`、`RegistrationService#recoverUnknown` |
++| 执行成功但响应丢失 | 重新查询并落盘原 request/event/key，不能返回新造的请求 ID | `lostSuccessfulResponseReturnsTheOriginalRequestInsteadOfAllocatingAgain` |
++| 数据库已 RELEASED，Redis 回退到 PROCESSING | 根据数据库终态重放原 Redis 标记，目标值修复不能重复退款 | `maintain`、`synchronize`、Lua `finish/repair` |
++| 小容量比赛累计出现 10000 个不同身份 | 已释放身份也占累计账本条数；新用户拒绝，原身份仍可查询重试 | Lua `reserve`、`MAX_LEDGER_ENTRIES`、`ledgerLimitCountsReleasedIdentitiesAndStillAllowsOriginalRetries` |
++
++初始化、预留及完成/释放先写原操作意图，报错后只按经核验的精确目标值恢复；证据冲突则保留原数据并暂停。新建容量和累计账本均限 10000。旧账本必须关闸核对身份及容量后升级，不能清空库存重来。细节与兼容边界见[报名恢复修复](../contest/registration-recovery.md)。
++
++闭卷成果测试：解释“Redis 扣库存后、用户映射写入前报错”与“执行成功但响应丢失”的差异，再构造数据库与 Redis 条数相同但身份不同的旧快照。8 人争 2 名额，插入“预留成功、DB 写入前崩溃”“已确认但 Redis 标记失败”“取消后旧确认到达”。每一步标明 Redis、MySQL、资格及待回收状态。
++
++通过标准：不把 PROCESSING 当资格、不按超时直接回滚；能区分序号检查与唯一约束、意图恢复与盲目退款，说明旧账本升级和累计上限。必须解释 R1 原反例为何最终资格没有超额，却仍破坏预留保障并暂停整场。核对历史 JV09—JV13/JV22—JV24/JV28，以及本轮 RegistrationRedisIntegrationTest 的 48 项真实 Redis/H2 测试、7 项消息契约和[真实依赖故障证据](../../outputs/validation/registration-fix-20261022/report.md)；不能把 mock 消息测试当成 Broker 验收。
+ 
+ ## 6. 扩展：乱序结果、排名与最终结算
+ 
+diff --git "a/docs/learning/04-\351\235\242\350\257\225.md" "b/docs/learning/04-\351\235\242\350\257\225.md"
+index 84d958c..18feb43 100644
+--- "a/docs/learning/04-\351\235\242\350\257\225.md"
++++ "b/docs/learning/04-\351\235\242\350\257\225.md"
+@@ -112,7 +112,9 @@
+ 
+ **参考回答：** 真实双 JVM 运行时，竞争者关闭同一文件的另一个 FileChannel，可能释放该 JVM 对文件持有的 POSIX 锁，导致另一管理器误判执行已失去 owner 并回收活跃容器。同 JVM 的替身测试没有暴露这个问题。修复后按文件共享长期打开的通道，只释放 FileLock，并增加独立 JVM 锁观察，再重跑隔离和业务矩阵。
+ 
+-**源码依据：** DurableExecutionRegistry 的通道共享与 Held#close、DurableExecutionRegistryTest；[报告根因记录](../../outputs/validation/isolation-20261022/report.md)。
++**报名补充案例：** Redis 旧快照只保留尚未落库的 A，而数据库只有已确认的 B，两边各一条记录，旧维护逻辑仍允许 C 预留并先确认，导致 A 转人工。修复增加持久预留序号和唯一约束；即使最大序号的查询结果已经过旧，数据库仍拒绝另一身份复用该序号。这个缺陷没有突破最终容量约束，影响的是预留保障与恢复完整性。
++
++**源码依据：** DurableExecutionRegistry 的通道共享与 Held#close、DurableExecutionRegistryTest；[隔离根因记录](../../outputs/validation/isolation-20261022/report.md)。报名看 RegistrationMaintenance、RegistrationTransactions、V005，以及[审查后修复验证](../../outputs/validation/registration-fix-20261022/report.md)。
+ 
+ **继续追问：** 文件锁和 Java synchronized 分别保护什么？为什么不能运行中删锁文件重置？
+ 
+@@ -132,13 +134,13 @@
+ 
+ ### 13. Redis Lua 成功是不是报名成功
+ 
+-**参考回答：** 只是得到预留，真正资格由 MySQL 确认。Lua 原子检查窗口/身份/容量并写预留；持久化请求与 Outbox 后异步确认。前端看到 PROCESSING 不能当已参赛。预留后崩溃可按原身份补建，未知状态不能立即加库存。
++**参考回答：** 只是得到预留，真正资格由 MySQL 确认。Lua 原子检查窗口/身份/容量并写预留；持久化请求与 Outbox 后异步确认。前端看到 PROCESSING 不能当已参赛。预留后崩溃可按原身份补建，未知状态不能立即加库存。Lua 中途报错也不会自动撤销此前写入，所以先记录完整操作意图，再按目标值恢复；查不到用户映射不足以证明没有扣过库存。旧快照通过已落库的预留序号和唯一约束阻止重新分配已知身份位置。
+ 
+-**源码依据：** RegistrationService#register/persist、contest-registration.lua、RegistrationTransactions、RegistrationConsumer。
++**源码依据：** RegistrationService#register/recoverUnknown/persist、RedisRegistrationLedger#check、Lua anchored/apply/repair、RegistrationTransactions、RegistrationConsumer、V005。
+ 
+-**继续追问：** Redis 成功、DB 写入前被杀怎么恢复？8 人争 2 名额，哪个约束最终防超卖？
++**继续追问：** Redis 成功、DB 写入前被杀怎么恢复？Lua 已扣库存但没写映射就报错怎么办？两侧条数相等为什么仍可能需要暂停？8 人争 2 名额，哪个约束最终防超卖？
+ 
+-**回答边界：** 功能并发样例通过不等于报名接口已测出某个 QPS。
++**回答边界：** 新代码有操作意图才能修复部分执行；没有意图的历史损坏、Redis 与数据库同时丢失不能靠猜测恢复。10000 是准入/账本保护上限，真实 Lua 边界测试不等于 10000 个完整账号验收或已测得某个 QPS。
+ 
+ ### 14. 为什么取消或超时后不能立即释放预留
+ 
+@@ -146,7 +148,7 @@
+ 
+ **源码依据：** RegistrationService#synchronize/reconcile、RegistrationTransactions#recover、RegistrationMaintenance。
+ 
+-**继续追问：** 已取消后收到晚到的确认消息，怎么拒绝？Redis 完全丢账能直接重设库存吗？
++**继续追问：** 已取消后收到晚到的确认消息，怎么拒绝？释放脚本写完库存后报错，怎样保证不重复归还？数据库已是 RELEASED、Redis 却恢复到旧状态时怎么办？Redis 完全丢账能直接重设库存吗？
+ 
+ **回答边界：** 不把客户端 timeout 当明确未发生，也不把缓存重置当对账。
+ 
+diff --git a/codeoj-backend/mysql-init/migrations/V005__registration_recovery_fence.sql b/codeoj-backend/mysql-init/migrations/V005__registration_recovery_fence.sql
+new file mode 100644
+index 0000000..1b324e2
+--- /dev/null
++++ b/codeoj-backend/mysql-init/migrations/V005__registration_recovery_fence.sql
+@@ -0,0 +1,3 @@
++-- After V004. Legacy ordinals remain NULL until closed-gate identity reconciliation.
++ALTER TABLE contest_registration_request ADD reservationSequence BIGINT NULL;
++CREATE UNIQUE INDEX uk_registration_sequence ON contest_registration_request(contestId,reservationEpoch,reservationSequence);
+diff --git a/scripts/local/check-registration-recovery.py b/scripts/local/check-registration-recovery.py
+new file mode 100644
+index 0000000..73a27d5
+--- /dev/null
++++ b/scripts/local/check-registration-recovery.py
+@@ -0,0 +1,243 @@
++#!/usr/bin/env python3
++"""Real disposable MySQL/Redis/MQ registration recovery. Fault fixtures are explicit;
++no user code execution, existing DB access, global service changes or load claims.
++"""
++import argparse
++import datetime as dt
++import hashlib
++import importlib.util
++import json
++from pathlib import Path
++import secrets
++import signal
++import socket
++import time
++import uuid
++
++spec = importlib.util.spec_from_file_location('registration_native', Path(__file__).with_name('run-native-stack.py'))
++native = importlib.util.module_from_spec(spec)
++spec.loader.exec_module(native)
++
++
++class RedisError(RuntimeError):
++    pass
++
++
++def read_resp(stream):
++    kind = stream.read(1)
++    line = stream.readline().rstrip(b'\r\n')
++    if kind == b'+': return line.decode()
++    if kind == b'-': raise RedisError(line.decode(errors='replace'))
++    if kind == b':': return int(line)
++    if kind == b'$':
++        n = int(line)
++        if n < 0: return None
++        data = stream.read(n)
++        if len(data) != n or stream.read(2) != b'\r\n': raise RedisError('SHORT_RESPONSE')
++        return data
++    if kind == b'*': return [read_resp(stream) for _ in range(int(line))]
++    raise RedisError('INVALID_RESPONSE')
++
++
++class RecoveryStack(native.Stack):
++    def redis(self, *args):
++        def send(stream, parts):
++            encoded = [p if isinstance(p, bytes) else str(p).encode() for p in parts]
++            stream.write(b'*' + str(len(encoded)).encode() + b'\r\n' + b''.join(b'$'+str(len(p)).encode()+b'\r\n'+p+b'\r\n' for p in encoded))
++            stream.flush()
++            return read_resp(stream)
++        with socket.create_connection(('127.0.0.1', self.ports['redis']), timeout=10) as sock:
++            with sock.makefile('rwb') as stream:
++                assert send(stream, ['AUTH', self.secret['redis']]) == 'OK'
++                assert send(stream, ['SELECT', 1]) == 'OK'  # Same private database as the application.
++                return send(stream, args)
++
++    def keys(self, contest):
++        return ['contest:registration:{' + contest + '}:' + suffix for suffix in ['meta', 'stock', 'users', 'ledger', 'pending']]
++
++    def lua(self, contest, args, marker=None):
++        source = (native.REPO / 'codeoj-backend/codeoj-backend-question-service/src/main/resources/lua/contest-registration.lua').read_text()
++        if marker:
++            assert marker in source
++            source = source.replace(marker, marker + "\n error('CONTROLLED_REAL_REDIS_FAULT')")
++        raw = self.redis('EVAL', source, 5, *self.keys(contest), *args)
++        return json.loads(raw)
++
++    def sql_string(self, value):
++        # Values come from this fixture and Lua; use a hex literal, never shell interpolation.
++        return "CONVERT(0x" + str(value).encode().hex() + " USING utf8mb4)"
++
++    def view(self, cid):
++        return self.api('/contests/' + cid)
++
++    def contest(self, capacity=2):
++        now = dt.datetime.now(dt.timezone.utc)
++        at = lambda n: (now + dt.timedelta(seconds=n)).isoformat(timespec='microseconds').replace('+00:00', 'Z')
++        draft = {'title': 'Registration recovery fixture', 'contestType': 'PRIVATE', 'capacity': capacity,
++                 'registrationOpenAt': at(3), 'registrationCloseAt': at(900), 'startAt': at(930), 'endAt': at(1000),
++                 'problems': [{'problemCode': 'A', 'title': 'Never executed', 'content': 'Registration-only validation.',
++                               'limits': {'timeLimit': 1000, 'memoryLimit': 131072}, 'cases': [{'input': '1', 'output': '1'}]}]}
++        if capacity > 10000:
++            status, body = self.api('/contests', 'POST', draft, allow_error=True)
++            assert status == 400 and body['data'] is None
++            return None
++        c = self.api('/contests', 'POST', draft)
++        cid = c['id']
++        self.api('/contests/'+cid+'/publish', 'POST', {'expectedVersion': c['version']})
++        self.api('/contests/'+cid+'/registration-admin/prepare', 'POST', {'expectedVersion': self.view(cid)['version'], 'reason': 'Disposable recovery fixture'})
++        self.api('/contests/'+cid+'/registration-admin/reconcile', 'POST', {'expectedVersion': self.view(cid)['version'], 'reason': 'Initialize private ledger'})
++        self.wait('question', lambda: dt.datetime.now(dt.timezone.utc) >= now + dt.timedelta(seconds=3), 10)
++        return cid
++
++    def reserve(self, cid, actor, marker=None, minimum=0):
++        version = int(self.sql('SELECT publishedVersion FROM contest WHERE id='+cid))
++        epoch = int(self.sql('SELECT registrationEpoch FROM contest WHERE id='+cid))
++        request = str(7000000000000000000 + secrets.randbelow(1000000000000))
++        event = str(uuid.uuid4())
++        key = 'real-recovery-' + actor
++        digest = hashlib.sha256(json.dumps({'type': 'REGISTRATION', 'contestId': int(cid), 'publishedVersion': version}, separators=(',', ':')).encode()).hexdigest()
++        args = ['reserve', cid, version, epoch, self.state[actor+'Id'], request, event, key, digest,
++                int(self.sql('SELECT FLOOR(UNIX_TIMESTAMP(UTC_TIMESTAMP(6))*1000)')), 2000, minimum]
++        if marker:
++            try: self.lua(cid, args, marker)
++            except RedisError as error: assert 'CONTROLLED_REAL_REDIS_FAULT' in str(error)
++            else: raise AssertionError('Injected failure not reached')
++            return {'requestId': request, 'eventId': event, 'requestKey': key}
++        reply = self.lua(cid, args)
++        assert reply['code'] == 'OK', reply['code']
++        return reply['reservation']
++
++    def row(self, r, state, marker):
++        reserved = dt.datetime.fromtimestamp(int(r['reservedAtMicros']) // 1000000, dt.timezone.utc).replace(microsecond=int(r['reservedAtMicros']) % 1000000).strftime('%Y-%m-%d %H:%M:%S.%f')
++        values = [r['requestId'], r['contestId'], r['publishedVersion'], r['userId'], r['eventId'], r['requestKey'], r['requestHash'], reserved, state, marker, reserved, r['epoch'], r['sequence']]
++        columns = 'id,contestId,publishedVersion,userId,eventId,requestKey,requestHash,reservedAt,status,reclaimState,createdAt,reservationEpoch,reservationSequence'
++        return 'INSERT INTO contest_registration_request('+columns+',stateVersion) VALUES('+','.join(self.sql_string(v) for v in values)+',0);'
++
++    def confirmed(self, cid, actor):
++        return self.wait('question', lambda: (lambda r: r if r['status'] == 'CONFIRMED' else None)(self.api('/contests/'+cid+'/registrations/me', actor=actor)), 25)
++
++    def exercise(self):
++        self.wait('gateway', lambda: self.http('http://127.0.0.1:'+str(self.ports['gateway'])+'/api/contests')[1].get('code') == 0, 45)
++        self.accounts()
++        assert self.sql("SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema='codeoj' AND table_name='contest_registration_request' AND index_name='uk_registration_sequence'") == '3'
++        self.event('REAL_MYSQL_V005_AND_UNIQUE_INDEX_PASSED')
++
++        # Real APIs, real Outbox relay and real consumer, no manual confirmation.
++        cid = self.contest(1)
++        accepted = self.api('/contests/'+cid+'/registrations', 'POST', actor='participant', key='real-normal-registration')
++        original = self.confirmed(cid, 'participant')
++        assert accepted['requestId'] == original['requestId']
++        assert self.sql('SELECT reservationSequence FROM contest_registration_request WHERE id='+original['requestId']) == '1'
++        self.event('REAL_HTTP_MQ_REGISTRATION_AND_ORDINAL_PASSED')
++
++        # Stop the manager so maintenance cannot erase the intended fault window.
++        cid = self.contest(2)
++        self.stop('question')
++        early = self.reserve(cid, 'participant')
++        snapshot = {k: self.redis('DUMP', k) for k in self.keys(cid)}
++        b = self.reserve(cid, 'admin')
++        # Explicit durable-confirmed fault fixture in real InnoDB, not a claimed consumer result.
++        self.sql('START TRANSACTION;'+self.row(b, 'CONFIRMED', 'COMPLETE')+'UPDATE contest SET remainingCapacity=remainingCapacity-1 WHERE id='+cid+';INSERT INTO contest_registration(id,contestId,userId,requestId,confirmedAt,status) VALUES('+','.join([b['requestId'], cid, b['userId'], b['requestId'], 'UTC_TIMESTAMP(6)', "'CONFIRMED'"])+');COMMIT;')
++        self.lua(cid, ['finish', b['eventId'], b['requestId'], b['userId'], b['publishedVersion'], b['epoch'], 'CONFIRMED'])
++        def restore():
++            self.redis('DEL', *self.keys(cid))
++            for key, value in snapshot.items():
++                if value is not None: self.redis('RESTORE', key, 0, value)
++        restore()
++        late = self.reserve(cid, 'observer', minimum=0)  # Simulates a stale DB high-water sample.
++        assert late['sequence'] == b['sequence']
++        try: self.sql(self.row(late, 'PROCESSING', 'RESERVED'))
++        except RuntimeError as error: assert '1062' in str(error)
++        else: raise AssertionError('Real MySQL ordinal collision was accepted')
++        restore()
++        self.restart('question')
++        self.wait('question', lambda: self.sql('SELECT registrationIssue FROM contest WHERE id='+cid) == 'LEDGER_ROLLBACK_DETECTED', 25)
++        status, _ = self.api('/contests/'+cid+'/registrations', 'POST', actor='observer', key='real-rollback-late', allow_error=True)
++        assert status in (409, 503)
++        assert self.sql('SELECT COUNT(*) FROM contest_registration WHERE contestId='+cid) == '1'
++        assert self.sql('SELECT COUNT(*) FROM contest_registration_request WHERE contestId='+cid) == '1'
++        assert json.loads(self.redis('HGET', self.keys(cid)[3], early['eventId']))['requestId'] == early['requestId']
++        self.event('REAL_OLD_SNAPSHOT_FENCE_AND_MYSQL_1062_PASSED')
++
++        cid = self.contest(1)
++        self.stop('question')
++        partial = self.reserve(cid, 'participant', '-- reserve.write.stock')
++        assert self.redis('HEXISTS', self.keys(cid)[0], 'mutation') == 1
++        self.restart('question')
++        recovered = self.confirmed(cid, 'participant')
++        assert recovered['requestId'] == partial['requestId']
++        assert self.redis('HEXISTS', self.keys(cid)[0], 'mutation') == 0
++        assert self.redis('GET', self.keys(cid)[1]) == b'0'
++        assert self.api('/contests/'+cid+'/registrations', 'POST', actor='participant', key=partial['requestKey'])['requestId'] == partial['requestId']
++        self.event('REAL_LUA_PARTIAL_RESERVE_PROCESS_RESTART_AND_MQ_CONFIRM_PASSED')
++
++        cid = self.contest(1)
++        self.stop('question')
++        r = self.reserve(cid, 'participant')
++        self.sql(self.row(r, 'FAILED', 'RELEASE_PENDING'))
++        try: self.lua(cid, ['finish', r['eventId'], r['requestId'], r['userId'], r['publishedVersion'], r['epoch'], 'RELEASED'], '-- finish.write.stock')
++        except RedisError as error: assert 'CONTROLLED_REAL_REDIS_FAULT' in str(error)
++        else: raise AssertionError('Release fault not reached')
++        self.restart('question')
++        self.wait('question', lambda: self.sql('SELECT reclaimState FROM contest_registration_request WHERE id='+r['requestId']) == 'RELEASED', 25)
++        assert self.redis('GET', self.keys(cid)[1]) == b'1'
++        self.api('/contests/'+cid+'/registrations', 'POST', actor='observer', key='real-after-recovered-release')
++        self.confirmed(cid, 'observer')
++        assert self.redis('GET', self.keys(cid)[1]) == b'0'
++        self.event('REAL_INTERRUPTED_RELEASE_AND_SINGLE_RESOLD_SLOT_PASSED')
++
++        cid = self.contest(2)
++        self.api('/contests/'+cid+'/registrations', 'POST', actor='participant', key='real-legacy-original')
++        original = self.confirmed(cid, 'participant')
++        self.stop('question')
++        entries = self.redis('HGETALL', self.keys(cid)[3])
++        for i in range(0, len(entries), 2):
++            row = json.loads(entries[i+1]);row.pop('sequence')
++            self.redis('HSET', self.keys(cid)[3], entries[i], json.dumps(row, separators=(',', ':')))
++        self.redis('HDEL', self.keys(cid)[0], 'format')
++        self.sql('UPDATE contest_registration_request SET reservationSequence=NULL WHERE contestId='+cid)
++        self.restart('question')
++        self.wait('question', lambda: self.sql('SELECT registrationIssue FROM contest WHERE id='+cid) == 'LEDGER_FORMAT_UPGRADE_REQUIRED', 25)
++        self.api('/contests/'+cid+'/registration-admin/reconcile', 'POST', {'expectedVersion': self.view(cid)['version'], 'reason': 'Closed-gate real legacy upgrade'})
++        assert self.redis('HGET', self.keys(cid)[0], 'format') == b'2'
++        assert self.api('/contests/'+cid+'/registrations/me', actor='participant')['requestId'] == original['requestId']
++        self.api('/contests/'+cid+'/registrations', 'POST', actor='observer', key='real-after-legacy-upgrade')
++        self.confirmed(cid, 'observer')
++        self.event('REAL_LEGACY_IDENTITY_UPGRADE_AND_NEW_REGISTRATION_PASSED')
++
++        self.contest(10001)
++        self.event('REAL_HTTP_OVERSIZED_CAPACITY_REJECTED')
++        self.wait('question', lambda: self.sql("SELECT COUNT(*) FROM contest_registration_request WHERE status='CONFIRMED' AND reclaimState<>'COMPLETE'") == '0', 25)
++        self.event('REAL_TERMINAL_MARKERS_SETTLED')
++        facts = {'passed': True, 'scope': 'Real private MySQL/Redis/RabbitMQ/Session/Gateway; explicit direct SQL/Redis fault setup for rollback/release; normal and restart-recovered confirmation used actual MQ consumer; no user code execution, Nacos or load test',
++                 'mysqlVersion': self.sql('SELECT VERSION()'), 'requestStates': self.sql('SELECT status,reclaimState,COUNT(*) FROM contest_registration_request GROUP BY status,reclaimState').splitlines(),
++                 'ordinals': self.sql('SELECT COUNT(*),COUNT(reservationSequence) FROM contest_registration_request').splitlines(),
++                 'qualificationCounts': self.sql('SELECT contestId,COUNT(*) FROM contest_registration GROUP BY contestId').splitlines(),
++                 'publishAttempts': self.sql("SELECT p.confirmState,COUNT(*) FROM publish_attempt p JOIN reliable_outbox o ON o.eventId=p.eventId WHERE o.eventType='REGISTRATION_CONFIRM' GROUP BY p.confirmState").splitlines(),
++                 'events': self.events}
++        (self.evidence/'registration-facts.json').write_text(json.dumps(facts, indent=2)+'\n')
++        self.ok = True
++
++
++def main():
++    parser = argparse.ArgumentParser()
++    parser.add_argument('--runtimes', required=True)
++    parser.add_argument('--evidence', required=True)
++    args = parser.parse_args()
++    def interrupted(_s, _f): raise KeyboardInterrupt('Cleaning owned registration fixture')
++    signal.signal(signal.SIGTERM, interrupted)
++    stack = RecoveryStack(args.runtimes, args.evidence)
++    try:
++        stack.verify_artifacts();stack.setup_infrastructure();stack.setup_services();stack.exercise()
++    finally:
++        stack.cleanup()
++        remaining=[]
++        for name, port in stack.ports.items():
++            try:
++                with socket.create_connection(('127.0.0.1', port), timeout=.2): remaining.append(name)
++            except OSError: pass
++        (stack.evidence/'cleanup-check.json').write_text(json.dumps({'temporaryWorkRemoved':not stack.work.exists(),'remainingOpenOwnedPorts':remaining},indent=2)+'\n')
++        if remaining: raise RuntimeError('OWNED_REGISTRATION_PORTS_REMAIN')
++
++
++if __name__ == '__main__': main()
+diff --git a/docs/contest/registration-recovery.md b/docs/contest/registration-recovery.md
+new file mode 100644
+index 0000000..2b9e2cd
+--- /dev/null
++++ b/docs/contest/registration-recovery.md
+@@ -0,0 +1,78 @@
++# 报名恢复：旧快照、Lua 异常与受理上限
++
++2026-10-22。本次修复对应[细致审查中的 R1/R2](../../outputs/validation/registration-review-20261022/report.md)，并补齐用户提出的“请求入口 Lua 执行失败”窗口。当前代码、[新增故障测试](../../codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationRedisIntegrationTest.java)及[本轮验证](../../outputs/validation/registration-fix-20261022/report.md)是判断依据；历史报告保留当时结果。
++
++## 1. 旧快照不能仅靠条数判断
++
++原问题：Redis 中尚未落库的 A 可以抵消数据库中已确认但 Redis 已丢失的 B，两边各一条记录，数量检查仍通过。后来者 C 因此得到额外预留，先确认后使 A 转人工。
++
++新预留的 `sequence` 随累计账本条数单调增加，持久到请求表的 `reservationSequence`。新增 V005 对 `(contestId,reservationEpoch,reservationSequence)` 建唯一约束。已释放、已确认请求仍保留序号，不在恢复时清零。
++
++- 新准入及周期维护读取数据库已落盘的最大预留序号，Lua 对照自身序号位置；旧快照低于这个位置时立即关 Redis 闸门，并将比赛置为 `LEDGER_ROLLBACK_DETECTED` 暂停。
++- 数据库时间样本或查询结果可能过旧，因此唯一约束仍必要：即便调用者以旧的最大序号访问 Redis，重新分配的序号也不能绑定到另一持久请求。
++- 原 request/event/key、时间和资格事实保留；不通过重建空库存掩盖已知身份丢失。数据不完整时保持暂停，待恢复完整证据后对账。
++- 只回退 Redis 完成/释放标记时，待处理扫描也会依据数据库持久终态重放原标记；数据库已经 COMPLETE/RELEASED 不再被当作“Redis 一定仍是最新状态”。
++
++序号是该比赛/epoch 内的持久一致性依据，不是跨系统时钟或绝对公平排序。这里验证的是完整旧快照回退和序号冲突；任意外部篡改、数据库与 Redis 同时丢失不在这些证明内。
++
++## 2. Lua 抛错不等于此前写入已撤销
++
++Lua 执行过程中不会被其他请求插入，但脚本运行时报错不自动回滚此前写入。特别是“已扣库存、尚未写用户映射”时，只查映射会遗漏部分执行。[Redis 官方说明](https://github.com/redis/redis/issues/10576)。
++
++初始化、预留、完成/释放现在按下列顺序执行：
++
++1. 校验键类型、原身份、时间、容量及上下文，准备好完整结果和目标值。
++2. 在同场 meta 内写 `mutation` 操作意图，保存原 request/event/user/key/序号与修改前计数。预留意图先于扣库存。
++3. 更新库存、用户映射、完整账本、pending 集合及计数。
++4. 最后删除操作意图。任何中间步骤报错，正常读写均不能越过未完成意图。
++5. 请求异常恢复、本人查询、维护任务及管理员对账可执行 `repair`：核验上下文、原身份及当前值是否仍处于该操作的修改前/目标值范围，再用确定的目标值补齐，最后清除意图。
++
++恢复使用 `SET 目标库存`，重复修复不会叠加 DECR/INCR。RELEASED 只能源于已落盘 FAILED/CANCELLED；CONFIRMED 的完成标记不退还名额。修复不是根据一次异常猜测失败后回滚。
++
++| 请求情形 | 当前行为 |
++| --- | --- |
++| 执行前连接失败，未发现原预留 | 503，不伪造已受理请求；原 key 可稍后重试 |
++| 预留成功但响应丢失 | 查询原用户映射及账本，落盘原 request/event，返回原请求 |
++| 写入意图后、扣库存前或后报错 | 核验并完成原意图，继续原请求；不能另建身份或直接退库存 |
++| API 在部分写入后退出 | 后台修复原意图，再补建原请求及 Outbox；真实 MQ 消费确认 |
++| 释放写库存后报错 | 按目标值补齐终态/集合，重复执行最多归还一个名额 |
++| Redis 仍不可达、证据冲突或键类型损坏 | 返回不可判断并暂停；保留意图与原始数据，不自动删除或重置 |
++| SCRIPT FLUSH 后执行 | 由现有 Spring Redis 脚本执行器重新加载/执行，已用实际 Redis 验证 |
++
++没有意图记录的历史损坏，不能靠新代码猜回修改前库存。Redis 整体丢失且某条预留从未进入数据库的边界仍存在。
++
++## 3. 受理能力与闭环能力一致
++
++新建比赛容量上限为 10000，管理页面同步限制。Lua 在创建新身份前原子限制该比赛累计账本条数为 10000；满额后返回 `REGISTRATION_LEDGER_LIMIT`，已有身份的查询与原键重试仍可完成。
++
++累计账本包括 PROCESSING、CONFIRMED 和 RELEASED，不能只限制当前资格数。小容量比赛经过不同用户失败、释放、再次分配后也受累计上限约束。保留终态身份用于幂等，不通过 TTL 或删历史记录绕过限制。该上限用于保证当前有界对账/结算可以闭合，不代表已测得 10000 用户吞吐能力。
++
++迁移不会缩减已有比赛容量或删除历史数据。超过旧版受支持对账规模的既有数据保持暂停，需独立迁移方案；不要通过直接提高扫描上限、改库存或清空身份进行“修复”。
++
++## 4. V005 与旧账本升级
++
++1. 停止旧版报名写入者，先应用 V001—V005，再使用本版代码。不要让不识别操作意图和序号的旧写入者继续并行操作同一账本。
++2. V005 增加可空 `reservationSequence` 和唯一索引；历史行不虚构序号，DB_SYNC 记录仍可为 NULL。
++3. 缺少 `format=2` 的旧 Redis 账本不允许新准入。管理员走既有 reconcile：关闸、扫描完整原身份、补建已有预留、核对数据库资格和容量。
++4. 核对通过后，在同一数据库事务中按保留的原时间/事件顺序分配稳定序号，再在关闭的旧 Redis 账本上填入序号；全部完成后才设置新格式并恢复入口。原 request/event/key 及资格不变。
++5. 中途失败保持暂停。数据库已提交的序号不会重分配；Redis 部分升级可以沿用原赋值继续。缺行、身份或容量不一致则拒绝升级。
++
++这是控制数据的兼容升级，不是生产部署自动化或热切换认证。
++
++## 5. 如何验证与解释
++
++后端入口：`REDIS_SERVER=/absolute/path/to/private/redis-server scripts/test-registration-local.sh`。测试仍自行启动独立随机端口 Redis/H2，不连接已有 6379。消息契约测试使用 mock；不要把它们写成真实 MQ 故障证据。
++
++真实依赖入口：[check-registration-recovery.py](../../scripts/local/check-registration-recovery.py)，使用新建私有 MySQL、Redis、RabbitMQ、会话、网关和服务：
++
++```bash
++python3 -B scripts/local/check-registration-recovery.py --runtimes /private/path/from-prepare-runtimes --evidence /new/evidence/registration-recovery
++```
++
++该入口的旧快照/释放故障准备明确使用私有 SQL/Redis 夹具；正常报名、部分预留后服务重启、旧账本升级后的报名均经过实际 HTTP/Outbox/MQ 消费。沙箱服务采用显式可信 native 模式启动，本入口不执行参赛代码，不替代容器隔离验收。结束自动停止所属进程、删除私有数据库/配置，并检查端口关闭。
++
++学习时应能解释：为什么查不到映射不能认定没扣库存；为什么条数相等仍可能丢身份；为什么序号检查还要有数据库唯一约束；为什么已标记 RELEASED 还可能需要重放 Redis 标记。
++
++## 6. 与点评仓库的区别
++
++本轮只读取同级 DianPing 当前版本 `8bec9928f853ffb0999787b62e4890fc84864fb4`。其 VoucherOrderServiceImpl 的 handleUnknownReserve 已有异常后查原映射的处理，但 seckill.lua 仍先 DECR，再 SADD/HSET 用户映射；映射不存在时将执行认定为未生效，对脚本内部部分写入不充分。本轮没有修改或运行验收 DianPing，不能把 CodeOJ 的新恢复协议描述成点评也已修复。

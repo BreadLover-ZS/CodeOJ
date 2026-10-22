@@ -1,0 +1,98 @@
+
+> codeoj-frontend@0.1.0 build
+> vue-cli-service build
+
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+All browser targets in the browserslist configuration have supported ES module.
+Therefore we don't build two separate bundles for differential loading.
+
+
+-  Building for production...
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+(node:66832) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+(node:66831) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+(node:66833) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+(node:66834) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:66837) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+(node:66835) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:66836) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+(node:66838) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:66839) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+ ERROR  Failed to compile with 1 error10:35:43 PM
+
+[eslint] 
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/views/contest/ManageContestsView.vue
+  70:31  error  Replace `⏎················v-model="form.capacity"⏎················:min="1"⏎···············` with `·v-model="form.capacity"·:min="1"`  prettier/prettier
+  77:11  error  Replace `></a-space` with `··></a-space⏎··········`                                                                                   prettier/prettier
+
+✖ 2 problems (2 errors, 0 warnings)
+  2 errors and 0 warnings potentially fixable with the `--fix` option.
+
+
+You may use special comments to disable some warnings.
+Use // eslint-disable-next-line to ignore the next line.
+Use /* eslint-disable */ to ignore all warnings in a file.
+ ERROR  Error: Build failed with errors.
+Error: Build failed with errors.
+    at /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/node_modules/@vue/cli-service/lib/commands/build/index.js:207:23
+    at /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/node_modules/webpack/lib/webpack.js:157:8
+    at /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/node_modules/webpack/lib/HookWebpackError.js:68:3
+    at Hook.eval [as callAsync] (eval at create (/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:6:1)
+    at Hook.CALL_ASYNC_DELEGATE [as _callAsync] (/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/node_modules/tapable/lib/Hook.js:18:14)
+    at Cache.shutdown (/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/node_modules/webpack/lib/Cache.js:150:23)
+    at /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/node_modules/webpack/lib/Compiler.js:1229:15
+    at Hook.eval [as callAsync] (eval at create (/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/node_modules/tapable/lib/HookCodeFactory.js:33:10), <anonymous>:6:1)
+    at Hook.CALL_ASYNC_DELEGATE [as _callAsync] (/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/node_modules/tapable/lib/Hook.js:18:14)
+    at Compiler.close (/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/node_modules/webpack/lib/Compiler.js:1222:23)

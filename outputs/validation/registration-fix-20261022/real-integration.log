@@ -1,0 +1,38 @@
+{"at": "2026-10-22T14:32:10.861342+00:00", "action": "PACKAGED_ARTIFACTS_MATCH_CURRENT_BUILD"}
+{"at": "2026-10-22T14:32:15.309700+00:00", "action": "MIGRATION_APPLIED", "name": "V001__reliable_judging.sql"}
+{"at": "2026-10-22T14:32:15.345318+00:00", "action": "MIGRATION_APPLIED", "name": "V002__contest_core.sql"}
+{"at": "2026-10-22T14:32:15.389795+00:00", "action": "MIGRATION_APPLIED", "name": "V003__async_registration.sql"}
+{"at": "2026-10-22T14:32:15.415428+00:00", "action": "MIGRATION_APPLIED", "name": "V004__contest_scoreboard.sql"}
+{"at": "2026-10-22T14:32:15.432563+00:00", "action": "MIGRATION_APPLIED", "name": "V005__registration_recovery_fence.sql"}
+{"at": "2026-10-22T14:32:20.445854+00:00", "action": "INFRASTRUCTURE_READY", "mysql": "8.0.46", "rabbitmq": "4.3.6", "erlang": "28.5.0.8", "redis": "6.2.24"}
+{"at": "2026-10-22T14:32:24.143801+00:00", "action": "SERVICE_READY", "service": "sandbox"}
+{"at": "2026-10-22T14:32:26.912716+00:00", "action": "SERVICE_READY", "service": "user"}
+{"at": "2026-10-22T14:32:30.290707+00:00", "action": "SERVICE_READY", "service": "question"}
+{"at": "2026-10-22T14:32:33.364555+00:00", "action": "SERVICE_READY", "service": "judge"}
+{"at": "2026-10-22T14:32:35.832210+00:00", "action": "SERVICE_READY", "service": "gateway"}
+{"at": "2026-10-22T14:32:36.788116+00:00", "action": "REAL_SESSION_LOGIN_PASSED"}
+{"at": "2026-10-22T14:32:36.801397+00:00", "action": "REAL_MYSQL_V005_AND_UNIQUE_INDEX_PASSED"}
+{"at": "2026-10-22T14:32:40.268918+00:00", "action": "REAL_HTTP_MQ_REGISTRATION_AND_ORDINAL_PASSED"}
+{"at": "2026-10-22T14:32:44.547451+00:00", "action": "PROCESS_STOPPED", "service": "question"}
+{"at": "2026-10-22T14:32:47.168483+00:00", "action": "PROCESS_STOPPED", "service": "gateway"}
+{"at": "2026-10-22T14:32:47.601395+00:00", "action": "PROCESS_STOPPED", "service": "judge"}
+{"at": "2026-10-22T14:32:47.601528+00:00", "action": "PROCESS_STOPPED", "service": "question"}
+{"at": "2026-10-22T14:32:47.786009+00:00", "action": "PROCESS_STOPPED", "service": "user"}
+{"at": "2026-10-22T14:32:47.808749+00:00", "action": "PROCESS_STOPPED", "service": "sandbox"}
+{"at": "2026-10-22T14:32:48.899323+00:00", "action": "PROCESS_STOPPED", "service": "rabbitmq"}
+{"at": "2026-10-22T14:32:48.904125+00:00", "action": "PROCESS_STOPPED", "service": "epmd"}
+{"at": "2026-10-22T14:32:49.037140+00:00", "action": "PROCESS_STOPPED", "service": "redis"}
+{"at": "2026-10-22T14:32:49.938583+00:00", "action": "PROCESS_STOPPED", "service": "mysql"}
+Traceback (most recent call last):
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/scripts/local/check-registration-recovery.py", line 240, in <module>
+    if __name__ == '__main__': main()
+                               ~~~~^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/scripts/local/check-registration-recovery.py", line 228, in main
+    stack.verify_artifacts();stack.setup_infrastructure();stack.setup_services();stack.exercise()
+                                                                                 ~~~~~~~~~~~~~~^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/scripts/local/check-registration-recovery.py", line 135, in exercise
+    early = self.reserve(cid, 'participant')
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/scripts/local/check-registration-recovery.py", line 106, in reserve
+    assert reply['code'] == 'OK', reply['code']
+           ^^^^^^^^^^^^^^^^^^^^^
+AssertionError: LEDGER_INCOMPLETE

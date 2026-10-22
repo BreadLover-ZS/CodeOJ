@@ -52,7 +52,14 @@ class RegistrationRedisIntegrationTest {
             process=new ProcessBuilder(binary,"--bind","127.0.0.1","--port",Integer.toString(port),"--requirepass",password,"--save","","--appendonly","yes","--appendfsync","always","--dir",dir.toString())
                     .redirectErrorStream(true).redirectOutput(ProcessBuilder.Redirect.appendTo(dir.resolve("redis.log").toFile())).start();
             long deadline=System.nanoTime()+5000000000L;
-            while(System.nanoTime()<deadline) { try(Socket socket=new Socket("127.0.0.1",port)) { return; }catch(java.io.IOException starting) { if(!process.isAlive()) { throw new IllegalStateException(new String(Files.readAllBytes(dir.resolve("redis.log")),StandardCharsets.UTF_8)); }Thread.sleep(10); } }
+            while(System.nanoTime()<deadline) { try(Socket socket=new Socket("127.0.0.1",port)) {
+                socket.setSoTimeout(200);
+                String auth="*2\r\n$4\r\nAUTH\r\n$"+password.length()+"\r\n"+password+"\r\n*1\r\n$4\r\nPING\r\n";
+                socket.getOutputStream().write(auth.getBytes(StandardCharsets.UTF_8));socket.getOutputStream().flush();
+                java.io.BufferedReader input=new java.io.BufferedReader(new java.io.InputStreamReader(socket.getInputStream(),StandardCharsets.UTF_8));
+                if("+OK".equals(input.readLine()) && "+PONG".equals(input.readLine())) { return; }
+                Thread.sleep(10);
+            }catch(java.io.IOException starting) { if(!process.isAlive()) { throw new IllegalStateException(new String(Files.readAllBytes(dir.resolve("redis.log")),StandardCharsets.UTF_8)); }Thread.sleep(10); } }
             throw new IllegalStateException("TEST_REDIS_START_TIMEOUT");
         }
         void stop() throws Exception { if(process!=null) { process.destroy();if(!process.waitFor(2,TimeUnit.SECONDS)) { process.destroyForcibly();process.waitFor(2,TimeUnit.SECONDS); } } }
@@ -80,6 +87,8 @@ class RegistrationRedisIntegrationTest {
         ContestCoreTest seed=new ContestCoreTest();seed.ds=ds;seed.jdbc=jdbc;seed.schema();
         String sql=new String(Files.readAllBytes(Paths.get("..","mysql-init","migrations","V003__async_registration.sql")),StandardCharsets.UTF_8);
         try(Connection c=ds.getConnection()) { ScriptUtils.executeSqlScript(c,new ByteArrayResource(sql.getBytes(StandardCharsets.UTF_8))); }
+        String fenceSql=new String(Files.readAllBytes(Paths.get("..","mysql-init","migrations","V005__registration_recovery_fence.sql")),StandardCharsets.UTF_8);
+        try(Connection c=ds.getConnection()) { ScriptUtils.executeSqlScript(c,new ByteArrayResource(fenceSql.getBytes(StandardCharsets.UTF_8))); }
         String scoreSql=new String(Files.readAllBytes(Paths.get("..","mysql-init","migrations","V004__contest_scoreboard.sql")),StandardCharsets.UTF_8).replace(" DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci","");
         try(Connection c=ds.getConnection()) { ScriptUtils.executeSqlScript(c,new ByteArrayResource(scoreSql.getBytes(StandardCharsets.UTF_8))); }
         try(RedisConnection c=redis.getConnectionFactory().getConnection()) { c.flushDb(); } // Only this harness's private server.
@@ -275,6 +284,186 @@ class RegistrationRedisIntegrationTest {
         service.reconcile(id,command(transactions.settings(id).getRevision()),99);assertEquals("0",ledger.stats(id).getStr("open"));
         scores.rebuild(id,scoreCommand(id),99,false);scores.finish(id,scoreCommand(id),99);
         Map<String,Object> finalBoard=scores.snapshot(id,0,20,null,99,true);assertEquals(true,finalBoard.get("final"));assertEquals(1L,finalBoard.get("total"));assertEquals("FINISHED",finalBoard.get("status"));
+    }
+
+    /** Executes the production Lua with exactly one injected runtime error, never a production fault flag. */
+    class FaultLedger extends RedisRegistrationLedger {
+        final String operation,marker;boolean armed=true;String proposedRequest,proposedEvent;
+        FaultLedger(String operation,String marker) { super(redis);this.operation=operation;this.marker=marker; }
+        @Override cn.hutool.json.JSONObject call(long contest,String... args) {
+            if(armed && operation.equals(args[0])) {
+                armed=false;
+                if("reserve".equals(operation)) { proposedRequest=args[5];proposedEvent=args[6]; }
+                try {
+                    String source=org.springframework.util.StreamUtils.copyToString(new org.springframework.core.io.ClassPathResource("lua/contest-registration.lua").getInputStream(),StandardCharsets.UTF_8);
+                    assertTrue(source.contains(marker));
+                    source=source.replace(marker,marker+"\n error('CONTROLLED_REVIEW_FAULT')");
+                    redis.execute(new org.springframework.data.redis.core.script.DefaultRedisScript<>(source,String.class),RedisRegistrationLedger.keys(contest),(Object[])args);
+                    throw new AssertionError("Fault was not reached");
+                } catch(java.io.IOException error) { throw new java.io.UncheckedIOException(error); }
+            }
+            return super.call(contest,args);
+        }
+    }
+    RegistrationService facade(RedisRegistrationLedger custom) {
+        RegistrationService result=new RegistrationService(contests,transactions,custom,new ExecutionRepository(jdbc),jdbc);
+        ReflectionTestUtils.setField(result,"enabled",true);return result;
+    }
+    Map<String,byte[]> dump(long id) {
+        Map<String,byte[]> snapshot=new LinkedHashMap<>();
+        try(RedisConnection c=redis.getConnectionFactory().getConnection()) { for(String k:RedisRegistrationLedger.keys(id)) { snapshot.put(k,c.dump(k.getBytes(StandardCharsets.UTF_8))); } }return snapshot;
+    }
+    void restore(long id,Map<String,byte[]> snapshot) {
+        try(RedisConnection c=redis.getConnectionFactory().getConnection()) {
+            for(String k:RedisRegistrationLedger.keys(id)) { c.del(k.getBytes(StandardCharsets.UTF_8)); }
+            for(Map.Entry<String,byte[]> e:snapshot.entrySet()) { if(e.getValue()!=null) { c.restore(e.getKey().getBytes(StandardCharsets.UTF_8),0,e.getValue()); } }
+        }
+    }
+    @Test void oldSnapshotWithOrphanCannotMaskMissingConfirmedIdentity() {
+        long id=active(2);RegistrationReservation early=raw(id,10);Map<String,byte[]> snapshot=dump(id);
+        RegistrationRequest b=accept(id,11);transactions.confirm(b.event());service.synchronize(request(id,11));restore(id,snapshot);
+        assertEquals(1,ledger.stats(id).getInt("count"));assertEquals(1,count("contest_registration_request"));
+        RedisRegistrationLedger.LedgerException error=assertThrows(RedisRegistrationLedger.LedgerException.class,()->maintenance().maintain(id));
+        assertEquals("LEDGER_ROLLBACK_DETECTED",error.getCode());assertFalse(transactions.settings(id).isReady());
+        assertThrows(BusinessException.class,()->service.register(id,key,12));
+        assertEquals(early.getEventId(),ledger.user(id,10).getEventId());assertEquals("CONFIRMED",request(id,11).getStatus());assertEquals(1,count("contest_registration"));
+    }
+    @Test void staleDatabaseSampleCannotReuseADurablyAssignedOrdinal() {
+        long id=active(2);raw(id,10);Map<String,byte[]> snapshot=dump(id);RegistrationSettings stale=transactions.settings(id);
+        RegistrationRequest b=accept(id,11);transactions.confirm(b.event());service.synchronize(request(id,11));restore(id,snapshot);
+        RegistrationReservation late=ledger.reserve(stale,12,IdWorker.getId(),UUID.randomUUID().toString(),key,RegistrationTransactions.hash(id,stale.getPublishedVersion()));
+        assertEquals(b.getReservation().getSequence(),late.getSequence());
+        assertThrows(BusinessException.class,()->service.persist(late));assertFalse(transactions.settings(id).isReady());
+        assertEquals(1,count("contest_registration_request"));assertEquals(1,count("contest_registration"));
+    }
+    @Test void newContestCannotExceedTheSupportedClosureCapacity() {
+        assertThrows(BusinessException.class,()->published(10001));assertEquals(0,count("contest"));
+    }
+    @Test @Timeout(60) void ledgerLimitCountsReleasedIdentitiesAndStillAllowsOriginalRetries() {
+        long id=active(1);RegistrationSettings s=transactions.settings(id);RegistrationReservation original=null;
+        // Lua contract fixture: each synthetic reservation is terminally released; not 10000 HTTP/MQ users.
+        for(int i=0;i<10000;i++) {
+            s.setNow(LocalDateTime.now(ZoneOffset.UTC));
+            RegistrationReservation r=ledger.reserve(s,1000L+i,IdWorker.getId(),UUID.randomUUID().toString(),key,RegistrationTransactions.hash(id,s.getPublishedVersion()));
+            if(i==0) { original=r; }ledger.finish(r,"RELEASED");
+        }
+        assertEquals(10000,ledger.stats(id).getInt("count"));assertEquals(1,stock(id));s.setNow(LocalDateTime.now(ZoneOffset.UTC));
+        RedisRegistrationLedger.LedgerException limit=assertThrows(RedisRegistrationLedger.LedgerException.class,()->ledger.reserve(s,99999,IdWorker.getId(),UUID.randomUUID().toString(),key,RegistrationTransactions.hash(id,s.getPublishedVersion())));
+        assertEquals("REGISTRATION_LEDGER_LIMIT",limit.getCode());assertEquals(1,stock(id));
+        assertEquals(original.getEventId(),ledger.reserve(s,1000,IdWorker.getId(),UUID.randomUUID().toString(),key,RegistrationTransactions.hash(id,s.getPublishedVersion())).getEventId());
+        ledger.gate(s,false,false);assertEquals(10000,ledger.snapshot(id).size());
+    }
+    @Test void reservationRecoversEveryPartialWriteAndTheOriginalIdentity() {
+        String[] markers={"-- reserve.write.intent","-- reserve.write.stock","-- reserve.write.user","-- reserve.write.ledger","-- reserve.write.pending","-- reserve.write.counters","-- mutation.clear"};
+        for(String marker:markers) {
+            long id=active(1);FaultLedger fault=new FaultLedger("reserve",marker);
+            Map<String,Object> response=facade(fault).register(id,key,10);RegistrationRequest q=request(id,10);
+            assertEquals("PROCESSING",response.get("status"));assertEquals(fault.proposedRequest,response.get("requestId"));assertEquals(fault.proposedEvent,q.event().getEventId());
+            assertEquals(0,stock(id));assertFalse(redis.opsForHash().hasKey(RedisRegistrationLedger.keys(id).get(0),"mutation"));
+            assertEquals(response.get("requestId"),service.register(id,key,10).get("requestId"));
+            transactions.confirm(q.event());service.synchronize(request(id,10));assertEquals("CONFIRMED",request(id,10).getStatus());assertEquals(0,stock(id));
+        }
+        System.out.println("REGISTRATION_RECOVERY_CASE reservation-write-points=7 original-identity-and-single-allocation=PASS");
+    }
+    @Test void processLostAfterStockWriteCanRecoverThroughMaintenance() {
+        long id=active(1);RegistrationSettings s=transactions.settings(id);FaultLedger fault=new FaultLedger("reserve","-- reserve.write.stock");
+        assertThrows(RuntimeException.class,()->fault.reserve(s,10,IdWorker.getId(),UUID.randomUUID().toString(),key,RegistrationTransactions.hash(id,s.getPublishedVersion())));
+        assertEquals(0,count("contest_registration_request"));maintenance().maintain(id);
+        assertEquals(fault.proposedRequest,request(id,10).getReservation().getRequestId().toString());assertEquals(0,stock(id));
+        assertThrows(SubmissionConflictException.class,()->service.register(id,key,11));
+    }
+    @Test void releaseRecoversEveryPartialWriteWithoutASecondRefund() {
+        String[] markers={"-- finish.write.intent","-- finish.write.stock","-- finish.write.ledger","-- finish.write.pending","-- finish.write.counters","-- mutation.clear"};
+        for(String marker:markers) {
+            long id=active(1);RegistrationRequest q=accept(id,10);transactions.review(id,q.getReservation().getRequestId(),review(q,"FAIL"),99);
+            assertThrows(RuntimeException.class,()->facade(new FaultLedger("finish",marker)).synchronize(request(id,10)));
+            ledger.repair(transactions.settings(id));service.synchronize(request(id,10));
+            assertEquals("RELEASED",request(id,10).getReclaimState());assertEquals(1,stock(id));
+            ledger.repair(transactions.settings(id));service.synchronize(request(id,10));assertEquals(1,stock(id));
+        }
+        System.out.println("REGISTRATION_RECOVERY_CASE release-write-points=6 no-double-refund=PASS");
+    }
+    @Test void confirmedMarkerFailureNeverRefundsAQualification() {
+        long id=active(1);RegistrationRequest q=accept(id,10);transactions.confirm(q.event());
+        assertThrows(RuntimeException.class,()->facade(new FaultLedger("finish","-- finish.write.ledger")).synchronize(request(id,10)));
+        ledger.repair(transactions.settings(id));service.synchronize(request(id,10));assertEquals(0,stock(id));assertEquals("COMPLETE",request(id,10).getReclaimState());assertEquals(1,count("contest_registration"));
+    }
+    @Test void interruptedInitializationResumesWithoutResettingAnAllocatedStock() {
+        for(String marker:new String[]{"-- init.write.intent","-- init.write.stock","-- mutation.clear"}) {
+            long id=published(1);service.prepare(id,command(1),99);RegistrationSettings s=transactions.settings(id);
+            assertThrows(RuntimeException.class,()->new FaultLedger("init",marker).initialize(s));
+            service.reconcile(id,command(s.getRevision()),99);accept(id,10);assertEquals(0,stock(id));ledger.initialize(transactions.settings(id));assertEquals(0,stock(id));
+        }
+    }
+    @Test void lostSuccessfulResponseReturnsTheOriginalRequestInsteadOfAllocatingAgain() {
+        long id=active(1);
+        RedisRegistrationLedger transport=new RedisRegistrationLedger(redis) {
+            boolean once=true;
+            @Override public RegistrationReservation reserve(RegistrationSettings s,long u,long r,String e,String k,String h) {
+                RegistrationReservation accepted=super.reserve(s,u,r,e,k,h);if(once) { once=false;throw new org.springframework.data.redis.RedisConnectionFailureException("CONTROLLED_RESPONSE_LOSS"); }return accepted;
+            }
+        };
+        Map<String,Object> response=facade(transport).register(id,key,10);
+        assertEquals(request(id,10).getReservation().getRequestId().toString(),response.get("requestId"));assertEquals(1,count("contest_registration_request"));assertEquals(0,stock(id));
+    }
+    @Test void exceptionBeforeScriptExecutionDoesNotInventAnAcceptedRequest() {
+        long id=active(1);
+        RedisRegistrationLedger transport=new RedisRegistrationLedger(redis) {
+            @Override public RegistrationReservation reserve(RegistrationSettings s,long u,long r,String e,String k,String h) { throw new org.springframework.data.redis.RedisConnectionFailureException("CONTROLLED_BEFORE_SEND"); }
+        };
+        assertThrows(BusinessException.class,()->facade(transport).register(id,key,10));assertEquals(1,stock(id));assertEquals(0,count("contest_registration_request"));
+        accept(id,10);assertEquals(0,stock(id));assertEquals(1,count("contest_registration_request"));
+    }
+    @Test void missingScriptCacheIsRebuiltByTheRealRedisExecutor() {
+        long id=active(1);try(RedisConnection c=redis.getConnectionFactory().getConnection()) { c.scriptFlush(); }
+        accept(id,10);assertEquals(0,stock(id));assertEquals(1,count("contest_registration_request"));
+    }
+    @Test void wrongKeyTypeFailsBeforeDeductionAndDoesNotFabricateARefund() {
+        long id=active(1);String pending=RedisRegistrationLedger.keys(id).get(4);redis.opsForValue().set(pending,"wrong-type");
+        assertThrows(BusinessException.class,()->service.register(id,key,10));
+        assertEquals("1",redis.opsForValue().get(RedisRegistrationLedger.keys(id).get(1)));assertEquals(0,count("contest_registration_request"));assertFalse(transactions.settings(id).isReady());
+    }
+    @Test void conflictingPartialWriteEvidenceStaysHeldForReview() {
+        long id=active(1);RegistrationSettings s=transactions.settings(id);FaultLedger fault=new FaultLedger("reserve","-- reserve.write.stock");
+        assertThrows(RuntimeException.class,()->fault.reserve(s,10,IdWorker.getId(),UUID.randomUUID().toString(),key,RegistrationTransactions.hash(id,s.getPublishedVersion())));
+        redis.opsForValue().set(RedisRegistrationLedger.keys(id).get(1),"2");
+        assertThrows(BusinessException.class,()->service.status(id,10));assertFalse(transactions.settings(id).isReady());
+        assertTrue(redis.opsForHash().hasKey(RedisRegistrationLedger.keys(id).get(0),"mutation"));assertEquals("2",redis.opsForValue().get(RedisRegistrationLedger.keys(id).get(1)));assertEquals(0,count("contest_registration_request"));
+    }
+    void legacy(long id) {
+        String records=RedisRegistrationLedger.keys(id).get(3);
+        for(Map.Entry<Object,Object> entry:redis.opsForHash().entries(records).entrySet()) {
+            cn.hutool.json.JSONObject r=JSONUtil.parseObj(entry.getValue());r.remove("sequence");redis.opsForHash().put(records,entry.getKey(),r.toString());
+        }
+        redis.opsForHash().delete(RedisRegistrationLedger.keys(id).get(0),"format");jdbc.update("UPDATE contest_registration_request SET reservationSequence=NULL WHERE contestId=?",id);
+    }
+    @Test void legacyLedgerNeedsClosedIdentityReconciliationBeforeNewAdmission() {
+        long id=active(3);RegistrationRequest a=accept(id,10),b=accept(id,11);transactions.confirm(b.event());service.synchronize(request(id,11));legacy(id);
+        assertThrows(BusinessException.class,()->service.register(id,key,12));assertFalse(transactions.settings(id).isReady());
+        service.reconcile(id,command(transactions.settings(id).getRevision()),99);assertTrue(transactions.settings(id).isReady());assertEquals("2",ledger.stats(id).getStr("format"));
+        assertEquals(a.event(),request(id,10).event());assertNotNull(request(id,10).getReservation().getSequence());
+        transactions.confirm(a.event());assertEquals("CONFIRMED",request(id,10).getStatus());accept(id,12);assertEquals(0,stock(id));
+    }
+    @Test void interruptedLegacyUpgradeReusesTheCommittedOrdinalAssignments() {
+        long id=active(2);accept(id,10);accept(id,11);legacy(id);
+        assertThrows(BusinessException.class,()->facade(new FaultLedger("upgrade","-- upgrade.write.record")).reconcile(id,command(transactions.settings(id).getRevision()),99));
+        List<Long> assigned=jdbc.queryForList("SELECT reservationSequence FROM contest_registration_request WHERE contestId=? ORDER BY id",Long.class,id);
+        assertTrue(assigned.stream().allMatch(Objects::nonNull));assertFalse(transactions.settings(id).isReady());
+        service.reconcile(id,command(transactions.settings(id).getRevision()),99);
+        assertEquals(assigned,jdbc.queryForList("SELECT reservationSequence FROM contest_registration_request WHERE contestId=? ORDER BY id",Long.class,id));assertTrue(transactions.settings(id).isReady());assertEquals(0,stock(id));
+    }
+
+    @Test void oldSnapshotCannotLeaveAnAlreadyReleasedDatabaseRequestHoldingStockForever() {
+        long id=active(1);RegistrationRequest q=accept(id,10);Map<String,byte[]> snapshot=dump(id);
+        transactions.review(id,q.getReservation().getRequestId(),review(q,"FAIL"),99);service.synchronize(request(id,10));assertEquals(1,stock(id));
+        restore(id,snapshot);assertEquals(0,stock(id));maintenance().maintain(id);
+        assertEquals(1,stock(id));assertEquals("RELEASED",ledger.user(id,10).getState());assertEquals("RELEASED",request(id,10).getReclaimState());
+        maintenance().maintain(id);assertEquals(1,stock(id));
+    }
+    @Test void oldSnapshotCompletionMarkerCanBeReplayedFromTheDurableQualification() {
+        long id=active(1);RegistrationRequest q=accept(id,10);Map<String,byte[]> snapshot=dump(id);
+        transactions.confirm(q.event());service.synchronize(request(id,10));restore(id,snapshot);maintenance().maintain(id);
+        assertEquals("CONFIRMED",ledger.user(id,10).getState());assertEquals(0,stock(id));assertEquals(1,count("contest_registration"));
     }
 
 }

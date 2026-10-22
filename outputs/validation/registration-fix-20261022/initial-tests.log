@@ -1,0 +1,156 @@
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-common:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ com.codeoj:codeoj-backend-microservice:0.0.1-SNAPSHOT, /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/pom.xml, line 44, column 20
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-model:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ com.codeoj:codeoj-backend-microservice:0.0.1-SNAPSHOT, /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/pom.xml, line 44, column 20
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-gateway:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ com.codeoj:codeoj-backend-microservice:0.0.1-SNAPSHOT, /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/pom.xml, line 44, column 20
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-service-client:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ com.codeoj:codeoj-backend-microservice:0.0.1-SNAPSHOT, /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/pom.xml, line 44, column 20
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-question-service:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ com.codeoj:codeoj-backend-microservice:0.0.1-SNAPSHOT, /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/pom.xml, line 44, column 20
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-user-service:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ com.codeoj:codeoj-backend-microservice:0.0.1-SNAPSHOT, /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/pom.xml, line 44, column 20
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-judge-service:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ com.codeoj:codeoj-backend-microservice:0.0.1-SNAPSHOT, /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/pom.xml, line 44, column 20
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-codesandbox:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ com.codeoj:codeoj-backend-microservice:0.0.1-SNAPSHOT, /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/pom.xml, line 44, column 20
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-microservice:pom:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ line 44, column 20
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] codeoj-backend-microservice                                        [pom]
+[INFO] codeoj-backend-common                                              [jar]
+[INFO] codeoj-backend-model                                               [jar]
+[INFO] codeoj-backend-service-client                                      [jar]
+[INFO] codeoj-backend-question-service                                    [jar]
+[INFO] 
+[INFO] ---------------< com.codeoj:codeoj-backend-microservice >---------------
+[INFO] Building codeoj-backend-microservice 0.0.1-SNAPSHOT                [1/5]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] ------------------< com.codeoj:codeoj-backend-common >------------------
+[INFO] Building codeoj-backend-common 0.0.1-SNAPSHOT                      [2/5]
+[INFO]   from codeoj-backend-common/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ codeoj-backend-common ---
+[INFO] skip non existing resourceDirectory /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-common/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ codeoj-backend-common ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ codeoj-backend-common ---
+[INFO] skip non existing resourceDirectory /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-common/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ codeoj-backend-common ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ codeoj-backend-common ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] ------------------< com.codeoj:codeoj-backend-model >-------------------
+[INFO] Building codeoj-backend-model 0.0.1-SNAPSHOT                       [3/5]
+[INFO]   from codeoj-backend-model/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ codeoj-backend-model ---
+[INFO] skip non existing resourceDirectory /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-model/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ codeoj-backend-model ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ codeoj-backend-model ---
+[INFO] skip non existing resourceDirectory /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-model/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ codeoj-backend-model ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ codeoj-backend-model ---
+[INFO] 
+[INFO] --------------< com.codeoj:codeoj-backend-service-client >--------------
+[INFO] Building codeoj-backend-service-client 0.0.1-SNAPSHOT              [4/5]
+[INFO]   from codeoj-backend-service-client/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ codeoj-backend-service-client ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ codeoj-backend-service-client ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ codeoj-backend-service-client ---
+[INFO] skip non existing resourceDirectory /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-service-client/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ codeoj-backend-service-client ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ codeoj-backend-service-client ---
+[INFO] 
+[INFO] -------------< com.codeoj:codeoj-backend-question-service >-------------
+[INFO] Building codeoj-backend-question-service 0.0.1-SNAPSHOT            [5/5]
+[INFO]   from codeoj-backend-question-service/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ codeoj-backend-question-service ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ codeoj-backend-question-service ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 52 source files to /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-question-service/target/classes
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ codeoj-backend-question-service ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ codeoj-backend-question-service ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 13 source files to /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-question-service/target/test-classes
+[INFO] /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardCacheTest.java: /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardCacheTest.java使用了未经检查或不安全的操作。
+[INFO] /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardCacheTest.java: 有关详细信息, 请使用 -Xlint:unchecked 重新编译。
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ codeoj-backend-question-service ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.codeoj.codeojbackendquestionservice.contest.RegistrationMessagingTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.390 s -- in com.codeoj.codeojbackendquestionservice.contest.RegistrationMessagingTest
+[INFO] Running com.codeoj.codeojbackendquestionservice.contest.RegistrationRedisIntegrationTest
+REGISTRATION_LOCAL_SAMPLE {"scope":"real isolated Redis/Lua + H2; manual consumer invocation; no MySQL/RabbitMQ acceptance","status":"CONFIRMED","remainingRedis":0,"requests":1,"qualifications":1,"outboxEvents":1}
+[INFO] Tests run: 30, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.193 s -- in com.codeoj.codeojbackendquestionservice.contest.RegistrationRedisIntegrationTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 37, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for codeoj-backend-microservice 0.0.1-SNAPSHOT:
+[INFO] 
+[INFO] codeoj-backend-microservice ........................ SUCCESS [  0.004 s]
+[INFO] codeoj-backend-common .............................. SUCCESS [  0.438 s]
+[INFO] codeoj-backend-model ............................... SUCCESS [  0.036 s]
+[INFO] codeoj-backend-service-client ...................... SUCCESS [  0.035 s]
+[INFO] codeoj-backend-question-service .................... SUCCESS [  5.963 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.614 s
+[INFO] Finished at: 2026-10-22T22:20:23+08:00
+[INFO] ------------------------------------------------------------------------

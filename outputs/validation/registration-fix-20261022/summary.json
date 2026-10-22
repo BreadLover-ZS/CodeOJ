@@ -1,0 +1,542 @@
+{
+  "baseline": "f10341721a1d8c5c7342bab671b607063338222e",
+  "state": "VALIDATED_PRE_PUBLICATION_SNAPSHOT",
+  "date": "2026-10-22",
+  "findings": {
+    "R1": "FIXED_VALIDATED",
+    "R2": "FIXED_VALIDATED",
+    "luaPartialWritesAndLostResponses": "IMPLEMENTED_VALIDATED"
+  },
+  "backend": {
+    "suites": 27,
+    "tests": 248,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "testSuites": [
+    {
+      "name": "com.codeoj.codeojbackendmodel.model.codesandbox.TextOutputComparatorTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "preservesSpacesAndTabs",
+        "acceptsCrLfAndOneFinalNewline",
+        "preservesAdditionalBlankLinesAndCase",
+        "emptyOutputAndMissingOutputAreDifferent"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendgateway.ContestRouteTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "aliasesMatchRootAndDetailAndRewriteToQuestionServiceContext"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendserviceclient.auth.CurrentAccountAuthorizationTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "sessionOnlySuppliesIdentityAndEveryRequestReadsCurrentAccount",
+        "lookupFailureNeverFallsBackToCachedAdmin",
+        "currentAdminPromotionTakesEffectWithoutRelogin",
+        "removedOrDeletedAccountCannotReuseAnOldSession",
+        "bannedAccountCannotUseAnOldOrdinarySession",
+        "absentMalformedAndIncompleteSessionsAreUnauthenticated",
+        "annotationDoesNotProceedWhenLookupFails",
+        "realAnnotationProxyRejectsDemotedAdminBeforeExecutingBody",
+        "loginOnlyAnnotationRejectsNewBanAndDeletedUser"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendserviceclient.filter.SessionAvailabilityFilterTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "committedResponseCannotBeRewrittenAsSuccessOrNewJson",
+        "unavailableStoreReturns503WithoutCookieDeletionOrSensitivePayload",
+        "servletWrappedRedisTimeoutIsAlsoUnavailable",
+        "unrelatedApplicationFailureKeepsItsOriginalMeaning"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardMessagingTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "interruptionLeavesDeliveryUnacknowledgedAndPreservesInterrupt",
+        "authorityFailureBacksOffBeforeRequeueInsteadOfAck",
+        "relayUsesSeparatePersistentMandatoryTransportAndCapturesReturn",
+        "mismatchedIdentityIsQuarantined",
+        "onlyDurablyHandledRequestsAreAcknowledged",
+        "sendExceptionIsUnknownAndNeverAReasonToReleaseCapacity",
+        "corruptAuthoritativeFactIsQuarantinedInsteadOfHotRequeued",
+        "unsupportedPayloadIsQuarantinedWithoutTouchingAuthority"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardTest",
+      "tests": 25,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "handCalculatedTieAndEarlierAcDeliveredLastChangeAchievedAt",
+        "postDeadlineCompletionCountsByAcceptanceTimeAndBlocksPrematureFinish",
+        "cacheInvalidationChangesNamespaceAndRequiresFreshRoleVersionsAndReason",
+        "finalRevisionKeepsPreviousFinalImmutableAndAudited",
+        "nonAcIsZeroAndMalformedEventCannotChangeScores",
+        "pendingRegistrationAndCapacityMismatchBlockSettlement",
+        "competitionRanksCrossPageAndZeroTiesDoNotRestart",
+        "userIdOnlyStabilizesDisplayAndNeverBreaksTie",
+        "missingBusinessReceiptRepublishesOriginalEventWithFiniteBudget",
+        "loggedInNonParticipantCanReadButCannotMutateAndNoHiddenFieldsLeak",
+        "finishRequiresRebuildAndDriftCannotBeSilentlyFinalized",
+        "concurrentDifferentProblemsForSameUserCannotLoseAggregate",
+        "rebuildFromAllFactsDoesNotRequireBrokerDeliveryAndLateReplayIsHarmless",
+        "tamperedResultDigestAndWrongSnapshotCannotBecomeFinalFacts",
+        "practiceResultIsReceiptedWithoutChangingAnyContestScore",
+        "delayedProjectionAndRebuildRaceEitherConflictsExplicitlyOrProducesSameFacts",
+        "redisModeRequiresFinalizingReconciliationAndCompletedSynchronization",
+        "midRebuildFailureRollsBackNewRowsAndKeepsReadVersion",
+        "zeroRowsAreCreatedInConfirmationTransactionAndAllTie",
+        "microsecondAcceptanceTimeBreaksOnlyActualTimeTies",
+        "platformNeedsAttentionIsNeverConvertedToWa",
+        "rebuildOnlyInFinalizingAndOldVersionRemainsQueryable",
+        "cancellationKeepsScoreHistoryAndRejectsFinalization",
+        "duplicateAndSameProblemAcNeverAddPoints",
+        "deletingAllScoreRowsCanBeRebuiltFromFactsIncludingZeroParticipants"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardCacheTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "revisionChangedDuringMissPublishesOnlyUnderNewRevision",
+        "cacheHitStillReadsFreshAuthorityAndOnlyCachesEntries",
+        "redisFailureDoesNotRollbackOrHideDatabasePage"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.contest.RegistrationMessagingTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "interruptionLeavesDeliveryUnacknowledgedAndPreservesInterrupt",
+        "authorityFailureBacksOffBeforeRequeueInsteadOfAck",
+        "relayUsesSeparatePersistentMandatoryTransportAndCapturesReturn",
+        "mismatchedIdentityIsQuarantined",
+        "onlyDurablyHandledRequestsAreAcknowledged",
+        "sendExceptionIsUnknownAndNeverAReasonToReleaseCapacity",
+        "unsupportedPayloadIsQuarantinedWithoutTouchingAuthority"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.contest.ContestCoreTest",
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "cancellationAndSubmissionRaceSerializesAcceptanceAndDoesNotStopAcceptedJudging",
+        "pendingOtherUserDoesNotBlockConfirmedParticipant",
+        "registrationUsesHalfOpenDatabaseWindowAndReplayAfterCloseIsStable",
+        "invalidTimesCapacityAndDuplicateCodesNeverCreateContest",
+        "staleAccountCannotRegisterOrSubmit",
+        "duplicateRegistrationNeverConsumesCapacityTwice",
+        "publishFailureRollsBackAllSnapshotsAndSpecs",
+        "cancellationKeepsConfirmationHistoryButImmediatelyInvalidatesQualification",
+        "currentRoleControlsEveryAdminMutation",
+        "globalReadinessBlocksAllNewSubmissionsAndRequiresAuditedVersion",
+        "submittingWrongSnapshotVersionOrChangedPayloadIsRejected",
+        "readinessCannotBeRestoredOverBrokenCapacityLedger",
+        "registrationAndCancellationRaceAlwaysLeavesClosedAuthorityAndConservedCapacity",
+        "outboxFailureRollsBackContestSubmissionAndContext",
+        "concurrentRegistrationCannotOversellAndEachUserHasOneFact",
+        "draftEditChecksVersionAndPublishedConfigurationIsFrozen",
+        "publishReplayCreatesOneSnapshotAndOneAudit",
+        "httpContractReturns201202And403409WithoutLeakingDatabaseErrors",
+        "submissionsUseHalfOpenWindowAndOriginalKeyReplaysAfterEnd",
+        "concurrentSameSubmissionKeyHasOneExecutionAndDispatch",
+        "privateProblemsNeverEnterPracticeAndPrestartOrUnqualifiedDetailHasNoStatement",
+        "publicTrainingSnapshotSurvivesSourceEditAndContestAcDoesNotAffectPracticeStatistics"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.contest.RegistrationRedisIntegrationTest",
+      "tests": 48,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "lateRecoveryCannotGrantANewAutomaticDeadlineToAnOldReservation",
+        "clockSkewInEitherDirectionPausesBeforeAnyReservation",
+        "delayedConfirmationUsesOriginalReservationTimeEvenAfterContestEnd",
+        "confirmedRequestCannotBeManuallyReleased",
+        "processLostAfterStockWriteCanRecoverThroughMaintenance",
+        "finalizationFindsUndurableReservationAndRequiresClosedReconciledLedger",
+        "reservationRecoversEveryPartialWriteAndTheOriginalIdentity",
+        "adminHttpContractUsesFreshRolesAndExposesEvidenceWithoutPrivateProblemData",
+        "forgedEventCannotConfirmAnotherRequestOrPublicationVersion",
+        "missingScriptCacheIsRebuiltByTheRealRedisExecutor",
+        "completeRedisLossCannotBeMisreportedAsNoReservationOrSilentlyReinitialized",
+        "conflictingPartialWriteEvidenceStaysHeldForReview",
+        "ledgerLimitCountsReleasedIdentitiesAndStillAllowsOriginalRetries",
+        "releaseMarkerFailureDoesNotIncreaseStockTwice",
+        "staleAccountAndStaleAdminAreCheckedAgainstCurrentDatabase",
+        "manualPublishExtensionPreservesAllOldAttemptEvidence",
+        "internallyConsistentOldRedisSnapshotStillCannotOmitKnownDatabaseRequests",
+        "outboxWriteFailureRollsBackDatabaseButNeverReleasesAnUnknownReservation",
+        "reservationAndOutboxAreDurableBeforeQualificationAndDuplicateConfirmationIsHarmless",
+        "exceptionBeforeScriptExecutionDoesNotInventAnAcceptedRequest",
+        "staleDatabaseSampleCannotReuseADurablyAssignedOrdinal",
+        "oldSnapshotCompletionMarkerCanBeReplayedFromTheDurableQualification",
+        "initializationRetryNeverResetsStockAndReconcileSubtractsPendingReservations",
+        "partialLedgerLossPausesGloballyAndCannotResetStock",
+        "terminalStatePrecedesReleaseAndLateConsumerCannotConfirmReleasedRequest",
+        "cutoverPreservesExistingSynchronousQualificationsAndClosesOldAllocator",
+        "cancellationAndConfirmationRaceNeverResellsConfirmedQualification",
+        "eightUsersContendingForTwoSlotsProduceOnlyTwoRequestsAndQualifications",
+        "oldSnapshotWithOrphanCannotMaskMissingConfirmedIdentity",
+        "confirmedMarkerFailureNeverRefundsAQualification",
+        "cancellationRecoversPreviouslyUnknownReservationAsCancelledAndReleasesOnce",
+        "lateGateOpenCannotOverrideNewerCancellationFence",
+        "reservedBeforeDatabaseCrashIsRebuiltWithOriginalIdentity",
+        "exhaustedConfirmationNeedsExplicitFiniteAdminExtensionAndKeepsOriginalEvent",
+        "legacyLedgerNeedsClosedIdentityReconciliationBeforeNewAdmission",
+        "wrongKeyTypeFailsBeforeDeductionAndDoesNotFabricateARefund",
+        "interruptedLegacyUpgradeReusesTheCommittedOrdinalAssignments",
+        "interruptedInitializationResumesWithoutResettingAnAllocatedStock",
+        "unknownEarlierPublishAndLaterNackCannotFreeReservation",
+        "wrongUserMappingCannotReturnAnotherUsersReservationOrPassReconciliation",
+        "lostSuccessfulResponseReturnsTheOriginalRequestInsteadOfAllocatingAgain",
+        "luaRejectsBothBeforeOpenAndAtOrAfterCloseWithoutChangingInventory",
+        "oldSnapshotCannotLeaveAnAlreadyReleasedDatabaseRequestHoldingStockForever",
+        "newContestCannotExceedTheSupportedClosureCapacity",
+        "releaseRecoversEveryPartialWriteWithoutASecondRefund",
+        "requestKeysArePerContestAndTerminalMappingsHaveNoExpiry",
+        "redisCompletionMarkerCanRetryAfterDatabaseMarkerWriteFails",
+        "redisAofRestartPreservesAnUnpersistedReservation"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.submission.outbox.OutboxRelayTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "synchronousSendExceptionIsUnknownRatherThanDefiniteFailure",
+        "ackPlusReturnRecordsUnroutableInsteadOfSuccess",
+        "sendsPersistentMessageWithSeparateEventAndPublishAttemptIdentities"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.submission.SubmissionStatusAccessTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "adminCanQueryButMissingRecordIs404",
+        "otherUserCannotReadSubmission",
+        "ownerCanQueryExecutionStatus"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcAdviceTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "authorityDiagnosticsRetainTypeLocationAndSqlCodeWithoutSensitiveMessages",
+        "untrustedSqlStateIsReducedToUnknown"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.submission.ReliableExecutionTest",
+      "tests": 26,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "expiredTotalDeadlineCannotBeResetByAutomaticRecovery",
+        "resultAndScoreEventAreOneTransaction",
+        "platformFailureUsesBackoffAndReplayDoesNotResetIt",
+        "returnedAckIsNotRoutableSuccessAndCannotBeOverwrittenByDuplicateCallback",
+        "publisherBudgetEndsInVisibleAttention",
+        "outboxUnknownEvidenceSurvivesLaterNackAndOldAckCanConverge",
+        "concurrentSameKeyCreatesOneFactAndEvent",
+        "badResultCannotBecomeAc",
+        "payloadHasNoSourceOrPrivateInputs",
+        "retryExhaustionNeedsExplicitFiniteAdminExtensionAndKeepsAttemptHistory",
+        "completedReplayDoesNotRepeatScoreEventOrAcceptedStatistic",
+        "adminDiagnosticProjectionDoesNotExposeCodeCasesOrExecutionTokens",
+        "exhaustedDispatchBudgetCannotBeResetByOrdinaryReplay",
+        "snapshotIsFrozenBeforeQuestionEditAndReplayDoesNotNeedCurrentQuestion",
+        "capacityDeferralDoesNotClaimAttemptAndDispatchBudgetIsFinite",
+        "repositoryUsesRealExceptionTranslationProxyAndJdbcAccessor",
+        "expiredLeaseRejectsHeartbeatAndResultThenRecoveryCreatesOnlyOneGeneration",
+        "staleSessionCannotSubmitAfterAccountBan",
+        "validHeartbeatExtendsOnlyItsOwnLeaseAndCannotChangeResult",
+        "staleAdminSessionCannotExtendExecutionBudget",
+        "simultaneousClaimsOnlyGrantOneLease",
+        "sameKeyDifferentUsersAreIndependent",
+        "outboxInsertFailureRollsBackSubmissionSnapshotAndAuthority",
+        "stableKeyReplaysOriginalAndConflictingContentDoesNotCreateSubmission",
+        "exhaustedDeadlineNeedsExplicitAuditedExtension",
+        "brokerConfirmDoesNotHideLongQueuedSubmission"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.submission.QuestionSubmitPrivacyTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "ownerCanReadOwnCodeWithoutAdminPrivilege",
+        "revokedAdminSessionCannotReadOthersCodeThroughLegacyListProjection"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcContractTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "internalCommandRequiresExistingSecretFilter",
+        "idempotencyConflictIsHttp409EvenWithLegacyGlobalAdvice",
+        "internalDatabaseFailureReturns503InsteadOfAFalseClaim",
+        "genericUpdateCannotWriteNewReliableSubmission"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackenduserservice.service.CurrentUserServiceTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "databaseFailureDoesNotGrantCachedRole",
+        "anonymousOptionalLookupDoesNotCreateASession",
+        "deletedAccountIsUnauthenticatedEvenWithOldSession",
+        "localAdminCheckRefreshesRoleWithoutRelogin",
+        "allLocalLoginHelpersRejectCurrentBan"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendjudgeservice.rabbitmq.ReliableJudgeConsumerTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "authorityFailureIsNotAcknowledgedAndReentryIsBackedOff",
+        "malformedMessageIsQuarantinedWithoutTouchingBusinessState",
+        "durablyHandledMessageIsAcknowledged"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendjudgeservice.judge.SandboxResultMapperTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "oldOrContradictoryProtocolIsNotImplicitSuccess",
+        "compilerErrorIsCompletedCeRatherThanWa",
+        "platformFailureHasNoUserVerdict",
+        "successfulExecutionStillNeedsAnswerAndResourceJudging",
+        "trustedExecutionDeadlineIsTle"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandboxTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "httpFailureIsPlatformError",
+        "deadlineDoesNotRetryOrBecomeUserTle",
+        "oldOrEmptyResponseIsNotSuccess",
+        "acceptsStructuredResponse"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendjudgeservice.judge.ReliableJudgeWorkerTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "staleOrCompletedMessageDoesNotExecuteOrFail",
+        "capacityIsReservedBeforeClaimAndNoSlotUsesDurableDeferral",
+        "missingClaimDecisionIsUnknownAndCannotBeAcknowledged",
+        "attributedUserReCompletesOnceAndNeverSchedulesPlatformRetry",
+        "cannotAcknowledgeWhenPlatformFailureCouldNotBePersisted",
+        "platformFailurePersistsRetryBeforeReturning",
+        "ceUsesFrozenClaimAndFencedCompletion"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImplTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "unknownMemoryDoesNotWriteAcOrIncrementAcceptedCount",
+        "ceCompletesAsUserVerdictInsteadOfWa",
+        "platformFailureDoesNotWriteCompletedVerdict"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendjudgeservice.judge.strategy.JavaLanguageJudgeStrategyTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "memoryLimitUsesKibibytes",
+        "missingTimeCannotBecomeZeroOrAc",
+        "acceptsOnlyPermittedNewlineNormalization",
+        "startupTimeIsNeverDiscountedByTenSeconds",
+        "missingOutputIsPlatformProtocolFailureRatherThanWa",
+        "missingMemoryCannotBecomeZeroOrAc"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendcodesandbox.service.impl.DurableExecutionRegistryTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "cleanupFailureKeepsSlotReservedUntilActualRemovalSucceeds",
+        "corruptJournalFailsClosedInsteadOfFreeingCapacity",
+        "differentCapacityOrEnginePolicyCannotShareTheSameAuthority",
+        "recoveryOfAbandonedSlotIsDurableAndDoesNotRerunOldToken",
+        "duplicateTokenAcrossManagersExecutesOnlyOnceAndSurvivesReopen",
+        "contentConflictAndExpiredIdentityCannotExecute",
+        "crashBetweenSlotJournalAndTokenJournalCannotRerunSameToken",
+        "separateManagersShareOnePhysicalSlot"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandboxTest",
+      "tests": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "entryInitializationExceptionIsAttributedRe",
+        "protocolLookingStdoutAndStderrCannotSupplyAControlReceipt",
+        "blockedStdinDoesNotBlockDeadlineOrNextSubmission",
+        "attemptBudgetCannotBeMisreportedAsUserTle",
+        "validatesCaseCountLanguageNullsAndInputBudget",
+        "eachCaseGetsAFreshWorkingDirectoryAndJvm",
+        "silentInfiniteLoopReachesTrustedRunDeadline",
+        "observedRssBreachHasExplicitMleEvidence",
+        "vmErrorIsNotGuessedToBeUserReOrMle",
+        "measuresActualJvmRssWhenHostObservationIsAvailable",
+        "compilesAndExecutesWithoutInventingMemoryMeasurement",
+        "explicitCompilerDiagnosticIsCe",
+        "unknownExitIsPlatformFailureRatherThanGuessedMleOrRe",
+        "compilerHandlesUnicodeEscapesAndDoesNotInitializeEntry",
+        "stdoutAndStderrAreDrainedConcurrently",
+        "entryIsSelectedFromCompiledTypesInsteadOfSourceText(String)[1]",
+        "entryIsSelectedFromCompiledTypesInsteadOfSourceText(String)[2]",
+        "entryIsSelectedFromCompiledTypesInsteadOfSourceText(String)[3]",
+        "entryIsSelectedFromCompiledTypesInsteadOfSourceText(String)[4]",
+        "entryIsSelectedFromCompiledTypesInsteadOfSourceText(String)[5]",
+        "entryIsSelectedFromCompiledTypesInsteadOfSourceText(String)[6]",
+        "entryIsSelectedFromCompiledTypesInsteadOfSourceText(String)[7]",
+        "entryIsSelectedFromCompiledTypesInsteadOfSourceText(String)[8]",
+        "entryIsSelectedFromCompiledTypesInsteadOfSourceText(String)[9]",
+        "entryIsSelectedFromCompiledTypesInsteadOfSourceText(String)[10]",
+        "attributedMainExceptionIsCompletedReWithoutLeakingDiagnostic(String)[1]",
+        "attributedMainExceptionIsCompletedReWithoutLeakingDiagnostic(String)[2]",
+        "attributedMainExceptionIsCompletedReWithoutLeakingDiagnostic(String)[3]",
+        "smallerExecutorPolicyCannotSilentlyOverrideProblemTimeLimit",
+        "zeroSystemExitWithoutLauncherReceiptCannotBecomeAc",
+        "continuousStderrIsTerminatedAsOutputLimit"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendcodesandbox.service.impl.NativeReceiptTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "receiptIsBoundToThisInvocationAndRequiresCompleteRecord",
+        "controlFileCannotFollowAContestantSymlink",
+        "oversizedRecordCannotCauseUnboundedRead"
+      ]
+    },
+    {
+      "name": "com.codeoj.codeojbackendcodesandbox.service.impl.NativeExecutionIdentityTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "concurrentAndRepeatedTokenStartsOnlyOnePhysicalJvm",
+        "expiredTokenCannotBeStarted"
+      ]
+    }
+  ],
+  "realIntegration": {
+    "passed": true,
+    "evidence": "real-integration-final/registration-facts.json",
+    "scope": "Real private MySQL/Redis/RabbitMQ/Session/Gateway; explicit direct SQL/Redis fault setup for rollback/release; normal and restart-recovered confirmation used actual MQ consumer; no user code execution, Nacos or load test"
+  },
+  "frontendBuild": true,
+  "dianping": {
+    "inspectedCommit": "8bec9928f853ffb0999787b62e4890fc84864fb4",
+    "modified": false,
+    "partialWriteGapStillPresentBySourceInspection": true
+  },
+  "cleanup": {
+    "privateRuntimeRootRemoved": true,
+    "remainingOwnedProcessIds": [],
+    "remainingTestHarnessDirectories": [],
+    "nativeRuns": {
+      "real-integration": {
+        "temporaryWorkRemoved": true,
+        "remainingOpenOwnedPorts": []
+      },
+      "real-integration-02": {
+        "temporaryWorkRemoved": true,
+        "remainingOpenOwnedPorts": []
+      },
+      "real-integration-final": {
+        "temporaryWorkRemoved": true,
+        "remainingOpenOwnedPorts": []
+      }
+    },
+    "globalServicesInstalled": false,
+    "retained": "Task reports, source/test changes, normal Maven/project build outputs; historical validation artifacts unchanged"
+  }
+}
