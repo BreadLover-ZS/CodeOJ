@@ -49,7 +49,15 @@ RabbitMQ    判题任务异步传递
 MySQL       用户、题目、提交和判题结果
 ```
 
-## 核心判题链路
+## 运行与学习入口
+
+- [运行、演示与交接](docs/contest/handoff.md)：固定开发版本、可信样例、真实依赖/浏览器、完整隔离复验及清理边界。
+- [源码阅读与成果测试](docs/learning/03-链路.md)：受理、状态、Outbox/租约、隔离回收，以及赛事报名/榜单和鉴权。
+- [项目讲解与面试追问](docs/learning/04-面试.md)：当前实现、源码依据、追问和可陈述边界。
+
+## 基础版本判题链路
+
+以下图示描述可靠判题开关关闭时的旧业务流程，旧调用需显式可信 native 模式；新版可靠路径为“受理事务/固定规格 → Outbox → claim/续租 → 隔离执行 → 带身份写回 → 计分”。详见上面的源码链路，不能用旧图推断新版没有 Outbox 或恢复机制。
 
 用户提交代码后，题目服务先保存提交记录，再将提交 ID 投递到 RabbitMQ。判题服务异步消费任务，将状态更新为 `RUNNING`，调用代码沙箱执行程序，通过判题策略生成结果，最后把流程状态和 `judgeInfo` 写回数据库。
 
@@ -121,55 +129,28 @@ flowchart LR
 | `codeoj-backend-common` | 通用响应、异常、注解和工具 |
 | `codeoj-frontend` | Vue 3 页面和 TypeScript API 客户端 |
 
-## 快速启动
+## 本机演示与复现
 
-### 环境要求
-
-- JDK 8、Maven 3.x；
-- MySQL 8、Redis、RabbitMQ、Nacos；
-- Docker 与 Docker Compose；
-- Node.js 与 npm。
-
-### 后端
-
-先构建 Maven 多模块项目：
+先准备 JDK 8 和 Maven，再从仓库根目录运行可信样例：
 
 ```bash
-cd codeoj-backend
-mvn clean package
+./scripts/demo-local-judge.sh
+./scripts/demo-local-contest.sh
 ```
 
-启动基础设施并完成数据库、RabbitMQ exchange、queue 和 binding 初始化后，再启动各个微服务。仓库中的 Compose 文件可作为本地环境入口：
+前者演示五类判题结果，后者以 H2、真实 Java 和手动事件分发演示赛事结算，均不能代替 MySQL/MQ/HTTP 或容器隔离验收。原生样例需要允许 `ps` 采集 RSS，缺失资源指标时会拒绝判定。
 
-```bash
-docker compose -f docker-compose.env.yml up -d
-docker compose -f docker-compose.service.yml up --build
-```
+macOS arm64 的真实依赖/浏览器入口为 `./scripts/test-native-stack.sh`，完整隔离验收还需私有 Linux Docker/cgroup v2 和固定镜像；前提、参数、预期输出和清理步骤见[交接文档](docs/contest/handoff.md)。临时验收环境已删除，仓库没有常驻演示服务。
 
-RabbitMQ 使用的拓扑为：
-
-```text
-exchange: code_exchange
-queue:    code_queue
-binding:  my_routingKey
-```
-
-### 前端
-
-```bash
-cd codeoj-frontend
-npm ci
-npm run serve
-```
-
-更完整的环境、配置和验证说明见[部署与运行](docs/learning/02-模块/06-部署与运行.md)。
+仓库的两套 Compose 保留作历史环境模板，未装配本轮隔离后端或验证 Nacos。新版业务需数据库迁移及显式业务开关，默认 isolated 的启动条件见[隔离配置](docs/contest/isolated-sandbox.md)，不能把历史模板视为当前一键启动交付。部署和压测继续后置。
 
 ## 当前实现说明
 
 - 提交语言枚举包含 `java`、`cpp` 和 `go`，当前完整代码执行链路以 Java 为主；
 - 默认隔离沙箱按提交/用例创建 Linux 容器；可信 native 模式不提供恶意代码隔离。配置和受支持的共享容量边界见[隔离执行器说明](docs/contest/isolated-sandbox.md)；
-- MQ 生产者当前未处理 Publisher Confirm 和 Return Callback，流程图中的正常返回不代表 Broker 已确认接收或消息已经成功路由；
-- 消费异常后使用 `basicNack(deliveryTag, false, false)`，消息不会重新入队。
+- 可靠判题已实现事务 Outbox、每次发布的 Confirm/Return/UNKNOWN 留痕、带代次/token/期限的领取及回写、有限恢复与人工处理；旧生产者/消费者仅保留作基础版分支；
+- 赛事提交固定判题规格，报名以 MySQL 确认资格，Redis 负责预留；榜单按结果事实重建并保留最终版本；
+- `bc35142` 完成固定版本的本机 JV01—JV29、隔离、权限和浏览器验收，具体数字及边界见[报告](outputs/validation/isolation-20261022/report.md)，不据此宣称生产或吞吐指标。
 
 ## 参考与致谢
 
