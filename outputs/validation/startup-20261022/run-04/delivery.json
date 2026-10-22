@@ -1,0 +1,68 @@
+{
+  "passed": false,
+  "mode": "verify",
+  "events": [
+    {
+      "at": "2026-10-22T08:22:59.098005+00:00",
+      "action": "PRIVATE_RUNTIME_DIRECTORY_CREATED",
+      "directory": "/private/tmp/codeoj-startup-1r6_j4r6"
+    },
+    {
+      "at": "2026-10-22T08:22:59.098171+00:00",
+      "action": "PREPARING_NATIVE_DEPENDENCIES"
+    },
+    {
+      "at": "2026-10-22T08:23:59.627722+00:00",
+      "action": "BUILDING_APPLICATION"
+    },
+    {
+      "at": "2026-10-22T08:25:12.996606+00:00",
+      "action": "DOWNLOAD_STARTED",
+      "asset": "lima.tgz"
+    },
+    {
+      "at": "2026-10-22T08:25:12.997197+00:00",
+      "action": "DOWNLOAD_STARTED",
+      "asset": "docker-mac.tgz"
+    },
+    {
+      "at": "2026-10-22T08:25:12.997424+00:00",
+      "action": "DOWNLOAD_STARTED",
+      "asset": "docker-linux.tgz"
+    },
+    {
+      "at": "2026-10-22T08:25:12.997650+00:00",
+      "action": "DOWNLOAD_STARTED",
+      "asset": "ubuntu.img"
+    },
+    {
+      "at": "2026-10-22T08:25:30.238335+00:00",
+      "action": "DOWNLOAD_VERIFIED",
+      "asset": "docker-mac.tgz"
+    },
+    {
+      "at": "2026-10-22T08:26:18.808623+00:00",
+      "action": "DOWNLOAD_VERIFIED",
+      "asset": "docker-linux.tgz"
+    },
+    {
+      "at": "2026-10-22T08:32:25.061591+00:00",
+      "action": "DOWNLOAD_VERIFIED",
+      "asset": "ubuntu.img"
+    },
+    {
+      "at": "2026-10-22T08:32:25.062330+00:00",
+      "action": "STARTUP_FAILED",
+      "errorType": "RuntimeError",
+      "errorCode": "DOWNLOAD_DIGEST_MISMATCH:lima.tgz"
+    }
+  ],
+  "cleanup": {
+    "vmDeleted": true,
+    "vmCreated": false,
+    "applicationStopped": true,
+    "privateRootRemoved": true,
+    "errors": []
+  },
+  "scope": "Mac arm64 startup delivery; static discovery; no Nacos/deployment/load acceptance"
+}

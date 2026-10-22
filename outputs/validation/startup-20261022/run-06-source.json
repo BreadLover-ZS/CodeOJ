@@ -1,0 +1,14 @@
+{
+  "baseCommit": "b1abbb5c86ace8933c1f473f72cc7e9746365f50",
+  "files": {
+    "scripts/local-stack.sh": "4b14ed797ca5d0d29f42841a1318bbb41bb14ef5451c5f661fef7ea035f0654d",
+    "scripts/local/start-stack.py": "c8afd809829382bd64940da037ca33bc76dd70ca1b383876648eb56ee05eb316",
+    "scripts/local/private-isolation.py": "2e57674ceca69fc60b3c830c547146d31cd23a30c37bb0d104d70af13983d4f9",
+    "scripts/local/verified_download.py": "444fcd3016d137941d405d8ec5f7b40587ce9e845feeef0f9a0c20185bee8609",
+    "scripts/local/serve-frontend.cjs": "249c0e9f8b2193e46268dd41a6b3174abc376326a04ea1f701cfed2aa5772747",
+    "scripts/validation/startup-real-browser.cjs": "b653806b34272940edaa88f5f03ef236725b02c370f6a40ad3bda8eddcd1d817",
+    "scripts/local/run-native-stack.py": "21af09fb5264fb7473b92aacdd9ea57ba43c3db2f68bc31a83ecdb22a31e8feb",
+    "scripts/local/prepare-runtimes.py": "b520c115b68f8c8cf3cccb4c9610858142e22554561deaca609f3d2d149440c6"
+  },
+  "mode": "serve, terminate with actual Ctrl+C after LOCAL_STACK_READY"
+}

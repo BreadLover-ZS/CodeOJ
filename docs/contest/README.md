@@ -4,6 +4,10 @@
 
 交接与学习：[运行/演示交接](handoff.md) · [源码链路与成果测试](../learning/03-链路.md) · [项目讲解与面试](../learning/04-面试.md)。开发及证据提交 `bc35142` 已推送，历史报告保留验收当时状态。
 
+## 后续阶段：完整本机启动入口
+
+按用户确认，先交付 Mac arm64 临时 Linux 隔离环境的一条命令启动/验证/清理。使用 `scripts/local-stack.sh`，说明见[完整启动方案](local-startup.md)。默认全构建 verify + 真实 Chrome、同源码默认全构建 serve 实际 Ctrl+C 清理均通过，23 项独立编排/下载契约检查通过；临时环境已清理。证据见[启动交付报告](../../outputs/validation/startup-20261022/report.md)，不覆盖前轮 JV；Nacos、远程部署和压测继续后置。
+
 ## 最新状态：2026-10-22 隔离与完整本机复验
 
 本轮补齐逐提交/用例 Linux 隔离、磁盘执行登记、跨管理器共享容量及重启回收。默认 isolated，可信样例需显式 native；需要配置固定镜像和共享本地状态目录，详见 [隔离执行器](isolated-sandbox.md)。

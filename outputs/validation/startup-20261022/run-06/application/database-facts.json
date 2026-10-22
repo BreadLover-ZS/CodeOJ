@@ -1,0 +1,13 @@
+{
+  "executions": [
+    "2113194228013522946\tCOMPLETED\t1\tNULL",
+    "2113194234984456194\tCOMPLETED\t1\tNULL",
+    "2113194241833754625\tCOMPLETED\t1\tNULL"
+  ],
+  "resultCounts": [
+    "AC\t1",
+    "WA\t1",
+    "CE\t1"
+  ],
+  "scoreReceipts": "3"
+}

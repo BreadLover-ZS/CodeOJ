@@ -1,0 +1,88 @@
+{
+  "passed": false,
+  "mode": "verify",
+  "events": [
+    {
+      "at": "2026-10-22T08:09:32.432823+00:00",
+      "action": "PRIVATE_RUNTIME_DIRECTORY_CREATED",
+      "directory": "/private/tmp/codeoj-startup-4j8v3ank"
+    },
+    {
+      "at": "2026-10-22T08:09:32.432999+00:00",
+      "action": "PREPARING_NATIVE_DEPENDENCIES"
+    },
+    {
+      "at": "2026-10-22T08:10:42.333105+00:00",
+      "action": "BUILDING_APPLICATION"
+    },
+    {
+      "at": "2026-10-22T08:11:59.774718+00:00",
+      "action": "DOWNLOAD_STARTED",
+      "asset": "lima.tgz"
+    },
+    {
+      "at": "2026-10-22T08:11:59.775388+00:00",
+      "action": "DOWNLOAD_STARTED",
+      "asset": "docker-mac.tgz"
+    },
+    {
+      "at": "2026-10-22T08:11:59.775648+00:00",
+      "action": "DOWNLOAD_STARTED",
+      "asset": "docker-linux.tgz"
+    },
+    {
+      "at": "2026-10-22T08:11:59.776015+00:00",
+      "action": "DOWNLOAD_STARTED",
+      "asset": "ubuntu.img"
+    },
+    {
+      "at": "2026-10-22T08:12:09.642550+00:00",
+      "action": "DOWNLOAD_VERIFIED",
+      "asset": "docker-mac.tgz"
+    },
+    {
+      "at": "2026-10-22T08:12:26.734823+00:00",
+      "action": "DOWNLOAD_VERIFIED",
+      "asset": "lima.tgz"
+    },
+    {
+      "at": "2026-10-22T08:12:48.523093+00:00",
+      "action": "DOWNLOAD_VERIFIED",
+      "asset": "docker-linux.tgz"
+    },
+    {
+      "at": "2026-10-22T08:14:22.373482+00:00",
+      "action": "DOWNLOAD_VERIFIED",
+      "asset": "ubuntu.img"
+    },
+    {
+      "at": "2026-10-22T08:14:23.688077+00:00",
+      "action": "PRIVATE_VM_STARTING"
+    },
+    {
+      "at": "2026-10-22T08:14:37.155192+00:00",
+      "action": "PRIVATE_DOCKER_READY",
+      "version": "29.9.2",
+      "cgroup": "2"
+    },
+    {
+      "at": "2026-10-22T08:15:45.948813+00:00",
+      "action": "PINNED_ISOLATION_IMAGE_READY",
+      "image": "sha256:1f9148ef9bf21df3a17b9a748b18904ba3c0ee64f74cc1e20595b28d271fcd01"
+    },
+    {
+      "at": "2026-10-22T08:17:01.548275+00:00",
+      "action": "STARTUP_FAILED",
+      "errorType": "RuntimeError",
+      "errorCode": null
+    }
+  ],
+  "cleanup": {
+    "vmDeleted": true,
+    "vmCreated": true,
+    "applicationStopped": true,
+    "privateRootRemoved": true,
+    "errors": []
+  },
+  "scope": "Mac arm64 startup delivery; static discovery; no Nacos/deployment/load acceptance"
+}

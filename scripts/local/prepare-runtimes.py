@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Pinned native macOS/arm64 test runtimes, extracted only into the caller's private directory."""
 import argparse, concurrent.futures, hashlib, json, os, pathlib, platform, subprocess, urllib.request
+from verified_download import fetch_verified
 
 RUNTIMES = {
     'mysql': ('https://cdn.mysql.com/Downloads/MySQL-8.0/mysql-8.0.46-macos15-arm64.tar.gz', 'sha256', '6ca4a361a45f5019fbf6d500997986b4aaf6f0e30ff9c41179d1e8ecd635f3db'),
@@ -27,14 +28,9 @@ def prepare(root):
             repository = url.split('/v2/', 1)[1].split('/blobs/', 1)[0]
             with urllib.request.urlopen('https://ghcr.io/token?service=ghcr.io&scope=repository:' + repository + ':pull', timeout=30) as response:
                 headers['Authorization'] = 'Bearer ' + json.load(response)['token']
-        if not archive.exists():
-            with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=90) as response, archive.open('wb') as output:
-                while True:
-                    block = response.read(1024 * 1024)
-                    if not block: break
-                    output.write(block)
-        actual = checksum(archive, algorithm)
-        if actual != digest: raise RuntimeError(name + ' archive checksum mismatch')
+        def event(action, **details):
+            print(json.dumps({'action': action, **details}), flush=True)
+        fetch_verified(url, archive, digest, headers, event)
         target = root / name
         target.mkdir(exist_ok=True)
         subprocess.run(['tar', '-xf', str(archive), '-C', str(target)], check=True)

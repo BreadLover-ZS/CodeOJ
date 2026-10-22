@@ -1,0 +1,15 @@
+{
+  "ownedRoots": [
+    "/private/tmp/codeoj-startup-1r6_j4r6",
+    "/private/tmp/codeoj-startup-4j8v3ank",
+    "/private/tmp/codeoj-startup-8pvi0y9k",
+    "/private/tmp/codeoj-startup-do9mjraf",
+    "/private/tmp/codeoj-startup-l8a3kr6m",
+    "/private/tmp/codeoj-startup-q6kqstso"
+  ],
+  "allOwnedRootsRemoved": true,
+  "remainingOwnedProcessIds": [],
+  "limaUrlCacheInventoryUnchanged": true,
+  "globalDockerAndLimaConfigMetadataUnchanged": true,
+  "checkedAt": "2026-10-22 after successful serve interruption"
+}

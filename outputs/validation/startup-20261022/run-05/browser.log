@@ -1,0 +1,1 @@
+{"passed":true,"scope":"Real local startup UI -> proxy -> gateway -> isolated Java; no mocks","checks":["admin login and contest list","participant login and isolated AC","observer scoreboard without editor"],"pageErrors":[]}

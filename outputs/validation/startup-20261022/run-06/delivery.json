@@ -1,0 +1,332 @@
+{
+  "passed": true,
+  "mode": "serve",
+  "events": [
+    {
+      "at": "2026-10-22T08:52:09.219541+00:00",
+      "action": "PRIVATE_RUNTIME_DIRECTORY_CREATED",
+      "directory": "/private/tmp/codeoj-startup-8pvi0y9k"
+    },
+    {
+      "at": "2026-10-22T08:52:09.219687+00:00",
+      "action": "PREPARING_NATIVE_DEPENDENCIES"
+    },
+    {
+      "at": "2026-10-22T08:53:11.771724+00:00",
+      "action": "BUILDING_APPLICATION"
+    },
+    {
+      "at": "2026-10-22T08:55:08.749183+00:00",
+      "action": "DOWNLOAD_STARTED",
+      "asset": "lima.tgz"
+    },
+    {
+      "at": "2026-10-22T08:55:08.749300+00:00",
+      "action": "DOWNLOAD_STARTED",
+      "asset": "docker-mac.tgz"
+    },
+    {
+      "at": "2026-10-22T08:55:08.749977+00:00",
+      "action": "DOWNLOAD_STARTED",
+      "asset": "docker-linux.tgz"
+    },
+    {
+      "at": "2026-10-22T08:55:08.750257+00:00",
+      "action": "DOWNLOAD_STARTED",
+      "asset": "ubuntu.img"
+    },
+    {
+      "at": "2026-10-22T08:55:25.420958+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "docker-mac.tgz",
+      "receivedMiB": 16
+    },
+    {
+      "at": "2026-10-22T08:55:25.820424+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "docker-linux.tgz",
+      "receivedMiB": 5
+    },
+    {
+      "at": "2026-10-22T08:55:26.426078+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "ubuntu.img",
+      "receivedMiB": 4
+    },
+    {
+      "at": "2026-10-22T08:55:30.767515+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "lima.tgz",
+      "receivedMiB": 5
+    },
+    {
+      "at": "2026-10-22T08:55:32.973845+00:00",
+      "action": "DOWNLOAD_VERIFIED",
+      "asset": "docker-mac.tgz"
+    },
+    {
+      "at": "2026-10-22T08:55:43.306073+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "ubuntu.img",
+      "receivedMiB": 9
+    },
+    {
+      "at": "2026-10-22T08:55:44.998925+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "docker-linux.tgz",
+      "receivedMiB": 11
+    },
+    {
+      "at": "2026-10-22T08:55:48.893373+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "lima.tgz",
+      "receivedMiB": 10
+    },
+    {
+      "at": "2026-10-22T08:56:00.129058+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "ubuntu.img",
+      "receivedMiB": 12
+    },
+    {
+      "at": "2026-10-22T08:56:00.444909+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "docker-linux.tgz",
+      "receivedMiB": 13
+    },
+    {
+      "at": "2026-10-22T08:56:05.213390+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "lima.tgz",
+      "receivedMiB": 14
+    },
+    {
+      "at": "2026-10-22T08:56:15.838154+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "docker-linux.tgz",
+      "receivedMiB": 16
+    },
+    {
+      "at": "2026-10-22T08:56:20.676412+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "lima.tgz",
+      "receivedMiB": 23
+    },
+    {
+      "at": "2026-10-22T08:56:21.506813+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "ubuntu.img",
+      "receivedMiB": 16
+    },
+    {
+      "at": "2026-10-22T08:56:33.132637+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "docker-linux.tgz",
+      "receivedMiB": 19
+    },
+    {
+      "at": "2026-10-22T08:56:37.951863+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "ubuntu.img",
+      "receivedMiB": 18
+    },
+    {
+      "at": "2026-10-22T08:56:41.032172+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "lima.tgz",
+      "receivedMiB": 27
+    },
+    {
+      "at": "2026-10-22T08:56:48.372921+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "docker-linux.tgz",
+      "receivedMiB": 21
+    },
+    {
+      "at": "2026-10-22T08:56:58.668757+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "ubuntu.img",
+      "receivedMiB": 21
+    },
+    {
+      "at": "2026-10-22T08:57:01.605369+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "lima.tgz",
+      "receivedMiB": 30
+    },
+    {
+      "at": "2026-10-22T08:57:06.804374+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "docker-linux.tgz",
+      "receivedMiB": 23
+    },
+    {
+      "at": "2026-10-22T08:57:19.056047+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "ubuntu.img",
+      "receivedMiB": 26
+    },
+    {
+      "at": "2026-10-22T08:57:24.822308+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "lima.tgz",
+      "receivedMiB": 33
+    },
+    {
+      "at": "2026-10-22T08:57:25.819582+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "docker-linux.tgz",
+      "receivedMiB": 25
+    },
+    {
+      "at": "2026-10-22T08:57:33.849606+00:00",
+      "action": "DOWNLOAD_VERIFIED",
+      "asset": "lima.tgz"
+    },
+    {
+      "at": "2026-10-22T08:57:34.664961+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "ubuntu.img",
+      "receivedMiB": 30
+    },
+    {
+      "at": "2026-10-22T08:57:42.051649+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "docker-linux.tgz",
+      "receivedMiB": 39
+    },
+    {
+      "at": "2026-10-22T08:57:49.803028+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "ubuntu.img",
+      "receivedMiB": 44
+    },
+    {
+      "at": "2026-10-22T08:57:57.937508+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "docker-linux.tgz",
+      "receivedMiB": 50
+    },
+    {
+      "at": "2026-10-22T08:58:04.854160+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "ubuntu.img",
+      "receivedMiB": 74
+    },
+    {
+      "at": "2026-10-22T08:58:09.445481+00:00",
+      "action": "DOWNLOAD_TRANSFER_REJECTED",
+      "asset": "docker-linux.tgz",
+      "attempt": 1,
+      "httpStatus": 200,
+      "declaredBytes": 77953959,
+      "receivedBytes": 77943731,
+      "contentRange": null,
+      "errorType": "TransferIncomplete"
+    },
+    {
+      "at": "2026-10-22T08:58:20.122940+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "ubuntu.img",
+      "receivedMiB": 118
+    },
+    {
+      "at": "2026-10-22T08:58:26.335433+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "docker-linux.tgz",
+      "receivedMiB": 41
+    },
+    {
+      "at": "2026-10-22T08:58:35.329264+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "ubuntu.img",
+      "receivedMiB": 170
+    },
+    {
+      "at": "2026-10-22T08:58:41.529287+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "docker-linux.tgz",
+      "receivedMiB": 68
+    },
+    {
+      "at": "2026-10-22T08:58:46.015141+00:00",
+      "action": "DOWNLOAD_VERIFIED",
+      "asset": "docker-linux.tgz"
+    },
+    {
+      "at": "2026-10-22T08:58:50.420281+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "ubuntu.img",
+      "receivedMiB": 233
+    },
+    {
+      "at": "2026-10-22T08:59:05.435673+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "ubuntu.img",
+      "receivedMiB": 299
+    },
+    {
+      "at": "2026-10-22T08:59:20.662559+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "ubuntu.img",
+      "receivedMiB": 369
+    },
+    {
+      "at": "2026-10-22T08:59:35.692006+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "ubuntu.img",
+      "receivedMiB": 437
+    },
+    {
+      "at": "2026-10-22T08:59:50.886010+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "ubuntu.img",
+      "receivedMiB": 500
+    },
+    {
+      "at": "2026-10-22T09:00:06.012309+00:00",
+      "action": "DOWNLOAD_PROGRESS",
+      "asset": "ubuntu.img",
+      "receivedMiB": 567
+    },
+    {
+      "at": "2026-10-22T09:00:10.715313+00:00",
+      "action": "DOWNLOAD_VERIFIED",
+      "asset": "ubuntu.img"
+    },
+    {
+      "at": "2026-10-22T09:00:12.016699+00:00",
+      "action": "PRIVATE_VM_STARTING"
+    },
+    {
+      "at": "2026-10-22T09:00:26.355656+00:00",
+      "action": "PRIVATE_DOCKER_READY",
+      "version": "29.9.2",
+      "cgroup": "2"
+    },
+    {
+      "at": "2026-10-22T09:01:31.224308+00:00",
+      "action": "PINNED_ISOLATION_IMAGE_READY",
+      "image": "sha256:2f74000030f977fc79342d3541abab4234dbe30c9cead6659f4e4f9b1499e3a8"
+    },
+    {
+      "at": "2026-10-22T09:02:24.512710+00:00",
+      "action": "LOCAL_STACK_READY",
+      "url": "http://127.0.0.1:51366",
+      "privateAccessFile": "/private/tmp/codeoj-startup-8pvi0y9k/access.json",
+      "mode": "serve"
+    },
+    {
+      "at": "2026-10-22T09:03:30.880387+00:00",
+      "action": "INTERRUPTED"
+    }
+  ],
+  "cleanup": {
+    "vmDeleted": true,
+    "vmCreated": true,
+    "applicationStopped": true,
+    "privateRootRemoved": true,
+    "errors": []
+  },
+  "scope": "Mac arm64 startup delivery; static discovery; no Nacos/deployment/load acceptance"
+}

@@ -1,0 +1,8 @@
+{
+  "status": 200,
+  "lengthHeader": "38328082",
+  "contentRange": null,
+  "receivedBytes": 38328082,
+  "sha256": "9e9eacce88f37e185c346bad73aa6136f738d8cdf8c3bb23cd42b071824bc66e",
+  "expected": "9e9eacce88f37e185c346bad73aa6136f738d8cdf8c3bb23cd42b071824bc66e"
+}

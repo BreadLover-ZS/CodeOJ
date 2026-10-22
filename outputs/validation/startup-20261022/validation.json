@@ -1,0 +1,11 @@
+{
+  "sourceFiles": 13,
+  "successfulRunsMatchCurrentRuntimeSources": true,
+  "backendJavaSourceChanges": false,
+  "unitContracts": 23,
+  "jsonAndLocalLinksAndSyntax": "PASS",
+  "privateConfigFilesAbsent": true,
+  "credentialPatternScan": "PASS",
+  "credentialScanScope": "40-64 hex password/secret/authorization assignments and long Bearer values; not an exhaustive secret audit",
+  "checkedAt": "2026-10-22T09:10:59.103909+00:00"
+}

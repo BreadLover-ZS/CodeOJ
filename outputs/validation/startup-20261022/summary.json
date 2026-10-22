@@ -1,0 +1,40 @@
+{
+  "baseCommit": "b1abbb5c86ace8933c1f473f72cc7e9746365f50",
+  "status": "PASS",
+  "platform": "macOS arm64; native data/application services + private Linux isolated execution",
+  "verify": {
+    "run": "run-05",
+    "defaultFullBuild": true,
+    "realBrowser": true,
+    "status": "PASS"
+  },
+  "serve": {
+    "run": "run-06",
+    "defaultFullBuild": true,
+    "actualCtrlC": true,
+    "status": "PASS"
+  },
+  "userVerdictsPerRun": [
+    "AC",
+    "WA",
+    "CE"
+  ],
+  "orchestrationContractTests": {
+    "tests": 23,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "usesMocks": true
+  },
+  "realTruncatedDownloadRecoveredWithoutRelaxingDigest": true,
+  "cleanupAudit": "cleanup-audit.json",
+  "backendRegressionRerun": false,
+  "fullJvmatrixRerun": false,
+  "excluded": [
+    "Nacos",
+    "remote deployment",
+    "load/performance",
+    "kernel escape certification",
+    "host power loss recovery"
+  ]
+}

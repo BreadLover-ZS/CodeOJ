@@ -1,0 +1,21 @@
+{
+  "rejectedResponses": [
+    {
+      "at": "2026-10-22T08:58:09.445481+00:00",
+      "action": "DOWNLOAD_TRANSFER_REJECTED",
+      "asset": "docker-linux.tgz",
+      "attempt": 1,
+      "httpStatus": 200,
+      "declaredBytes": 77953959,
+      "receivedBytes": 77943731,
+      "contentRange": null,
+      "errorType": "TransferIncomplete"
+    }
+  ],
+  "finalAsset": {
+    "url": "https://download.docker.com/linux/static/stable/aarch64/docker-29.9.2.tgz",
+    "sha256": "873b3e0207857c3b2f28392fb922f3ea6efe37620c16d4d4aaf2fef409c90b73",
+    "bytes": 77953959,
+    "attempts": 2
+  }
+}

@@ -2,6 +2,8 @@
 
 开发与验收版本：`bc3514261767d07cc3be7c3ab681afc894e25c02`（2026-10-22，已推送）。后续学习/交接文档更新不改变该版本的运行证据。原报告中“尚未提交”描述的是验收当时状态；历史文件与指纹保留原样。
 
+完整启动的新入口见 [Mac 完整本机启动](local-startup.md)：`./scripts/local-stack.sh verify`，或 `serve` 前台演示。下文保留各层单独复验入口。
+
 ## 1. 接手时先核对
 
 从仓库根目录运行 `git status --short`、`git log -2 --oneline`。先阅读[验收报告](../../outputs/validation/isolation-20261022/report.md)、[逐项矩阵](../../outputs/validation/isolation-20261022/jv-matrix.md)与[隔离配置](isolated-sandbox.md)。

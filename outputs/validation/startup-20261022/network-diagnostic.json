@@ -1,0 +1,10 @@
+{
+  "asset": "openssl",
+  "subsequentIndependentCheck": {
+    "httpStatus": 200,
+    "receivedBytes": 11216046,
+    "sha256": "39fb74d25429fbb9794cf4327530ba458b97d0000406715270d3b0715bd6ba35",
+    "matchesPinnedDigest": true
+  },
+  "earlierMismatchCause": "not reproduced; raw preparation failure retained; no digest relaxed"
+}

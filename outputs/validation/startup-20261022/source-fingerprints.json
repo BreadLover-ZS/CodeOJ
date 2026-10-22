@@ -1,0 +1,18 @@
+{
+  "baseCommit": "b1abbb5c86ace8933c1f473f72cc7e9746365f50",
+  "files": {
+    "README.md": "c7c0eb6ffcb370cabf3016d6550e24b04d0d2ff661fcdda22a63a41faff16a23",
+    "docs/contest/README.md": "b5fe771b7eed53795b892e7319d3de987fa7cc7366fb5608ce647ad2f32aa77d",
+    "docs/contest/handoff.md": "4734023bb3f0f7bd16a747b6921b55e45a572b066ac640ac15331067c15b2778",
+    "docs/contest/local-startup.md": "5ac326d771f4cd8485e7f1a295b94133f5182713c0bc404c6a7597e88d92cb23",
+    "scripts/local-stack.sh": "4b14ed797ca5d0d29f42841a1318bbb41bb14ef5451c5f661fef7ea035f0654d",
+    "scripts/local/prepare-runtimes.py": "b520c115b68f8c8cf3cccb4c9610858142e22554561deaca609f3d2d149440c6",
+    "scripts/local/private-isolation.py": "2e57674ceca69fc60b3c830c547146d31cd23a30c37bb0d104d70af13983d4f9",
+    "scripts/local/serve-frontend.cjs": "249c0e9f8b2193e46268dd41a6b3174abc376326a04ea1f701cfed2aa5772747",
+    "scripts/local/start-stack.py": "c8afd809829382bd64940da037ca33bc76dd70ca1b383876648eb56ee05eb316",
+    "scripts/local/tests/test_startup_cleanup.py": "306c349c6f7a3f75c5f8f58e8d0a6af8cd224e10f15f025e9f88223aaf7f6f7f",
+    "scripts/local/tests/test_verified_download.py": "6b5d6f8d078e831efc6c3f5c54a50cbef6cd932d14d568bd03808a9cce6b9827",
+    "scripts/local/verified_download.py": "444fcd3016d137941d405d8ec5f7b40587ce9e845feeef0f9a0c20185bee8609",
+    "scripts/validation/startup-real-browser.cjs": "b653806b34272940edaa88f5f03ef236725b02c370f6a40ad3bda8eddcd1d817"
+  }
+}

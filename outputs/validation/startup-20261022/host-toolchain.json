@@ -1,0 +1,6 @@
+{
+  "java": "openjdk version \"1.8.0_504\"\nOpenJDK Runtime Environment Corretto-8.504.01.1 (build 1.8.0_504-b01)\nOpenJDK 64-Bit Server VM Corretto-8.504.01.1 (build 25.504-b01, mixed mode)",
+  "node": "v26.0.0",
+  "npm": "11.12.1",
+  "maven": "Apache Maven 3.9.16 (2bdd9fddda4b155ebf8000e807eb73fd829a51d5)\nMaven home: /opt/homebrew/Cellar/maven/3.9.16/libexec\nJava version: 1.8.0_504, vendor: Amazon.com Inc., runtime: /Library/Java/JavaVirtualMachines/amazon-corretto-8.jdk/Contents/Home/jre\nDefault locale: zh_CN, platform encoding: UTF-8\nOS name: \"mac os x\", version: \"27.0.1\", arch: \"aarch64\", family: \"mac\""
+}

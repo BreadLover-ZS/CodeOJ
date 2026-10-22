@@ -1,0 +1,28 @@
+test_application_stop_keeps_journal_until_physical_vm_cleanup (test_startup_cleanup.CleanupContracts.test_application_stop_keeps_journal_until_physical_vm_cleanup) ... ok
+test_failed_process_cleanup_still_attempts_vm_cleanup_and_retains_data (test_startup_cleanup.CleanupContracts.test_failed_process_cleanup_still_attempts_vm_cleanup_and_retains_data) ... ok
+test_failed_vm_cleanup_retains_private_control_directory (test_startup_cleanup.CleanupContracts.test_failed_vm_cleanup_retains_private_control_directory) ... ok
+test_failed_vm_stop_never_deletes_its_live_disk (test_startup_cleanup.CleanupContracts.test_failed_vm_stop_never_deletes_its_live_disk) ... ok
+test_proxy_credentials_are_removed_from_archived_logs (test_startup_cleanup.CleanupContracts.test_proxy_credentials_are_removed_from_archived_logs) ... ok
+test_remaining_vm_is_a_cleanup_failure (test_startup_cleanup.CleanupContracts.test_remaining_vm_is_a_cleanup_failure) ... ok
+test_stopped_vm_is_deleted_and_removal_is_checked (test_startup_cleanup.CleanupContracts.test_stopped_vm_is_deleted_and_removal_is_checked) ... ok
+test_success_removes_only_owned_private_directory (test_startup_cleanup.CleanupContracts.test_success_removes_only_owned_private_directory) ... ok
+test_jackson_long_string_zero_is_ready (test_startup_cleanup.ScoreboardWireContract.test_jackson_long_string_zero_is_ready) ... ok
+test_pending_projection_is_not_ready (test_startup_cleanup.ScoreboardWireContract.test_pending_projection_is_not_ready) ... ok
+test_unknown_counter_does_not_become_zero (test_startup_cleanup.ScoreboardWireContract.test_unknown_counter_does_not_become_zero) ... ok
+test_failure_after_ready_is_not_reported_as_passed (test_startup_cleanup.StartupFailureAndProxyContracts.test_failure_after_ready_is_not_reported_as_passed) ... ok
+test_loopback_proxy_is_translated_without_mutating_host_environment (test_startup_cleanup.StartupFailureAndProxyContracts.test_loopback_proxy_is_translated_without_mutating_host_environment) ... ok
+test_non_http_proxy_is_rejected (test_startup_cleanup.StartupFailureAndProxyContracts.test_non_http_proxy_is_rejected) ... ok
+test_remote_proxy_and_no_proxy_rules_are_preserved (test_startup_cleanup.StartupFailureAndProxyContracts.test_remote_proxy_and_no_proxy_rules_are_preserved) ... ok
+test_authentication_error_is_not_retried (test_verified_download.DownloadBoundaryContracts.test_authentication_error_is_not_retried) ... ok
+test_cancelled_peer_download_does_not_start_new_request (test_verified_download.DownloadBoundaryContracts.test_cancelled_peer_download_does_not_start_new_request) ... ok
+test_complete_wrong_digest_fails_without_retry_or_completed_file (test_verified_download.DownloadBoundaryContracts.test_complete_wrong_digest_fails_without_retry_or_completed_file) ... ok
+test_existing_corrupt_asset_cannot_be_reused (test_verified_download.DownloadBoundaryContracts.test_existing_corrupt_asset_cannot_be_reused) ... ok
+test_silent_short_read_is_rejected_and_full_digest_is_still_required (test_verified_download.DownloadBoundaryContracts.test_silent_short_read_is_rejected_and_full_digest_is_still_required) ... ok
+test_timeout_can_retry_same_pinned_asset (test_verified_download.DownloadBoundaryContracts.test_timeout_can_retry_same_pinned_asset) ... ok
+test_transport_retry_budget_is_finite (test_verified_download.DownloadBoundaryContracts.test_transport_retry_budget_is_finite) ... ok
+test_unrequested_partial_response_is_not_published (test_verified_download.DownloadBoundaryContracts.test_unrequested_partial_response_is_not_published) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 0.013s
+
+OK

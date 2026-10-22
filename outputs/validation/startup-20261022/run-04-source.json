@@ -1,0 +1,12 @@
+{
+  "baseCommit": "b1abbb5c86ace8933c1f473f72cc7e9746365f50",
+  "files": {
+    "scripts/local-stack.sh": "4b14ed797ca5d0d29f42841a1318bbb41bb14ef5451c5f661fef7ea035f0654d",
+    "scripts/local/start-stack.py": "7bbc29c8abb223714ea62a7ad3280ceea1b873c6970fc21d16976b481a2215da",
+    "scripts/local/private-isolation.py": "adec1429737f04c4da9b81655c7fa104225e46a02567e7d09b50d7c7c1de201b",
+    "scripts/local/serve-frontend.cjs": "249c0e9f8b2193e46268dd41a6b3174abc376326a04ea1f701cfed2aa5772747",
+    "scripts/validation/startup-real-browser.cjs": "b653806b34272940edaa88f5f03ef236725b02c370f6a40ad3bda8eddcd1d817",
+    "scripts/local/run-native-stack.py": "21af09fb5264fb7473b92aacdd9ea57ba43c3db2f68bc31a83ecdb22a31e8feb",
+    "scripts/local/prepare-runtimes.py": "f45a7d421d4b0a536d7d0f13c368f98c44e0cc690fee4f9c4ca671b2ead1af8c"
+  }
+}

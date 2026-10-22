@@ -1,0 +1,77 @@
+{
+  "passed": false,
+  "mode": "verify",
+  "events": [
+    {
+      "at": "2026-10-22T07:57:11.970644+00:00",
+      "action": "PREPARING_NATIVE_DEPENDENCIES"
+    },
+    {
+      "at": "2026-10-22T07:58:09.678095+00:00",
+      "action": "BUILDING_APPLICATION"
+    },
+    {
+      "at": "2026-10-22T07:59:33.194645+00:00",
+      "action": "DOWNLOAD_STARTED",
+      "asset": "lima.tgz"
+    },
+    {
+      "at": "2026-10-22T07:59:33.195396+00:00",
+      "action": "DOWNLOAD_STARTED",
+      "asset": "docker-mac.tgz"
+    },
+    {
+      "at": "2026-10-22T07:59:33.195652+00:00",
+      "action": "DOWNLOAD_STARTED",
+      "asset": "docker-linux.tgz"
+    },
+    {
+      "at": "2026-10-22T07:59:33.195881+00:00",
+      "action": "DOWNLOAD_STARTED",
+      "asset": "ubuntu.img"
+    },
+    {
+      "at": "2026-10-22T07:59:46.316640+00:00",
+      "action": "DOWNLOAD_VERIFIED",
+      "asset": "docker-mac.tgz"
+    },
+    {
+      "at": "2026-10-22T08:00:05.669027+00:00",
+      "action": "DOWNLOAD_VERIFIED",
+      "asset": "lima.tgz"
+    },
+    {
+      "at": "2026-10-22T08:00:20.805051+00:00",
+      "action": "DOWNLOAD_VERIFIED",
+      "asset": "docker-linux.tgz"
+    },
+    {
+      "at": "2026-10-22T08:01:46.501162+00:00",
+      "action": "DOWNLOAD_VERIFIED",
+      "asset": "ubuntu.img"
+    },
+    {
+      "at": "2026-10-22T08:01:47.738909+00:00",
+      "action": "PRIVATE_VM_STARTING"
+    },
+    {
+      "at": "2026-10-22T08:02:01.131159+00:00",
+      "action": "PRIVATE_DOCKER_READY",
+      "version": "29.9.2",
+      "cgroup": "2"
+    },
+    {
+      "at": "2026-10-22T08:02:16.191774+00:00",
+      "action": "STARTUP_FAILED",
+      "errorType": "CalledProcessError"
+    }
+  ],
+  "cleanup": {
+    "vmDeleted": true,
+    "vmCreated": true,
+    "applicationStopped": true,
+    "privateRootRemoved": true,
+    "errors": []
+  },
+  "scope": "Mac arm64 startup delivery; static discovery; no Nacos/deployment/load acceptance"
+}
