@@ -1,0 +1,458 @@
+2026-10-22 06:10:06.983  WARN 35431 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionSubmitMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionSubmitMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 06:10:06.984  WARN 35431 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 06:10:06.984  WARN 35431 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendquestionservice.mapper]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-22 06:10:09.240  WARN 35431 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-22 06:10:16.552  WARN 35431 --- [.1-58659-exec-1] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-22 06:11:02.658  WARN 35431 --- [127.0.0.1:58704] c.r.c.impl.ForgivingExceptionHandler     : An unexpected connection driver error occurred (Exception message: Connection reset)
+2026-10-22 06:11:03.568  WARN 35431 --- [127.0.0.1:58704] c.r.c.impl.ForgivingExceptionHandler     : An unexpected connection driver error occurred (Exception message: Connection reset)
+2026-10-22 06:11:03.640  WARN 35431 --- [127.0.0.1:58704] c.r.c.impl.ForgivingExceptionHandler     : An unexpected connection driver error occurred (Exception message: Connection reset)
+2026-10-22 06:11:18.442  WARN 35431 --- [ioEventLoop-4-4] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58653]: Connection refused: /127.0.0.1:58653
+2026-10-22 06:11:18.442  WARN 35431 --- [ioEventLoop-4-3] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58653]: Connection refused: /127.0.0.1:58653
+2026-10-22 06:11:24.734  WARN 35431 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113150929059872770
+2026-10-22 06:11:27.539  WARN 35431 --- [ioEventLoop-4-7] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58653]: Connection refused: /127.0.0.1:58653
+2026-10-22 06:11:27.539  WARN 35431 --- [ioEventLoop-4-8] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58653]: Connection refused: /127.0.0.1:58653
+2026-10-22 06:11:28.451  WARN 35431 --- [.1-58659-exec-2] c.c.c.filter.SessionAvailabilityFilter   : Redis-dependent request unavailable: type=org.springframework.dao.QueryTimeoutException
+2026-10-22 06:11:31.752  WARN 35431 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113150929059872770
+2026-10-22 06:11:35.847  WARN 35431 --- [.1-58659-exec-1] c.c.c.filter.SessionAvailabilityFilter   : Redis-dependent request unavailable: type=org.springframework.web.util.NestedServletException
+2026-10-22 06:11:35.850  WARN 35431 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113150929059872770
+2026-10-22 06:13:56.918  WARN 37107 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionSubmitMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionSubmitMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 06:13:56.919  WARN 37107 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 06:13:56.919  WARN 37107 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendquestionservice.mapper]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-22 06:13:58.749  WARN 37107 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-22 06:13:58.913  WARN 37107 --- [.1-58659-exec-2] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-22 06:14:00.042  WARN 37107 --- [127.0.0.1:58704] c.r.c.impl.ForgivingExceptionHandler     : An unexpected connection driver error occurred (Exception message: Connection reset)
+2026-10-22 06:14:00.044  WARN 37107 --- [127.0.0.1:58704] c.r.c.impl.ForgivingExceptionHandler     : An unexpected connection driver error occurred (Exception message: Connection reset)
+2026-10-22 06:14:03.727  WARN 37153 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionSubmitMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionSubmitMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 06:14:03.728  WARN 37153 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 06:14:03.728  WARN 37153 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendquestionservice.mapper]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-22 06:14:05.643  WARN 37153 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-22 06:14:06.010  WARN 37153 --- [.1-58659-exec-3] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-22 06:14:37.769  WARN 37153 --- [127.0.0.1:58704] c.r.c.impl.ForgivingExceptionHandler     : An unexpected connection driver error occurred (Exception message: Connection reset)
+2026-10-22 06:14:38.010  WARN 37153 --- [127.0.0.1:58704] c.r.c.impl.ForgivingExceptionHandler     : An unexpected connection driver error occurred (Exception message: Connection reset)
+2026-10-22 06:14:38.757  WARN 37153 --- [127.0.0.1:58704] c.r.c.impl.ForgivingExceptionHandler     : An unexpected connection driver error occurred (Exception message: Connection reset)
+2026-10-22 06:15:55.773  WARN 37975 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionSubmitMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionSubmitMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 06:15:55.774  WARN 37975 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 06:15:55.774  WARN 37975 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendquestionservice.mapper]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-22 06:15:57.658  WARN 37975 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-22 06:15:58.064  WARN 37975 --- [.1-58659-exec-3] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-22 06:16:03.667  WARN 37975 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113152364241661954
+2026-10-22 06:16:13.950  WARN 37975 --- [ioEventLoop-4-3] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58653]: Connection refused: /127.0.0.1:58653
+2026-10-22 06:16:13.950  WARN 37975 --- [ioEventLoop-4-4] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58653]: Connection refused: /127.0.0.1:58653
+2026-10-22 06:16:19.813  WARN 37975 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113150929059872770
+2026-10-22 06:16:23.047  WARN 37975 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113152291420123137
+2026-10-22 06:16:28.148  WARN 37975 --- [ioEventLoop-4-8] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58653]: Connection refused: /127.0.0.1:58653
+2026-10-22 06:16:28.148  WARN 37975 --- [ioEventLoop-4-7] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58653]: Connection refused: /127.0.0.1:58653
+2026-10-22 06:16:33.138  WARN 37975 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113150929059872770
+2026-10-22 06:16:35.442  WARN 37975 --- [ioEventLoop-4-4] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58653]: Connection refused: /127.0.0.1:58653
+2026-10-22 06:16:35.442  WARN 37975 --- [ioEventLoop-4-3] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58653]: Connection refused: /127.0.0.1:58653
+2026-10-22 06:16:38.143  WARN 37975 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113152291420123137
+2026-10-22 06:16:42.367  WARN 37975 --- [1-58659-exec-10] .m.m.a.ExceptionHandlerExceptionResolver : Failure in @ExceptionHandler com.codeoj.codeojbackendquestionservice.submission.SubmissionConflictAdvice#unavailable(DataAccessException)
+
+org.springframework.dao.QueryTimeoutException: Redis command timed out; nested exception is io.lettuce.core.RedisCommandTimeoutException: Command timed out after 5 second(s)
+	at org.springframework.data.redis.connection.lettuce.LettuceExceptionConverter.convert(LettuceExceptionConverter.java:70) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceExceptionConverter.convert(LettuceExceptionConverter.java:41) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.PassThroughExceptionTranslationStrategy.translate(PassThroughExceptionTranslationStrategy.java:44) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.FallbackExceptionTranslationStrategy.translate(FallbackExceptionTranslationStrategy.java:42) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceConnection.convertLettuceAccessException(LettuceConnection.java:272) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceConnection.await(LettuceConnection.java:1063) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceConnection.lambda$doInvoke$4(LettuceConnection.java:920) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceInvoker$Synchronizer.invoke(LettuceInvoker.java:665) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceInvoker.just(LettuceInvoker.java:109) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceHashCommands.hMSet(LettuceHashCommands.java:257) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.DefaultedRedisConnection.hMSet(DefaultedRedisConnection.java:1434) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.DefaultHashOperations.lambda$putAll$12(DefaultHashOperations.java:213) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.RedisTemplate.execute(RedisTemplate.java:223) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.RedisTemplate.execute(RedisTemplate.java:190) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.AbstractOperations.execute(AbstractOperations.java:97) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.DefaultHashOperations.putAll(DefaultHashOperations.java:212) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.DefaultBoundHashOperations.putAll(DefaultBoundHashOperations.java:187) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.session.data.redis.RedisIndexedSessionRepository$RedisSession.saveDelta(RedisIndexedSessionRepository.java:811) ~[spring-session-data-redis-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.data.redis.RedisIndexedSessionRepository$RedisSession.save(RedisIndexedSessionRepository.java:799) ~[spring-session-data-redis-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.data.redis.RedisIndexedSessionRepository$RedisSession.access$000(RedisIndexedSessionRepository.java:686) ~[spring-session-data-redis-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.data.redis.RedisIndexedSessionRepository.save(RedisIndexedSessionRepository.java:415) ~[spring-session-data-redis-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.data.redis.RedisIndexedSessionRepository.save(RedisIndexedSessionRepository.java:251) ~[spring-session-data-redis-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper.commitSession(SessionRepositoryFilter.java:226) ~[spring-session-core-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper.access$100(SessionRepositoryFilter.java:193) ~[spring-session-core-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryResponseWrapper.onResponseCommitted(SessionRepositoryFilter.java:180) ~[spring-session-core-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.web.http.OnCommittedResponseWrapper.doOnResponseCommitted(OnCommittedResponseWrapper.java:227) ~[spring-session-core-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.web.http.OnCommittedResponseWrapper.access$000(OnCommittedResponseWrapper.java:35) ~[spring-session-core-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.web.http.OnCommittedResponseWrapper$SaveContextServletOutputStream.flush(OnCommittedResponseWrapper.java:498) ~[spring-session-core-2.6.3.jar!/:2.6.3]
+	at java.io.FilterOutputStream.flush(FilterOutputStream.java:140) ~[na:1.8.0_504]
+	at com.fasterxml.jackson.core.json.UTF8JsonGenerator.flush(UTF8JsonGenerator.java:1187) ~[jackson-core-2.13.4.jar!/:2.13.4]
+	at com.fasterxml.jackson.databind.ObjectWriter.writeValue(ObjectWriter.java:1009) ~[jackson-databind-2.13.4.2.jar!/:2.13.4.2]
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.writeInternal(AbstractJackson2HttpMessageConverter.java:456) ~[spring-web-5.3.23.jar!/:5.3.23]
+	at org.springframework.http.converter.AbstractGenericHttpMessageConverter.write(AbstractGenericHttpMessageConverter.java:104) ~[spring-web-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodProcessor.writeWithMessageConverters(AbstractMessageConverterMethodProcessor.java:290) ~[spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor.handleReturnValue(HttpEntityMethodProcessor.java:219) ~[spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.method.support.HandlerMethodReturnValueHandlerComposite.handleReturnValue(HandlerMethodReturnValueHandlerComposite.java:78) ~[spring-web-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:135) ~[spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver.doResolveHandlerMethodException(ExceptionHandlerExceptionResolver.java:428) ~[spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodExceptionResolver.doResolveException(AbstractHandlerMethodExceptionResolver.java:75) [spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver.resolveException(AbstractHandlerExceptionResolver.java:142) [spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.handler.HandlerExceptionResolverComposite.resolveException(HandlerExceptionResolverComposite.java:80) [spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.DispatcherServlet.processHandlerException(DispatcherServlet.java:1331) [spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1142) [spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1088) [spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:964) [spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006) [spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:909) [spring-webmvc-5.3.23.jar!/:5.3.23]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:696) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883) [spring-webmvc-5.3.23.jar!/:5.3.23]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:779) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:227) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53) [tomcat-embed-websocket-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) [tomcat-embed-core-9.0.68.jar!/:na]
+	at com.codeoj.codeojbackendserviceclient.filter.InnerApiAuthFilter.doFilterInternal(InnerApiAuthFilter.java:44) [codeoj-backend-service-client-0.0.1-SNAPSHOT.jar!/:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) [spring-web-5.3.23.jar!/:5.3.23]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) [spring-web-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) [spring-web-5.3.23.jar!/:5.3.23]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) [spring-web-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) [spring-web-5.3.23.jar!/:5.3.23]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.springframework.session.web.http.SessionRepositoryFilter.doFilterInternal(SessionRepositoryFilter.java:142) [spring-session-core-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.web.http.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:82) [spring-session-core-2.6.3.jar!/:2.6.3]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) [tomcat-embed-core-9.0.68.jar!/:na]
+	at com.codeoj.codeojbackendserviceclient.filter.SessionAvailabilityFilter.doFilterInternal(SessionAvailabilityFilter.java:22) [codeoj-backend-service-client-0.0.1-SNAPSHOT.jar!/:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) [spring-web-5.3.23.jar!/:5.3.23]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) [spring-web-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) [spring-web-5.3.23.jar!/:5.3.23]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:197) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:541) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:135) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:360) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:893) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1789) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) [tomcat-embed-core-9.0.68.jar!/:na]
+	at java.lang.Thread.run(Thread.java:750) [na:1.8.0_504]
+Caused by: io.lettuce.core.RedisCommandTimeoutException: Command timed out after 5 second(s)
+	at io.lettuce.core.internal.ExceptionFactory.createTimeoutException(ExceptionFactory.java:59) ~[lettuce-core-6.1.10.RELEASE.jar!/:6.1.10.RELEASE]
+	at io.lettuce.core.internal.Futures.awaitOrCancel(Futures.java:246) ~[lettuce-core-6.1.10.RELEASE.jar!/:6.1.10.RELEASE]
+	at io.lettuce.core.LettuceFutures.awaitOrCancel(LettuceFutures.java:74) ~[lettuce-core-6.1.10.RELEASE.jar!/:6.1.10.RELEASE]
+	at org.springframework.data.redis.connection.lettuce.LettuceConnection.await(LettuceConnection.java:1061) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	... 89 common frames omitted
+
+2026-10-22 06:16:43.153  WARN 37975 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113152312974651393
+2026-10-22 06:16:43.649  WARN 37975 --- [ioEventLoop-4-6] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58653]: Connection refused: /127.0.0.1:58653
+2026-10-22 06:16:43.649  WARN 37975 --- [ioEventLoop-4-5] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58653]: Connection refused: /127.0.0.1:58653
+2026-10-22 06:16:47.375  WARN 37975 --- [1-58659-exec-10] c.c.c.filter.SessionAvailabilityFilter   : Redis-dependent request unavailable: type=org.springframework.dao.QueryTimeoutException
+2026-10-22 06:16:48.159  WARN 37975 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113152364241661954
+2026-10-22 06:16:53.161  WARN 37975 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113152410949431298
+2026-10-22 06:16:58.171  WARN 37975 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113152466851115009
+2026-10-22 06:17:34.097 ERROR 37975 --- [.1-58659-exec-9] c.c.c.exception.GlobalExceptionHandler   : BusinessException
+
+com.codeoj.codeojbackendcommon.exception.BusinessException: 请求数据不存在
+	at com.codeoj.codeojbackendquestionservice.controller.QuestionController.getQuestionById(QuestionController.java:168) ~[classes!/:na]
+	at com.codeoj.codeojbackendquestionservice.controller.QuestionController$$FastClassBySpringCGLIB$$9fe25ca2.invoke(<generated>) ~[classes!/:na]
+	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218) ~[spring-core-5.3.23.jar!/:5.3.23]
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:793) ~[spring-aop-5.3.23.jar!/:5.3.23]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163) ~[spring-aop-5.3.23.jar!/:5.3.23]
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763) ~[spring-aop-5.3.23.jar!/:5.3.23]
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97) ~[spring-aop-5.3.23.jar!/:5.3.23]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.3.23.jar!/:5.3.23]
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763) ~[spring-aop-5.3.23.jar!/:5.3.23]
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:708) ~[spring-aop-5.3.23.jar!/:5.3.23]
+	at com.codeoj.codeojbackendquestionservice.controller.QuestionController$$EnhancerBySpringCGLIB$$17a92eb9.getQuestionById(<generated>) ~[classes!/:na]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_504]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_504]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_504]
+	at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_504]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205) ~[spring-web-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150) ~[spring-web-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117) ~[spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:895) ~[spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:808) ~[spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1071) ~[spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:964) ~[spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006) [spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:898) [spring-webmvc-5.3.23.jar!/:5.3.23]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:670) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883) [spring-webmvc-5.3.23.jar!/:5.3.23]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:779) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:227) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53) [tomcat-embed-websocket-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) [tomcat-embed-core-9.0.68.jar!/:na]
+	at com.codeoj.codeojbackendserviceclient.filter.InnerApiAuthFilter.doFilterInternal(InnerApiAuthFilter.java:44) [codeoj-backend-service-client-0.0.1-SNAPSHOT.jar!/:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) [spring-web-5.3.23.jar!/:5.3.23]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) [spring-web-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) [spring-web-5.3.23.jar!/:5.3.23]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) [spring-web-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) [spring-web-5.3.23.jar!/:5.3.23]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.springframework.session.web.http.SessionRepositoryFilter.doFilterInternal(SessionRepositoryFilter.java:142) [spring-session-core-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.web.http.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:82) [spring-session-core-2.6.3.jar!/:2.6.3]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) [tomcat-embed-core-9.0.68.jar!/:na]
+	at com.codeoj.codeojbackendserviceclient.filter.SessionAvailabilityFilter.doFilterInternal(SessionAvailabilityFilter.java:22) [codeoj-backend-service-client-0.0.1-SNAPSHOT.jar!/:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) [spring-web-5.3.23.jar!/:5.3.23]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) [spring-web-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) [spring-web-5.3.23.jar!/:5.3.23]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:197) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:541) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:135) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:360) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:893) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1789) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) [tomcat-embed-core-9.0.68.jar!/:na]
+	at java.lang.Thread.run(Thread.java:750) [na:1.8.0_504]
+
+2026-10-22 06:17:34.113  WARN 37975 --- [.1-58659-exec-2] c.c.c.filter.InnerApiAuthFilter          : 内部接口鉴权失败，来源: 127.0.0.1
+2026-10-22 06:18:49.146  WARN 37975 --- [oEventLoop-4-10] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58653]: Connection refused: /127.0.0.1:58653
+2026-10-22 06:18:49.146  WARN 37975 --- [ioEventLoop-4-9] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58653]: Connection refused: /127.0.0.1:58653
+2026-10-22 06:18:55.839  WARN 37975 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113150929059872770
+2026-10-22 06:18:58.245  WARN 37975 --- [ioEventLoop-4-4] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58653]: Connection refused: /127.0.0.1:58653
+2026-10-22 06:18:58.245  WARN 37975 --- [ioEventLoop-4-3] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58653]: Connection refused: /127.0.0.1:58653
+2026-10-22 06:19:00.843  WARN 37975 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113152291420123137
+2026-10-22 06:19:05.067  WARN 37975 --- [.1-58659-exec-7] .m.m.a.ExceptionHandlerExceptionResolver : Failure in @ExceptionHandler com.codeoj.codeojbackendquestionservice.submission.SubmissionConflictAdvice#unavailable(DataAccessException)
+
+org.springframework.dao.QueryTimeoutException: Redis command timed out; nested exception is io.lettuce.core.RedisCommandTimeoutException: Command timed out after 5 second(s)
+	at org.springframework.data.redis.connection.lettuce.LettuceExceptionConverter.convert(LettuceExceptionConverter.java:70) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceExceptionConverter.convert(LettuceExceptionConverter.java:41) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.PassThroughExceptionTranslationStrategy.translate(PassThroughExceptionTranslationStrategy.java:44) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.FallbackExceptionTranslationStrategy.translate(FallbackExceptionTranslationStrategy.java:42) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceConnection.convertLettuceAccessException(LettuceConnection.java:272) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceConnection.await(LettuceConnection.java:1063) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceConnection.lambda$doInvoke$4(LettuceConnection.java:920) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceInvoker$Synchronizer.invoke(LettuceInvoker.java:665) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceInvoker.just(LettuceInvoker.java:109) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.lettuce.LettuceHashCommands.hMSet(LettuceHashCommands.java:257) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.connection.DefaultedRedisConnection.hMSet(DefaultedRedisConnection.java:1434) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.DefaultHashOperations.lambda$putAll$12(DefaultHashOperations.java:213) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.RedisTemplate.execute(RedisTemplate.java:223) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.RedisTemplate.execute(RedisTemplate.java:190) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.AbstractOperations.execute(AbstractOperations.java:97) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.DefaultHashOperations.putAll(DefaultHashOperations.java:212) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.data.redis.core.DefaultBoundHashOperations.putAll(DefaultBoundHashOperations.java:187) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	at org.springframework.session.data.redis.RedisIndexedSessionRepository$RedisSession.saveDelta(RedisIndexedSessionRepository.java:811) ~[spring-session-data-redis-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.data.redis.RedisIndexedSessionRepository$RedisSession.save(RedisIndexedSessionRepository.java:799) ~[spring-session-data-redis-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.data.redis.RedisIndexedSessionRepository$RedisSession.access$000(RedisIndexedSessionRepository.java:686) ~[spring-session-data-redis-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.data.redis.RedisIndexedSessionRepository.save(RedisIndexedSessionRepository.java:415) ~[spring-session-data-redis-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.data.redis.RedisIndexedSessionRepository.save(RedisIndexedSessionRepository.java:251) ~[spring-session-data-redis-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper.commitSession(SessionRepositoryFilter.java:226) ~[spring-session-core-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper.access$100(SessionRepositoryFilter.java:193) ~[spring-session-core-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryResponseWrapper.onResponseCommitted(SessionRepositoryFilter.java:180) ~[spring-session-core-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.web.http.OnCommittedResponseWrapper.doOnResponseCommitted(OnCommittedResponseWrapper.java:227) ~[spring-session-core-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.web.http.OnCommittedResponseWrapper.access$000(OnCommittedResponseWrapper.java:35) ~[spring-session-core-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.web.http.OnCommittedResponseWrapper$SaveContextServletOutputStream.flush(OnCommittedResponseWrapper.java:498) ~[spring-session-core-2.6.3.jar!/:2.6.3]
+	at java.io.FilterOutputStream.flush(FilterOutputStream.java:140) ~[na:1.8.0_504]
+	at com.fasterxml.jackson.core.json.UTF8JsonGenerator.flush(UTF8JsonGenerator.java:1187) ~[jackson-core-2.13.4.jar!/:2.13.4]
+	at com.fasterxml.jackson.databind.ObjectWriter.writeValue(ObjectWriter.java:1009) ~[jackson-databind-2.13.4.2.jar!/:2.13.4.2]
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.writeInternal(AbstractJackson2HttpMessageConverter.java:456) ~[spring-web-5.3.23.jar!/:5.3.23]
+	at org.springframework.http.converter.AbstractGenericHttpMessageConverter.write(AbstractGenericHttpMessageConverter.java:104) ~[spring-web-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodProcessor.writeWithMessageConverters(AbstractMessageConverterMethodProcessor.java:290) ~[spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor.handleReturnValue(HttpEntityMethodProcessor.java:219) ~[spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.method.support.HandlerMethodReturnValueHandlerComposite.handleReturnValue(HandlerMethodReturnValueHandlerComposite.java:78) ~[spring-web-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:135) ~[spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver.doResolveHandlerMethodException(ExceptionHandlerExceptionResolver.java:428) ~[spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodExceptionResolver.doResolveException(AbstractHandlerMethodExceptionResolver.java:75) [spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver.resolveException(AbstractHandlerExceptionResolver.java:142) [spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.handler.HandlerExceptionResolverComposite.resolveException(HandlerExceptionResolverComposite.java:80) [spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.DispatcherServlet.processHandlerException(DispatcherServlet.java:1331) [spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1142) [spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1088) [spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:964) [spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006) [spring-webmvc-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:909) [spring-webmvc-5.3.23.jar!/:5.3.23]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:696) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883) [spring-webmvc-5.3.23.jar!/:5.3.23]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:779) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:227) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53) [tomcat-embed-websocket-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) [tomcat-embed-core-9.0.68.jar!/:na]
+	at com.codeoj.codeojbackendserviceclient.filter.InnerApiAuthFilter.doFilterInternal(InnerApiAuthFilter.java:44) [codeoj-backend-service-client-0.0.1-SNAPSHOT.jar!/:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) [spring-web-5.3.23.jar!/:5.3.23]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) [spring-web-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) [spring-web-5.3.23.jar!/:5.3.23]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) [spring-web-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) [spring-web-5.3.23.jar!/:5.3.23]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.springframework.session.web.http.SessionRepositoryFilter.doFilterInternal(SessionRepositoryFilter.java:142) [spring-session-core-2.6.3.jar!/:2.6.3]
+	at org.springframework.session.web.http.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:82) [spring-session-core-2.6.3.jar!/:2.6.3]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) [tomcat-embed-core-9.0.68.jar!/:na]
+	at com.codeoj.codeojbackendserviceclient.filter.SessionAvailabilityFilter.doFilterInternal(SessionAvailabilityFilter.java:22) [codeoj-backend-service-client-0.0.1-SNAPSHOT.jar!/:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) [spring-web-5.3.23.jar!/:5.3.23]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) [spring-web-5.3.23.jar!/:5.3.23]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117) [spring-web-5.3.23.jar!/:5.3.23]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:197) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:541) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:135) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:360) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:893) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1789) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) [tomcat-embed-core-9.0.68.jar!/:na]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) [tomcat-embed-core-9.0.68.jar!/:na]
+	at java.lang.Thread.run(Thread.java:750) [na:1.8.0_504]
+Caused by: io.lettuce.core.RedisCommandTimeoutException: Command timed out after 5 second(s)
+	at io.lettuce.core.internal.ExceptionFactory.createTimeoutException(ExceptionFactory.java:59) ~[lettuce-core-6.1.10.RELEASE.jar!/:6.1.10.RELEASE]
+	at io.lettuce.core.internal.Futures.awaitOrCancel(Futures.java:246) ~[lettuce-core-6.1.10.RELEASE.jar!/:6.1.10.RELEASE]
+	at io.lettuce.core.LettuceFutures.awaitOrCancel(LettuceFutures.java:74) ~[lettuce-core-6.1.10.RELEASE.jar!/:6.1.10.RELEASE]
+	at org.springframework.data.redis.connection.lettuce.LettuceConnection.await(LettuceConnection.java:1061) ~[spring-data-redis-2.6.9.jar!/:2.6.9]
+	... 89 common frames omitted
+
+2026-10-22 06:19:05.853  WARN 37975 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113152312974651393
+2026-10-22 06:19:06.546  WARN 37975 --- [ioEventLoop-4-6] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58653]: Connection refused: /127.0.0.1:58653
+2026-10-22 06:19:06.546  WARN 37975 --- [ioEventLoop-4-5] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58653]: Connection refused: /127.0.0.1:58653
+2026-10-22 06:19:10.075  WARN 37975 --- [.1-58659-exec-7] c.c.c.filter.SessionAvailabilityFilter   : Redis-dependent request unavailable: type=org.springframework.dao.QueryTimeoutException
+2026-10-22 06:19:10.858  WARN 37975 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113152364241661954
+2026-10-22 06:19:15.871  WARN 37975 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113152410949431298
+2026-10-22 06:19:20.876  WARN 37975 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113152466851115009
+2026-10-22 06:19:21.522  WARN 37975 --- [.1-58659-exec-8] c.c.c.filter.SessionAvailabilityFilter   : Redis-dependent request unavailable: type=org.springframework.dao.QueryTimeoutException
+2026-10-22 06:19:33.121  WARN 37975 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:19:35.166  WARN 37975 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:19:37.445  WARN 39388 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionSubmitMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionSubmitMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 06:19:37.446  WARN 39388 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 06:19:37.446  WARN 39388 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendquestionservice.mapper]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-22 06:19:39.287  WARN 39388 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-22 06:19:40.372  WARN 39388 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153039654629377
+2026-10-22 06:19:40.378  WARN 39388 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153220999557122
+2026-10-22 06:19:40.381  WARN 39388 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:19:40.385  WARN 39388 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153259553599490
+2026-10-22 06:19:41.845  WARN 39412 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionSubmitMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionSubmitMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 06:19:41.846  WARN 39412 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 06:19:41.846  WARN 39412 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendquestionservice.mapper]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-22 06:19:43.711  WARN 39412 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-22 06:19:43.879  WARN 39412 --- [.1-58659-exec-2] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-22 06:19:44.627  WARN 39412 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:19:46.315  WARN 39436 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionSubmitMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionSubmitMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 06:19:46.317  WARN 39436 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 06:19:46.317  WARN 39436 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendquestionservice.mapper]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-22 06:19:48.312  WARN 39436 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-22 06:19:49.422  WARN 39436 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:19:49.433  WARN 39436 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153259553599490
+2026-10-22 06:19:51.948  WARN 39464 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionSubmitMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionSubmitMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 06:19:51.949  WARN 39464 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 06:19:51.949  WARN 39464 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendquestionservice.mapper]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-22 06:19:53.898  WARN 39464 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-22 06:19:54.258  WARN 39464 --- [.1-58659-exec-3] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-22 06:19:54.785  WARN 39464 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:19:56.487  WARN 39483 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionSubmitMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionSubmitMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 06:19:56.489  WARN 39483 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 06:19:56.489  WARN 39483 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendquestionservice.mapper]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-22 06:19:58.490  WARN 39483 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-22 06:19:58.786  WARN 39483 --- [.1-58659-exec-1] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-22 06:19:59.484  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:01.554  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:03.607  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:05.665  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:07.717  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:09.760  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:11.790  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:13.817  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:15.843  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:17.879  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:19.909  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:21.954  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:23.990  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:26.037  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:28.076  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:30.109  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:32.149  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:34.184  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:36.224  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:38.266  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:40.310  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:42.347  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:44.390  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:46.422  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:48.452  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:50.490  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:52.525  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:54.561  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:56.591  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:20:58.619  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:21:00.651  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049
+2026-10-22 06:21:02.679  WARN 39483 --- [pool-7-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113153242839298049

@@ -1,0 +1,255 @@
+{
+  "counts": {
+    "tests": 230,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "suites": 27,
+  "source": "lock-fixed-regression.log",
+  "details": [
+    {
+      "module": "codeoj-backend-model",
+      "name": "com.codeoj.codeojbackendmodel.model.codesandbox.TextOutputComparatorTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.018"
+    },
+    {
+      "module": "codeoj-backend-gateway",
+      "name": "com.codeoj.codeojbackendgateway.ContestRouteTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.252"
+    },
+    {
+      "module": "codeoj-backend-service-client",
+      "name": "com.codeoj.codeojbackendserviceclient.auth.CurrentAccountAuthorizationTest",
+      "tests": "9",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.332"
+    },
+    {
+      "module": "codeoj-backend-service-client",
+      "name": "com.codeoj.codeojbackendserviceclient.filter.SessionAvailabilityFilterTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.01"
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "name": "com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardMessagingTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.399"
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "name": "com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardTest",
+      "tests": "25",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "1.737"
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "name": "com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardCacheTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.072"
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "name": "com.codeoj.codeojbackendquestionservice.contest.RegistrationMessagingTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.015"
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "name": "com.codeoj.codeojbackendquestionservice.contest.ContestCoreTest",
+      "tests": "22",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.245"
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "name": "com.codeoj.codeojbackendquestionservice.contest.RegistrationRedisIntegrationTest",
+      "tests": "30",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "1.246"
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "name": "com.codeoj.codeojbackendquestionservice.submission.outbox.OutboxRelayTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.003"
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "name": "com.codeoj.codeojbackendquestionservice.submission.SubmissionStatusAccessTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.054"
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "name": "com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcAdviceTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.003"
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "name": "com.codeoj.codeojbackendquestionservice.submission.ReliableExecutionTest",
+      "tests": "26",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.106"
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "name": "com.codeoj.codeojbackendquestionservice.submission.QuestionSubmitPrivacyTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.007"
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "name": "com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcContractTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.031"
+    },
+    {
+      "module": "codeoj-backend-user-service",
+      "name": "com.codeoj.codeojbackenduserservice.service.CurrentUserServiceTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.278"
+    },
+    {
+      "module": "codeoj-backend-judge-service",
+      "name": "com.codeoj.codeojbackendjudgeservice.rabbitmq.ReliableJudgeConsumerTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "2.283"
+    },
+    {
+      "module": "codeoj-backend-judge-service",
+      "name": "com.codeoj.codeojbackendjudgeservice.judge.SandboxResultMapperTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.011"
+    },
+    {
+      "module": "codeoj-backend-judge-service",
+      "name": "com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandboxTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.177"
+    },
+    {
+      "module": "codeoj-backend-judge-service",
+      "name": "com.codeoj.codeojbackendjudgeservice.judge.ReliableJudgeWorkerTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.251"
+    },
+    {
+      "module": "codeoj-backend-judge-service",
+      "name": "com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImplTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.014"
+    },
+    {
+      "module": "codeoj-backend-judge-service",
+      "name": "com.codeoj.codeojbackendjudgeservice.judge.strategy.JavaLanguageJudgeStrategyTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.004"
+    },
+    {
+      "module": "codeoj-backend-codesandbox",
+      "name": "com.codeoj.codeojbackendcodesandbox.service.impl.DurableExecutionRegistryTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.156"
+    },
+    {
+      "module": "codeoj-backend-codesandbox",
+      "name": "com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandboxTest",
+      "tests": "31",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "8.101"
+    },
+    {
+      "module": "codeoj-backend-codesandbox",
+      "name": "com.codeoj.codeojbackendcodesandbox.service.impl.NativeReceiptTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.006"
+    },
+    {
+      "module": "codeoj-backend-codesandbox",
+      "name": "com.codeoj.codeojbackendcodesandbox.service.impl.NativeExecutionIdentityTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.341"
+    }
+  ]
+}

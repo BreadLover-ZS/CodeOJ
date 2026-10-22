@@ -1,0 +1,12 @@
+[
+  {
+    "case": "real-java-and-cgroup-metrics",
+    "jv": [
+      "JV07"
+    ],
+    "status": "FAIL",
+    "errorType": "AssertionError",
+    "error": "{'outputList': [], 'message': 'COMPILER_BUDGET_OR_PLATFORM_FAILURE', 'status': 3, 'judgeInfo': None, 'outcome': 'PLATFORM_ERROR', 'errorCode': 'COMPILER_BUDGET_OR_PLATFORM_FAILURE'}",
+    "elapsedSeconds": 0.631
+  }
+]

@@ -1,0 +1,123 @@
+2026-10-22 06:29:16.739 ERROR 40551 --- [           main] i.n.r.d.DnsServerAddressStreamProviders  : Unable to load io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider, fallback to system defaults. This may result in incorrect DNS resolutions on MacOS. Check whether you have a dependency on 'io.netty:netty-resolver-dns-native-macos'
+
+java.lang.reflect.InvocationTargetException: null
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[na:1.8.0_504]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) ~[na:1.8.0_504]
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[na:1.8.0_504]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423) ~[na:1.8.0_504]
+	at io.netty.resolver.dns.DnsServerAddressStreamProviders.<clinit>(DnsServerAddressStreamProviders.java:64) ~[netty-resolver-dns-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.resolver.dns.DnsNameResolverBuilder.<init>(DnsNameResolverBuilder.java:60) [netty-resolver-dns-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.lettuce.core.resource.AddressResolverGroupProvider$DefaultDnsAddressResolverGroupWrapper.<clinit>(AddressResolverGroupProvider.java:56) [lettuce-core-6.1.10.RELEASE.jar!/:6.1.10.RELEASE]
+	at io.lettuce.core.resource.AddressResolverGroupProvider.<clinit>(AddressResolverGroupProvider.java:35) [lettuce-core-6.1.10.RELEASE.jar!/:6.1.10.RELEASE]
+	at io.lettuce.core.resource.DefaultClientResources.<clinit>(DefaultClientResources.java:112) [lettuce-core-6.1.10.RELEASE.jar!/:6.1.10.RELEASE]
+	at org.springframework.boot.autoconfigure.data.redis.LettuceConnectionConfiguration.lettuceClientResources(LettuceConnectionConfiguration.java:71) [spring-boot-autoconfigure-2.6.13.jar!/:2.6.13]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_504]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_504]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_504]
+	at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_504]
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154) [spring-beans-5.3.23.jar!/:5.3.23]
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:653) [spring-beans-5.3.23.jar!/:5.3.23]
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:638) [spring-beans-5.3.23.jar!/:5.3.23]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1352) [spring-beans-5.3.23.jar!/:5.3.23]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1195) [spring-beans-5.3.23.jar!/:5.3.23]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:582) [spring-beans-5.3.23.jar!/:5.3.23]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) [spring-beans-5.3.23.jar!/:5.3.23]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) [spring-beans-5.3.23.jar!/:5.3.23]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.23.jar!/:5.3.23]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) [spring-beans-5.3.23.jar!/:5.3.23]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) [spring-beans-5.3.23.jar!/:5.3.23]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:955) ~[spring-beans-5.3.23.jar!/:5.3.23]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918) ~[spring-context-5.3.23.jar!/:5.3.23]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583) ~[spring-context-5.3.23.jar!/:5.3.23]
+	at org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext.refresh(ReactiveWebServerApplicationContext.java:64) ~[spring-boot-2.6.13.jar!/:2.6.13]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:745) ~[spring-boot-2.6.13.jar!/:2.6.13]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:420) ~[spring-boot-2.6.13.jar!/:2.6.13]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307) ~[spring-boot-2.6.13.jar!/:2.6.13]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1317) ~[spring-boot-2.6.13.jar!/:2.6.13]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1306) ~[spring-boot-2.6.13.jar!/:2.6.13]
+	at com.codeoj.codeojbackendgateway.CodeojBackendGatewayApplication.main(CodeojBackendGatewayApplication.java:13) ~[classes!/:na]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_504]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_504]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_504]
+	at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_504]
+	at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:49) ~[codeoj-backend-gateway-0.0.1-SNAPSHOT.jar:na]
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:108) ~[codeoj-backend-gateway-0.0.1-SNAPSHOT.jar:na]
+	at org.springframework.boot.loader.Launcher.launch(Launcher.java:58) ~[codeoj-backend-gateway-0.0.1-SNAPSHOT.jar:na]
+	at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:88) ~[codeoj-backend-gateway-0.0.1-SNAPSHOT.jar:na]
+Caused by: java.lang.UnsatisfiedLinkError: failed to load the required native library
+	at io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider.ensureAvailability(MacOSDnsServerAddressStreamProvider.java:110) ~[netty-resolver-dns-classes-macos-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider.<init>(MacOSDnsServerAddressStreamProvider.java:120) ~[netty-resolver-dns-classes-macos-4.1.84.Final.jar!/:4.1.84.Final]
+	... 43 common frames omitted
+Caused by: java.lang.UnsatisfiedLinkError: could not load a native library: netty_resolver_dns_native_macos_aarch_64
+	at io.netty.util.internal.NativeLibraryLoader.load(NativeLibraryLoader.java:239) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider.loadNativeLibrary(MacOSDnsServerAddressStreamProvider.java:92) ~[netty-resolver-dns-classes-macos-4.1.84.Final.jar!/:4.1.84.Final]
+	at io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider.<clinit>(MacOSDnsServerAddressStreamProvider.java:77) ~[netty-resolver-dns-classes-macos-4.1.84.Final.jar!/:4.1.84.Final]
+	at java.lang.Class.forName0(Native Method) ~[na:1.8.0_504]
+	at java.lang.Class.forName(Class.java:348) ~[na:1.8.0_504]
+	at io.netty.resolver.dns.DnsServerAddressStreamProviders$1.run(DnsServerAddressStreamProviders.java:50) ~[netty-resolver-dns-4.1.84.Final.jar!/:4.1.84.Final]
+	at java.security.AccessController.doPrivileged(Native Method) ~[na:1.8.0_504]
+	at io.netty.resolver.dns.DnsServerAddressStreamProviders.<clinit>(DnsServerAddressStreamProviders.java:46) ~[netty-resolver-dns-4.1.84.Final.jar!/:4.1.84.Final]
+	... 38 common frames omitted
+	Suppressed: java.lang.UnsatisfiedLinkError: could not load a native library: netty_resolver_dns_native_macos
+		at io.netty.util.internal.NativeLibraryLoader.load(NativeLibraryLoader.java:239) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+		at io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider.loadNativeLibrary(MacOSDnsServerAddressStreamProvider.java:95) ~[netty-resolver-dns-classes-macos-4.1.84.Final.jar!/:4.1.84.Final]
+		... 44 common frames omitted
+	Caused by: java.io.FileNotFoundException: META-INF/native/libnetty_resolver_dns_native_macos.jnilib
+		at io.netty.util.internal.NativeLibraryLoader.load(NativeLibraryLoader.java:181)
+		... 45 common frames omitted
+		Suppressed: java.lang.UnsatisfiedLinkError: no netty_resolver_dns_native_macos in java.library.path
+			at java.lang.ClassLoader.loadLibrary(ClassLoader.java:1860)
+			at java.lang.Runtime.loadLibrary0(Runtime.java:843)
+			at java.lang.System.loadLibrary(System.java:1136)
+			at io.netty.util.internal.NativeLibraryUtil.loadLibrary(NativeLibraryUtil.java:38)
+			at io.netty.util.internal.NativeLibraryLoader.loadLibrary(NativeLibraryLoader.java:391)
+			at io.netty.util.internal.NativeLibraryLoader.load(NativeLibraryLoader.java:161)
+			... 45 common frames omitted
+			Suppressed: java.lang.UnsatisfiedLinkError: no netty_resolver_dns_native_macos in java.library.path
+				at java.lang.ClassLoader.loadLibrary(ClassLoader.java:1860)
+				at java.lang.Runtime.loadLibrary0(Runtime.java:843)
+				at java.lang.System.loadLibrary(System.java:1136)
+				at io.netty.util.internal.NativeLibraryUtil.loadLibrary(NativeLibraryUtil.java:38)
+				at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+				at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+				at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+				at java.lang.reflect.Method.invoke(Method.java:498)
+				at io.netty.util.internal.NativeLibraryLoader$1.run(NativeLibraryLoader.java:425)
+				at java.security.AccessController.doPrivileged(Native Method)
+				at io.netty.util.internal.NativeLibraryLoader.loadLibraryByHelper(NativeLibraryLoader.java:417)
+				at io.netty.util.internal.NativeLibraryLoader.loadLibrary(NativeLibraryLoader.java:383)
+				... 46 common frames omitted
+Caused by: java.io.FileNotFoundException: META-INF/native/libnetty_resolver_dns_native_macos_aarch_64.jnilib
+	at io.netty.util.internal.NativeLibraryLoader.load(NativeLibraryLoader.java:181) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+	... 45 common frames omitted
+	Suppressed: java.lang.UnsatisfiedLinkError: no netty_resolver_dns_native_macos_aarch_64 in java.library.path
+		at java.lang.ClassLoader.loadLibrary(ClassLoader.java:1860) ~[na:1.8.0_504]
+		at java.lang.Runtime.loadLibrary0(Runtime.java:843) ~[na:1.8.0_504]
+		at java.lang.System.loadLibrary(System.java:1136) ~[na:1.8.0_504]
+		at io.netty.util.internal.NativeLibraryUtil.loadLibrary(NativeLibraryUtil.java:38) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+		at io.netty.util.internal.NativeLibraryLoader.loadLibrary(NativeLibraryLoader.java:391) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+		at io.netty.util.internal.NativeLibraryLoader.load(NativeLibraryLoader.java:161) ~[netty-common-4.1.84.Final.jar!/:4.1.84.Final]
+		... 45 common frames omitted
+		Suppressed: java.lang.UnsatisfiedLinkError: no netty_resolver_dns_native_macos_aarch_64 in java.library.path
+			at java.lang.ClassLoader.loadLibrary(ClassLoader.java:1860)
+			at java.lang.Runtime.loadLibrary0(Runtime.java:843)
+			at java.lang.System.loadLibrary(System.java:1136)
+			at io.netty.util.internal.NativeLibraryUtil.loadLibrary(NativeLibraryUtil.java:38)
+			at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+			at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+			at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+			at java.lang.reflect.Method.invoke(Method.java:498)
+			at io.netty.util.internal.NativeLibraryLoader$1.run(NativeLibraryLoader.java:425)
+			at java.security.AccessController.doPrivileged(Native Method)
+			at io.netty.util.internal.NativeLibraryLoader.loadLibraryByHelper(NativeLibraryLoader.java:417)
+			at io.netty.util.internal.NativeLibraryLoader.loadLibrary(NativeLibraryLoader.java:383)
+			... 46 common frames omitted
+
+2026-10-22 06:29:17.334  WARN 40551 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+INFO: Sentinel log output type is: file
+INFO: Sentinel log charset is: utf-8
+INFO: Sentinel log base directory is: /private/tmp/codeoj-native-stack-ju5l4eqz/sentinel-logs/
+INFO: Sentinel log name use pid is: false
+INFO: Sentinel log level is: INFO
+2026-10-22 06:29:17.564  WARN 40551 --- [.1-63199-exec-2] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-22 06:29:18.322  WARN 40551 --- [.1-63199-exec-4] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.

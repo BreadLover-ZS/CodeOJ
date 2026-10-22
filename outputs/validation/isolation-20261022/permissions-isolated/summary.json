@@ -1,0 +1,8 @@
+{
+  "sameSessionCookiesThroughout": true,
+  "roleChangesViaRealManagementApi": true,
+  "privateQuestionUnmodifiedByDeniedRequests": true,
+  "pass": 53,
+  "fail": 0,
+  "scope": "F03 and related account authorization only; no full JV matrix, isolation or load acceptance"
+}

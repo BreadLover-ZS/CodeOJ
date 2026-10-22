@@ -1,0 +1,12 @@
+[
+  {
+    "case": "shared",
+    "jv": [
+      "JV25"
+    ],
+    "status": "FAIL",
+    "errorType": "AssertionError",
+    "error": "{'outputList': [], 'message': 'ISOLATED_EXECUTION_FAILURE', 'status': 3, 'judgeInfo': None, 'outcome': 'PLATFORM_ERROR', 'errorCode': 'ISOLATED_EXECUTION_FAILURE'}",
+    "elapsedSeconds": 1.593
+  }
+]

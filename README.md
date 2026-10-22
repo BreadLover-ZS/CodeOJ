@@ -6,7 +6,9 @@ CodeOJ 是我基于 **Spring Cloud + Vue 3** 实现的微服务在线判题系�
 
 赛事平台二次开发已加入可靠判题、比赛快照/资格、秒杀报名、恢复对账、成绩榜单和最终结算，三个业务开关默认关闭。实施与证据见 [赛事开发记录](docs/contest/README.md)。[J6本机真实联调](docs/contest/j6-native-local.md)使用独立MySQL/Redis/RabbitMQ、会话、网关、Feign和原生Java沙箱，保留失败与修复记录；静态实例发现不等于Nacos验收。
 
-可运行 `./scripts/demo-local-contest.sh` 查看H2与真实Java结算样例；`./scripts/test-native-stack.sh` 在macOS arm64下载固定原生运行时，使用临时独立实例和真实浏览器联调，结束后清理，不安装全局服务。运行依赖和命令见J6记录。开发阶段不处理Docker、部署和压测。
+可运行 `./scripts/demo-local-contest.sh` 查看H2与真实Java结算样例；`./scripts/test-native-stack.sh` 在macOS arm64下载固定原生运行时，显式使用可信 native 样例模式及临时独立实例和真实浏览器，结束后清理，不安装全局服务。运行依赖和命令见J6记录。
+
+新增[隔离执行器与持久化回收](docs/contest/isolated-sandbox.md)：默认 `isolated` 模式要求 Linux Docker/cgroup v2、固定镜像及共享本地登记目录；缺失配置时拒绝启动，不降级为宿主执行。完整链路启用可靠判题并提供 execution token/deadline；旧版无执行身份的演示流程仅适用于显式 `native` 可信样例模式。本轮已允许临时 Linux 容器环境用于功能验收，部署和压测继续后置。
 
 ## 核心功能
 
@@ -113,7 +115,7 @@ flowchart LR
 | `codeoj-backend-user-service` | 注册、登录、用户管理和 Session 读写 |
 | `codeoj-backend-question-service` | 题目管理、提交入库、MQ 发布和结果持久化接口 |
 | `codeoj-backend-judge-service` | MQ 消费、判题编排、沙箱调用和策略判定 |
-| `codeoj-backend-codesandbox` | Java 源码编译和进程执行 |
+| `codeoj-backend-codesandbox` | 隔离编译/用例执行、持久化身份/容量与残留回收；显式可信 native 模式 |
 | `codeoj-backend-service-client` | OpenFeign 内部接口、请求头和权限切面 |
 | `codeoj-backend-model` | 跨服务实体、DTO、枚举和沙箱契约 |
 | `codeoj-backend-common` | 通用响应、异常、注解和工具 |
@@ -165,7 +167,7 @@ npm run serve
 ## 当前实现说明
 
 - 提交语言枚举包含 `java`、`cpp` 和 `go`，当前完整代码执行链路以 Java 为主；
-- 当前代码沙箱通过本机 Java 子进程完成编译和运行，未提供提交级容器隔离；
+- 默认隔离沙箱按提交/用例创建 Linux 容器；可信 native 模式不提供恶意代码隔离。配置和受支持的共享容量边界见[隔离执行器说明](docs/contest/isolated-sandbox.md)；
 - MQ 生产者当前未处理 Publisher Confirm 和 Return Callback，流程图中的正常返回不代表 Broker 已确认接收或消息已经成功路由；
 - 消费异常后使用 `basicNack(deliveryTag, false, false)`，消息不会重新入队。
 

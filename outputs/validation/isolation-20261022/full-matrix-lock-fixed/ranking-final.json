@@ -1,0 +1,45 @@
+{
+  "contestId": "2113153373739290625",
+  "contestVersion": "5",
+  "status": "FINISHED",
+  "ruleVersion": "FIRST_AC_V1",
+  "projectionVersion": "2",
+  "activeProjectionVersion": "2",
+  "revision": "12",
+  "cacheEpoch": "1",
+  "finalVersion": "2",
+  "asOf": "2026-10-22T06:20:53.869536Z",
+  "pendingCount": "0",
+  "projectionPendingCount": "0",
+  "final": true,
+  "versionState": "FINAL",
+  "page": 0,
+  "pageSize": 20,
+  "total": "4",
+  "entries": [
+    {
+      "userId": "2113151815190478849",
+      "solvedCount": 2,
+      "achievedAt": "2026-10-22T06:20:13.431241Z",
+      "rank": "1"
+    },
+    {
+      "userId": "2113151815664435202",
+      "solvedCount": 2,
+      "achievedAt": "2026-10-22T06:20:14.431241Z",
+      "rank": "2"
+    },
+    {
+      "userId": "2113151816130002945",
+      "solvedCount": 0,
+      "achievedAt": null,
+      "rank": "3"
+    },
+    {
+      "userId": "2113151816587182082",
+      "solvedCount": 0,
+      "achievedAt": null,
+      "rank": "3"
+    }
+  ]
+}

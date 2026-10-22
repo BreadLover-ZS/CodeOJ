@@ -1,0 +1,16 @@
+[
+  {
+    "case": "pid",
+    "jv": [
+      "JV08"
+    ],
+    "status": "PASS",
+    "facts": {
+      "kernelPidsMaxEvents": 1,
+      "childPipesClosedToAvoidNofileLimit": true,
+      "observerReadOnlyAndNeverRunsUserCode": true,
+      "descendantsRemoved": true
+    },
+    "elapsedSeconds": 3.562
+  }
+]

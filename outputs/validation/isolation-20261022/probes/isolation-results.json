@@ -1,0 +1,12 @@
+[
+  {
+    "case": "real-java-and-cgroup-metrics",
+    "jv": [
+      "JV07"
+    ],
+    "status": "FAIL",
+    "errorType": "HTTPError",
+    "error": "HTTP Error 502: Bad Gateway",
+    "elapsedSeconds": 3.787
+  }
+]

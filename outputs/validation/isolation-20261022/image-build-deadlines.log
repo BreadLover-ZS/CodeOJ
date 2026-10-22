@@ -1,0 +1,122 @@
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            BuildKit is currently disabled; enable it by removing the DOCKER_BUILDKIT=0
+            environment-variable.
+
+Sending build context to Docker daemon  77.84MB
+Step 1/9 : ARG BASE_IMAGE=eclipse-temurin:8-jdk-jammy
+Step 2/9 : FROM ${BASE_IMAGE}
+ ---> 185d4ef919b9
+Step 3/9 : RUN apt-get update && apt-get install -y --no-install-recommends python3     && rm -rf /var/lib/apt/lists/*     && mkdir -p /opt/helpers /opt/source /source /work/classes /receipt     && chown -R 10000:10000 /work && chmod 0700 /receipt
+ ---> Running in dac799a0698a
+Get:1 http://ports.ubuntu.com/ubuntu-ports jammy InRelease [270 kB]
+Get:2 http://ports.ubuntu.com/ubuntu-ports jammy-updates InRelease [128 kB]
+Get:3 http://ports.ubuntu.com/ubuntu-ports jammy-backports InRelease [127 kB]
+Get:4 http://ports.ubuntu.com/ubuntu-ports jammy-security InRelease [129 kB]
+Get:5 http://ports.ubuntu.com/ubuntu-ports jammy/restricted arm64 Packages [24.2 kB]
+Get:6 http://ports.ubuntu.com/ubuntu-ports jammy/main arm64 Packages [1,758 kB]
+Get:7 http://ports.ubuntu.com/ubuntu-ports jammy/universe arm64 Packages [17.2 MB]
+Get:8 http://ports.ubuntu.com/ubuntu-ports jammy/multiverse arm64 Packages [224 kB]
+Get:9 http://ports.ubuntu.com/ubuntu-ports jammy-updates/universe arm64 Packages [1,717 kB]
+Get:10 http://ports.ubuntu.com/ubuntu-ports jammy-updates/multiverse arm64 Packages [81.6 kB]
+Get:11 http://ports.ubuntu.com/ubuntu-ports jammy-updates/main arm64 Packages [4,567 kB]
+Get:12 http://ports.ubuntu.com/ubuntu-ports jammy-updates/restricted arm64 Packages [8,359 kB]
+Get:13 http://ports.ubuntu.com/ubuntu-ports jammy-backports/main arm64 Packages [82.5 kB]
+Get:14 http://ports.ubuntu.com/ubuntu-ports jammy-backports/universe arm64 Packages [33.7 kB]
+Get:15 http://ports.ubuntu.com/ubuntu-ports jammy-security/restricted arm64 Packages [8,061 kB]
+Get:16 http://ports.ubuntu.com/ubuntu-ports jammy-security/universe arm64 Packages [1,421 kB]
+Get:17 http://ports.ubuntu.com/ubuntu-ports jammy-security/multiverse arm64 Packages [75.6 kB]
+Get:18 http://ports.ubuntu.com/ubuntu-ports jammy-security/main arm64 Packages [4,253 kB]
+Fetched 48.5 MB in 55s (884 kB/s)
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  libmpdec3 libpython3-stdlib libpython3.10-minimal libpython3.10-stdlib
+  media-types python3-minimal python3.10 python3.10-minimal
+Suggested packages:
+  python3-doc python3-tk python3-venv python3.10-venv python3.10-doc binutils
+  binfmt-support
+The following NEW packages will be installed:
+  libmpdec3 libpython3-stdlib libpython3.10-minimal libpython3.10-stdlib
+  media-types python3 python3-minimal python3.10 python3.10-minimal
+0 upgraded, 9 newly installed, 0 to remove and 4 not upgraded.
+Need to get 5,584 kB of archives.
+After this operation, 20.4 MB of additional disk space will be used.
+Get:1 http://ports.ubuntu.com/ubuntu-ports jammy-updates/main arm64 libpython3.10-minimal arm64 3.10.12-1~22.04.18 [814 kB]
+Get:2 http://ports.ubuntu.com/ubuntu-ports jammy-updates/main arm64 python3.10-minimal arm64 3.10.12-1~22.04.18 [2,245 kB]
+Get:3 http://ports.ubuntu.com/ubuntu-ports jammy-updates/main arm64 python3-minimal arm64 3.10.6-1~22.04.1 [24.3 kB]
+Get:4 http://ports.ubuntu.com/ubuntu-ports jammy/main arm64 media-types all 7.0.0 [25.5 kB]
+Get:5 http://ports.ubuntu.com/ubuntu-ports jammy/main arm64 libmpdec3 arm64 2.5.1-2build2 [89.0 kB]
+Get:6 http://ports.ubuntu.com/ubuntu-ports jammy-updates/main arm64 libpython3.10-stdlib arm64 3.10.12-1~22.04.18 [1,848 kB]
+Get:7 http://ports.ubuntu.com/ubuntu-ports jammy-updates/main arm64 python3.10 arm64 3.10.12-1~22.04.18 [508 kB]
+Get:8 http://ports.ubuntu.com/ubuntu-ports jammy-updates/main arm64 libpython3-stdlib arm64 3.10.6-1~22.04.1 [6,812 B]
+Get:9 http://ports.ubuntu.com/ubuntu-ports jammy-updates/main arm64 python3 arm64 3.10.6-1~22.04.1 [22.8 kB]
+[91mdebconf: delaying package configuration, since apt-utils is not installed
+[0mFetched 5,584 kB in 8s (667 kB/s)
+Selecting previously unselected package libpython3.10-minimal:arm64.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 7909 files and directories currently installed.)
+Preparing to unpack .../libpython3.10-minimal_3.10.12-1~22.04.18_arm64.deb ...
+Unpacking libpython3.10-minimal:arm64 (3.10.12-1~22.04.18) ...
+Selecting previously unselected package python3.10-minimal.
+Preparing to unpack .../python3.10-minimal_3.10.12-1~22.04.18_arm64.deb ...
+Unpacking python3.10-minimal (3.10.12-1~22.04.18) ...
+Setting up libpython3.10-minimal:arm64 (3.10.12-1~22.04.18) ...
+Setting up python3.10-minimal (3.10.12-1~22.04.18) ...
+Selecting previously unselected package python3-minimal.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 8205 files and directories currently installed.)
+Preparing to unpack .../0-python3-minimal_3.10.6-1~22.04.1_arm64.deb ...
+Unpacking python3-minimal (3.10.6-1~22.04.1) ...
+Selecting previously unselected package media-types.
+Preparing to unpack .../1-media-types_7.0.0_all.deb ...
+Unpacking media-types (7.0.0) ...
+Selecting previously unselected package libmpdec3:arm64.
+Preparing to unpack .../2-libmpdec3_2.5.1-2build2_arm64.deb ...
+Unpacking libmpdec3:arm64 (2.5.1-2build2) ...
+Selecting previously unselected package libpython3.10-stdlib:arm64.
+Preparing to unpack .../3-libpython3.10-stdlib_3.10.12-1~22.04.18_arm64.deb ...
+Unpacking libpython3.10-stdlib:arm64 (3.10.12-1~22.04.18) ...
+Selecting previously unselected package python3.10.
+Preparing to unpack .../4-python3.10_3.10.12-1~22.04.18_arm64.deb ...
+Unpacking python3.10 (3.10.12-1~22.04.18) ...
+Selecting previously unselected package libpython3-stdlib:arm64.
+Preparing to unpack .../5-libpython3-stdlib_3.10.6-1~22.04.1_arm64.deb ...
+Unpacking libpython3-stdlib:arm64 (3.10.6-1~22.04.1) ...
+Setting up python3-minimal (3.10.6-1~22.04.1) ...
+Selecting previously unselected package python3.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 8607 files and directories currently installed.)
+Preparing to unpack .../python3_3.10.6-1~22.04.1_arm64.deb ...
+Unpacking python3 (3.10.6-1~22.04.1) ...
+Setting up media-types (7.0.0) ...
+Setting up libmpdec3:arm64 (2.5.1-2build2) ...
+Setting up libpython3.10-stdlib:arm64 (3.10.12-1~22.04.18) ...
+Setting up libpython3-stdlib:arm64 (3.10.6-1~22.04.1) ...
+Setting up python3.10 (3.10.12-1~22.04.18) ...
+Setting up python3 (3.10.6-1~22.04.1) ...
+running python rtupdate hooks for python3.10...
+running python post-rtupdate hooks for python3.10...
+Processing triggers for libc-bin (2.35-0ubuntu3.15) ...
+ ---> Removed intermediate container dac799a0698a
+ ---> b13dc7be94d9
+Step 4/9 : COPY src/main/java/com/codeoj/codeojbackendcodesandbox/service/impl/nativejava/*.java /opt/source/
+ ---> 3e0ca37ff203
+Step 5/9 : RUN javac -encoding UTF-8 -d /opt/helpers /opt/source/*.java && rm -rf /opt/source
+ ---> Running in 67a3701b472c
+ ---> Removed intermediate container 67a3701b472c
+ ---> c7c6ff814b98
+Step 6/9 : COPY isolation/supervisor.py /opt/codeoj/supervisor.py
+ ---> 54619e81a30d
+Step 7/9 : RUN chmod 0555 /opt/codeoj/supervisor.py
+ ---> Running in 99f331e60ad1
+ ---> Removed intermediate container 99f331e60ad1
+ ---> f1368295eab6
+Step 8/9 : WORKDIR /tmp
+ ---> Running in b17e10343735
+ ---> Removed intermediate container b17e10343735
+ ---> b742b738b5a4
+Step 9/9 : ENTRYPOINT ["python3", "/opt/codeoj/supervisor.py"]
+ ---> Running in 1de5fc08c965
+ ---> Removed intermediate container 1de5fc08c965
+ ---> 4273964e4b8b
+Successfully built 4273964e4b8b
+Successfully tagged codeoj-isolation:local

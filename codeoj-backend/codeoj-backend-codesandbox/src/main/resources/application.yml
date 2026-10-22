@@ -11,6 +11,8 @@ server:
 
 # 沙箱自身配置
 codesandbox:
+  # native is only for trusted local samples; isolated never falls back to native.
+  mode: ${CODESANDBOX_MODE:isolated}
   # 鉴权密钥：必须与判题服务的 codesandbox.remote.auth-secret 一致，生产环境务必通过环境变量覆盖
   auth-secret: ${CODESANDBOX_REMOTE_AUTH_SECRET:secretKey}
   # 单个用例运行超时（毫秒）
@@ -20,3 +22,12 @@ codesandbox:
   attempt-timeout-ms: ${CODESANDBOX_ATTEMPT_TIMEOUT_MS:30000}
   max-output-bytes: ${CODESANDBOX_MAX_OUTPUT_BYTES:65536}
   max-concurrent: ${CODESANDBOX_MAX_CONCURRENT:2}
+  isolated:
+    docker-binary: ${CODESANDBOX_DOCKER_BINARY:/usr/bin/docker}
+    docker-endpoint: ${CODESANDBOX_DOCKER_ENDPOINT:unix:///var/run/docker.sock}
+    # Mandatory immutable image ID or repository@sha256 digest in isolated mode.
+    image: ${CODESANDBOX_ISOLATION_IMAGE:}
+    # All managers on one Docker daemon must share this persistent local directory.
+    state-directory: ${CODESANDBOX_STATE_DIRECTORY:./sandbox-state}
+    pids: ${CODESANDBOX_PIDS:64}
+    cpus: ${CODESANDBOX_CPUS:1.0}

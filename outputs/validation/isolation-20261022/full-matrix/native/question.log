@@ -1,0 +1,21 @@
+2026-10-22 06:06:53.804  WARN 34261 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionSubmitMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionSubmitMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 06:06:53.805  WARN 34261 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'questionMapper' and 'com.codeoj.codeojbackendquestionservice.mapper.QuestionMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 06:06:53.805  WARN 34261 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackendquestionservice.mapper]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-22 06:06:55.771  WARN 34261 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-22 06:07:02.704  WARN 34261 --- [.1-58079-exec-3] c.l.c.ServiceInstanceListSupplierBuilder : LoadBalancerCacheManager not available, returning delegate without caching.
+2026-10-22 06:07:47.165  WARN 34261 --- [127.0.0.1:58130] c.r.c.impl.ForgivingExceptionHandler     : An unexpected connection driver error occurred (Exception message: Connection reset)
+2026-10-22 06:07:48.061  WARN 34261 --- [127.0.0.1:58130] c.r.c.impl.ForgivingExceptionHandler     : An unexpected connection driver error occurred (Exception message: Connection reset)
+2026-10-22 06:07:48.162  WARN 34261 --- [127.0.0.1:58130] c.r.c.impl.ForgivingExceptionHandler     : An unexpected connection driver error occurred (Exception message: Connection reset)
+2026-10-22 06:08:03.000  WARN 34261 --- [ioEventLoop-4-3] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58073]: Connection refused: /127.0.0.1:58073
+2026-10-22 06:08:03.000  WARN 34261 --- [ioEventLoop-4-4] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58073]: Connection refused: /127.0.0.1:58073
+2026-10-22 06:08:09.225  WARN 34261 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113150115985637378
+2026-10-22 06:08:12.097  WARN 34261 --- [ioEventLoop-4-8] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58073]: Connection refused: /127.0.0.1:58073
+2026-10-22 06:08:12.097  WARN 34261 --- [ioEventLoop-4-7] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58073]: Connection refused: /127.0.0.1:58073
+2026-10-22 06:08:12.931  WARN 34261 --- [.1-58079-exec-9] c.c.c.filter.SessionAvailabilityFilter   : Redis-dependent request unavailable: type=org.springframework.dao.QueryTimeoutException
+2026-10-22 06:08:16.238  WARN 34261 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113150115985637378
+2026-10-22 06:08:20.309  WARN 34261 --- [1-58079-exec-10] c.c.c.filter.SessionAvailabilityFilter   : Redis-dependent request unavailable: type=org.springframework.web.util.NestedServletException
+2026-10-22 06:08:20.311  WARN 34261 --- [pool-4-thread-1] c.c.c.contest.RegistrationMaintenance    : Registration recovery unavailable: contestId=2113150115985637378

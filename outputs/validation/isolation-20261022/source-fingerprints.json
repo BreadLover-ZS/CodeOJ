@@ -1,0 +1,25 @@
+{
+  "baseCommit": "b070aac28bf13b73a1e79723ee74b01a8bc727b7",
+  "files": {
+    "README.md": "2037806d7e1ff7462875220d3008a5b5b2a3f796a723b9bf76a2e99350031d39",
+    "codeoj-backend/codeoj-backend-codesandbox/isolation/Dockerfile": "3387d5539552bde66735fed5fdc3db1ee86020ddcdf3d4c9b29cf434d1ad07df",
+    "codeoj-backend/codeoj-backend-codesandbox/isolation/supervisor.py": "ae4182a360b2c37ee5950a2e27efef1bcf3f220abca4bb64029297c3ce101d49",
+    "codeoj-backend/codeoj-backend-codesandbox/src/main/java/com/codeoj/codeojbackendcodesandbox/service/impl/DockerIsolationEngine.java": "fd1af1e837d82ee42e75d7e0292c7ad6d55e4f3ac878df4933dd53727941411b",
+    "codeoj-backend/codeoj-backend-codesandbox/src/main/java/com/codeoj/codeojbackendcodesandbox/service/impl/DurableExecutionRegistry.java": "87e1461b0afd6ce1013375992ebac890481412fe2c56ad59ba5382f66faf8396",
+    "codeoj-backend/codeoj-backend-codesandbox/src/main/java/com/codeoj/codeojbackendcodesandbox/service/impl/IsolationEngine.java": "240ad0888d3e51467b4a3f8c6a4b267751e2bea21ca9ff6f6642ed3a7761a175",
+    "codeoj-backend/codeoj-backend-codesandbox/src/main/java/com/codeoj/codeojbackendcodesandbox/service/impl/JavaIsolatedCodeSandbox.java": "c3b4f5944e2f70fdeadfe959ad7ce263a4703a0e5d56869c223a27c4803482ce",
+    "codeoj-backend/codeoj-backend-codesandbox/src/main/java/com/codeoj/codeojbackendcodesandbox/service/impl/JavaNativeCodeSandbox.java": "39a55981182d4c325b29847913341bcb4df7de0ec9f5be579e30593966b31327",
+    "codeoj-backend/codeoj-backend-codesandbox/src/main/java/com/codeoj/codeojbackendcodesandbox/service/impl/nativejava/IsolatedLauncher.java": "99a6f7fea9a7af5148f351b90038fba260b9d9288ae5f36f956e775bba1cef21",
+    "codeoj-backend/codeoj-backend-codesandbox/src/main/java/com/codeoj/codeojbackendcodesandbox/service/impl/nativejava/NativeCompiler.java": "1ffa78cfab6494678551332e88a4f520d737d01f1c92e3b9704e896fc7e926e2",
+    "codeoj-backend/codeoj-backend-codesandbox/src/main/resources/application.yml": "ed99dc00e656e4e147f5c1d364309df8e50d7b3e27614a78f35cfe207e6cd9cd",
+    "codeoj-backend/codeoj-backend-codesandbox/src/test/java/com/codeoj/codeojbackendcodesandbox/service/impl/DurableExecutionRegistryTest.java": "edd8a96782d7865d240b195a25b0889a8f281b15f5b912871ae2fbfa75cae123",
+    "docs/contest/README.md": "97f9d457e0d507a67099667b794ab397716cf32c0ae594f3dda06bd2a5b1cd45",
+    "docs/contest/isolated-sandbox.md": "3446f54b7bd953ca72c9b9f66a9abce8782ed3dede61d465be07562383c900ca",
+    "docs/contest/remaining-development.md": "c834640c2146c0af4215dc46932d18d4be0e89ccba0b2bea0d1ccaff7fc6a1ae",
+    "docs/contest/source-reading.md": "01928aee733f1e71482b8d490e32dce24fd9bfd024229ab6d4c9f4281fb703cd",
+    "scripts/local/check-isolation.py": "7b2f5d72a09015fa01912665e23a57cc1b9c718ae050e0acfd1e16f970710aac",
+    "scripts/local/check-judge-cutover.py": "23a009d4f69d6b777a8a0885e308f8f2b70bdd4e0ddecdda9bca28a18d59d9f9",
+    "scripts/local/run-final-acceptance.py": "c93d351d954aef288550db064d8f6f09f19864d48098f75e30d10f3467fcb991",
+    "scripts/local/run-native-stack.py": "21af09fb5264fb7473b92aacdd9ea57ba43c3db2f68bc31a83ecdb22a31e8feb"
+  }
+}

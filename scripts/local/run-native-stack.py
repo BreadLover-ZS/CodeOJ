@@ -136,6 +136,7 @@ log.file.level = warning
         return self.http('http://127.0.0.1:'+str(self.ports['management'])+'/api'+path,method,body,headers={'Authorization':'Basic '+auth})
     def setup_services(self):
         cfg={
+          'codesandbox.mode':'native',  # Explicit trusted-sample fixture; full acceptance overrides to isolated.
           'server.address':'127.0.0.1','spring.cloud.nacos.discovery.enabled':'false','spring.cloud.nacos.discovery.register-enabled':'false','spring.cloud.nacos.config.enabled':'false',
           'spring.datasource.url':f"jdbc:mysql://127.0.0.1:{self.ports['mysql']}/codeoj?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=UTF-8",
           'spring.datasource.username':'codeoj_fixture','spring.datasource.password':self.secret['db'],
@@ -146,6 +147,12 @@ log.file.level = warning
           'mybatis-plus.configuration.log-impl':'org.apache.ibatis.logging.nologging.NoLoggingImpl','logging.level.root':'WARN','spring.main.banner-mode':'off','knife4j.gateway.discover.enabled':'false',
           'codeoj.cors-allowed-origins':f"http://127.0.0.1:{self.ports['frontend']}",
         }
+        if self.env.get('CODEOJ_SANDBOX_MODE') == 'isolated':
+            cfg.update({'codesandbox.mode':'isolated',
+                        'codesandbox.isolated.docker-binary':self.env['CODEOJ_DOCKER_BINARY'],
+                        'codesandbox.isolated.docker-endpoint':self.env['CODEOJ_DOCKER_ENDPOINT'],
+                        'codesandbox.isolated.image':self.env['CODEOJ_ISOLATION_IMAGE'],
+                        'codesandbox.isolated.state-directory':str(self.work/'sandbox-state')})
         for name in ['user','question','judge']:
             cfg['spring.cloud.discovery.client.simple.instances.codeoj-backend-'+name+'-service[0].uri']='http://127.0.0.1:'+str(self.ports[name])
         file=self.work/'local.properties';file.write_text(''.join(str(k)+'='+str(v)+'\n' for k,v in cfg.items()));os.chmod(file,0o600)
@@ -263,7 +270,10 @@ log.file.level = warning
             content=path.read_text(errors='replace')
             for secret in self.secret.values():content=content.replace(secret,'[REDACTED]')
             (self.evidence/path.name).write_text(content)
-        summary={'scope':'Real native MySQL/Redis/RabbitMQ, Spring Session, Gateway, Feign, remote native Java sandbox; static discovery, no Nacos; not load/production acceptance','passed':self.ok,'ports':self.ports,'runtimeArchives':self.runtime_info['archives'],'events':self.events,'temporaryDataRemoved':True}
+        mode=self.env.get('CODEOJ_SANDBOX_MODE','native')
+        summary={'scope':'Real native MySQL/Redis/RabbitMQ, Spring Session, Gateway, Feign; static discovery, no Nacos; not load/production acceptance',
+                 'sandboxMode':mode,'isolationImage':self.env.get('CODEOJ_ISOLATION_IMAGE') if mode=='isolated' else None,
+                 'passed':self.ok,'ports':self.ports,'runtimeArchives':self.runtime_info['archives'],'events':self.events,'temporaryDataRemoved':True}
         shutil.rmtree(self.work)
         (self.evidence/'run.json').write_text(json.dumps(summary,indent=2)+'\n')
 

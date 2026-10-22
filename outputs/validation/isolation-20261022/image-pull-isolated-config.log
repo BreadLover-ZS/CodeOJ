@@ -1,0 +1,21 @@
+8-jdk-jammy: Pulling from library/eclipse-temurin
+0fe03f9ce678: Pulling fs layer
+2908c4fa36d8: Pulling fs layer
+807776a0e8f9: Pulling fs layer
+63cafcf31d6d: Pulling fs layer
+f7a40d36813a: Pulling fs layer
+2908c4fa36d8: Download complete
+f7a40d36813a: Download complete
+0fe03f9ce678: Download complete
+2908c4fa36d8: Pull complete
+a0900cf0358d: Download complete
+5d34c795c302: Download complete
+807776a0e8f9: Download complete
+807776a0e8f9: Pull complete
+63cafcf31d6d: Download complete
+f7a40d36813a: Pull complete
+0fe03f9ce678: Pull complete
+63cafcf31d6d: Pull complete
+Digest: sha256:185d4ef919b98cd195690c33f3fd93bd49c66c70f0b662e54566c0dbaebea6ce
+Status: Downloaded newer image for eclipse-temurin:8-jdk-jammy
+docker.io/library/eclipse-temurin:8-jdk-jammy

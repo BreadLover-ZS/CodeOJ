@@ -1,0 +1,11 @@
+2026-10-22 06:06:50.927  WARN 34256 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : Skipping MapperFactoryBean with name 'userMapper' and 'com.codeoj.codeojbackenduserservice.mapper.UserMapper' mapperInterface. Bean already defined with the same name!
+2026-10-22 06:06:50.932  WARN 34256 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.codeoj.codeojbackenduserservice.mapper]' package. Please check your configuration.
+ _ _   |_  _ _|_. ___ _ |    _ 
+| | |\/|_)(_| | |_\  |_)||_|_\ 
+     /               |         
+                        3.5.2 
+2026-10-22 06:06:52.508  WARN 34256 --- [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-10-22 06:08:02.979  WARN 34256 --- [ioEventLoop-4-4] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58073]: Connection refused: /127.0.0.1:58073
+2026-10-22 06:08:02.979  WARN 34256 --- [ioEventLoop-4-3] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58073]: Connection refused: /127.0.0.1:58073
+2026-10-22 06:08:12.076  WARN 34256 --- [ioEventLoop-4-8] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58073]: Connection refused: /127.0.0.1:58073
+2026-10-22 06:08:12.076  WARN 34256 --- [ioEventLoop-4-7] i.l.core.protocol.ConnectionWatchdog     : Cannot reconnect to [127.0.0.1:58073]: Connection refused: /127.0.0.1:58073

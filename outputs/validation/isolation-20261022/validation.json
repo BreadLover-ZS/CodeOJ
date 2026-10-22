@@ -1,0 +1,45 @@
+{
+  "sourceFiles": 20,
+  "currentJarsMatchCompiledClassesAndDependencies": true,
+  "evidenceJson": "PASS",
+  "pythonSyntax": "PASS",
+  "historicalEvidenceUnchanged": true,
+  "credentialPatternScan": "PASS",
+  "credentialPatternScanScope": "40-64 hex password/secret/authorization assignments and long Bearer values; not a complete secret audit",
+  "checks": {
+    "baseCommit": "b070aac28bf13b73a1e79723ee74b01a8bc727b7",
+    "businessGroups": 25,
+    "isolationChecks": 17,
+    "permissionChecks": 53,
+    "backendTests": {
+      "tests": 230,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "jv": {
+      "PASS": 29,
+      "FAIL": 0,
+      "BLOCKED": 0,
+      "UNTESTED": 0
+    },
+    "realBrowser": "PASS",
+    "sandboxMode": "isolated",
+    "scope": "Fixed-version local functional/fault/isolation acceptance; excludes Nacos, deployment, load, kernel escape certification and cross-host shared capacity",
+    "caseLabelNote": "Historical helper shadowed its case name in cleanup. business-results.json resolves names from ordered START events with identical JV arrays; raw statuses and facts are unchanged.",
+    "legacyQueueCutover": "PASS",
+    "businessGroupsIncludeFixturePreparation": true,
+    "businessFaultChecks": 24
+  },
+  "cleanup": {
+    "checkedAt": "2026-10-22T06:43:34.886595+00:00",
+    "temporaryVmDeleted": true,
+    "runtimeDirectoryRemoved": true,
+    "remainingOwnedProcessIds": [],
+    "newLimaImageCacheRemoved": true,
+    "cacheOwnershipVerified": true,
+    "vmImageSha256": "1d6bffe64b848468ac97f821d369a4846d983de1800ccf6b5ec8853e85cefc55",
+    "otherUserVmDockerConfigAndHistoricalCachesUntouched": true,
+    "allPrivateNativeAndIsolationProcessesChecked": true
+  }
+}

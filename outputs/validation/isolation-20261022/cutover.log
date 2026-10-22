@@ -1,0 +1,41 @@
+{"at": "2026-10-22T06:25:53.763512+00:00", "action": "PACKAGED_ARTIFACTS_MATCH_CURRENT_BUILD"}
+{"at": "2026-10-22T06:25:55.366514+00:00", "action": "MIGRATION_APPLIED", "name": "V001__reliable_judging.sql"}
+{"at": "2026-10-22T06:25:55.400672+00:00", "action": "MIGRATION_APPLIED", "name": "V002__contest_core.sql"}
+{"at": "2026-10-22T06:25:55.446807+00:00", "action": "MIGRATION_APPLIED", "name": "V003__async_registration.sql"}
+{"at": "2026-10-22T06:25:55.472525+00:00", "action": "MIGRATION_APPLIED", "name": "V004__contest_scoreboard.sql"}
+{"at": "2026-10-22T06:25:57.466514+00:00", "action": "INFRASTRUCTURE_READY", "mysql": "8.0.46", "rabbitmq": "4.3.6", "erlang": "28.5.0.8", "redis": "6.2.24"}
+{"at": "2026-10-22T06:25:58.988487+00:00", "action": "SERVICE_READY", "service": "sandbox"}
+{"at": "2026-10-22T06:26:01.732837+00:00", "action": "SERVICE_READY", "service": "user"}
+{"at": "2026-10-22T06:26:05.061737+00:00", "action": "SERVICE_READY", "service": "question"}
+{"at": "2026-10-22T06:26:08.102973+00:00", "action": "SERVICE_READY", "service": "judge"}
+{"at": "2026-10-22T06:26:10.229711+00:00", "action": "SERVICE_READY", "service": "gateway"}
+{"at": "2026-10-22T06:26:11.124792+00:00", "action": "REAL_SESSION_LOGIN_PASSED"}
+{"at": "2026-10-22T06:26:12.544760+00:00", "action": "PROCESS_STOPPED", "service": "judge"}
+{"at": "2026-10-22T06:26:17.413756+00:00", "action": "LEGACY_INFLIGHT_QUEUE_OBSERVED", "submissionId": "2113154938827104258", "ready": 1}
+{"at": "2026-10-22T06:26:20.444057+00:00", "action": "PROCESS_RESTARTED", "service": "judge"}
+{"at": "2026-10-22T06:26:27.669715+00:00", "action": "PROCESS_STOPPED", "service": "question"}
+{"at": "2026-10-22T06:26:28.434928+00:00", "action": "PROCESS_STOPPED", "service": "judge"}
+{"at": "2026-10-22T06:26:28.484286+00:00", "action": "PROCESS_STOPPED", "service": "sandbox"}
+{"at": "2026-10-22T06:26:30.009760+00:00", "action": "PROCESS_RESTARTED", "service": "sandbox"}
+{"at": "2026-10-22T06:26:33.349083+00:00", "action": "PROCESS_RESTARTED", "service": "question"}
+{"at": "2026-10-22T06:26:36.380814+00:00", "action": "PROCESS_RESTARTED", "service": "judge"}
+{"at": "2026-10-22T06:26:40.795160+00:00", "action": "PROCESS_STOPPED", "service": "gateway"}
+{"at": "2026-10-22T06:26:41.512218+00:00", "action": "PROCESS_STOPPED", "service": "judge"}
+{"at": "2026-10-22T06:26:42.530760+00:00", "action": "PROCESS_STOPPED", "service": "question"}
+{"at": "2026-10-22T06:26:42.708826+00:00", "action": "PROCESS_STOPPED", "service": "user"}
+{"at": "2026-10-22T06:26:42.747902+00:00", "action": "PROCESS_STOPPED", "service": "sandbox"}
+{"at": "2026-10-22T06:26:43.800421+00:00", "action": "PROCESS_STOPPED", "service": "rabbitmq"}
+{"at": "2026-10-22T06:26:43.801670+00:00", "action": "PROCESS_STOPPED", "service": "epmd"}
+{"at": "2026-10-22T06:26:43.840320+00:00", "action": "PROCESS_STOPPED", "service": "redis"}
+{"at": "2026-10-22T06:26:44.452652+00:00", "action": "PROCESS_STOPPED", "service": "mysql"}
+Traceback (most recent call last):
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/scripts/local/check-judge-cutover.py", line 101, in <module>
+    if __name__ == "__main__": main()
+                               ~~~~^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/scripts/local/check-judge-cutover.py", line 96, in main
+    stack.verify_artifacts(); stack.setup_infrastructure(); stack.setup_services(); stack.exercise()
+                                                                                    ~~~~~~~~~~~~~~^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/scripts/local/check-judge-cutover.py", line 72, in exercise
+    assert self.queue("codeoj.judge.v1.queue").get("consumers", 0) > 0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

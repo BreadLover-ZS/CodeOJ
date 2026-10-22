@@ -6,6 +6,7 @@
 | --- | --- | --- |
 | 受理与固定规格 | `ContestController.submit` → `ContestService` → `ContestTransactions.submit` → `SubmissionAcceptance.write` → `reliable_outbox` | ContestCoreTest、ReliableExecutionTest |
 | 原生判题 | `ReliableJudgeConsumer` → `ReliableJudgeWorker` → claim/heartbeat → `JavaNativeCodeSandbox` → `BoundedProcessRunner` → `SandboxResultMapper`/严格比较 → complete/fail | JavaNativeCodeSandboxTest、ReliableJudgeWorkerTest；demo-local-contest.sh |
+| 隔离与物理回收 | `ReliableJudgeWorker` → `JavaIsolatedCodeSandbox` → `DurableExecutionRegistry`（token/slot journal 与文件锁）→ `DockerIsolationEngine` → `isolation/supervisor.py` → 降权 Java/namespace 清理 → 私有收据 → 删除物理对象后释放 slot | DurableExecutionRegistryTest、check-isolation.py（实际双 JVM、SIGKILL、cgroup、越界样例） |
 | 名额竞争 | `RegistrationService.register` → `RedisRegistrationLedger.reserve` → `lua/contest-registration.lua` → persist+Outbox → `RegistrationConsumer` → confirmRegistration → synchronize | RegistrationRedisIntegrationTest；独立Redis+H2，MQ为手动消费/替身 |
 | 未知与恢复 | `OutboxStore.claim/record` → 每次 publish_attempt → `RegistrationMaintenance` → `recover`/`reconcile` → 人工 review | RegistrationMessagingTest、RegistrationRedisIntegrationTest |
 | 乱序计分 | `ExecutionCommands.complete` → JUDGE_RESULT → `ScoreboardMessaging.Relay` → `ScoreboardConsumer` → `ScoreboardTransactions.project` → 用户锁+题目最早AC+重算 → 业务回执 | ScoreboardTest、ScoreboardMessagingTest |
@@ -24,4 +25,4 @@ J5最终版本与历史版本是投影；有效提交、结果摘要、发布快
 
 真实服务联调入口为 `scripts/test-native-stack.sh`，运行时与实例均临时隔离；[J6记录](j6-native-local.md)说明真实HTTP范围、代理故障、会话503与恢复边界。
 
-本机入口与证据见 [J5记录](j5-local.md)、[J4记录](j4-local.md)。J6已增加本机真实MySQL/MQ、会话API和浏览器证据；Nacos、全面故障矩阵、部署和压测仍需独立验证。
+本机入口与历史证据见 [J5](j5-local.md)、[J4](j4-local.md)。2026-10-22 新增[隔离执行器](isolated-sandbox.md)及[JV01—JV29 全套本机复验](../../outputs/validation/isolation-20261022/jv-matrix.md)；Nacos、部署、压测和本机证据之外的故障场景仍需独立验证。

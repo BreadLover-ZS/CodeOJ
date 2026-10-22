@@ -1,0 +1,365 @@
+{"at": "2026-10-22T06:09:57.155141+00:00", "action": "PACKAGED_ARTIFACTS_MATCH_CURRENT_BUILD"}
+{"at": "2026-10-22T06:09:58.793987+00:00", "action": "MIGRATION_APPLIED", "name": "V001__reliable_judging.sql"}
+{"at": "2026-10-22T06:09:58.830901+00:00", "action": "MIGRATION_APPLIED", "name": "V002__contest_core.sql"}
+{"at": "2026-10-22T06:09:58.879822+00:00", "action": "MIGRATION_APPLIED", "name": "V003__async_registration.sql"}
+{"at": "2026-10-22T06:09:58.907182+00:00", "action": "MIGRATION_APPLIED", "name": "V004__contest_scoreboard.sql"}
+{"at": "2026-10-22T06:10:00.859285+00:00", "action": "INFRASTRUCTURE_READY", "mysql": "8.0.46", "rabbitmq": "4.3.6", "erlang": "28.5.0.8", "redis": "6.2.24"}
+{"at": "2026-10-22T06:10:02.676712+00:00", "action": "SERVICE_READY", "service": "sandbox"}
+{"at": "2026-10-22T06:10:05.706223+00:00", "action": "SERVICE_READY", "service": "user"}
+{"at": "2026-10-22T06:10:09.346881+00:00", "action": "SERVICE_READY", "service": "question"}
+{"at": "2026-10-22T06:10:12.993944+00:00", "action": "SERVICE_READY", "service": "judge"}
+{"at": "2026-10-22T06:10:15.429482+00:00", "action": "SERVICE_READY", "service": "gateway"}
+{"at": "2026-10-22T06:10:15.429592+00:00", "action": "REAL_AMQP_FAULT_PROXY_READY"}
+{"at": "2026-10-22T06:10:16.445476+00:00", "action": "REAL_SESSION_LOGIN_PASSED"}
+{"at": "2026-10-22T06:10:22.467504+00:00", "action": "ASYNC_REGISTRATION_CONFIRMED", "requestId": "2113150949582602241"}
+{"at": "2026-10-22T06:10:54.237808+00:00", "action": "REAL_JUDGE_RESULT", "submissionId": "2113151076082810881", "verdict": "AC", "case": "AC"}
+{"at": "2026-10-22T06:10:56.166049+00:00", "action": "REAL_JUDGE_RESULT", "submissionId": "2113151087034138625", "verdict": "AC", "case": "COMMENT_AC"}
+{"at": "2026-10-22T06:10:58.081364+00:00", "action": "REAL_JUDGE_RESULT", "submissionId": "2113151095129145345", "verdict": "WA", "case": "WA"}
+{"at": "2026-10-22T06:10:59.381635+00:00", "action": "REAL_JUDGE_RESULT", "submissionId": "2113151103152848897", "verdict": "CE", "case": "CE"}
+{"at": "2026-10-22T06:11:00.664771+00:00", "action": "REAL_JUDGE_RESULT", "submissionId": "2113151108634804225", "verdict": "RE", "case": "RE"}
+{"at": "2026-10-22T06:11:00.698036+00:00", "action": "REAL_SCOREBOARD_AND_ROLE_CHECK_PASSED"}
+{"at": "2026-10-22T06:11:01.621250+00:00", "action": "PROCESS_STOPPED", "service": "judge"}
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 59016)
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+    self.handle()
+    ~~~~~~~~~~~^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/outputs/validation/final-acceptance-20261018/fault_proxy.py", line 11, in handle
+    def handle(self):owner.handle(self.request)
+                     ~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/outputs/validation/final-acceptance-20261018/fault_proxy.py", line 23, in handle
+    backend=socket.create_connection(('127.0.0.1',self.backend),timeout=10);backend.settimeout(None);client.settimeout(None)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 874, in create_connection
+    raise exceptions[0]
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 859, in create_connection
+    sock.connect(sa)
+    ~~~~~~~~~~~~^^^^
+ConnectionRefusedError: [Errno 61] Connection refused
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 59018)
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+    self.handle()
+    ~~~~~~~~~~~^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/outputs/validation/final-acceptance-20261018/fault_proxy.py", line 11, in handle
+    def handle(self):owner.handle(self.request)
+                     ~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/outputs/validation/final-acceptance-20261018/fault_proxy.py", line 23, in handle
+    backend=socket.create_connection(('127.0.0.1',self.backend),timeout=10);backend.settimeout(None);client.settimeout(None)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 874, in create_connection
+    raise exceptions[0]
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 859, in create_connection
+    sock.connect(sa)
+    ~~~~~~~~~~~~^^^^
+ConnectionRefusedError: [Errno 61] Connection refused
+----------------------------------------
+{"at": "2026-10-22T06:11:03.729652+00:00", "action": "PROCESS_STOPPED", "service": "rabbitmq"}
+{"at": "2026-10-22T06:11:05.246265+00:00", "action": "PROCESS_RESTARTED", "service": "rabbitmq"}
+{"at": "2026-10-22T06:11:08.292264+00:00", "action": "PROCESS_RESTARTED", "service": "judge"}
+{"at": "2026-10-22T06:11:11.952524+00:00", "action": "DURABLE_QUEUE_BROKER_RESTART_AND_DUPLICATE_PASSED", "submissionId": "2113151117971324929"}
+{"at": "2026-10-22T06:11:11.987700+00:00", "action": "PROCESS_STOPPED", "service": "sandbox"}
+{"at": "2026-10-22T06:11:14.796615+00:00", "action": "PROCESS_RESTARTED", "service": "sandbox"}
+{"at": "2026-10-22T06:11:18.308617+00:00", "action": "SANDBOX_FAILURE_AND_LEASE_RECOVERY_PASSED", "submissionId": "2113151161462063106"}
+{"at": "2026-10-22T06:11:18.436901+00:00", "action": "PROCESS_STOPPED", "service": "redis"}
+{"at": "2026-10-22T06:11:28.768357+00:00", "action": "PROCESS_RESTARTED", "service": "redis"}
+{"at": "2026-10-22T06:11:36.177563+00:00", "action": "REDIS_RESTART_SESSION_AND_LEDGER_RECOVERY_PASSED"}
+{"at": "2026-10-22T06:12:43.303958+00:00", "action": "REAL_BROWSER_PASSED"}
+{"at": "2026-10-22T06:13:47.803548+00:00", "action": "FINALIZATION_PASSED", "projectionVersion": "2"}
+{"at": "2026-10-22T06:13:47.803605+00:00", "action": "CURRENT_ISOLATED_BROWSER_BASELINE_PASSED"}
+{"at": "2026-10-22T06:13:47.803643+00:00", "action": "ACCEPTANCE_CASE_START", "case": "fixtures", "jv": []}
+{"at": "2026-10-22T06:13:48.733401+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:13:48.733426+00:00", "action": "ACCEPTANCE_CASE_START", "case": "submission-idempotency", "jv": ["JV01"]}
+{"at": "2026-10-22T06:13:50.754135+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:13:50.754159+00:00", "action": "ACCEPTANCE_CASE_START", "case": "api-crash-commit-windows", "jv": ["JV02"]}
+{"at": "2026-10-22T06:13:50.791118+00:00", "action": "PROCESS_SIGKILL", "service": "question"}
+{"at": "2026-10-22T06:13:58.826991+00:00", "action": "PROCESS_RESTARTED", "service": "question"}
+{"at": "2026-10-22T06:13:59.904603+00:00", "action": "PROCESS_STOPPED", "service": "judge"}
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 59832)
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+    self.handle()
+    ~~~~~~~~~~~^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/outputs/validation/final-acceptance-20261018/fault_proxy.py", line 11, in handle
+    def handle(self):owner.handle(self.request)
+                     ~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/outputs/validation/final-acceptance-20261018/fault_proxy.py", line 23, in handle
+    backend=socket.create_connection(('127.0.0.1',self.backend),timeout=10);backend.settimeout(None);client.settimeout(None)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 874, in create_connection
+    raise exceptions[0]
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 859, in create_connection
+    sock.connect(sa)
+    ~~~~~~~~~~~~^^^^
+ConnectionRefusedError: [Errno 61] Connection refused
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 59834)
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+    self.handle()
+    ~~~~~~~~~~~^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/outputs/validation/final-acceptance-20261018/fault_proxy.py", line 11, in handle
+    def handle(self):owner.handle(self.request)
+                     ~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/outputs/validation/final-acceptance-20261018/fault_proxy.py", line 23, in handle
+    backend=socket.create_connection(('127.0.0.1',self.backend),timeout=10);backend.settimeout(None);client.settimeout(None)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 874, in create_connection
+    raise exceptions[0]
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 859, in create_connection
+    sock.connect(sa)
+    ~~~~~~~~~~~~^^^^
+ConnectionRefusedError: [Errno 61] Connection refused
+----------------------------------------
+{"at": "2026-10-22T06:14:00.975234+00:00", "action": "PROCESS_STOPPED", "service": "rabbitmq"}
+{"at": "2026-10-22T06:14:01.078792+00:00", "action": "PROCESS_SIGKILL", "service": "question"}
+{"at": "2026-10-22T06:14:02.602122+00:00", "action": "PROCESS_RESTARTED", "service": "rabbitmq"}
+{"at": "2026-10-22T06:14:05.940969+00:00", "action": "PROCESS_RESTARTED", "service": "question"}
+{"at": "2026-10-22T06:14:09.242329+00:00", "action": "PROCESS_RESTARTED", "service": "judge"}
+{"at": "2026-10-22T06:14:10.495931+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:14:10.495974+00:00", "action": "ACCEPTANCE_CASE_START", "case": "publisher-return-confirm-loss-disconnect", "jv": ["JV03"]}
+{"at": "2026-10-22T06:14:11.575844+00:00", "action": "PROCESS_STOPPED", "service": "judge"}
+{"at": "2026-10-22T06:14:15.737665+00:00", "action": "PROCESS_RESTARTED", "service": "judge"}
+{"at": "2026-10-22T06:14:17.932789+00:00", "action": "PROCESS_STOPPED", "service": "judge"}
+{"at": "2026-10-22T06:14:36.775692+00:00", "action": "PROCESS_RESTARTED", "service": "judge"}
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 60087)
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+    self.handle()
+    ~~~~~~~~~~~^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/outputs/validation/final-acceptance-20261018/fault_proxy.py", line 11, in handle
+    def handle(self):owner.handle(self.request)
+                     ~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/outputs/validation/final-acceptance-20261018/fault_proxy.py", line 23, in handle
+    backend=socket.create_connection(('127.0.0.1',self.backend),timeout=10);backend.settimeout(None);client.settimeout(None)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 874, in create_connection
+    raise exceptions[0]
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 859, in create_connection
+    sock.connect(sa)
+    ~~~~~~~~~~~~^^^^
+ConnectionRefusedError: [Errno 61] Connection refused
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 60089)
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+    self.handle()
+    ~~~~~~~~~~~^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/outputs/validation/final-acceptance-20261018/fault_proxy.py", line 11, in handle
+    def handle(self):owner.handle(self.request)
+                     ~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/outputs/validation/final-acceptance-20261018/fault_proxy.py", line 23, in handle
+    backend=socket.create_connection(('127.0.0.1',self.backend),timeout=10);backend.settimeout(None);client.settimeout(None)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 874, in create_connection
+    raise exceptions[0]
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 859, in create_connection
+    sock.connect(sa)
+    ~~~~~~~~~~~~^^^^
+ConnectionRefusedError: [Errno 61] Connection refused
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 60091)
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+    self.handle()
+    ~~~~~~~~~~~^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/outputs/validation/final-acceptance-20261018/fault_proxy.py", line 11, in handle
+    def handle(self):owner.handle(self.request)
+                     ~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/outputs/validation/final-acceptance-20261018/fault_proxy.py", line 23, in handle
+    backend=socket.create_connection(('127.0.0.1',self.backend),timeout=10);backend.settimeout(None);client.settimeout(None)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 874, in create_connection
+    raise exceptions[0]
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 859, in create_connection
+    sock.connect(sa)
+    ~~~~~~~~~~~~^^^^
+ConnectionRefusedError: [Errno 61] Connection refused
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 60093)
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+    self.handle()
+    ~~~~~~~~~~~^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/outputs/validation/final-acceptance-20261018/fault_proxy.py", line 11, in handle
+    def handle(self):owner.handle(self.request)
+                     ~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/outputs/validation/final-acceptance-20261018/fault_proxy.py", line 23, in handle
+    backend=socket.create_connection(('127.0.0.1',self.backend),timeout=10);backend.settimeout(None);client.settimeout(None)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 874, in create_connection
+    raise exceptions[0]
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 859, in create_connection
+    sock.connect(sa)
+    ~~~~~~~~~~~~^^^^
+ConnectionRefusedError: [Errno 61] Connection refused
+----------------------------------------
+{"at": "2026-10-22T06:14:38.837900+00:00", "action": "PROCESS_STOPPED", "service": "rabbitmq"}
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 60103)
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+    self.handle()
+    ~~~~~~~~~~~^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/outputs/validation/final-acceptance-20261018/fault_proxy.py", line 11, in handle
+    def handle(self):owner.handle(self.request)
+                     ~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/outputs/validation/final-acceptance-20261018/fault_proxy.py", line 23, in handle
+    backend=socket.create_connection(('127.0.0.1',self.backend),timeout=10);backend.settimeout(None);client.settimeout(None)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 874, in create_connection
+    raise exceptions[0]
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 859, in create_connection
+    sock.connect(sa)
+    ~~~~~~~~~~~~^^^^
+ConnectionRefusedError: [Errno 61] Connection refused
+----------------------------------------
+{"at": "2026-10-22T06:14:41.286974+00:00", "action": "PROCESS_RESTARTED", "service": "rabbitmq"}
+{"at": "2026-10-22T06:14:44.692507+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:14:44.692537+00:00", "action": "ACCEPTANCE_CASE_START", "case": "two-consumers-precise-lock-observer", "jv": ["JV04"]}
+{"at": "2026-10-22T06:14:50.893645+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:14:50.893679+00:00", "action": "ACCEPTANCE_CASE_START", "case": "worker-sigkill-token-generation-fence", "jv": ["JV05", "JV20"]}
+{"at": "2026-10-22T06:14:51.981986+00:00", "action": "PROCESS_STOPPED", "service": "judge"}
+{"at": "2026-10-22T06:14:53.008890+00:00", "action": "PROCESS_STOPPED", "service": "judge2"}
+{"at": "2026-10-22T06:14:56.046854+00:00", "action": "PROCESS_RESTARTED", "service": "judge"}
+{"at": "2026-10-22T06:14:57.083012+00:00", "action": "PROCESS_SIGKILL", "service": "judge"}
+{"at": "2026-10-22T06:15:15.137907+00:00", "action": "PROCESS_RESTARTED", "service": "judge"}
+{"at": "2026-10-22T06:15:18.880270+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:15:18.880309+00:00", "action": "ACCEPTANCE_CASE_START", "case": "commit-before-ack-redelivery", "jv": ["JV06"]}
+{"at": "2026-10-22T06:15:20.014467+00:00", "action": "PROCESS_STOPPED", "service": "judge"}
+{"at": "2026-10-22T06:15:20.014560+00:00", "action": "PROCESS_STOPPED", "service": "judge2"}
+{"at": "2026-10-22T06:15:23.044921+00:00", "action": "PROCESS_RESTARTED", "service": "judge"}
+{"at": "2026-10-22T06:15:31.382717+00:00", "action": "PROCESS_SIGKILL", "service": "judge"}
+{"at": "2026-10-22T06:15:34.418612+00:00", "action": "PROCESS_RESTARTED", "service": "judge"}
+{"at": "2026-10-22T06:15:41.395883+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:15:41.395915+00:00", "action": "ACCEPTANCE_CASE_START", "case": "limited-registration", "jv": ["JV09"]}
+{"at": "2026-10-22T06:15:46.534901+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:15:46.534960+00:00", "action": "ACCEPTANCE_CASE_START", "case": "reservation-api-crash-before-db", "jv": ["JV10"]}
+{"at": "2026-10-22T06:15:49.625421+00:00", "action": "PROCESS_SIGKILL", "service": "question"}
+{"at": "2026-10-22T06:15:57.990622+00:00", "action": "PROCESS_RESTARTED", "service": "question"}
+{"at": "2026-10-22T06:15:58.754367+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:15:58.754396+00:00", "action": "ACCEPTANCE_CASE_START", "case": "confirmation-marker-failure", "jv": ["JV11"]}
+{"at": "2026-10-22T06:16:09.894658+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:16:09.894686+00:00", "action": "ACCEPTANCE_CASE_START", "case": "redis-down-confirmation-and-release", "jv": ["JV11", "JV22"]}
+{"at": "2026-10-22T06:16:13.843525+00:00", "action": "PROCESS_STOPPED", "service": "redis"}
+{"at": "2026-10-22T06:16:20.233178+00:00", "action": "PROCESS_RESTARTED", "service": "redis"}
+{"at": "2026-10-22T06:16:26.454898+00:00", "action": "PROCESS_STOPPED", "service": "redis"}
+{"at": "2026-10-22T06:16:47.754418+00:00", "action": "PROCESS_RESTARTED", "service": "redis"}
+{"at": "2026-10-22T06:17:01.365581+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:17:01.365610+00:00", "action": "ACCEPTANCE_CASE_START", "case": "reservation-before-close-consume-after", "jv": ["JV12"]}
+{"at": "2026-10-22T06:17:11.571758+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:17:11.571789+00:00", "action": "ACCEPTANCE_CASE_START", "case": "registration-cancel-race", "jv": ["JV13"]}
+{"at": "2026-10-22T06:17:14.710864+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:17:14.710891+00:00", "action": "ACCEPTANCE_CASE_START", "case": "submission-cancel-race", "jv": ["JV13"]}
+{"at": "2026-10-22T06:17:23.941625+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:17:23.941658+00:00", "action": "ACCEPTANCE_CASE_START", "case": "private-snapshot-and-submission-permissions", "jv": ["JV14"]}
+{"at": "2026-10-22T06:17:36.021731+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:17:36.021760+00:00", "action": "ACCEPTANCE_CASE_START", "case": "accepted-snapshot-edited-before-execution", "jv": ["JV15"]}
+{"at": "2026-10-22T06:17:40.390740+00:00", "action": "PROCESS_STOPPED", "service": "judge"}
+{"at": "2026-10-22T06:17:40.390896+00:00", "action": "PROCESS_STOPPED", "service": "judge2"}
+{"at": "2026-10-22T06:17:50.216117+00:00", "action": "PROCESS_RESTARTED", "service": "judge"}
+{"at": "2026-10-22T06:17:52.260290+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:17:52.260316+00:00", "action": "ACCEPTANCE_CASE_START", "case": "budget-exhaustion-manual-recovery", "jv": ["JV19"]}
+{"at": "2026-10-22T06:17:52.279191+00:00", "action": "PROCESS_STOPPED", "service": "sandbox"}
+{"at": "2026-10-22T06:18:02.780618+00:00", "action": "PROCESS_RESTARTED", "service": "sandbox"}
+{"at": "2026-10-22T06:18:04.315487+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:18:04.315514+00:00", "action": "ACCEPTANCE_CASE_START", "case": "confirmed-unclaimed-recovery", "jv": ["JV21"]}
+{"at": "2026-10-22T06:18:05.425220+00:00", "action": "PROCESS_STOPPED", "service": "judge"}
+{"at": "2026-10-22T06:18:05.425324+00:00", "action": "PROCESS_STOPPED", "service": "judge2"}
+{"at": "2026-10-22T06:18:38.768490+00:00", "action": "PROCESS_RESTARTED", "service": "judge"}
+{"at": "2026-10-22T06:18:39.791665+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:18:39.791691+00:00", "action": "ACCEPTANCE_CASE_START", "case": "late-confirm-after-release", "jv": ["JV22"]}
+{"at": "2026-10-22T06:18:45.967710+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:18:45.967742+00:00", "action": "ACCEPTANCE_CASE_START", "case": "cancel-committed-redis-down", "jv": ["JV23"]}
+{"at": "2026-10-22T06:18:49.127183+00:00", "action": "PROCESS_STOPPED", "service": "redis"}
+{"at": "2026-10-22T06:19:11.512333+00:00", "action": "PROCESS_RESTARTED", "service": "redis"}
+{"at": "2026-10-22T06:19:23.027313+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:19:23.027344+00:00", "action": "ACCEPTANCE_CASE_START", "case": "ledger-initialization-loss-persistence", "jv": ["JV24", "JV28"]}
+{"at": "2026-10-22T06:19:28.233872+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:19:28.233899+00:00", "action": "ACCEPTANCE_CASE_START", "case": "complete-redis-ledger-loss", "jv": ["JV24"]}
+{"at": "2026-10-22T06:19:32.206505+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:19:32.206531+00:00", "action": "ACCEPTANCE_CASE_START", "case": "mysql-clock-skew-both-directions", "jv": ["JV24"]}
+{"at": "2026-10-22T06:19:36.326536+00:00", "action": "PROCESS_STOPPED", "service": "question"}
+{"at": "2026-10-22T06:19:40.726688+00:00", "action": "PROCESS_STOPPED", "service": "question"}
+{"at": "2026-10-22T06:19:45.161721+00:00", "action": "PROCESS_STOPPED", "service": "question"}
+{"at": "2026-10-22T06:19:50.813671+00:00", "action": "PROCESS_STOPPED", "service": "question"}
+{"at": "2026-10-22T06:19:55.347395+00:00", "action": "PROCESS_STOPPED", "service": "question"}
+{"at": "2026-10-22T06:19:59.020700+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:19:59.020733+00:00", "action": "ACCEPTANCE_CASE_START", "case": "score-race-rebuild-finalization", "jv": ["JV16", "JV17", "JV18", "JV26", "JV27"]}
+{"at": "2026-10-22T06:19:59.431169+00:00", "action": "PROCESS_STOPPED", "service": "judge"}
+{"at": "2026-10-22T06:19:59.431225+00:00", "action": "PROCESS_STOPPED", "service": "judge2"}
+{"at": "2026-10-22T06:20:13.701888+00:00", "action": "PROCESS_RESTARTED", "service": "judge"}
+{"at": "2026-10-22T06:20:43.662664+00:00", "action": "PROCESS_STOPPED", "service": "judge"}
+{"at": "2026-10-22T06:20:43.662741+00:00", "action": "PROCESS_STOPPED", "service": "judge2"}
+{"at": "2026-10-22T06:20:48.555570+00:00", "action": "PROCESS_RESTARTED", "service": "judge"}
+{"at": "2026-10-22T06:20:53.903130+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:20:53.903158+00:00", "action": "ACCEPTANCE_CASE_START", "case": "practice-spec-frozen-at-acceptance", "jv": ["JV29"]}
+{"at": "2026-10-22T06:20:54.747888+00:00", "action": "PROCESS_STOPPED", "service": "judge"}
+{"at": "2026-10-22T06:20:54.747960+00:00", "action": "PROCESS_STOPPED", "service": "judge2"}
+{"at": "2026-10-22T06:20:57.898829+00:00", "action": "PROCESS_RESTARTED", "service": "judge"}
+{"at": "2026-10-22T06:20:59.917043+00:00", "action": "ACCEPTANCE_CASE_END", "case": "judge", "status": "PASS"}
+{"at": "2026-10-22T06:20:59.917093+00:00", "action": "PROCESS_STOPPED", "service": "judge2"}
+{"at": "2026-10-22T06:20:59.917101+00:00", "action": "PROCESS_STOPPED", "service": "browser"}
+{"at": "2026-10-22T06:21:02.502609+00:00", "action": "PROCESS_STOPPED", "service": "gateway"}
+{"at": "2026-10-22T06:21:03.054887+00:00", "action": "PROCESS_STOPPED", "service": "judge"}
+{"at": "2026-10-22T06:21:03.864657+00:00", "action": "PROCESS_STOPPED", "service": "question"}
+{"at": "2026-10-22T06:21:04.047683+00:00", "action": "PROCESS_STOPPED", "service": "user"}
+{"at": "2026-10-22T06:21:04.086550+00:00", "action": "PROCESS_STOPPED", "service": "sandbox"}
+{"at": "2026-10-22T06:21:05.196772+00:00", "action": "PROCESS_STOPPED", "service": "rabbitmq"}
+{"at": "2026-10-22T06:21:05.201644+00:00", "action": "PROCESS_STOPPED", "service": "epmd"}
+{"at": "2026-10-22T06:21:05.243918+00:00", "action": "PROCESS_STOPPED", "service": "redis"}
+{"at": "2026-10-22T06:21:05.728606+00:00", "action": "PROCESS_STOPPED", "service": "mysql"}

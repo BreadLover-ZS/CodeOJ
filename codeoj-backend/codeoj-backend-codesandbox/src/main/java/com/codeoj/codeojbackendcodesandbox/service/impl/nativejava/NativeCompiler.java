@@ -17,6 +17,9 @@ public final class NativeCompiler {
 
     public static void main(String[] args) throws Exception {
         Path source = Paths.get(args[0]), classes = Paths.get(args[1]), receipt = Paths.get(args[2]);
+        // Native callers pre-create this file; a fresh isolated artifact volume does not.
+        try { Files.createFile(receipt); }
+        catch (FileAlreadyExistsException existing) { /* NativeReceipt rejects symbolic links. */ }
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         if (compiler == null) { NativeReceipt.write(receipt, args[3], "PLATFORM", "COMPILER_UNAVAILABLE");return; }
         try (StandardJavaFileManager manager = compiler.getStandardFileManager(null, Locale.ROOT, StandardCharsets.UTF_8)) {

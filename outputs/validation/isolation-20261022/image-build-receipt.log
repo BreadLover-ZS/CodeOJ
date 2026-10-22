@@ -1,0 +1,37 @@
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            BuildKit is currently disabled; enable it by removing the DOCKER_BUILDKIT=0
+            environment-variable.
+
+Sending build context to Docker daemon  77.84MB
+Step 1/10 : ARG BASE_IMAGE=eclipse-temurin:8-jdk-jammy
+Step 2/10 : FROM ${BASE_IMAGE}
+ ---> 185d4ef919b9
+Step 3/10 : RUN apt-get update && apt-get install -y --no-install-recommends python3     && rm -rf /var/lib/apt/lists/*     && mkdir -p /opt/helpers /opt/source /source /work/classes /receipt     && chown -R 10000:10000 /work && chmod 0700 /receipt
+ ---> Using cache
+ ---> b13dc7be94d9
+Step 4/10 : COPY src/main/java/com/codeoj/codeojbackendcodesandbox/service/impl/nativejava/*.java /opt/source/
+ ---> 8daf8735f3fc
+Step 5/10 : RUN javac -encoding UTF-8 -d /opt/helpers /opt/source/*.java && rm -rf /opt/source
+ ---> Running in df0063f371c2
+ ---> Removed intermediate container df0063f371c2
+ ---> b51960e53fa1
+Step 6/10 : COPY isolation/supervisor.py /opt/codeoj/supervisor.py
+ ---> 8adccf9543e1
+Step 7/10 : RUN chmod 0555 /opt/codeoj/supervisor.py
+ ---> Running in 08e495aa49d4
+ ---> Removed intermediate container 08e495aa49d4
+ ---> c8e13deb1b17
+Step 8/10 : WORKDIR /tmp
+ ---> Running in 75e0531c82d6
+ ---> Removed intermediate container 75e0531c82d6
+ ---> f40ca518aa48
+Step 9/10 : ENTRYPOINT ["python3", "/opt/codeoj/supervisor.py"]
+ ---> Running in b965cca3e3c7
+ ---> Removed intermediate container b965cca3e3c7
+ ---> 93460a1dd502
+Step 10/10 : LABEL codeoj.isolation.protocol="1"
+ ---> Running in 494ccabf676d
+ ---> Removed intermediate container 494ccabf676d
+ ---> b02caae51240
+Successfully built b02caae51240
+Successfully tagged codeoj-isolation:local

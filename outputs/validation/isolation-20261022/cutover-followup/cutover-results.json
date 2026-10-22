@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "legacyInflightQueueObserved": true,
+  "legacyDrainedBeforeSwitch": true,
+  "producersStoppedDuringSwitch": true,
+  "legacyConsumerAbsentAfterSwitch": true,
+  "newReliableIsolatedVerdict": "AC",
+  "legacyResultUnchanged": true,
+  "legacyNotSilentlyBackfilled": true,
+  "legacyAndNewRecordsReadable": true,
+  "scope": "Disposable local functional cutover only; not a production rollout or rollback"
+}

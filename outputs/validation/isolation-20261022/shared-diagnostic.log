@@ -1,0 +1,15 @@
+{"case": "shared", "jv": ["JV25"], "status": "FAIL", "errorType": "AssertionError", "error": "{'outputList': [], 'message': 'ISOLATED_EXECUTION_FAILURE', 'status': 3, 'judgeInfo': None, 'outcome': 'PLATFORM_ERROR', 'errorCode': 'ISOLATED_EXECUTION_FAILURE'}", "elapsedSeconds": 1.593}
+Traceback (most recent call last):
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/scripts/local/check-isolation.py", line 242, in <module>
+    if __name__ == "__main__": main()
+                               ~~~~^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/scripts/local/check-isolation.py", line 238, in main
+    try: checks.exercise()
+         ~~~~~~~~~~~~~~~^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/scripts/local/check-isolation.py", line 183, in exercise
+    self.run_case(name, ["JV25"], self.shared_slot if name == "shared" else self.manager_recovery)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/scripts/local/check-isolation.py", line 124, in run_case
+    assert row["status"] == "PASS", row
+           ^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'case': 'shared', 'jv': ['JV25'], 'status': 'FAIL', 'errorType': 'AssertionError', 'error': "{'outputList': [], 'message': 'ISOLATED_EXECUTION_FAILURE', 'status': 3, 'judgeInfo': None, 'outcome': 'PLATFORM_ERROR', 'errorCode': 'ISOLATED_EXECUTION_FAILURE'}", 'elapsedSeconds': 1.593}

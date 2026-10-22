@@ -1,0 +1,15 @@
+{"case": "real-java-and-cgroup-metrics", "jv": ["JV07"], "status": "FAIL", "errorType": "HTTPError", "error": "HTTP Error 502: Bad Gateway", "elapsedSeconds": 3.787}
+Traceback (most recent call last):
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/scripts/local/check-isolation.py", line 233, in <module>
+    if __name__ == "__main__": main()
+                               ~~~~^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/scripts/local/check-isolation.py", line 229, in main
+    try: checks.exercise()
+         ~~~~~~~~~~~~~~~^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/scripts/local/check-isolation.py", line 177, in exercise
+    self.run_case("real-java-and-cgroup-metrics", ["JV07"], lambda: self.expect('System.out.print("3");', outputs=["3"]))
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/scripts/local/check-isolation.py", line 122, in run_case
+    assert row["status"] == "PASS", row
+           ^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'case': 'real-java-and-cgroup-metrics', 'jv': ['JV07'], 'status': 'FAIL', 'errorType': 'HTTPError', 'error': 'HTTP Error 502: Bad Gateway', 'elapsedSeconds': 3.787}

@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 /** Native runner for trusted local samples only. Isolation validation is deferred. */
 @Slf4j
 @Service
+@org.springframework.boot.autoconfigure.condition.ConditionalOnProperty(name = "codesandbox.mode", havingValue = "native")
 public class JavaNativeCodeSandbox implements CodeSandboxService {
     private static final int MAX_CODE_BYTES = 256 * 1024;
     private static final int MAX_INPUT_BYTES = 1024 * 1024;

@@ -1,0 +1,13 @@
+{
+  "remainingContainersBeforeVmDeletion": [],
+  "remainingVolumesBeforeVmDeletion": [],
+  "privateStackDirectoriesRemoved": true,
+  "privateStackDirectories": [
+    "/private/tmp/codeoj-native-stack-h8sw2rp5",
+    "/private/tmp/codeoj-native-stack-ju5l4eqz",
+    "/private/tmp/codeoj-native-stack-rrai_bfd",
+    "/private/tmp/codeoj-native-stack-u7ecia6r",
+    "/private/tmp/codeoj-native-stack-wbm7zjy0"
+  ],
+  "isolationProbeDirectoriesRemoved": true
+}

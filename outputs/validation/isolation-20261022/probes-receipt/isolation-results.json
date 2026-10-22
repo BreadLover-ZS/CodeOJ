@@ -1,0 +1,277 @@
+[
+  {
+    "case": "real-java-and-cgroup-metrics",
+    "jv": [
+      "JV07"
+    ],
+    "status": "PASS",
+    "facts": {
+      "outcome": "EXECUTED",
+      "outputs": [
+        "3"
+      ],
+      "metrics": {
+        "message": null,
+        "memory": 14180,
+        "time": 35,
+        "verdict": null,
+        "memoryMeasurement": "CGROUP_V2_PEAK_KIB"
+      }
+    },
+    "elapsedSeconds": 0.971
+  },
+  {
+    "case": "network-denied",
+    "jv": [
+      "JV08"
+    ],
+    "status": "PASS",
+    "facts": {
+      "outcome": "EXECUTED",
+      "outputs": [
+        "BLOCKED"
+      ],
+      "metrics": {
+        "message": null,
+        "memory": 14828,
+        "time": 34,
+        "verdict": null,
+        "memoryMeasurement": "CGROUP_V2_PEAK_KIB"
+      }
+    },
+    "elapsedSeconds": 0.876
+  },
+  {
+    "case": "nonroot-no-capabilities-no-docker-socket",
+    "jv": [
+      "JV08"
+    ],
+    "status": "PASS",
+    "facts": {
+      "outcome": "EXECUTED",
+      "outputs": [
+        "true"
+      ],
+      "metrics": {
+        "message": null,
+        "memory": 14804,
+        "time": 37,
+        "verdict": null,
+        "memoryMeasurement": "CGROUP_V2_PEAK_KIB"
+      }
+    },
+    "elapsedSeconds": 0.81
+  },
+  {
+    "case": "readonly-root-artifacts-and-private-receipt",
+    "jv": [
+      "JV08"
+    ],
+    "status": "PASS",
+    "facts": {
+      "outcome": "EXECUTED",
+      "outputs": [
+        "3"
+      ],
+      "metrics": {
+        "message": null,
+        "memory": 14328,
+        "time": 33,
+        "verdict": null,
+        "memoryMeasurement": "CGROUP_V2_PEAK_KIB"
+      }
+    },
+    "elapsedSeconds": 0.861
+  },
+  {
+    "case": "bounded-tmpfs",
+    "jv": [
+      "JV08"
+    ],
+    "status": "PASS",
+    "facts": {
+      "outcome": "EXECUTED",
+      "outputs": [
+        "BOUNDED"
+      ],
+      "metrics": {
+        "message": null,
+        "memory": 32692,
+        "time": 33,
+        "verdict": null,
+        "memoryMeasurement": "CGROUP_V2_PEAK_KIB"
+      }
+    },
+    "elapsedSeconds": 0.823
+  },
+  {
+    "case": "pid-cgroup-limit-and-descendant-cleanup",
+    "jv": [
+      "JV08",
+      "JV25"
+    ],
+    "status": "PASS",
+    "facts": {
+      "outcome": "EXECUTED",
+      "outputs": [
+        "true"
+      ],
+      "metrics": {
+        "message": null,
+        "memory": 27576,
+        "time": 508,
+        "verdict": null,
+        "memoryMeasurement": "CGROUP_V2_PEAK_KIB"
+      }
+    },
+    "elapsedSeconds": 1.321
+  },
+  {
+    "case": "cgroup-memory-limit",
+    "jv": [
+      "JV08"
+    ],
+    "status": "PASS",
+    "facts": {
+      "outcome": "MLE",
+      "outputs": [],
+      "metrics": {
+        "message": null,
+        "memory": null,
+        "time": 0,
+        "verdict": null,
+        "memoryMeasurement": null
+      }
+    },
+    "elapsedSeconds": 0.843
+  },
+  {
+    "case": "wall-deadline",
+    "jv": [
+      "JV07"
+    ],
+    "status": "PASS",
+    "facts": {
+      "outcome": "TLE",
+      "outputs": [],
+      "metrics": {
+        "message": null,
+        "memory": 13944,
+        "time": 703,
+        "verdict": null,
+        "memoryMeasurement": "CGROUP_V2_PEAK_KIB"
+      }
+    },
+    "elapsedSeconds": 1.438
+  },
+  {
+    "case": "stdout-budget",
+    "jv": [
+      "JV07"
+    ],
+    "status": "PASS",
+    "facts": {
+      "outcome": "OUTPUT_LIMIT",
+      "outputs": [],
+      "metrics": {
+        "message": null,
+        "memory": null,
+        "time": 0,
+        "verdict": null,
+        "memoryMeasurement": null
+      }
+    },
+    "elapsedSeconds": 0.773
+  },
+  {
+    "case": "stderr-budget",
+    "jv": [
+      "JV07"
+    ],
+    "status": "PASS",
+    "facts": {
+      "outcome": "OUTPUT_LIMIT",
+      "outputs": [],
+      "metrics": {
+        "message": null,
+        "memory": null,
+        "time": 0,
+        "verdict": null,
+        "memoryMeasurement": null
+      }
+    },
+    "elapsedSeconds": 0.869
+  },
+  {
+    "case": "stdin-not-read",
+    "jv": [
+      "JV07"
+    ],
+    "status": "PASS",
+    "facts": {
+      "outcome": "TLE",
+      "outputs": [],
+      "metrics": {
+        "message": null,
+        "memory": 13936,
+        "time": 712,
+        "verdict": null,
+        "memoryMeasurement": "CGROUP_V2_PEAK_KIB"
+      }
+    },
+    "elapsedSeconds": 1.516
+  },
+  {
+    "case": "case-filesystem-isolation",
+    "jv": [
+      "JV08"
+    ],
+    "status": "PASS",
+    "facts": {
+      "outcome": "EXECUTED",
+      "outputs": [
+        "CLEAN",
+        "CLEAN"
+      ],
+      "metrics": {
+        "message": null,
+        "memory": 14720,
+        "time": 34,
+        "verdict": null,
+        "memoryMeasurement": "CGROUP_V2_PEAK_KIB"
+      }
+    },
+    "elapsedSeconds": 1.002
+  },
+  {
+    "case": "setsid-descendants-cleaned-on-normal-exit",
+    "jv": [
+      "JV25"
+    ],
+    "status": "PASS",
+    "facts": {
+      "outcome": "EXECUTED",
+      "outputs": [
+        "done"
+      ],
+      "metrics": {
+        "message": null,
+        "memory": 21184,
+        "time": 72,
+        "verdict": null,
+        "memoryMeasurement": "CGROUP_V2_PEAK_KIB"
+      }
+    },
+    "elapsedSeconds": 0.811
+  },
+  {
+    "case": "shared-slot-token-dedup-and-restart",
+    "jv": [
+      "JV25"
+    ],
+    "status": "FAIL",
+    "errorType": "AssertionError",
+    "error": "",
+    "elapsedSeconds": 0.751
+  }
+]

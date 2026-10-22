@@ -1,0 +1,35 @@
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            BuildKit is currently disabled; enable it by removing the DOCKER_BUILDKIT=0
+            environment-variable.
+
+Sending build context to Docker daemon  77.84MB
+Step 1/10 : ARG BASE_IMAGE=eclipse-temurin:8-jdk-jammy
+Step 2/10 : FROM ${BASE_IMAGE}
+ ---> 185d4ef919b9
+Step 3/10 : RUN apt-get update && apt-get install -y --no-install-recommends python3     && rm -rf /var/lib/apt/lists/*     && mkdir -p /opt/helpers /opt/source /source /work/classes /receipt     && chown -R 10000:10000 /work && chmod 0700 /receipt
+ ---> Using cache
+ ---> b13dc7be94d9
+Step 4/10 : COPY src/main/java/com/codeoj/codeojbackendcodesandbox/service/impl/nativejava/*.java /opt/source/
+ ---> Using cache
+ ---> 3e0ca37ff203
+Step 5/10 : RUN javac -encoding UTF-8 -d /opt/helpers /opt/source/*.java && rm -rf /opt/source
+ ---> Using cache
+ ---> c7c6ff814b98
+Step 6/10 : COPY isolation/supervisor.py /opt/codeoj/supervisor.py
+ ---> Using cache
+ ---> 54619e81a30d
+Step 7/10 : RUN chmod 0555 /opt/codeoj/supervisor.py
+ ---> Using cache
+ ---> f1368295eab6
+Step 8/10 : WORKDIR /tmp
+ ---> Using cache
+ ---> b742b738b5a4
+Step 9/10 : ENTRYPOINT ["python3", "/opt/codeoj/supervisor.py"]
+ ---> Using cache
+ ---> 4273964e4b8b
+Step 10/10 : LABEL codeoj.isolation.protocol="1"
+ ---> Running in a351029449fc
+ ---> Removed intermediate container a351029449fc
+ ---> 2d0bfaae67ff
+Successfully built 2d0bfaae67ff
+Successfully tagged codeoj-isolation:local

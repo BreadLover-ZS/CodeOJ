@@ -1,0 +1,532 @@
+[
+  {
+    "case": "current administrator reads private question",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/question/get?id=2113151465448411137",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 0,
+    "expected": "allowed"
+  },
+  {
+    "case": "owner reads private question",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/question/get?id=2113151465448411137",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 0,
+    "expected": "allowed"
+  },
+  {
+    "case": "ordinary non-owner cannot read private question",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/question/get?id=2113151465448411137",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "anonymous private question is unauthenticated",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/question/get?id=2113151465448411137",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 40100,
+    "expected": "unauthenticated"
+  },
+  {
+    "case": "public question view remains readable",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/question/get/vo?id=2113151465448411137",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 0,
+    "expected": "allowed"
+  },
+  {
+    "case": "current administrator updates question",
+    "status": "PASS",
+    "method": "POST",
+    "path": "/question/update",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 0,
+    "expected": "allowed"
+  },
+  {
+    "case": "current administrator lists private questions",
+    "status": "PASS",
+    "method": "POST",
+    "path": "/question/list/page",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 0,
+    "expected": "allowed"
+  },
+  {
+    "case": "current administrator manages users",
+    "status": "PASS",
+    "method": "POST",
+    "path": "/user/list/page",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 0,
+    "expected": "allowed"
+  },
+  {
+    "case": "current administrator sees judge operations",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/admin/operations",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 0,
+    "expected": "allowed"
+  },
+  {
+    "case": "current administrator reads another users submission",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/submissions/2113151467239378945",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 0,
+    "expected": "allowed"
+  },
+  {
+    "case": "ordinary session initially has no user management role",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/user/get?id=2113151463980425218",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "promotion applies to same old ordinary Session",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/user/get?id=2113151463980425218",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 0,
+    "expected": "allowed"
+  },
+  {
+    "case": "promotion applies across service boundary",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/question/get?id=2113151465448411137",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 0,
+    "expected": "allowed"
+  },
+  {
+    "case": "administrator contest control before demotion",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/contests/2113151477016301570?admin=true",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 0,
+    "expected": "allowed"
+  },
+  {
+    "case": "F03 revoked administrator cannot read private judge cases",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/question/get?id=2113151465448411137",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "F03 revoked administrator cannot update question",
+    "status": "PASS",
+    "method": "POST",
+    "path": "/question/update",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "revoked administrator cannot edit another owners question",
+    "status": "PASS",
+    "method": "POST",
+    "path": "/question/edit",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "revoked administrator cannot delete another owners question",
+    "status": "PASS",
+    "method": "POST",
+    "path": "/question/delete",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "revoked administrator cannot list hidden questions",
+    "status": "PASS",
+    "method": "POST",
+    "path": "/question/list/page",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "revoked administrator cannot manage contest",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/contests/2113151477016301570?admin=true",
+    "via": "gateway",
+    "httpStatus": 403,
+    "businessCode": 40300,
+    "expected": "forbidden"
+  },
+  {
+    "case": "revoked administrator cannot read another users submission",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/submissions/2113151467239378945",
+    "via": "gateway",
+    "httpStatus": 403,
+    "businessCode": 40300,
+    "expected": "forbidden"
+  },
+  {
+    "case": "revoked administrator legacy submission list remains sanitized",
+    "status": "PASS",
+    "method": "POST",
+    "path": "/question/question_submit/list/page",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 0,
+    "expected": "allowed"
+  },
+  {
+    "case": "owner legacy submission list retains own source",
+    "status": "PASS",
+    "method": "POST",
+    "path": "/question/question_submit/list/page",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 0,
+    "expected": "allowed"
+  },
+  {
+    "case": "revoked administrator denied /admin/operations",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/admin/operations",
+    "via": "gateway",
+    "httpStatus": 403,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "revoked administrator denied /admin/operations/1",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/admin/operations/1",
+    "via": "gateway",
+    "httpStatus": 403,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "revoked administrator denied /admin/operations/1/retry",
+    "status": "PASS",
+    "method": "POST",
+    "path": "/admin/operations/1/retry",
+    "via": "gateway",
+    "httpStatus": 403,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "revoked administrator denied /user/get?id=2113151463980425218",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/user/get?id=2113151463980425218",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "revoked administrator denied /user/get/vo?id=2113151463980425218",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/user/get/vo?id=2113151463980425218",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "revoked administrator denied /user/list/page",
+    "status": "PASS",
+    "method": "POST",
+    "path": "/user/list/page",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "revoked administrator denied /user/add",
+    "status": "PASS",
+    "method": "POST",
+    "path": "/user/add",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "revoked administrator denied /user/update",
+    "status": "PASS",
+    "method": "POST",
+    "path": "/user/update",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "revoked administrator denied /user/delete",
+    "status": "PASS",
+    "method": "POST",
+    "path": "/user/delete",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "direct question service enforces revocation",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/question/get?id=2113151465448411137",
+    "via": "question",
+    "httpStatus": 200,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "direct user service enforces revocation",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/user/get?id=2113151463980425218",
+    "via": "user",
+    "httpStatus": 200,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "owner still edits own question",
+    "status": "PASS",
+    "method": "POST",
+    "path": "/question/edit",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 0,
+    "expected": "allowed"
+  },
+  {
+    "case": "banned old owner Session denied /question/get?id=2113151465448411137",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/question/get?id=2113151465448411137",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "banned old owner Session denied /question/edit",
+    "status": "PASS",
+    "method": "POST",
+    "path": "/question/edit",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "banned old owner Session denied /question/delete",
+    "status": "PASS",
+    "method": "POST",
+    "path": "/question/delete",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "banned old owner Session denied /question/add",
+    "status": "PASS",
+    "method": "POST",
+    "path": "/question/add",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "banned old owner Session denied /question/question_submit/do",
+    "status": "PASS",
+    "method": "POST",
+    "path": "/question/question_submit/do",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "banned old owner Session denied /user/get/login",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/user/get/login",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "banned old owner Session denied /user/update/my",
+    "status": "PASS",
+    "method": "POST",
+    "path": "/user/update/my",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "unban restores owner access without relogin",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/question/get?id=2113151465448411137",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 0,
+    "expected": "allowed"
+  },
+  {
+    "case": "logically deleted owner loses question access",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/question/get?id=2113151465448411137",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 40100,
+    "expected": "unauthenticated"
+  },
+  {
+    "case": "logically deleted owner loses local profile access",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/user/get/login",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 40100,
+    "expected": "unauthenticated"
+  },
+  {
+    "case": "user service outage never falls back to old administrator",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/question/get?id=2113151465448411137",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 50000,
+    "expected": "unavailable"
+  },
+  {
+    "case": "user service outage prevents privileged update",
+    "status": "PASS",
+    "method": "POST",
+    "path": "/question/update",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 50000,
+    "expected": "unavailable"
+  },
+  {
+    "case": "revocation survives user service restart",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/question/get?id=2113151465448411137",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 40101,
+    "expected": "forbidden"
+  },
+  {
+    "case": "current administrator still works after restart",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/question/get?id=2113151465448411137",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 0,
+    "expected": "allowed"
+  },
+  {
+    "case": "regrant applies to original Session",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/question/get?id=2113151465448411137",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 0,
+    "expected": "allowed"
+  },
+  {
+    "case": "regranted administrator can update",
+    "status": "PASS",
+    "method": "POST",
+    "path": "/question/update",
+    "via": "gateway",
+    "httpStatus": 200,
+    "businessCode": 0,
+    "expected": "allowed"
+  },
+  {
+    "case": "gateway rejects unauthenticated internal endpoint",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/user/inner/get/id?userId=2113151463221256194",
+    "via": "gateway",
+    "httpStatus": 403,
+    "businessCode": null,
+    "expected": "internal_denied"
+  },
+  {
+    "case": "direct service rejects unauthenticated internal endpoint",
+    "status": "PASS",
+    "method": "GET",
+    "path": "/user/inner/get/id?userId=2113151463221256194",
+    "via": "user",
+    "httpStatus": 403,
+    "businessCode": null,
+    "expected": "internal_denied"
+  }
+]

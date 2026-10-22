@@ -1,0 +1,519 @@
+[
+  {
+    "case": "fixtures",
+    "jv": [],
+    "status": "PASS",
+    "facts": {
+      "users": 8,
+      "practiceQuestionId": "2113151818743054338",
+      "fixtureOnly": true
+    },
+    "elapsedSeconds": 0.93,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 34
+    }
+  },
+  {
+    "case": "submission-idempotency",
+    "jv": [
+      "JV01"
+    ],
+    "status": "PASS",
+    "facts": {
+      "identicalReplaySameId": true,
+      "differentContentHttp": 409,
+      "authorityRows": 1
+    },
+    "elapsedSeconds": 2.02,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 36
+    }
+  },
+  {
+    "case": "api-crash-commit-windows",
+    "jv": [
+      "JV02"
+    ],
+    "status": "PASS",
+    "facts": {
+      "beforeCommitApiSigkill": true,
+      "beforeCommitNoAuthorityOrOutbox": true,
+      "afterCommitApiSigkill": true,
+      "persistedOutboxRecovered": true
+    },
+    "elapsedSeconds": 19.74,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 38
+    }
+  },
+  {
+    "case": "publisher-return-confirm-loss-disconnect",
+    "jv": [
+      "JV03"
+    ],
+    "status": "PASS",
+    "facts": {
+      "realReturnPersisted": true,
+      "realPublisherConfirmFramesDropped": 1,
+      "unknownAttemptPreserved": true,
+      "disconnectedBrokerRecovered": true
+    },
+    "elapsedSeconds": 34.2,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 48
+    }
+  },
+  {
+    "case": "two-consumers-precise-lock-observer",
+    "jv": [
+      "JV04"
+    ],
+    "status": "PASS",
+    "facts": {
+      "actualInnoDbLockWaitObserved": true,
+      "triggerWindowObserved": true,
+      "judgeProcesses": 2,
+      "effectiveAttempts": 1,
+      "brokerDuplicateDeliveries": 2,
+      "claimGateSeconds": 2,
+      "actualFeignReadTimeoutMs": 5000,
+      "replacesMisconfiguredPrimaryFaultGate": true
+    },
+    "elapsedSeconds": 6.2,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 56
+    }
+  },
+  {
+    "case": "worker-sigkill-token-generation-fence",
+    "jv": [
+      "JV05",
+      "JV20"
+    ],
+    "status": "PASS",
+    "facts": {
+      "runningWorkerSigkill": true,
+      "leaseRecoveredWithoutTimeMutation": true,
+      "oldHeartbeatRejected": true,
+      "oldResultRejected": true,
+      "staleGenerationRedelivered": true,
+      "attempts": 2,
+      "oldTokenDigest": "129db45f8ea7"
+    },
+    "elapsedSeconds": 27.99,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 58
+    }
+  },
+  {
+    "case": "commit-before-ack-redelivery",
+    "jv": [
+      "JV06"
+    ],
+    "status": "PASS",
+    "facts": {
+      "resultCommittedBeforeBrokerAck": true,
+      "consumerAckFramesDropped": 1,
+      "workerSigkillAndBrokerRedelivery": true,
+      "attempts": 1,
+      "resultEvents": 1
+    },
+    "elapsedSeconds": 22.52,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 65
+    }
+  },
+  {
+    "case": "limited-registration",
+    "jv": [
+      "JV09"
+    ],
+    "status": "PASS",
+    "facts": {
+      "contestId": "2113152291420123137",
+      "concurrentUsers": 8,
+      "functionalRequestsNotLoadTest": true,
+      "confirmed": 2,
+      "remainingCapacity": 0,
+      "identityStableOnRetry": true,
+      "ledgerRows": 2
+    },
+    "elapsedSeconds": 5.14,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 72
+    }
+  },
+  {
+    "case": "reservation-api-crash-before-db",
+    "jv": [
+      "JV10"
+    ],
+    "status": "PASS",
+    "facts": {
+      "apiSigkillAfterRedisBeforeDbCommit": true,
+      "noDbRequestBeforeRestart": true,
+      "sameRequestIdRecovered": true,
+      "sameEventIdRecovered": true,
+      "status": "CONFIRMED"
+    },
+    "elapsedSeconds": 12.22,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 74
+    }
+  },
+  {
+    "case": "confirmation-marker-failure",
+    "jv": [
+      "JV11"
+    ],
+    "status": "PASS",
+    "facts": {
+      "dbConfirmedRedisConfirmedBeforeDbMarker": true,
+      "fixtureSqlFailureInjected": true,
+      "retryCompletesMarker": true,
+      "capacityDeductedOnce": true
+    },
+    "elapsedSeconds": 11.14,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 78
+    }
+  },
+  {
+    "case": "redis-down-confirmation-and-release",
+    "jv": [
+      "JV11",
+      "JV22"
+    ],
+    "status": "PASS",
+    "facts": {
+      "dbConfirmationCommittedWhileRedisUnavailable": true,
+      "confirmedMarkRecovered": true,
+      "capacityDeductedOnce": true,
+      "dbTerminalCommittedBeforeRedisRelease": true,
+      "releasePendingDurableDuringOutage": true,
+      "releasedExactlyOnceAfterRecovery": true,
+      "unknownApiStatusesRecorded": [
+        202,
+        503
+      ]
+    },
+    "elapsedSeconds": 51.47,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 80
+    }
+  },
+  {
+    "case": "reservation-before-close-consume-after",
+    "jv": [
+      "JV12"
+    ],
+    "status": "PASS",
+    "facts": {
+      "requestId": "2113152639589330945",
+      "reservedBeforeClose": true,
+      "actualMqConsumptionAfterClose": true,
+      "newReservationAfterCloseHttp": 409
+    },
+    "elapsedSeconds": 10.21,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 86
+    }
+  },
+  {
+    "case": "registration-cancel-race",
+    "jv": [
+      "JV13"
+    ],
+    "status": "PASS",
+    "facts": {
+      "cancelRacedWithRegistrationHttp": true,
+      "cancelCommitted": true,
+      "qualificationInvalid": true,
+      "postCancelNewRequestRejected": true,
+      "capacity": 2,
+      "confirmedHistory": 0
+    },
+    "elapsedSeconds": 3.14,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 88
+    }
+  },
+  {
+    "case": "submission-cancel-race",
+    "jv": [
+      "JV13"
+    ],
+    "status": "PASS",
+    "facts": {
+      "actualSubmitCancelRace": true,
+      "concurrentRequests": 6,
+      "newSubmissionsAfterCancellation": 0,
+      "postCancelNewKeyHttp": 409,
+      "acceptedBeforeCancel": 0
+    },
+    "elapsedSeconds": 9.23,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 90
+    }
+  },
+  {
+    "case": "private-snapshot-and-submission-permissions",
+    "jv": [
+      "JV14"
+    ],
+    "status": "PASS",
+    "facts": {
+      "unregisteredPrivateStatementHiddenAfterStart": true,
+      "unregisteredSubmissionDenied": true,
+      "snapshotNotAccessibleThroughLegacyQuestion": true,
+      "adminFlagCannotGrantRole": true,
+      "otherUsersSubmissionDenied": true,
+      "internalEndpointsDeniedViaGatewayAndDirect": true
+    },
+    "elapsedSeconds": 12.08,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 92
+    }
+  },
+  {
+    "case": "accepted-snapshot-edited-before-execution",
+    "jv": [
+      "JV15"
+    ],
+    "status": "PASS",
+    "facts": {
+      "acceptedBeforeSourceEdit": true,
+      "contestAC": true,
+      "newPracticeWA": true,
+      "snapshotHashUnchanged": true,
+      "practiceAcceptedNumUnchanged": true,
+      "fixtureQuestionIndependent": true
+    },
+    "elapsedSeconds": 16.24,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 94
+    }
+  },
+  {
+    "case": "budget-exhaustion-manual-recovery",
+    "jv": [
+      "JV19"
+    ],
+    "status": "PASS",
+    "facts": {
+      "platformFailuresExhaustedAt": 3,
+      "needsAttentionWasNotWa": true,
+      "retryWithoutBudgetHttp": 409,
+      "explicitFiniteRetryCompletesAc": true,
+      "attemptHistory": 4,
+      "auditRows": 2
+    },
+    "elapsedSeconds": 12.05,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 99
+    }
+  },
+  {
+    "case": "confirmed-unclaimed-recovery",
+    "jv": [
+      "JV21"
+    ],
+    "status": "PASS",
+    "facts": {
+      "confirmedButUnclaimedOverThreshold": true,
+      "generationBefore": 1,
+      "generationAfter": 2,
+      "businessScannerRecovered": true,
+      "effectiveAttempts": 1
+    },
+    "elapsedSeconds": 35.48,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 103
+    }
+  },
+  {
+    "case": "late-confirm-after-release",
+    "jv": [
+      "JV22"
+    ],
+    "status": "PASS",
+    "facts": {
+      "dbFailedBeforeRelease": true,
+      "realLateConsumerAfterRelease": true,
+      "duplicateLateEvents": 2,
+      "qualifications": 0,
+      "stockBeforeRelease": 1,
+      "stockAfterDuplicates": 2
+    },
+    "elapsedSeconds": 6.18,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 108
+    }
+  },
+  {
+    "case": "cancel-committed-redis-down",
+    "jv": [
+      "JV23"
+    ],
+    "status": "PASS",
+    "facts": {
+      "cancellationCommittedWhileRedisDown": true,
+      "lateRealConsumerCannotConfirm": true,
+      "newQualificationCount": 0,
+      "redisGateClosedAfterRecovery": true,
+      "reclaimRecovered": true,
+      "newRequestHttp": 409,
+      "cancelResponseMayBeUnknown": 503
+    },
+    "elapsedSeconds": 37.06,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 110
+    }
+  },
+  {
+    "case": "ledger-initialization-loss-persistence",
+    "jv": [
+      "JV24",
+      "JV28"
+    ],
+    "status": "PASS",
+    "facts": {
+      "initializationRetriesNeverResetStock": true,
+      "partialLedgerLossPausesNotEmptyInventory": true,
+      "reconcileHttpOnLoss": 503,
+      "fixtureOriginalLedgerRestoredForCleanup": true,
+      "persistentKeyTtls": [
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "clockSkewNotIncludedInThisCase": true
+    },
+    "elapsedSeconds": 5.21,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 114
+    }
+  },
+  {
+    "case": "complete-redis-ledger-loss",
+    "jv": [
+      "JV24"
+    ],
+    "status": "PASS",
+    "facts": {
+      "completeLedgerLossDetected": true,
+      "unknownNeverBecomesEmptyStock": true,
+      "stockNotReinitialized": true,
+      "authorityQualificationRetained": true,
+      "reconcileHttp": 503
+    },
+    "elapsedSeconds": 3.97,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 116
+    }
+  },
+  {
+    "case": "mysql-clock-skew-both-directions",
+    "jv": [
+      "JV24"
+    ],
+    "status": "PASS",
+    "facts": {
+      "mysqlSessionOnlyClockOffsetsSeconds": [
+        10,
+        -10
+      ],
+      "positiveAndNegativeSkewPause": true,
+      "reservationsCreated": 0,
+      "stockNotReset": true,
+      "hostClockUnchanged": true
+    },
+    "elapsedSeconds": 26.81,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 118
+    }
+  },
+  {
+    "case": "score-race-rebuild-finalization",
+    "jv": [
+      "JV16",
+      "JV17",
+      "JV18",
+      "JV26",
+      "JV27"
+    ],
+    "status": "PASS",
+    "facts": {
+      "contestId": "2113153373739290625",
+      "controlledAcceptedAtFixture": true,
+      "timestampFixtureScope": "5 HTTP submissions retimed only in isolated DB to produce exact hand-calculated ties; not claimed as natural HTTP timing",
+      "initialAllZeroRank": 1,
+      "intermediateTwoUsersTieAtRank": 1,
+      "sameUserTwoProblemsActuallyRunningConcurrently": true,
+      "finalRanks": [
+        1,
+        2,
+        3,
+        3
+      ],
+      "crossPageZeroRanks": [
+        3,
+        3
+      ],
+      "actualAcceptedBeforeDeadlineCompletedAfter": true,
+      "pendingFinishHttp": 409,
+      "rebuildSqlFailureHttp": 503,
+      "rollbackPreservedVersion": 1,
+      "firstLateScoreDeliveryDuringRebuild": true,
+      "atomicVersionObserved": 2,
+      "finalVersion": 2
+    },
+    "elapsedSeconds": 54.88,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 125
+    }
+  },
+  {
+    "case": "practice-spec-frozen-at-acceptance",
+    "jv": [
+      "JV29"
+    ],
+    "status": "PASS",
+    "facts": {
+      "actualPracticeApiAndMq": true,
+      "queuedBeforeEditUsesOldSpec": "AC",
+      "newSubmissionUsesNewSpec": "WA",
+      "immutableSpecHashesDiffer": true
+    },
+    "elapsedSeconds": 6.01,
+    "caseNameEvidence": {
+      "file": "full-matrix-lock-fixed/native/run.json",
+      "eventIndex": 133
+    }
+  }
+]

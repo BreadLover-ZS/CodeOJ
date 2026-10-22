@@ -1,0 +1,27 @@
+{
+  "contestId": "2113150929059872770",
+  "contestVersion": "12",
+  "status": "FINISHED",
+  "ruleVersion": "FIRST_AC_V1",
+  "projectionVersion": "2",
+  "activeProjectionVersion": "2",
+  "revision": "11",
+  "cacheEpoch": "0",
+  "finalVersion": "2",
+  "asOf": "2026-10-22T06:13:47.703449Z",
+  "pendingCount": "0",
+  "projectionPendingCount": "0",
+  "final": true,
+  "versionState": "FINAL",
+  "page": 0,
+  "pageSize": 20,
+  "total": "1",
+  "entries": [
+    {
+      "userId": "2113150927562506241",
+      "solvedCount": 1,
+      "achievedAt": "2026-10-22T06:10:51.644002Z",
+      "rank": "1"
+    }
+  ]
+}

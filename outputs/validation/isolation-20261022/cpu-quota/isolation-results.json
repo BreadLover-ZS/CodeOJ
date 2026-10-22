@@ -1,0 +1,15 @@
+[
+  {
+    "case": "cpu",
+    "jv": [
+      "JV08"
+    ],
+    "status": "PASS",
+    "facts": {
+      "configuredNanoCpus": 1000000000,
+      "kernelThrottledPeriodsObserved": 1,
+      "fourBusyThreadsBoundedByQuotaAndDeadline": true
+    },
+    "elapsedSeconds": 5.446
+  }
+]

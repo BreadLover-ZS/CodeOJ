@@ -1,0 +1,421 @@
+[
+  {
+    "id": "JV01",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "submission-idempotency",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV02",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "api-crash-commit-windows",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV03",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "publisher-return-confirm-loss-disconnect",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV04",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "two-consumers-precise-lock-observer",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV05",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "worker-sigkill-token-generation-fence",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV06",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "commit-before-ack-redelivery",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV07",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "isolation",
+        "case": "real-java-and-cgroup-metrics",
+        "status": "PASS"
+      },
+      {
+        "group": "isolation",
+        "case": "wall-deadline",
+        "status": "PASS"
+      },
+      {
+        "group": "isolation",
+        "case": "stdout-budget",
+        "status": "PASS"
+      },
+      {
+        "group": "isolation",
+        "case": "stderr-budget",
+        "status": "PASS"
+      },
+      {
+        "group": "isolation",
+        "case": "stdin-not-read",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV08",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "isolation",
+        "case": "network-denied",
+        "status": "PASS"
+      },
+      {
+        "group": "isolation",
+        "case": "nonroot-no-capabilities-no-docker-socket",
+        "status": "PASS"
+      },
+      {
+        "group": "isolation",
+        "case": "readonly-root-artifacts-and-private-receipt",
+        "status": "PASS"
+      },
+      {
+        "group": "isolation",
+        "case": "bounded-tmpfs",
+        "status": "PASS"
+      },
+      {
+        "group": "isolation",
+        "case": "pid-cgroup-limit-and-descendant-cleanup",
+        "status": "PASS"
+      },
+      {
+        "group": "isolation",
+        "case": "cgroup-memory-limit",
+        "status": "PASS"
+      },
+      {
+        "group": "isolation",
+        "case": "case-filesystem-isolation",
+        "status": "PASS"
+      },
+      {
+        "group": "cpu",
+        "case": "cpu",
+        "status": "PASS"
+      },
+      {
+        "group": "pid-kernel",
+        "case": "pid",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV09",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "limited-registration",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV10",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "reservation-api-crash-before-db",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV11",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "confirmation-marker-failure",
+        "status": "PASS"
+      },
+      {
+        "group": "business",
+        "case": "redis-down-confirmation-and-release",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV12",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "reservation-before-close-consume-after",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV13",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "registration-cancel-race",
+        "status": "PASS"
+      },
+      {
+        "group": "business",
+        "case": "submission-cancel-race",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV14",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "private-snapshot-and-submission-permissions",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV15",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "accepted-snapshot-edited-before-execution",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV16",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "score-race-rebuild-finalization",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV17",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "score-race-rebuild-finalization",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV18",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "score-race-rebuild-finalization",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV19",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "budget-exhaustion-manual-recovery",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV20",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "worker-sigkill-token-generation-fence",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV21",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "confirmed-unclaimed-recovery",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV22",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "redis-down-confirmation-and-release",
+        "status": "PASS"
+      },
+      {
+        "group": "business",
+        "case": "late-confirm-after-release",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV23",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "cancel-committed-redis-down",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV24",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "ledger-initialization-loss-persistence",
+        "status": "PASS"
+      },
+      {
+        "group": "business",
+        "case": "complete-redis-ledger-loss",
+        "status": "PASS"
+      },
+      {
+        "group": "business",
+        "case": "mysql-clock-skew-both-directions",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV25",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "isolation",
+        "case": "pid-cgroup-limit-and-descendant-cleanup",
+        "status": "PASS"
+      },
+      {
+        "group": "isolation",
+        "case": "setsid-descendants-cleaned-on-normal-exit",
+        "status": "PASS"
+      },
+      {
+        "group": "isolation",
+        "case": "shared-slot-token-dedup-and-restart",
+        "status": "PASS"
+      },
+      {
+        "group": "isolation",
+        "case": "sigkill-manager-independent-deadline-recovery",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV26",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "score-race-rebuild-finalization",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV27",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "score-race-rebuild-finalization",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV28",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "ledger-initialization-loss-persistence",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV29",
+    "status": "PASS",
+    "evidence": [
+      {
+        "group": "business",
+        "case": "practice-spec-frozen-at-acceptance",
+        "status": "PASS"
+      }
+    ]
+  }
+]

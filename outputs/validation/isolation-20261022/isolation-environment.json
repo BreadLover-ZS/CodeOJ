@@ -1,0 +1,7 @@
+{
+  "docker": "/private/tmp/codeoj-isolation-20261022/docker-client/docker/docker",
+  "endpoint": "unix:///private/tmp/codeoj-isolation-20261022/instances/codeoj/sock/docker.sock",
+  "image": "sha256:b02caae51240956b35b6b1248ba359a51b56b154a308caff644b29e4862abaea",
+  "dockerConfig": "/private/tmp/codeoj-isolation-20261022/docker-config",
+  "baseImage": "eclipse-temurin@sha256:185d4ef919b98cd195690c33f3fd93bd49c66c70f0b662e54566c0dbaebea6ce"
+}
