@@ -1,0 +1,10 @@
+{
+  "checkedAt": "2026-10-22T05:28:56.049618+00:00",
+  "remainingOwnedProcessIds": [],
+  "privateStackDirectoriesRemoved": true,
+  "runtimeDirectoryRemoved": true,
+  "runtimeDirectory": "/private/tmp/codeoj-f03-20261022",
+  "privateStackDirectories": [
+    "/private/tmp/codeoj-native-stack-yvkxv8ih"
+  ]
+}

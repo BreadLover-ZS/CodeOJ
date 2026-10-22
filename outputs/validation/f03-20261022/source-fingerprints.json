@@ -1,0 +1,14 @@
+{
+  "baseCommit": "b29bee743dee13e44ca70253e13841a338628ce3",
+  "files": {
+    "codeoj-backend/codeoj-backend-service-client/src/main/java/com/codeoj/codeojbackendserviceclient/auth/SessionUserResolver.java": "b9f28b0ee9646596c5f793ae3a247f25c00cfb41ee2d0fc40b108721e4dc6293",
+    "codeoj-backend/codeoj-backend-service-client/src/main/java/com/codeoj/codeojbackendserviceclient/aop/AuthInterceptor.java": "642ebc404a090491d8223300dc8f4bfebed33cd1ab0d2ec1085b46227eabd115",
+    "codeoj-backend/codeoj-backend-service-client/src/main/java/com/codeoj/codeojbackendserviceclient/service/UserFeignClient.java": "bfc51204965700aff6a829ae447ca7320e0660446b6e41023117bce107cf8d06",
+    "codeoj-backend/codeoj-backend-user-service/src/main/java/com/codeoj/codeojbackenduserservice/service/impl/UserServiceImpl.java": "2cd7b9b194e71badab392609abfcc509ce28b54ac4b60e900f0d18737ea8820a",
+    "codeoj-backend/codeoj-backend-service-client/src/test/java/com/codeoj/codeojbackendserviceclient/auth/CurrentAccountAuthorizationTest.java": "f5ec0a4845632a1d64f1ce101fdb11049b47072458a7aa9cce03d3861849e656",
+    "codeoj-backend/codeoj-backend-user-service/src/test/java/com/codeoj/codeojbackenduserservice/service/CurrentUserServiceTest.java": "cac022901466613b0ea4ce811f3e472885dcf6fc8308a0a0d18322565be25252",
+    "scripts/local/check-current-permissions.py": "14362f43fdf0ffe2fbecc6e704a69da56845e0c5a3e2aea6d80a2ac1689f03c6",
+    "docs/contest/fix-current-permissions.md": "e77d6118cca44e0224a3468f6554f902f295a97dc8c5218df5402d116e675ad2",
+    "docs/contest/README.md": "6cb79ff811e533cc7f2735bd3177e3ffe71c6a9d38d52dc91a6f4d4f70ec2bdd"
+  }
+}

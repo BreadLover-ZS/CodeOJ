@@ -1,0 +1,298 @@
+{
+  "source": "backend-regression-opt-in.log; XML limited to suites actually run in that log",
+  "counts": {
+    "tests": 222,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "suites": 26,
+  "details": [
+    {
+      "module": "codeoj-backend-model",
+      "suite": {
+        "name": "com.codeoj.codeojbackendmodel.model.codesandbox.TextOutputComparatorTest",
+        "tests": "4",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.027"
+      }
+    },
+    {
+      "module": "codeoj-backend-gateway",
+      "suite": {
+        "name": "com.codeoj.codeojbackendgateway.ContestRouteTest",
+        "tests": "1",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.325"
+      }
+    },
+    {
+      "module": "codeoj-backend-service-client",
+      "suite": {
+        "name": "com.codeoj.codeojbackendserviceclient.auth.CurrentAccountAuthorizationTest",
+        "tests": "9",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.425"
+      }
+    },
+    {
+      "module": "codeoj-backend-service-client",
+      "suite": {
+        "name": "com.codeoj.codeojbackendserviceclient.filter.SessionAvailabilityFilterTest",
+        "tests": "4",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.011"
+      }
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "suite": {
+        "name": "com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardMessagingTest",
+        "tests": "8",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.444"
+      }
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "suite": {
+        "name": "com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardTest",
+        "tests": "25",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "2.427"
+      }
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "suite": {
+        "name": "com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardCacheTest",
+        "tests": "3",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.094"
+      }
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "suite": {
+        "name": "com.codeoj.codeojbackendquestionservice.contest.RegistrationMessagingTest",
+        "tests": "7",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.023"
+      }
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "suite": {
+        "name": "com.codeoj.codeojbackendquestionservice.contest.ContestCoreTest",
+        "tests": "22",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.393"
+      }
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "suite": {
+        "name": "com.codeoj.codeojbackendquestionservice.contest.RegistrationRedisIntegrationTest",
+        "tests": "30",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "1.678"
+      }
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "suite": {
+        "name": "com.codeoj.codeojbackendquestionservice.submission.outbox.OutboxRelayTest",
+        "tests": "3",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.003"
+      }
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "suite": {
+        "name": "com.codeoj.codeojbackendquestionservice.submission.SubmissionStatusAccessTest",
+        "tests": "3",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.056"
+      }
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "suite": {
+        "name": "com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcAdviceTest",
+        "tests": "2",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.003"
+      }
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "suite": {
+        "name": "com.codeoj.codeojbackendquestionservice.submission.ReliableExecutionTest",
+        "tests": "26",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.118"
+      }
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "suite": {
+        "name": "com.codeoj.codeojbackendquestionservice.submission.QuestionSubmitPrivacyTest",
+        "tests": "2",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.011"
+      }
+    },
+    {
+      "module": "codeoj-backend-question-service",
+      "suite": {
+        "name": "com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcContractTest",
+        "tests": "4",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.033"
+      }
+    },
+    {
+      "module": "codeoj-backend-user-service",
+      "suite": {
+        "name": "com.codeoj.codeojbackenduserservice.service.CurrentUserServiceTest",
+        "tests": "5",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.306"
+      }
+    },
+    {
+      "module": "codeoj-backend-judge-service",
+      "suite": {
+        "name": "com.codeoj.codeojbackendjudgeservice.rabbitmq.ReliableJudgeConsumerTest",
+        "tests": "3",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "2.305"
+      }
+    },
+    {
+      "module": "codeoj-backend-judge-service",
+      "suite": {
+        "name": "com.codeoj.codeojbackendjudgeservice.judge.SandboxResultMapperTest",
+        "tests": "5",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.01"
+      }
+    },
+    {
+      "module": "codeoj-backend-judge-service",
+      "suite": {
+        "name": "com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandboxTest",
+        "tests": "4",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.177"
+      }
+    },
+    {
+      "module": "codeoj-backend-judge-service",
+      "suite": {
+        "name": "com.codeoj.codeojbackendjudgeservice.judge.ReliableJudgeWorkerTest",
+        "tests": "7",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.239"
+      }
+    },
+    {
+      "module": "codeoj-backend-judge-service",
+      "suite": {
+        "name": "com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImplTest",
+        "tests": "3",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.009"
+      }
+    },
+    {
+      "module": "codeoj-backend-judge-service",
+      "suite": {
+        "name": "com.codeoj.codeojbackendjudgeservice.judge.strategy.JavaLanguageJudgeStrategyTest",
+        "tests": "6",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.003"
+      }
+    },
+    {
+      "module": "codeoj-backend-codesandbox",
+      "suite": {
+        "name": "com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandboxTest",
+        "tests": "31",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "8.292"
+      }
+    },
+    {
+      "module": "codeoj-backend-codesandbox",
+      "suite": {
+        "name": "com.codeoj.codeojbackendcodesandbox.service.impl.NativeReceiptTest",
+        "tests": "3",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.009"
+      }
+    },
+    {
+      "module": "codeoj-backend-codesandbox",
+      "suite": {
+        "name": "com.codeoj.codeojbackendcodesandbox.service.impl.NativeExecutionIdentityTest",
+        "tests": "2",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.383"
+      }
+    }
+  ]
+}

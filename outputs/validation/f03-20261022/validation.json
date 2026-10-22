@@ -1,0 +1,19 @@
+{
+  "backendTests": {
+    "tests": 222,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "httpPermissionChecks": {
+    "pass": 53,
+    "fail": 0
+  },
+  "practiceJudge": "AC",
+  "originalAcceptanceEvidenceUnchanged": true,
+  "fixtureSyntax": "PASS",
+  "evidenceJsonParse": "PASS",
+  "credentialPatternScan": "PASS",
+  "credentialScanScope": "40-character hex password/secret/cookie/authorization assignments and long Bearer values; not a complete secret audit",
+  "temporaryResourcesRemoved": true
+}

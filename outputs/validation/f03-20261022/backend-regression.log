@@ -1,0 +1,746 @@
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-common:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ com.codeoj:codeoj-backend-microservice:0.0.1-SNAPSHOT, /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/pom.xml, line 44, column 20
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-model:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ com.codeoj:codeoj-backend-microservice:0.0.1-SNAPSHOT, /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/pom.xml, line 44, column 20
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-gateway:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ com.codeoj:codeoj-backend-microservice:0.0.1-SNAPSHOT, /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/pom.xml, line 44, column 20
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-service-client:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ com.codeoj:codeoj-backend-microservice:0.0.1-SNAPSHOT, /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/pom.xml, line 44, column 20
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-question-service:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ com.codeoj:codeoj-backend-microservice:0.0.1-SNAPSHOT, /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/pom.xml, line 44, column 20
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-user-service:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ com.codeoj:codeoj-backend-microservice:0.0.1-SNAPSHOT, /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/pom.xml, line 44, column 20
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-judge-service:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ com.codeoj:codeoj-backend-microservice:0.0.1-SNAPSHOT, /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/pom.xml, line 44, column 20
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-codesandbox:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ com.codeoj:codeoj-backend-microservice:0.0.1-SNAPSHOT, /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/pom.xml, line 44, column 20
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-microservice:pom:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ line 44, column 20
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] codeoj-backend-microservice                                        [pom]
+[INFO] codeoj-backend-common                                              [jar]
+[INFO] codeoj-backend-model                                               [jar]
+[INFO] codeoj-backend-gateway                                             [jar]
+[INFO] codeoj-backend-service-client                                      [jar]
+[INFO] codeoj-backend-question-service                                    [jar]
+[INFO] codeoj-backend-user-service                                        [jar]
+[INFO] codeoj-backend-judge-service                                       [jar]
+[INFO] codeoj-backend-codesandbox                                         [jar]
+[INFO] 
+[INFO] ---------------< com.codeoj:codeoj-backend-microservice >---------------
+[INFO] Building codeoj-backend-microservice 0.0.1-SNAPSHOT                [1/9]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] ------------------< com.codeoj:codeoj-backend-common >------------------
+[INFO] Building codeoj-backend-common 0.0.1-SNAPSHOT                      [2/9]
+[INFO]   from codeoj-backend-common/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ codeoj-backend-common ---
+[INFO] skip non existing resourceDirectory /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-common/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ codeoj-backend-common ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ codeoj-backend-common ---
+[INFO] skip non existing resourceDirectory /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-common/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ codeoj-backend-common ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ codeoj-backend-common ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ codeoj-backend-common ---
+[INFO] Building jar: /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-common/target/codeoj-backend-common-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] ------------------< com.codeoj:codeoj-backend-model >-------------------
+[INFO] Building codeoj-backend-model 0.0.1-SNAPSHOT                       [3/9]
+[INFO]   from codeoj-backend-model/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ codeoj-backend-model ---
+[INFO] skip non existing resourceDirectory /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-model/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ codeoj-backend-model ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ codeoj-backend-model ---
+[INFO] skip non existing resourceDirectory /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-model/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ codeoj-backend-model ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ codeoj-backend-model ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.codeoj.codeojbackendmodel.model.codesandbox.TextOutputComparatorTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.018 s -- in com.codeoj.codeojbackendmodel.model.codesandbox.TextOutputComparatorTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ codeoj-backend-model ---
+[INFO] Building jar: /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-model/target/codeoj-backend-model-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] -----------------< com.codeoj:codeoj-backend-gateway >------------------
+[INFO] Building codeoj-backend-gateway 0.0.1-SNAPSHOT                     [4/9]
+[INFO]   from codeoj-backend-gateway/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ codeoj-backend-gateway ---
+[INFO] Copying 2 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ codeoj-backend-gateway ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ codeoj-backend-gateway ---
+[INFO] skip non existing resourceDirectory /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-gateway/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ codeoj-backend-gateway ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ codeoj-backend-gateway ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.codeoj.codeojbackendgateway.ContestRouteTest
+13:23:06.846 [main] DEBUG reactor.util.Loggers - Using Slf4j logging framework
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.248 s -- in com.codeoj.codeojbackendgateway.ContestRouteTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ codeoj-backend-gateway ---
+[INFO] Building jar: /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-gateway/target/codeoj-backend-gateway-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:2.6.13:repackage (repackage) @ codeoj-backend-gateway ---
+[INFO] Replacing main artifact with repackaged archive
+[INFO] 
+[INFO] --------------< com.codeoj:codeoj-backend-service-client >--------------
+[INFO] Building codeoj-backend-service-client 0.0.1-SNAPSHOT              [5/9]
+[INFO]   from codeoj-backend-service-client/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ codeoj-backend-service-client ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ codeoj-backend-service-client ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 9 source files to /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-service-client/target/classes
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ codeoj-backend-service-client ---
+[INFO] skip non existing resourceDirectory /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-service-client/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ codeoj-backend-service-client ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 2 source files to /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-service-client/target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ codeoj-backend-service-client ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.codeoj.codeojbackendserviceclient.auth.CurrentAccountAuthorizationTest
+13:23:08.769 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'userFeignClient' of type [null] on target object [com.codeoj.codeojbackendserviceclient.aop.AuthInterceptor@64ba3208] or target class [class com.codeoj.codeojbackendserviceclient.aop.AuthInterceptor] to value [com.codeoj.codeojbackendserviceclient.service.UserFeignClient$MockitoMock$1400095668@158a3b2e]
+13:23:08.785 [main] DEBUG org.springframework.aop.aspectj.annotation.ReflectiveAspectJAdvisorFactory - Found AspectJ method: public java.lang.Object com.codeoj.codeojbackendserviceclient.aop.AuthInterceptor.doInterceptor(org.aspectj.lang.ProceedingJoinPoint,com.codeoj.codeojbackendcommon.annotation.AuthCheck) throws java.lang.Throwable
+13:23:08.879 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'userFeignClient' of type [null] on target object [com.codeoj.codeojbackendserviceclient.aop.AuthInterceptor@514eedd8] or target class [class com.codeoj.codeojbackendserviceclient.aop.AuthInterceptor] to value [com.codeoj.codeojbackendserviceclient.service.UserFeignClient$MockitoMock$1400095668@617fe9e1]
+13:23:08.879 [main] DEBUG org.springframework.aop.aspectj.annotation.ReflectiveAspectJAdvisorFactory - Found AspectJ method: public java.lang.Object com.codeoj.codeojbackendserviceclient.aop.AuthInterceptor.doInterceptor(org.aspectj.lang.ProceedingJoinPoint,com.codeoj.codeojbackendcommon.annotation.AuthCheck) throws java.lang.Throwable
+13:23:08.881 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'userFeignClient' of type [null] on target object [com.codeoj.codeojbackendserviceclient.aop.AuthInterceptor@5b800468] or target class [class com.codeoj.codeojbackendserviceclient.aop.AuthInterceptor] to value [com.codeoj.codeojbackendserviceclient.service.UserFeignClient$MockitoMock$1400095668@2e185cd7]
+13:23:08.881 [main] DEBUG org.springframework.aop.aspectj.annotation.ReflectiveAspectJAdvisorFactory - Found AspectJ method: public java.lang.Object com.codeoj.codeojbackendserviceclient.aop.AuthInterceptor.doInterceptor(org.aspectj.lang.ProceedingJoinPoint,com.codeoj.codeojbackendcommon.annotation.AuthCheck) throws java.lang.Throwable
+13:23:08.884 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'userFeignClient' of type [null] on target object [com.codeoj.codeojbackendserviceclient.aop.AuthInterceptor@60094a13] or target class [class com.codeoj.codeojbackendserviceclient.aop.AuthInterceptor] to value [com.codeoj.codeojbackendserviceclient.service.UserFeignClient$MockitoMock$1400095668@5aceec94]
+13:23:08.884 [main] DEBUG org.springframework.aop.aspectj.annotation.ReflectiveAspectJAdvisorFactory - Found AspectJ method: public java.lang.Object com.codeoj.codeojbackendserviceclient.aop.AuthInterceptor.doInterceptor(org.aspectj.lang.ProceedingJoinPoint,com.codeoj.codeojbackendcommon.annotation.AuthCheck) throws java.lang.Throwable
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.346 s -- in com.codeoj.codeojbackendserviceclient.auth.CurrentAccountAuthorizationTest
+[INFO] Running com.codeoj.codeojbackendserviceclient.filter.SessionAvailabilityFilterTest
+13:23:08.892 [main] WARN com.codeoj.codeojbackendserviceclient.filter.SessionAvailabilityFilter - Redis-dependent request unavailable: type=org.springframework.data.redis.RedisConnectionFailureException
+13:23:08.896 [main] WARN com.codeoj.codeojbackendserviceclient.filter.SessionAvailabilityFilter - Redis-dependent request unavailable: type=javax.servlet.ServletException
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.010 s -- in com.codeoj.codeojbackendserviceclient.filter.SessionAvailabilityFilterTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ codeoj-backend-service-client ---
+[INFO] Building jar: /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-service-client/target/codeoj-backend-service-client-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] -------------< com.codeoj:codeoj-backend-question-service >-------------
+[INFO] Building codeoj-backend-question-service 0.0.1-SNAPSHOT            [6/9]
+[INFO]   from codeoj-backend-question-service/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ codeoj-backend-question-service ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ codeoj-backend-question-service ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ codeoj-backend-question-service ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ codeoj-backend-question-service ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ codeoj-backend-question-service ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardMessagingTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.389 s -- in com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardMessagingTest
+[INFO] Running com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardTest
+[INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.755 s -- in com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardTest
+[INFO] Running com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardCacheTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.069 s -- in com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardCacheTest
+[INFO] Running com.codeoj.codeojbackendquestionservice.contest.RegistrationMessagingTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in com.codeoj.codeojbackendquestionservice.contest.RegistrationMessagingTest
+[INFO] Running com.codeoj.codeojbackendquestionservice.contest.ContestCoreTest
+[INFO] Tests run: 22, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.246 s -- in com.codeoj.codeojbackendquestionservice.contest.ContestCoreTest
+[INFO] Running com.codeoj.codeojbackendquestionservice.contest.RegistrationRedisIntegrationTest
+[WARNING] Tests run: 30, Failures: 0, Errors: 0, Skipped: 30, Time elapsed: 0.001 s -- in com.codeoj.codeojbackendquestionservice.contest.RegistrationRedisIntegrationTest
+[INFO] Running com.codeoj.codeojbackendquestionservice.submission.outbox.OutboxRelayTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in com.codeoj.codeojbackendquestionservice.submission.outbox.OutboxRelayTest
+[INFO] Running com.codeoj.codeojbackendquestionservice.submission.SubmissionStatusAccessTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.058 s -- in com.codeoj.codeojbackendquestionservice.submission.SubmissionStatusAccessTest
+[INFO] Running com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcAdviceTest
+ERROR c.c.c.s.ExecutionRpcAdvice - Execution authority unavailable: [java.lang.IllegalStateException, com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcAdviceTest.authorityDiagnosticsRetainTypeLocationAndSqlCodeWithoutSensitiveMessages:15, java.sql.SQLException, com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcAdviceTest.authorityDiagnosticsRetainTypeLocationAndSqlCodeWithoutSensitiveMessages:15, SQL_STATE=23000;CODE=1062]
+ERROR c.c.c.s.ExecutionRpcAdvice - Execution authority unavailable: [java.lang.IllegalStateException, com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcAdviceTest.untrustedSqlStateIsReducedToUnknown:25, java.sql.SQLException, com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcAdviceTest.untrustedSqlStateIsReducedToUnknown:25, SQL_STATE=UNKNOWN;CODE=0]
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcAdviceTest
+[INFO] Running com.codeoj.codeojbackendquestionservice.submission.ReliableExecutionTest
+[INFO] Tests run: 26, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.109 s -- in com.codeoj.codeojbackendquestionservice.submission.ReliableExecutionTest
+[INFO] Running com.codeoj.codeojbackendquestionservice.submission.QuestionSubmitPrivacyTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s -- in com.codeoj.codeojbackendquestionservice.submission.QuestionSubmitPrivacyTest
+[INFO] Running com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcContractTest
+WARN c.c.c.f.InnerApiAuthFilter - 内部接口鉴权失败，来源: 127.0.0.1
+ERROR c.c.c.s.ExecutionRpcAdvice - Execution authority unavailable: [java.lang.IllegalStateException, com.codeoj.codeojbackendquestionservice.controller.inner.QuestionInnerController.claimExecution:80]
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.035 s -- in com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcContractTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[WARNING] Tests run: 135, Failures: 0, Errors: 0, Skipped: 30
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ codeoj-backend-question-service ---
+[INFO] Building jar: /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-question-service/target/codeoj-backend-question-service-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:2.6.13:repackage (repackage) @ codeoj-backend-question-service ---
+[INFO] Replacing main artifact with repackaged archive
+[INFO] 
+[INFO] ---------------< com.codeoj:codeoj-backend-user-service >---------------
+[INFO] Building codeoj-backend-user-service 0.0.1-SNAPSHOT                [7/9]
+[INFO]   from codeoj-backend-user-service/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ codeoj-backend-user-service ---
+[INFO] Copying 2 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ codeoj-backend-user-service ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 7 source files to /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-user-service/target/classes
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ codeoj-backend-user-service ---
+[INFO] skip non existing resourceDirectory /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-user-service/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ codeoj-backend-user-service ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 2 source files to /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-user-service/target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ codeoj-backend-user-service ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.codeoj.codeojbackenduserservice.service.CurrentUserServiceTest
+13:23:13.134 [main] DEBUG org.apache.ibatis.logging.LogFactory - Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter.
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.312 s -- in com.codeoj.codeojbackenduserservice.service.CurrentUserServiceTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ codeoj-backend-user-service ---
+[INFO] Building jar: /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-user-service/target/codeoj-backend-user-service-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:2.6.13:repackage (repackage) @ codeoj-backend-user-service ---
+[INFO] Replacing main artifact with repackaged archive
+[INFO] 
+[INFO] --------------< com.codeoj:codeoj-backend-judge-service >---------------
+[INFO] Building codeoj-backend-judge-service 0.0.1-SNAPSHOT               [8/9]
+[INFO]   from codeoj-backend-judge-service/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ codeoj-backend-judge-service ---
+[INFO] Copying 2 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ codeoj-backend-judge-service ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ codeoj-backend-judge-service ---
+[INFO] skip non existing resourceDirectory /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-judge-service/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ codeoj-backend-judge-service ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ codeoj-backend-judge-service ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.codeoj.codeojbackendjudgeservice.rabbitmq.ReliableJudgeConsumerTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.292 s -- in com.codeoj.codeojbackendjudgeservice.rabbitmq.ReliableJudgeConsumerTest
+[INFO] Running com.codeoj.codeojbackendjudgeservice.judge.SandboxResultMapperTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s -- in com.codeoj.codeojbackendjudgeservice.judge.SandboxResultMapperTest
+[INFO] Running com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandboxTest
+[ERROR] Tests run: 4, Failures: 0, Errors: 4, Skipped: 0, Time elapsed: 0.016 s <<< FAILURE! -- in com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandboxTest
+[ERROR] com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandboxTest.httpFailureIsPlatformError -- Time elapsed: 0.008 s <<< ERROR!
+java.net.SocketException: Operation not permitted
+	at sun.nio.ch.Net.bind0(Native Method)
+	at sun.nio.ch.Net.bind(Net.java:461)
+	at sun.nio.ch.Net.bind(Net.java:453)
+	at sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:222)
+	at sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:85)
+	at sun.net.httpserver.ServerImpl.<init>(ServerImpl.java:141)
+	at sun.net.httpserver.HttpServerImpl.<init>(HttpServerImpl.java:50)
+	at sun.net.httpserver.DefaultHttpServerProvider.createHttpServer(DefaultHttpServerProvider.java:35)
+	at com.sun.net.httpserver.HttpServer.create(HttpServer.java:130)
+	at com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandboxTest.endpoint(RemoteCodeSandboxTest.java:23)
+	at com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandboxTest.httpFailureIsPlatformError(RemoteCodeSandboxTest.java:62)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:725)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutInvocation.proceed(TimeoutInvocation.java:46)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:149)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:140)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:84)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(ExecutableInvoker.java:115)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.lambda$invoke$0(ExecutableInvoker.java:105)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:104)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:98)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:214)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:210)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:135)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:66)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.util.ArrayList.forEach(ArrayList.java:1259)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.util.ArrayList.forEach(ArrayList.java:1259)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:107)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:88)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:67)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:52)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
+	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.executeWithoutCancellationToken(LauncherAdapter.java:60)
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.execute(LauncherAdapter.java:52)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:203)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:168)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:136)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+[ERROR] com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandboxTest.deadlineDoesNotRetryOrBecomeUserTle -- Time elapsed: 0 s <<< ERROR!
+java.net.SocketException: Operation not permitted
+	at sun.nio.ch.Net.bind0(Native Method)
+	at sun.nio.ch.Net.bind(Net.java:461)
+	at sun.nio.ch.Net.bind(Net.java:453)
+	at sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:222)
+	at sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:85)
+	at sun.net.httpserver.ServerImpl.<init>(ServerImpl.java:141)
+	at sun.net.httpserver.HttpServerImpl.<init>(HttpServerImpl.java:50)
+	at sun.net.httpserver.DefaultHttpServerProvider.createHttpServer(DefaultHttpServerProvider.java:35)
+	at com.sun.net.httpserver.HttpServer.create(HttpServer.java:130)
+	at com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandboxTest.endpoint(RemoteCodeSandboxTest.java:23)
+	at com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandboxTest.deadlineDoesNotRetryOrBecomeUserTle(RemoteCodeSandboxTest.java:71)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:725)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutInvocation.proceed(TimeoutInvocation.java:46)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:149)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:140)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:84)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(ExecutableInvoker.java:115)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.lambda$invoke$0(ExecutableInvoker.java:105)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:104)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:98)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:214)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:210)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:135)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:66)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.util.ArrayList.forEach(ArrayList.java:1259)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.util.ArrayList.forEach(ArrayList.java:1259)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:107)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:88)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:67)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:52)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
+	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.executeWithoutCancellationToken(LauncherAdapter.java:60)
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.execute(LauncherAdapter.java:52)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:203)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:168)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:136)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+[ERROR] com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandboxTest.oldOrEmptyResponseIsNotSuccess -- Time elapsed: 0.001 s <<< ERROR!
+java.net.SocketException: Operation not permitted
+	at sun.nio.ch.Net.bind0(Native Method)
+	at sun.nio.ch.Net.bind(Net.java:461)
+	at sun.nio.ch.Net.bind(Net.java:453)
+	at sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:222)
+	at sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:85)
+	at sun.net.httpserver.ServerImpl.<init>(ServerImpl.java:141)
+	at sun.net.httpserver.HttpServerImpl.<init>(HttpServerImpl.java:50)
+	at sun.net.httpserver.DefaultHttpServerProvider.createHttpServer(DefaultHttpServerProvider.java:35)
+	at com.sun.net.httpserver.HttpServer.create(HttpServer.java:130)
+	at com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandboxTest.endpoint(RemoteCodeSandboxTest.java:23)
+	at com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandboxTest.oldOrEmptyResponseIsNotSuccess(RemoteCodeSandboxTest.java:67)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:725)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutInvocation.proceed(TimeoutInvocation.java:46)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:149)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:140)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:84)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(ExecutableInvoker.java:115)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.lambda$invoke$0(ExecutableInvoker.java:105)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:104)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:98)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:214)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:210)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:135)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:66)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.util.ArrayList.forEach(ArrayList.java:1259)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.util.ArrayList.forEach(ArrayList.java:1259)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:107)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:88)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:67)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:52)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
+	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.executeWithoutCancellationToken(LauncherAdapter.java:60)
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.execute(LauncherAdapter.java:52)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:203)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:168)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:136)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+[ERROR] com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandboxTest.acceptsStructuredResponse -- Time elapsed: 0.001 s <<< ERROR!
+java.net.SocketException: Operation not permitted
+	at sun.nio.ch.Net.bind0(Native Method)
+	at sun.nio.ch.Net.bind(Net.java:461)
+	at sun.nio.ch.Net.bind(Net.java:453)
+	at sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:222)
+	at sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:85)
+	at sun.net.httpserver.ServerImpl.<init>(ServerImpl.java:141)
+	at sun.net.httpserver.HttpServerImpl.<init>(HttpServerImpl.java:50)
+	at sun.net.httpserver.DefaultHttpServerProvider.createHttpServer(DefaultHttpServerProvider.java:35)
+	at com.sun.net.httpserver.HttpServer.create(HttpServer.java:130)
+	at com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandboxTest.endpoint(RemoteCodeSandboxTest.java:23)
+	at com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandboxTest.acceptsStructuredResponse(RemoteCodeSandboxTest.java:57)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:725)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutInvocation.proceed(TimeoutInvocation.java:46)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:149)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:140)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:84)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(ExecutableInvoker.java:115)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.lambda$invoke$0(ExecutableInvoker.java:105)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:104)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:98)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:214)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:210)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:135)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:66)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.util.ArrayList.forEach(ArrayList.java:1259)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.util.ArrayList.forEach(ArrayList.java:1259)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:107)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:88)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:67)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:52)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
+	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.executeWithoutCancellationToken(LauncherAdapter.java:60)
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.execute(LauncherAdapter.java:52)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:203)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:168)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:136)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+
+[INFO] Running com.codeoj.codeojbackendjudgeservice.judge.ReliableJudgeWorkerTest
+13:23:16.183 [pool-2-thread-1] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox request: language=java, cases=1
+13:23:16.391 [pool-2-thread-1] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox response: outcome=CE
+13:23:16.399 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox request: language=java, cases=1
+13:23:16.399 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox response: outcome=RE
+13:23:16.402 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox request: language=java, cases=1
+13:23:16.404 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox request: language=java, cases=1
+13:23:16.405 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox response: outcome=PLATFORM_ERROR
+13:23:16.407 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox request: language=java, cases=1
+13:23:16.407 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox response: outcome=CE
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.249 s -- in com.codeoj.codeojbackendjudgeservice.judge.ReliableJudgeWorkerTest
+[INFO] Running com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImplTest
+13:23:16.440 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'questionFeignClient' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl@3c1e3314] or target class [class com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl] to value [Mock for QuestionFeignClient, hashCode: 1266093632]
+13:23:16.440 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'codeSandboxFactory' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl@3c1e3314] or target class [class com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl] to value [Mock for CodeSandboxFactory, hashCode: 426288284]
+13:23:16.440 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'judgeManager' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl@3c1e3314] or target class [class com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl] to value [com.codeoj.codeojbackendjudgeservice.judge.JudgeManager@6a1ebcff]
+13:23:16.440 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'type' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl@3c1e3314] or target class [class com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl] to value [remote]
+13:23:16.447 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox request: language=java, cases=1
+13:23:16.447 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox response: outcome=EXECUTED
+13:23:16.449 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'questionFeignClient' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl@63a5e46c] or target class [class com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl] to value [Mock for QuestionFeignClient, hashCode: 2123269713]
+13:23:16.449 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'codeSandboxFactory' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl@63a5e46c] or target class [class com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl] to value [Mock for CodeSandboxFactory, hashCode: 1240412896]
+13:23:16.449 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'judgeManager' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl@63a5e46c] or target class [class com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl] to value [com.codeoj.codeojbackendjudgeservice.judge.JudgeManager@271f18d3]
+13:23:16.449 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'type' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl@63a5e46c] or target class [class com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl] to value [remote]
+13:23:16.450 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox request: language=java, cases=1
+13:23:16.450 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox response: outcome=CE
+13:23:16.452 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'questionFeignClient' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl@308a6984] or target class [class com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl] to value [Mock for QuestionFeignClient, hashCode: 1723278948]
+13:23:16.452 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'codeSandboxFactory' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl@308a6984] or target class [class com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl] to value [Mock for CodeSandboxFactory, hashCode: 2050275256]
+13:23:16.452 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'judgeManager' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl@308a6984] or target class [class com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl] to value [com.codeoj.codeojbackendjudgeservice.judge.JudgeManager@58cd06cb]
+13:23:16.453 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'type' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl@308a6984] or target class [class com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl] to value [remote]
+13:23:16.454 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox request: language=java, cases=1
+13:23:16.454 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox response: outcome=PLATFORM_ERROR
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.043 s -- in com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImplTest
+[INFO] Running com.codeoj.codeojbackendjudgeservice.judge.strategy.JavaLanguageJudgeStrategyTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.codeoj.codeojbackendjudgeservice.judge.strategy.JavaLanguageJudgeStrategyTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Errors: 
+[ERROR]   RemoteCodeSandboxTest.acceptsStructuredResponse:57->endpoint:23 » Socket Operation not permitted
+[ERROR]   RemoteCodeSandboxTest.deadlineDoesNotRetryOrBecomeUserTle:71->endpoint:23 » Socket Operation not permitted
+[ERROR]   RemoteCodeSandboxTest.httpFailureIsPlatformError:62->endpoint:23 » Socket Operation not permitted
+[ERROR]   RemoteCodeSandboxTest.oldOrEmptyResponseIsNotSuccess:67->endpoint:23 » Socket Operation not permitted
+[INFO] 
+[ERROR] Tests run: 28, Failures: 0, Errors: 4, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for codeoj-backend-microservice 0.0.1-SNAPSHOT:
+[INFO] 
+[INFO] codeoj-backend-microservice ........................ SUCCESS [  0.000 s]
+[INFO] codeoj-backend-common .............................. SUCCESS [  0.707 s]
+[INFO] codeoj-backend-model ............................... SUCCESS [  0.433 s]
+[INFO] codeoj-backend-gateway ............................. SUCCESS [  0.940 s]
+[INFO] codeoj-backend-service-client ...................... SUCCESS [  1.582 s]
+[INFO] codeoj-backend-question-service .................... SUCCESS [  3.276 s]
+[INFO] codeoj-backend-user-service ........................ SUCCESS [  1.352 s]
+[INFO] codeoj-backend-judge-service ....................... FAILURE [  2.928 s]
+[INFO] codeoj-backend-codesandbox ......................... SKIPPED
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  11.374 s
+[INFO] Finished at: 2026-10-22T13:23:16+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.4:test (default-test) on project codeoj-backend-judge-service: 
+[ERROR] 
+[ERROR] See /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-judge-service/target/surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+[ERROR] 
+[ERROR] After correcting the problems, you can resume the build with the command
+[ERROR]   mvn <args> -rf :codeoj-backend-judge-service

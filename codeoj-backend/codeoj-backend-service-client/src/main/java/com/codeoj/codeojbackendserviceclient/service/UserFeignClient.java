@@ -1,7 +1,6 @@
 package com.codeoj.codeojbackendserviceclient.service;
 
-import com.codeoj.codeojbackendcommon.common.ErrorCode;
-import com.codeoj.codeojbackendcommon.exception.BusinessException;
+import com.codeoj.codeojbackendserviceclient.auth.SessionUserResolver;
 import com.codeoj.codeojbackendmodel.model.entity.User;
 import com.codeoj.codeojbackendmodel.model.enums.UserRoleEnum;
 import com.codeoj.codeojbackendmodel.model.vo.UserVO;
@@ -13,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.List;
-
-import static com.codeoj.codeojbackendcommon.constant.UserConstant.USER_LOGIN_STATE;
 
 /**
  * 用户服务
@@ -46,18 +43,11 @@ public interface UserFeignClient {
      * @return
      */
     default User getLoginUser(HttpServletRequest request) {
-        // 先判断是否已登录
-        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
-        User currentUser = (User) userObj;
-        if (currentUser == null || currentUser.getId() == null) {
-            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
-        }
-        // 可以考虑在这里做全局权限校验
-        return currentUser;
+        return SessionUserResolver.requireLogin(request, this::getById);
     }
 
     /**
-     * 是否为管理员
+     * 是否为管理员。参数必须来自本次请求的现时账号查询，不能传入 Session 快照。
      *
      * @param user
      * @return
