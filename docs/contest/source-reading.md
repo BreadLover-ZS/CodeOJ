@@ -11,7 +11,7 @@
 | Lua 部分执行与旧快照 | `RegistrationService.recoverUnknown` → `RedisRegistrationLedger.repair/check` → Lua mutation/apply/repair/anchored；`RegistrationTransactions.persist` + V005 唯一序号 | 48 项 Redis/H2 测试含故障注入；check-registration-recovery.py 的真实 MySQL/Redis/MQ 故障场景 |
 | 未知与恢复 | `OutboxStore.claim/record` → 每次 publish_attempt → `RegistrationMaintenance` → `recover`/`reconcile` → 人工 review | RegistrationMessagingTest、RegistrationRedisIntegrationTest |
 | 乱序计分 | `ExecutionCommands.complete` → JUDGE_RESULT → `ScoreboardMessaging.Relay` → `ScoreboardConsumer` → `ScoreboardTransactions.project` → 用户锁+题目最早AC+重算 → 业务回执 | ScoreboardTest、ScoreboardMessagingTest |
-| 并列/缓存 | `ScoreboardController.page` → `ScoreboardService.page` → snapshot元数据 → 版本化页缓存/SQL排序 → 严格领先人数+1 | ScoreboardCacheTest、ScoreboardTest；mock浏览器检查 |
+| 并列/缓存 | `ScoreboardController.page` → `ScoreboardService.page` → snapshot元数据 → 版本化页缓存/SQL排序 → 严格领先人数+1 | ScoreboardCacheTest、ScoreboardTest；真实 Chrome 主链及榜单故障矩阵 |
 | 最终结算 | `ContestLifecycle.tick` → FINALIZING → 报名关闭对账/待定解决 → scoreboard rebuild → 新版本校验/切换 → finish → finalVersion | ScoreboardTest、RegistrationRedisIntegrationTest；原生演示 |
 
 后端包根目录：`codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/`。测试位于同模块 `src/test/java/`；判题服务、沙箱、模型协议分别在各自 Maven 模块。迁移按 `mysql-init/migrations/V001` 到 `V005` 阅读；V005 的可空历史序号、唯一约束和关闸升级见[报名恢复](registration-recovery.md)。
@@ -26,6 +26,6 @@ J5最终版本与历史版本是投影；有效提交、结果摘要、发布快
 
 真实服务联调入口为 `scripts/test-native-stack.sh`，运行时与实例均临时隔离；[J6记录](j6-native-local.md)说明真实HTTP范围、代理故障、会话503与恢复边界。
 
-本机入口与历史证据见 [J5](j5-local.md)、[J4](j4-local.md)。2026-10-22 新增[隔离执行器](isolated-sandbox.md)及[JV01—JV29 全套本机复验](../../outputs/validation/isolation-20261022/jv-matrix.md)；Nacos、部署、压测和本机证据之外的故障场景仍需独立验证。
+当前版本与范围见[状态页](../status.md)，完整复验证据为 [2026-10-23 JV01—JV29](../../outputs/validation/overall-acceptance-20261023/jv-matrix.md)。[隔离执行器](isolated-sandbox.md)是当前配置入口；[J5](j5-local.md)、[J4](j4-local.md)保留阶段历史。Nacos、部署、压测和本机证据之外的故障场景仍需独立验证。
 
-报名补充自测：画出“扣库存后、用户映射前报错”的状态，解释意图记录如何保留原身份；再画出旧快照中 A 与数据库中 B 条数相等的反例，说明最大持久序号及唯一约束如何分别处理恢复与并发窗口。最后解释为什么小容量比赛也可能触及 10000 条累计账本限制。当前修复与新证据见[报名恢复说明](registration-recovery.md)和[验证报告](../../outputs/validation/registration-fix-20261022/report.md)，不能用历史整套 JV 代替本轮执行范围。
+报名补充自测：画出“扣库存后、用户映射前报错”的状态，解释意图记录如何保留原身份；再画出旧快照中 A 与数据库中 B 条数相等的反例，说明最大持久序号及唯一约束如何分别处理恢复与并发窗口。最后解释为什么小容量比赛也可能触及 10000 条累计账本限制。当前修复与新证据见[报名恢复说明](registration-recovery.md)和[验证报告](../../outputs/validation/registration-fix-20261022/report.md)；随后完整本机复验又重跑了该专项和全套 JV，见[本轮报名事实](../../outputs/validation/overall-acceptance-20261023/registration-recovery/registration-facts.json)。

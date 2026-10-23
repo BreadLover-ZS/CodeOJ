@@ -1,6 +1,6 @@
 # 报名恢复：旧快照、Lua 异常与受理上限
 
-2026-10-22。本次修复对应[细致审查中的 R1/R2](../../outputs/validation/registration-review-20261022/report.md)，并补齐用户提出的“请求入口 Lua 执行失败”窗口。当前代码、[新增故障测试](../../codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationRedisIntegrationTest.java)及[本轮验证](../../outputs/validation/registration-fix-20261022/report.md)是判断依据；历史报告保留当时结果。
+2026-10-22。本次修复对应[细致审查中的 R1/R2](../../outputs/validation/registration-review-20261022/report.md)，并补齐用户提出的“请求入口 Lua 执行失败”窗口。当前代码、[新增故障测试](../../codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationRedisIntegrationTest.java)及[本轮验证](../../outputs/validation/registration-fix-20261022/report.md)是判断依据；历史报告保留当时结果。2026-10-23 又在该修复基线上完成[整体本机复验](../../outputs/validation/overall-acceptance-20261023/report.md)，其中[报名专项](../../outputs/validation/overall-acceptance-20261023/registration-recovery/registration-facts.json)也重新执行；当前汇总见[状态页](../status.md)。
 
 ## 1. 旧快照不能仅靠条数判断
 

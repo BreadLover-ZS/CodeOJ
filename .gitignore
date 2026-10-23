@@ -5,3 +5,8 @@
 
 # 本机个人产物（简历等，不纳入仓库）
 output/
+
+# Python 工具缓存；验收日志和事实 JSON 继续纳入版本管理
+__pycache__/
+*.pyc
+*.pyo

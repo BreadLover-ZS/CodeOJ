@@ -1,17 +1,17 @@
 # 运行、演示与交接
 
-开发与验收版本：`bc3514261767d07cc3be7c3ab681afc894e25c02`（2026-10-22，已推送）。该历史运行证据保留原样。当前源码另有[报名恢复修复](registration-recovery.md)，需要 V005，运行结果按[对应新报告](../../outputs/validation/registration-fix-20261022/report.md)判断。原报告中“尚未提交”描述的是验收当时状态；历史文件与指纹保留原样。
+最近完整本机验收源码基线：`19f77fc11c50aac34fa189a7b39bcb27fad9b139`（2026-10-23），包含[报名恢复修复](registration-recovery.md)与 V005；证据归档提交为 `bbfd4af`。版本、验收数量和后置事项统一见[当前状态](../status.md)。历史报告的“尚未提交”、临时路径与指纹保留归档当时含义。
 
 完整启动的新入口见 [Mac 完整本机启动](local-startup.md)：`./scripts/local-stack.sh verify`，或 `serve` 前台演示。下文保留各层单独复验入口。
 
 ## 1. 接手时先核对
 
-从仓库根目录运行 `git status --short`、`git log -2 --oneline`。先阅读[验收报告](../../outputs/validation/isolation-20261022/report.md)、[逐项矩阵](../../outputs/validation/isolation-20261022/jv-matrix.md)与[隔离配置](isolated-sandbox.md)。
+从仓库根目录运行 `git status --short`、`git log -2 --oneline`。先阅读[验收报告](../../outputs/validation/overall-acceptance-20261023/report.md)、[逐项矩阵](../../outputs/validation/overall-acceptance-20261023/jv-matrix.md)与[隔离配置](isolated-sandbox.md)。
 
 | 已有证据 | 结论边界 |
 | --- | --- |
-| 后端 230 tests，0失败/错误/跳过 | 当轮实际选中的 27 个测试类；默认 infrastructure 标签未计入，不能以任意一次默认 test 的计数替代 |
-| JV01—JV29 全 PASS、17 项隔离检查、53 项权限检查、真实 Chrome 主链 | 固定版本、本机独立 MySQL/Redis/MQ、单 Docker daemon、受控功能/故障样例 |
+| 后端 248 tests，0失败/错误/跳过 | 当轮实际选中的 27 个测试类；默认 infrastructure 标签未计入，不能以任意一次默认 test 的计数替代 |
+| JV01—JV29 全 PASS、16 项隔离检查、53 项权限检查、真实 Chrome 8 项检查 | 固定版本、本机独立 MySQL/Redis/MQ、单 Docker daemon、受控功能/故障样例 |
 | 旧队列排空切换、临时环境清理通过 | 私有实例演练；不代表生产发布/回滚；原 VM、私有数据、镜像与运行时目录已删除 |
 | 后置 | Nacos、部署、压测、多宿主容量、断电与内核逃逸认证 |
 
@@ -47,7 +47,7 @@ PLAYWRIGHT_MODULE=/absolute/path/to/playwright PLAYWRIGHT_BROWSER_CHANNEL=chrome
 
 ## 4. 重新执行隔离及完整验收
 
-先准备自己的私有 Linux Docker/cgroup v2 环境，按[隔离说明](isolated-sandbox.md)构建镜像并记录不可变 ID、私有 Unix socket 与 CLI 绝对路径。使用专用空 CLI 配置；受信管理器可调用 socket，用户容器不挂载 socket。VM 的建立和删除目前由外层管理，仓库脚本不自动安装 Lima 或管理用户其他 VM。
+先准备自己的私有 Linux Docker/cgroup v2 环境，按[隔离说明](isolated-sandbox.md)构建镜像并记录不可变 ID、私有 Unix socket 与 CLI 绝对路径。使用专用空 CLI 配置；受信管理器可调用 socket，用户容器不挂载 socket。下列分层检查入口的 VM 由外层管理；Mac 完整启动入口 `local-stack.sh` 会使用 private-isolation.py 准备和删除自己的临时 VM，不管理用户其他 VM。
 
 创建私有 JSON（替换占位值；不提交私有配置）：
 
@@ -65,18 +65,19 @@ npm --prefix codeoj-frontend ci
 env VUE_APP_API_BASE_URL= npm --prefix codeoj-frontend run build
 
 python3 -B scripts/local/check-isolation.py --docker /absolute/path/to/docker --endpoint unix:///private/socket/docker.sock --image sha256:REPLACE_WITH_64_HEX --docker-config /private/empty/docker-config --evidence /new/evidence/probes
-# all 默认执行 15 项；CPU/PID 内核证据必须分别运行，不能仅凭 all 宣称 17 项。
+# 当前 all 执行 16 项，已含 CPU 节流和 PID 内核观测；下面两行仅用于独立排查，不重复累计数量。
 python3 -B scripts/local/check-isolation.py --docker /absolute/path/to/docker --endpoint unix:///private/socket/docker.sock --image sha256:REPLACE_WITH_64_HEX --docker-config /private/empty/docker-config --focus cpu --evidence /new/evidence/cpu
 python3 -B scripts/local/check-isolation.py --docker /absolute/path/to/docker --endpoint unix:///private/socket/docker.sock --image sha256:REPLACE_WITH_64_HEX --docker-config /private/empty/docker-config --focus pid --evidence /new/evidence/pid
 
 PLAYWRIGHT_MODULE=/absolute/path/to/playwright PLAYWRIGHT_BROWSER_CHANNEL=chrome python3 -B scripts/local/run-final-acceptance.py --runtimes /private/tmp/codeoj-new-runtimes --environment /private/isolation-environment.json --evidence /new/evidence/full-matrix
 CODEOJ_SANDBOX_MODE=isolated CODEOJ_DOCKER_BINARY=/absolute/path/to/docker CODEOJ_DOCKER_ENDPOINT=unix:///private/socket/docker.sock CODEOJ_ISOLATION_IMAGE=sha256:REPLACE_WITH_64_HEX python3 -B scripts/local/check-current-permissions.py --runtimes /private/tmp/codeoj-new-runtimes --evidence /new/evidence/permissions
+python3 -B scripts/local/check-registration-recovery.py --runtimes /private/tmp/codeoj-new-runtimes --evidence /new/evidence/registration-recovery
 python3 -B scripts/local/check-judge-cutover.py --runtimes /private/tmp/codeoj-new-runtimes --environment /private/isolation-environment.json --evidence /new/evidence/cutover
 ```
 
 REPLACE_WITH_64_HEX 与 JSON 中的尖括号是占位说明，运行前必须替换。PID 检查使用受信只读观察容器挂载 VM cgroup，观察容器从不运行用户代码。完整业务入口依赖仓库历史目录中的只读 Python 夹具，不能只拷贝 `scripts/local/`；`--skip-baseline` 仅排查使用，不能当完整浏览器验收。
 
-这些入口不自动重建全套 JV 汇总：逐项阅读新 JSON/日志，再按[矩阵](../../outputs/validation/isolation-20261022/jv-matrix.md)合并业务、隔离、权限及切换证据，分别保留 PASS/FAIL/BLOCKED/UNTESTED。230 项 Maven 回归还包括显式启用的真实 Redis+H2 与 native observation 测试，不包含在上面的 `-DskipTests package` 中。
+这些入口不自动重建全套 JV 汇总：逐项阅读新 JSON/日志，再按[矩阵](../../outputs/validation/overall-acceptance-20261023/jv-matrix.md)合并业务、隔离、权限及切换证据，分别保留 PASS/FAIL/BLOCKED/UNTESTED。报名专项不执行参赛代码；完整基线/浏览器使用 isolated，不以浏览器夹具的历史 native 文案判断模式。本次 248 项 Maven 回归还包括显式启用的真实 Redis+H2 与 native observation 测试，不包含在上面的 `-DskipTests package` 中。
 
 如需复现同口径后端回归，从新运行时 `runtimes.json` 的 `paths.redis` 取得本轮 Redis 可执行路径，替换下面占位值。在允许本地监听和 RSS 观测的环境运行，保存本轮日志；不借用既有 Redis，也不添加跳过失败用例的选项。
 

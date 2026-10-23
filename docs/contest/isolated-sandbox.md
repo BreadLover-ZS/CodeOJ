@@ -92,4 +92,4 @@ python3 -B scripts/local/run-final-acceptance.py \
 
 本机固定版本、单个 Docker daemon、共享本地登记目录、受控越界/故障样例的结果按证据报告。该边界不包含内核逃逸安全认证、任意恶意代码公开服务、跨宿主物理全局容量、状态盘被删、主机断电、Nacos、部署或压测。
 
-真实运行证据及本轮 JV 矩阵将归档到 `outputs/validation/isolation-20261022/`；只有实际执行结果才能关闭对应项。
+初轮证据保留在 `outputs/validation/isolation-20261022/`；最近完整本机复验见[2026-10-23 矩阵](../../outputs/validation/overall-acceptance-20261023/jv-matrix.md)，版本和边界统一见[状态页](../status.md)。只有对应版本的实际执行结果才能关闭验收项。
