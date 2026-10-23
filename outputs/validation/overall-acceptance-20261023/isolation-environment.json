@@ -1,0 +1,6 @@
+{
+  "docker": "/private/tmp/codeoj-overall-9r7sqmso/isolation/client/docker/docker",
+  "endpoint": "unix:///private/tmp/codeoj-overall-9r7sqmso/isolation/instances/codeoj/sock/docker.sock",
+  "image": "sha256:5d4bdb63cf15accd7caf2cd14290be952237a74e60ac302c4c6068a1ad4f134d",
+  "dockerConfig": "/private/tmp/codeoj-overall-9r7sqmso/isolation/docker-config"
+}

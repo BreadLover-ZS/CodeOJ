@@ -1,0 +1,913 @@
+{
+  "scope": "Real native MySQL/Redis/RabbitMQ, Spring Session, Gateway, Feign; static discovery, no Nacos; not load/production acceptance",
+  "sandboxMode": "isolated",
+  "isolationImage": "sha256:5d4bdb63cf15accd7caf2cd14290be952237a74e60ac302c4c6068a1ad4f134d",
+  "passed": true,
+  "ports": {
+    "mysql": 62425,
+    "redis": 62426,
+    "amqp": 62427,
+    "management": 62428,
+    "epmd": 62429,
+    "distribution": 62430,
+    "user": 62431,
+    "question": 62432,
+    "judge": 62433,
+    "sandbox": 62434,
+    "gateway": 62435,
+    "frontend": 62436,
+    "amqpProxy": 62467,
+    "judge2": 63532
+  },
+  "runtimeArchives": {
+    "mysql": {
+      "url": "https://cdn.mysql.com/Downloads/MySQL-8.0/mysql-8.0.46-macos15-arm64.tar.gz",
+      "verification": "sha256:6ca4a361a45f5019fbf6d500997986b4aaf6f0e30ff9c41179d1e8ecd635f3db",
+      "sha256": "6ca4a361a45f5019fbf6d500997986b4aaf6f0e30ff9c41179d1e8ecd635f3db"
+    },
+    "rabbitmq": {
+      "url": "https://github.com/rabbitmq/rabbitmq-server/releases/download/v4.3.6/rabbitmq-server-generic-unix-4.3.6.tar.xz",
+      "verification": "sha256:aa0ff5de9ff0136dc42eba21dc3a973cc3b286437cdba0f45556e890509c1614",
+      "sha256": "aa0ff5de9ff0136dc42eba21dc3a973cc3b286437cdba0f45556e890509c1614"
+    },
+    "erlang": {
+      "url": "https://ghcr.io/v2/homebrew/core/erlang/28/blobs/sha256:e37b0ce944f1e772767bb7b2fa8844076c3069754ce44c224f15d76fd39aed67",
+      "verification": "sha256:e37b0ce944f1e772767bb7b2fa8844076c3069754ce44c224f15d76fd39aed67",
+      "sha256": "e37b0ce944f1e772767bb7b2fa8844076c3069754ce44c224f15d76fd39aed67"
+    },
+    "openssl": {
+      "url": "https://ghcr.io/v2/homebrew/core/openssl/4/blobs/sha256:39fb74d25429fbb9794cf4327530ba458b97d0000406715270d3b0715bd6ba35",
+      "verification": "sha256:39fb74d25429fbb9794cf4327530ba458b97d0000406715270d3b0715bd6ba35",
+      "sha256": "39fb74d25429fbb9794cf4327530ba458b97d0000406715270d3b0715bd6ba35"
+    },
+    "redis": {
+      "url": "https://download.redis.io/releases/redis-6.2.24.tar.gz",
+      "verification": "sha256:c3f112749c7cb108597713469cc9beed305e91f036fba313ce8dcbad829f5821",
+      "sha256": "c3f112749c7cb108597713469cc9beed305e91f036fba313ce8dcbad829f5821"
+    }
+  },
+  "events": [
+    {
+      "at": "2026-10-23T06:35:01.123671+00:00",
+      "action": "PACKAGED_ARTIFACTS_MATCH_CURRENT_BUILD"
+    },
+    {
+      "at": "2026-10-23T06:35:02.705900+00:00",
+      "action": "MIGRATION_APPLIED",
+      "name": "V001__reliable_judging.sql"
+    },
+    {
+      "at": "2026-10-23T06:35:02.740358+00:00",
+      "action": "MIGRATION_APPLIED",
+      "name": "V002__contest_core.sql"
+    },
+    {
+      "at": "2026-10-23T06:35:02.785883+00:00",
+      "action": "MIGRATION_APPLIED",
+      "name": "V003__async_registration.sql"
+    },
+    {
+      "at": "2026-10-23T06:35:02.812002+00:00",
+      "action": "MIGRATION_APPLIED",
+      "name": "V004__contest_scoreboard.sql"
+    },
+    {
+      "at": "2026-10-23T06:35:02.828220+00:00",
+      "action": "MIGRATION_APPLIED",
+      "name": "V005__registration_recovery_fence.sql"
+    },
+    {
+      "at": "2026-10-23T06:35:04.821513+00:00",
+      "action": "INFRASTRUCTURE_READY",
+      "mysql": "8.0.46",
+      "rabbitmq": "4.3.6",
+      "erlang": "28.5.0.8",
+      "redis": "6.2.24"
+    },
+    {
+      "at": "2026-10-23T06:35:06.651672+00:00",
+      "action": "SERVICE_READY",
+      "service": "sandbox"
+    },
+    {
+      "at": "2026-10-23T06:35:09.380896+00:00",
+      "action": "SERVICE_READY",
+      "service": "user"
+    },
+    {
+      "at": "2026-10-23T06:35:12.718023+00:00",
+      "action": "SERVICE_READY",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-23T06:35:15.754498+00:00",
+      "action": "SERVICE_READY",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:35:18.178231+00:00",
+      "action": "SERVICE_READY",
+      "service": "gateway"
+    },
+    {
+      "at": "2026-10-23T06:35:18.178345+00:00",
+      "action": "REAL_AMQP_FAULT_PROXY_READY"
+    },
+    {
+      "at": "2026-10-23T06:35:19.062191+00:00",
+      "action": "REAL_SESSION_LOGIN_PASSED"
+    },
+    {
+      "at": "2026-10-23T06:35:24.658707+00:00",
+      "action": "ASYNC_REGISTRATION_CONFIRMED",
+      "requestId": "2113519640757321729"
+    },
+    {
+      "at": "2026-10-23T06:35:56.394628+00:00",
+      "action": "REAL_JUDGE_RESULT",
+      "submissionId": "2113519765781135361",
+      "verdict": "AC",
+      "case": "AC"
+    },
+    {
+      "at": "2026-10-23T06:35:58.315170+00:00",
+      "action": "REAL_JUDGE_RESULT",
+      "submissionId": "2113519775402868737",
+      "verdict": "AC",
+      "case": "COMMENT_AC"
+    },
+    {
+      "at": "2026-10-23T06:36:00.234653+00:00",
+      "action": "REAL_JUDGE_RESULT",
+      "submissionId": "2113519783455932417",
+      "verdict": "WA",
+      "case": "WA"
+    },
+    {
+      "at": "2026-10-23T06:36:01.523025+00:00",
+      "action": "REAL_JUDGE_RESULT",
+      "submissionId": "2113519791508996098",
+      "verdict": "CE",
+      "case": "CE"
+    },
+    {
+      "at": "2026-10-23T06:36:02.810061+00:00",
+      "action": "REAL_JUDGE_RESULT",
+      "submissionId": "2113519796915453954",
+      "verdict": "RE",
+      "case": "RE"
+    },
+    {
+      "at": "2026-10-23T06:36:02.846973+00:00",
+      "action": "REAL_SCOREBOARD_AND_ROLE_CHECK_PASSED"
+    },
+    {
+      "at": "2026-10-23T06:36:03.707745+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:36:05.149796+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "rabbitmq"
+    },
+    {
+      "at": "2026-10-23T06:36:06.673453+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "rabbitmq"
+    },
+    {
+      "at": "2026-10-23T06:36:09.707232+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:36:13.052821+00:00",
+      "action": "DURABLE_QUEUE_BROKER_RESTART_AND_DUPLICATE_PASSED",
+      "submissionId": "2113519806054842370"
+    },
+    {
+      "at": "2026-10-23T06:36:13.086748+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "sandbox"
+    },
+    {
+      "at": "2026-10-23T06:36:15.894157+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "sandbox"
+    },
+    {
+      "at": "2026-10-23T06:36:19.443289+00:00",
+      "action": "SANDBOX_FAILURE_AND_LEASE_RECOVERY_PASSED",
+      "submissionId": "2113519845376442370"
+    },
+    {
+      "at": "2026-10-23T06:36:19.517734+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "redis"
+    },
+    {
+      "at": "2026-10-23T06:36:29.839067+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "redis"
+    },
+    {
+      "at": "2026-10-23T06:36:37.085391+00:00",
+      "action": "REDIS_RESTART_SESSION_AND_LEDGER_RECOVERY_PASSED"
+    },
+    {
+      "at": "2026-10-23T06:37:43.994423+00:00",
+      "action": "REAL_BROWSER_PASSED"
+    },
+    {
+      "at": "2026-10-23T06:38:50.506470+00:00",
+      "action": "FINALIZATION_PASSED",
+      "projectionVersion": "2"
+    },
+    {
+      "at": "2026-10-23T06:38:50.506533+00:00",
+      "action": "CURRENT_ISOLATED_BROWSER_BASELINE_PASSED"
+    },
+    {
+      "at": "2026-10-23T06:38:50.506592+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "fixtures",
+      "jv": []
+    },
+    {
+      "at": "2026-10-23T06:38:51.432417+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:38:51.432511+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "submission-idempotency",
+      "jv": [
+        "JV01"
+      ]
+    },
+    {
+      "at": "2026-10-23T06:38:52.979208+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:38:52.979301+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "api-crash-commit-windows",
+      "jv": [
+        "JV02"
+      ]
+    },
+    {
+      "at": "2026-10-23T06:38:53.018583+00:00",
+      "action": "PROCESS_SIGKILL",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-23T06:39:01.716370+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-23T06:39:03.069415+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:39:04.172032+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "rabbitmq"
+    },
+    {
+      "at": "2026-10-23T06:39:04.276463+00:00",
+      "action": "PROCESS_SIGKILL",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-23T06:39:05.818423+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "rabbitmq"
+    },
+    {
+      "at": "2026-10-23T06:39:08.871474+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-23T06:39:12.332218+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:39:13.610407+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:39:13.610495+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "publisher-return-confirm-loss-disconnect",
+      "jv": [
+        "JV03"
+      ]
+    },
+    {
+      "at": "2026-10-23T06:39:14.759533+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:39:18.366853+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:39:20.571134+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:39:38.962356+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:39:41.209053+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "rabbitmq"
+    },
+    {
+      "at": "2026-10-23T06:39:44.173891+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "rabbitmq"
+    },
+    {
+      "at": "2026-10-23T06:39:47.289643+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:39:47.289744+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "two-consumers-precise-lock-observer",
+      "jv": [
+        "JV04"
+      ]
+    },
+    {
+      "at": "2026-10-23T06:39:53.571846+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:39:53.571941+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "worker-sigkill-token-generation-fence",
+      "jv": [
+        "JV05",
+        "JV20"
+      ]
+    },
+    {
+      "at": "2026-10-23T06:39:54.664091+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:39:55.694065+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "judge2"
+    },
+    {
+      "at": "2026-10-23T06:39:58.758369+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:39:59.478431+00:00",
+      "action": "PROCESS_SIGKILL",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:40:17.579780+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:40:21.049733+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:40:21.049850+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "commit-before-ack-redelivery",
+      "jv": [
+        "JV06"
+      ]
+    },
+    {
+      "at": "2026-10-23T06:40:22.147295+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:40:22.147387+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "judge2"
+    },
+    {
+      "at": "2026-10-23T06:40:25.197168+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:40:33.937003+00:00",
+      "action": "PROCESS_SIGKILL",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:40:36.985244+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:40:43.991856+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:40:43.991978+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "limited-registration",
+      "jv": [
+        "JV09"
+      ]
+    },
+    {
+      "at": "2026-10-23T06:40:48.868369+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:40:48.868481+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "reservation-api-crash-before-db",
+      "jv": [
+        "JV10"
+      ]
+    },
+    {
+      "at": "2026-10-23T06:40:52.050019+00:00",
+      "action": "PROCESS_SIGKILL",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-23T06:41:00.083064+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-23T06:41:01.078632+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:41:01.078758+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "confirmation-marker-failure",
+      "jv": [
+        "JV11"
+      ]
+    },
+    {
+      "at": "2026-10-23T06:41:12.199195+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:41:12.199306+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "redis-down-confirmation-and-release",
+      "jv": [
+        "JV11",
+        "JV22"
+      ]
+    },
+    {
+      "at": "2026-10-23T06:41:16.287712+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "redis"
+    },
+    {
+      "at": "2026-10-23T06:41:22.520375+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "redis"
+    },
+    {
+      "at": "2026-10-23T06:41:28.777377+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "redis"
+    },
+    {
+      "at": "2026-10-23T06:41:50.164620+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "redis"
+    },
+    {
+      "at": "2026-10-23T06:42:04.688993+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:42:04.689109+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "reservation-before-close-consume-after",
+      "jv": [
+        "JV12"
+      ]
+    },
+    {
+      "at": "2026-10-23T06:42:14.870232+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:42:14.870358+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "registration-cancel-race",
+      "jv": [
+        "JV13"
+      ]
+    },
+    {
+      "at": "2026-10-23T06:42:18.103390+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:42:18.103504+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "submission-cancel-race",
+      "jv": [
+        "JV13"
+      ]
+    },
+    {
+      "at": "2026-10-23T06:42:27.262072+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:42:27.262194+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "private-snapshot-and-submission-permissions",
+      "jv": [
+        "JV14"
+      ]
+    },
+    {
+      "at": "2026-10-23T06:42:39.062429+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:42:39.062613+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "accepted-snapshot-edited-before-execution",
+      "jv": [
+        "JV15"
+      ]
+    },
+    {
+      "at": "2026-10-23T06:42:43.197350+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:42:43.197497+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "judge2"
+    },
+    {
+      "at": "2026-10-23T06:42:53.639341+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:42:55.808531+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:42:55.808656+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "budget-exhaustion-manual-recovery",
+      "jv": [
+        "JV19"
+      ]
+    },
+    {
+      "at": "2026-10-23T06:42:55.841843+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "sandbox"
+    },
+    {
+      "at": "2026-10-23T06:43:06.322107+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "sandbox"
+    },
+    {
+      "at": "2026-10-23T06:43:07.494197+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:43:07.494333+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "confirmed-unclaimed-recovery",
+      "jv": [
+        "JV21"
+      ]
+    },
+    {
+      "at": "2026-10-23T06:43:08.570183+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:43:08.570252+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "judge2"
+    },
+    {
+      "at": "2026-10-23T06:43:41.895876+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:43:43.065400+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:43:43.065516+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "late-confirm-after-release",
+      "jv": [
+        "JV22"
+      ]
+    },
+    {
+      "at": "2026-10-23T06:43:49.123270+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:43:49.123418+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "cancel-committed-redis-down",
+      "jv": [
+        "JV23"
+      ]
+    },
+    {
+      "at": "2026-10-23T06:43:52.446832+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "redis"
+    },
+    {
+      "at": "2026-10-23T06:44:14.761979+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "redis"
+    },
+    {
+      "at": "2026-10-23T06:44:26.286656+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:44:26.286858+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "ledger-initialization-loss-persistence",
+      "jv": [
+        "JV24",
+        "JV28"
+      ]
+    },
+    {
+      "at": "2026-10-23T06:44:31.568591+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:44:31.568708+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "complete-redis-ledger-loss",
+      "jv": [
+        "JV24"
+      ]
+    },
+    {
+      "at": "2026-10-23T06:44:35.452163+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:44:35.452295+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "mysql-clock-skew-both-directions",
+      "jv": [
+        "JV24"
+      ]
+    },
+    {
+      "at": "2026-10-23T06:44:39.544884+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-23T06:44:43.995437+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-23T06:44:48.426880+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-23T06:44:52.970869+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-23T06:44:57.522119+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-23T06:45:01.203199+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:45:01.203363+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "score-race-rebuild-finalization",
+      "jv": [
+        "JV16",
+        "JV17",
+        "JV18",
+        "JV26",
+        "JV27"
+      ]
+    },
+    {
+      "at": "2026-10-23T06:45:02.278735+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:45:02.278823+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "judge2"
+    },
+    {
+      "at": "2026-10-23T06:45:16.524183+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:45:46.294161+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:45:46.294263+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "judge2"
+    },
+    {
+      "at": "2026-10-23T06:45:50.934170+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:45:56.262443+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:45:56.262661+00:00",
+      "action": "ACCEPTANCE_CASE_START",
+      "case": "practice-spec-frozen-at-acceptance",
+      "jv": [
+        "JV29"
+      ]
+    },
+    {
+      "at": "2026-10-23T06:45:57.022147+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:45:57.022260+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "judge2"
+    },
+    {
+      "at": "2026-10-23T06:46:00.167242+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:46:02.152115+00:00",
+      "action": "ACCEPTANCE_CASE_END",
+      "case": "judge",
+      "status": "PASS"
+    },
+    {
+      "at": "2026-10-23T06:46:02.152284+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "judge2"
+    },
+    {
+      "at": "2026-10-23T06:46:02.152294+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "browser"
+    },
+    {
+      "at": "2026-10-23T06:46:04.664445+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "gateway"
+    },
+    {
+      "at": "2026-10-23T06:46:05.269833+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:46:06.408097+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-23T06:46:06.581607+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "user"
+    },
+    {
+      "at": "2026-10-23T06:46:06.619812+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "sandbox"
+    },
+    {
+      "at": "2026-10-23T06:46:07.713501+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "rabbitmq"
+    },
+    {
+      "at": "2026-10-23T06:46:07.717628+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "epmd"
+    },
+    {
+      "at": "2026-10-23T06:46:07.793440+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "redis"
+    },
+    {
+      "at": "2026-10-23T06:46:08.240237+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "mysql"
+    }
+  ],
+  "temporaryDataRemoved": true
+}

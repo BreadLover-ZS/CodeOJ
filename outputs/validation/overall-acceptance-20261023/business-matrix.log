@@ -1,0 +1,104 @@
+{"at": "2026-10-23T06:30:27.124468+00:00", "action": "PACKAGED_ARTIFACTS_MATCH_CURRENT_BUILD"}
+{"at": "2026-10-23T06:30:32.297487+00:00", "action": "MIGRATION_APPLIED", "name": "V001__reliable_judging.sql"}
+{"at": "2026-10-23T06:30:32.331954+00:00", "action": "MIGRATION_APPLIED", "name": "V002__contest_core.sql"}
+{"at": "2026-10-23T06:30:32.376894+00:00", "action": "MIGRATION_APPLIED", "name": "V003__async_registration.sql"}
+{"at": "2026-10-23T06:30:32.402725+00:00", "action": "MIGRATION_APPLIED", "name": "V004__contest_scoreboard.sql"}
+{"at": "2026-10-23T06:30:32.420226+00:00", "action": "MIGRATION_APPLIED", "name": "V005__registration_recovery_fence.sql"}
+{"at": "2026-10-23T06:30:37.904526+00:00", "action": "INFRASTRUCTURE_READY", "mysql": "8.0.46", "rabbitmq": "4.3.6", "erlang": "28.5.0.8", "redis": "6.2.24"}
+{"at": "2026-10-23T06:30:39.432867+00:00", "action": "SERVICE_READY", "service": "sandbox"}
+{"at": "2026-10-23T06:30:42.170299+00:00", "action": "SERVICE_READY", "service": "user"}
+{"at": "2026-10-23T06:30:45.802490+00:00", "action": "SERVICE_READY", "service": "question"}
+{"at": "2026-10-23T06:30:49.147100+00:00", "action": "SERVICE_READY", "service": "judge"}
+{"at": "2026-10-23T06:30:51.578629+00:00", "action": "SERVICE_READY", "service": "gateway"}
+{"at": "2026-10-23T06:30:51.578755+00:00", "action": "REAL_AMQP_FAULT_PROXY_READY"}
+{"at": "2026-10-23T06:30:52.497557+00:00", "action": "REAL_SESSION_LOGIN_PASSED"}
+{"at": "2026-10-23T06:30:58.755638+00:00", "action": "ASYNC_REGISTRATION_CONFIRMED", "requestId": "2113518522698502146"}
+{"at": "2026-10-23T06:31:29.886912+00:00", "action": "REAL_JUDGE_RESULT", "submissionId": "2113518648074637313", "verdict": "AC", "case": "AC"}
+{"at": "2026-10-23T06:31:31.493811+00:00", "action": "REAL_JUDGE_RESULT", "submissionId": "2113518657604096001", "verdict": "AC", "case": "COMMENT_AC"}
+{"at": "2026-10-23T06:31:33.429261+00:00", "action": "REAL_JUDGE_RESULT", "submissionId": "2113518664335953921", "verdict": "WA", "case": "WA"}
+{"at": "2026-10-23T06:31:34.728127+00:00", "action": "REAL_JUDGE_RESULT", "submissionId": "2113518672451932162", "verdict": "CE", "case": "CE"}
+{"at": "2026-10-23T06:31:36.009344+00:00", "action": "REAL_JUDGE_RESULT", "submissionId": "2113518677904527362", "verdict": "RE", "case": "RE"}
+{"at": "2026-10-23T06:31:36.049014+00:00", "action": "REAL_SCOREBOARD_AND_ROLE_CHECK_PASSED"}
+{"at": "2026-10-23T06:31:36.868073+00:00", "action": "PROCESS_STOPPED", "service": "judge"}
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 61345)
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+    self.handle()
+    ~~~~~~~~~~~^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/outputs/validation/final-acceptance-20261018/fault_proxy.py", line 11, in handle
+    def handle(self):owner.handle(self.request)
+                     ~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/outputs/validation/final-acceptance-20261018/fault_proxy.py", line 23, in handle
+    backend=socket.create_connection(('127.0.0.1',self.backend),timeout=10);backend.settimeout(None);client.settimeout(None)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 874, in create_connection
+    raise exceptions[0]
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 859, in create_connection
+    sock.connect(sa)
+    ~~~~~~~~~~~~^^^^
+ConnectionRefusedError: [Errno 61] Connection refused
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 61347)
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 766, in __init__
+    self.handle()
+    ~~~~~~~~~~~^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/outputs/validation/final-acceptance-20261018/fault_proxy.py", line 11, in handle
+    def handle(self):owner.handle(self.request)
+                     ~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/outputs/validation/final-acceptance-20261018/fault_proxy.py", line 23, in handle
+    backend=socket.create_connection(('127.0.0.1',self.backend),timeout=10);backend.settimeout(None);client.settimeout(None)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 874, in create_connection
+    raise exceptions[0]
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socket.py", line 859, in create_connection
+    sock.connect(sa)
+    ~~~~~~~~~~~~^^^^
+ConnectionRefusedError: [Errno 61] Connection refused
+----------------------------------------
+{"at": "2026-10-23T06:31:38.318375+00:00", "action": "PROCESS_STOPPED", "service": "rabbitmq"}
+{"at": "2026-10-23T06:31:40.148651+00:00", "action": "PROCESS_RESTARTED", "service": "rabbitmq"}
+{"at": "2026-10-23T06:31:43.180330+00:00", "action": "PROCESS_RESTARTED", "service": "judge"}
+{"at": "2026-10-23T06:31:46.825922+00:00", "action": "DURABLE_QUEUE_BROKER_RESTART_AND_DUPLICATE_PASSED", "submissionId": "2113518686838394881"}
+{"at": "2026-10-23T06:31:46.861974+00:00", "action": "PROCESS_STOPPED", "service": "sandbox"}
+{"at": "2026-10-23T06:31:49.027147+00:00", "action": "PROCESS_RESTARTED", "service": "sandbox"}
+{"at": "2026-10-23T06:31:52.534574+00:00", "action": "SANDBOX_FAILURE_AND_LEASE_RECOVERY_PASSED", "submissionId": "2113518728752074753"}
+{"at": "2026-10-23T06:31:52.553441+00:00", "action": "PROCESS_STOPPED", "service": "redis"}
+{"at": "2026-10-23T06:32:02.879617+00:00", "action": "PROCESS_RESTARTED", "service": "redis"}
+{"at": "2026-10-23T06:32:10.218475+00:00", "action": "REDIS_RESTART_SESSION_AND_LEDGER_RECOVERY_PASSED"}
+{"at": "2026-10-23T06:32:41.769816+00:00", "action": "PROCESS_STOPPED", "service": "browser"}
+{"at": "2026-10-23T06:32:44.274871+00:00", "action": "PROCESS_STOPPED", "service": "gateway"}
+{"at": "2026-10-23T06:32:45.456439+00:00", "action": "PROCESS_STOPPED", "service": "judge"}
+{"at": "2026-10-23T06:32:46.436365+00:00", "action": "PROCESS_STOPPED", "service": "question"}
+{"at": "2026-10-23T06:32:46.619544+00:00", "action": "PROCESS_STOPPED", "service": "user"}
+{"at": "2026-10-23T06:32:46.656377+00:00", "action": "PROCESS_STOPPED", "service": "sandbox"}
+{"at": "2026-10-23T06:32:47.705230+00:00", "action": "PROCESS_STOPPED", "service": "rabbitmq"}
+{"at": "2026-10-23T06:32:47.706673+00:00", "action": "PROCESS_STOPPED", "service": "epmd"}
+{"at": "2026-10-23T06:32:47.834419+00:00", "action": "PROCESS_STOPPED", "service": "redis"}
+{"at": "2026-10-23T06:32:48.281313+00:00", "action": "PROCESS_STOPPED", "service": "mysql"}
+Traceback (most recent call last):
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/scripts/local/run-final-acceptance.py", line 160, in <module>
+    if __name__ == "__main__": main()
+                               ~~~~^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/scripts/local/run-final-acceptance.py", line 155, in main
+    stack.verify_artifacts(); stack.setup_infrastructure(); stack.setup_services(); stack.exercise()
+                                                                                    ~~~~~~~~~~~~~~^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/scripts/local/run-final-acceptance.py", line 97, in exercise
+    acceptance.native.Stack.exercise(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/Users/zzds/Workspace/gitStore/CodeOJ/scripts/local/run-native-stack.py", line 240, in exercise
+    if browser.wait(timeout=100)!=0: raise RuntimeError('Real browser check failed; see sanitized browser.log')
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: Real browser check failed; see sanitized browser.log

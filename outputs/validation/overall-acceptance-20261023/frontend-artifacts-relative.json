@@ -1,0 +1,975 @@
+{
+  "buildEnvironment": {
+    "VUE_APP_API_BASE_URL": ""
+  },
+  "compiledRelativeOpenApiBaseObservedIn": [
+    "codeoj-frontend/dist/js/app.6e4a76ae.js"
+  ],
+  "artifacts": [
+    {
+      "path": "codeoj-frontend/dist/favicon.ico",
+      "bytes": 4286,
+      "sha256": "db74ab0b78338c1f778f8398c45f4103c99aea0e845a3118a7750b4eeafd3445"
+    },
+    {
+      "path": "codeoj-frontend/dist/index.html",
+      "bytes": 660,
+      "sha256": "85392d7a85a47d1e66296dc5b68ee39daeb85d0d1c3d7c79593702b77fb5e4a0"
+    },
+    {
+      "path": "codeoj-frontend/dist/editor.worker.js.map",
+      "bytes": 1104506,
+      "sha256": "723765eeaf6f16607e25f5cbe32f22e2e050cd64f1fd7d2b50f1ec02cfa6f2c2"
+    },
+    {
+      "path": "codeoj-frontend/dist/editor.worker.js",
+      "bytes": 253671,
+      "sha256": "cde05960d3dbb9e6ffe738f1a017e4ae617f214f98943c254616d2d56f0c3678"
+    },
+    {
+      "path": "codeoj-frontend/dist/css/chunk-vendors.726b9b17.css",
+      "bytes": 511707,
+      "sha256": "a21ef3678475ee19205b76fa4f9a6501c0961294399eadbbd47b63b5492242aa"
+    },
+    {
+      "path": "codeoj-frontend/dist/css/4514.589392d8.css",
+      "bytes": 4869,
+      "sha256": "9a3713645331b238cb837edf94d37e7cd4f2a51c1e7a8d21db2f34f2d99cd656"
+    },
+    {
+      "path": "codeoj-frontend/dist/css/4301.0f3978fa.css",
+      "bytes": 9938,
+      "sha256": "31b1385a2bb52054707fc8a24f571aecbd2cc59a268cf00f49e6e1ccc4eb01f9"
+    },
+    {
+      "path": "codeoj-frontend/dist/css/app.1113673c.css",
+      "bytes": 12011,
+      "sha256": "a77271746db56366ad2b372e26d362af801a6d3369eed6085cbcfcd3584278c6"
+    },
+    {
+      "path": "codeoj-frontend/dist/css/5535.93d169fe.css",
+      "bytes": 2983,
+      "sha256": "0f0c460561c2370d70546b0225980c06eaa53284364b545040bcf321fcc715bc"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5661.6ec28344.js.map",
+      "bytes": 9187,
+      "sha256": "6c17054d767276c10305cc4faad839a5403cb771c96b366c49f31ca04bf6bc6a"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/2936.3664eecd.js.map",
+      "bytes": 10846,
+      "sha256": "19bde761e0024c5b8b3aafd868cdf15e9623ce49b59e307c5c2b84fdcb3950cf"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/9007.be8dee33.js",
+      "bytes": 4984,
+      "sha256": "95171307bb3d045b32a68aac63608f2c233979a66816e638adaa10dc2d0bd586"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/3817.1d0e00fb.js",
+      "bytes": 8965,
+      "sha256": "ef455c5c9962422e3c114043b9370cf983e7ab2862836c58316440077c12003b"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/3956.e76da3e0.js.map",
+      "bytes": 10308,
+      "sha256": "565f0e5a2a3edd0e129f72077c4619d7525624311a1e50e31029433b71830c55"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5527.7140885a.js",
+      "bytes": 3395,
+      "sha256": "fb95f8f9fe6cffda227e2fe9d0aa74354a7d64d322ed7546066fabd9727dfa72"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/786.0176c1ce.js.map",
+      "bytes": 10435,
+      "sha256": "e1659f0041cce26fb1eab31b45b2aca7db9f7834395afc451a467551a3c098dd"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/9903.46963227.js.map",
+      "bytes": 19516,
+      "sha256": "01a0b362af892920d05d8f683f268ddffe3b73e5291e7b567b4abac160b4ff5a"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/413.18641670.js.map",
+      "bytes": 23477,
+      "sha256": "490901f93ff041a87895e66c5e8d666b9a0acf7834cecd5c8e673f2a6c73c3b8"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/4514.570a33d4.js",
+      "bytes": 7832,
+      "sha256": "297319b1e354c949779764a7ea5c31a316a4b67a05c7830e9d168a8c161a3cd7"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/9380.ed8358d6.js",
+      "bytes": 3454,
+      "sha256": "ee6621ca80b18fbb09b28a02db11707b993835c3ab94701a729bde9832cf83f9"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/622.d7257a2f.js.map",
+      "bytes": 17425,
+      "sha256": "9445f6184a5a89fca2d286d2e808cbda369bce7e507302d75409ef9648243d4a"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5710.bb4c0a45.js.map",
+      "bytes": 18902,
+      "sha256": "b89b549ae711b7964cb68c7cfea6a3062ac37623f21abf4de992eeb32fbf8e5e"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/3956.e76da3e0.js",
+      "bytes": 4035,
+      "sha256": "d19a448f1531c60822c03a8101cb3cf63d9d8b91c27c7ee41420983d7e3db6a9"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/6862.2b515d91.js",
+      "bytes": 8063,
+      "sha256": "79c910e9c6836922ad36e69dd7e5c883a48d882557eb4b8202d225d63d3bfe8c"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/6786.48d79ff0.js.map",
+      "bytes": 122208,
+      "sha256": "8b39a288566ecee3987758c134eef4453fb1eff4b77a59badc864049af1d5d4d"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/9270.bf81be77.js",
+      "bytes": 4620,
+      "sha256": "96b7016dabb7b9e7c3df62a9d3e0b7577c8580fe9392f32a4dca8155aa51caeb"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/7099.759ae719.js.map",
+      "bytes": 7017,
+      "sha256": "31d0c4bd794540f2861ff5b9d570304515fcafa48e359805957db39197e6b907"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5535.8221711e.js.map",
+      "bytes": 26662,
+      "sha256": "24cca74dd2639d4a2294fd37a14a776429c1bf171abb1b80f33d3ad6781f3778"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/413.18641670.js",
+      "bytes": 10755,
+      "sha256": "6765be295b8c8c6df5276dd8baef81a8dde8420b2373ec5f82a9a7efeb023faa"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/8822.3f86f82b.js",
+      "bytes": 3848,
+      "sha256": "df5d83ec131a41400806af956ea7145e65ada09167ec32abba15712b57ce75d8"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/9765.35309c5e.js",
+      "bytes": 4050,
+      "sha256": "d3d5bd79c7d272ef88f8fdf034a4382e0416fdc6d2179b4e4cba06f73e8e93cc"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/6048.bd2d1e2e.js.map",
+      "bytes": 16703,
+      "sha256": "6e61feff74adba896c512e26fe57551fcb208b5ae47f667153ad306a565163af"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/1636.3efdb3ed.js.map",
+      "bytes": 13273,
+      "sha256": "9abf0c11832530b586a6a50966d4dd65107f049b3e3aa2b90b0a2c98b2053189"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/9007.be8dee33.js.map",
+      "bytes": 11838,
+      "sha256": "d3c216ee2bb9eb3742757d14a361c20e9964c9e8e2e33c1d6f51ba231dce62c6"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/4301.19ee1d1c.js",
+      "bytes": 24442,
+      "sha256": "bd99fdbfcf80b3e51adc46d58fcd858abe5d696c0420dbf77fe9469eb5259198"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/4962.203e1195.js.map",
+      "bytes": 123786,
+      "sha256": "5298966302e2022cd16f65d3af1f47a1d58906336c4341fa605cbde7030e597e"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/9765.35309c5e.js.map",
+      "bytes": 8088,
+      "sha256": "7a47cf3a10ce3deede61561e519dd4411092ee3a0fa3cd877ee0aaa636b55838"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/7010.fd90b134.js.map",
+      "bytes": 13463,
+      "sha256": "a99ba55382810512b2017e729c0eef66e1d046b65861c6b22e74c411d27af520"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/9700.df9517fb.js",
+      "bytes": 10717,
+      "sha256": "0ae118a18a0bec3c3b79b158e14962a533a2b92092b0c190d560ccc0aab3e4cf"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/7146.193ca1fb.js",
+      "bytes": 3443,
+      "sha256": "8820f55fc2e234af761331cb2460ce49e025e8f9ee7889b3cb44f3bf5603bbf3"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/7099.759ae719.js",
+      "bytes": 2998,
+      "sha256": "353ad746e9a43af680bdb2a12288a77c3d5d32b463cde4a942118ae36e4dbb79"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/6346.2b8973f1.js.map",
+      "bytes": 2812,
+      "sha256": "0dfdd09a4ca68f6932d68dc983eb0f0c4d1a3c1cf95283eeee76ae2de5d920bf"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/1598.ed75cfc5.js.map",
+      "bytes": 9566,
+      "sha256": "18429e30b0b5cb8a92e7242b16cece984b8d7de3aafb151b64637d838035f45c"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/9928.31af6e82.js.map",
+      "bytes": 7518,
+      "sha256": "c8cca2c8e33753d17816031268692887fc454c1a4fe90c0ba24f7f8a02f73ee7"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/2784.5f0cfc37.js.map",
+      "bytes": 10572,
+      "sha256": "fc000669289afcee55916589063b344030ddd998ca9813b7ac3be86e97e8a763"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/6877.f37f325b.js",
+      "bytes": 23553,
+      "sha256": "37c8f82d26bef746c7a107f4830a62f60f10690ba881ccfc897b6e78bda02a9a"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/2532.021b8d5a.js.map",
+      "bytes": 7027,
+      "sha256": "d61a28c2df82cb4013a2259ab2b37a05fb4d640a27a04c6f0d6ffabd3d1f205a"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/3202.d51ebdbb.js",
+      "bytes": 6439,
+      "sha256": "795b51bfd11abaa1f8cc554729535e9886342b2954e9257345490a329f5256ab"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/2341.d93e0e89.js.map",
+      "bytes": 10632,
+      "sha256": "d00282fe099f7c4474e6172833031a853ce59a69283ea2aaea5f144e4194bc1f"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/8647.352e1a05.js.map",
+      "bytes": 8196,
+      "sha256": "0aa8c792d8d4a49e6ddde88a99dcee8dc10d23732a85ac4886bd0c363b5082ae"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/3703.d0757878.js.map",
+      "bytes": 17437,
+      "sha256": "9e75b947b2647414143243e0792642a2fb91ec256e19ced4c3f271fa70053412"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/7010.fd90b134.js",
+      "bytes": 5288,
+      "sha256": "a8a88a17f9f7e3d7569abed417738850ba7d37b196d77570324a509da8f094ca"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/7473.f030518c.js",
+      "bytes": 2143,
+      "sha256": "67c01da58ba923e0f9fa5cd1af11beb43e72c1aa5fb9ed11020026876ea17eea"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/7271.84ad37c2.js.map",
+      "bytes": 147852,
+      "sha256": "a4d1159bf211985240cae9134c0d8c5365c668658f021cc4703468c737cbc419"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/6388.67d6acb6.js.map",
+      "bytes": 9166,
+      "sha256": "189d48c5b7d8b053d1e676bb7e7a797d6d853ae6dccabe4d2651be28dd1012c8"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5710.bb4c0a45.js",
+      "bytes": 8487,
+      "sha256": "5594fc012607eb474b0fe50cb9cfa025707b400f133e0257b92e0a6a00758faf"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/1598.ed75cfc5.js",
+      "bytes": 4266,
+      "sha256": "d2183f3b9c7060142392745464d32c7dbbe2b432855f4d493be6f2044169eec9"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5662.079cc878.js.map",
+      "bytes": 19990,
+      "sha256": "2c458cf8de47d9179953ca57390d9dcf5dbf7715b2849d06b3cbfb84d31c8422"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/7954.266c72b0.js.map",
+      "bytes": 14171,
+      "sha256": "ce9b7f32594f3fad722202240c513027f776add05009be728b64e98c35d11c57"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/2532.021b8d5a.js",
+      "bytes": 3039,
+      "sha256": "d1a1ae97fc4025dde592cbc827592a536fa74a322993f654ace4682f8d5f1933"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/3703.d0757878.js",
+      "bytes": 7241,
+      "sha256": "2c85cb86e20f1b5dd8724ac577e3813947ec90c5d3eee80609ff0700ac234a15"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5096.e4707a69.js",
+      "bytes": 17399,
+      "sha256": "53e1ec9fd795fe209bda0f2c7c5e9bcfbf1805e2692fccb7a4c66d1c97e8abee"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/6877.f37f325b.js.map",
+      "bytes": 73891,
+      "sha256": "3b01175b20f89bc2495c99df2cf090dff57bc4c8dcf17efc48a9dd08d1f5b3a2"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/7007.c46d66ce.js",
+      "bytes": 2304,
+      "sha256": "ce86be3df25e50af1e89851a24bc392c26675517fa759024b99816bcdca83135"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/1636.3efdb3ed.js",
+      "bytes": 5938,
+      "sha256": "568b087a70933a745d7c57f64972de1842233069c718ccce48d3921249a8c5ed"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/2804.1b805036.js",
+      "bytes": 5372,
+      "sha256": "45ab8e6fd7804062eb56aa47329ecdb4888d30b5ee4f73efe64058748010413d"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/7271.84ad37c2.js",
+      "bytes": 39768,
+      "sha256": "9d68bcd56a8a59e4ea77e4ccb9953f328afdd3b3cffe9be24ea55b348901e4d1"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/2401.b597d5da.js",
+      "bytes": 1879,
+      "sha256": "3488598c4fc230852076c10007416b7fa3a0150e47f8033137ac34de71cc5cc2"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/2804.1b805036.js.map",
+      "bytes": 11849,
+      "sha256": "910cbb4694d75a67fb8fcf8a722bcfa3c6efa026e6320e031b972f2563406c35"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/7643.7caa6db3.js",
+      "bytes": 11734,
+      "sha256": "0f77a6f27418a5fc94f92c9e079c84892dd6d072f06e2c90d73c74a39b282da4"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5254.4589bb34.js.map",
+      "bytes": 8849,
+      "sha256": "e8b5b6135e4d235c8d7702754a12584fa81fc269d838ee8adb4415464f81321e"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/1022.5549aa0e.js.map",
+      "bytes": 5191,
+      "sha256": "b292db973f6d9e8ad9a36bfa89131b10cb9bc3c98f98c10cd4e1dd978b88c972"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5985.fb43b8e2.js.map",
+      "bytes": 9045,
+      "sha256": "1748a14cd77989e1215479500103346964679ee2a0c31e22da2276858f5a7c5c"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/9700.df9517fb.js.map",
+      "bytes": 23217,
+      "sha256": "39fc9f9b5deda56665e208095dc18570b135078b0a0522f5a967a14fa34f439f"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/1030.c0cd7ff6.js",
+      "bytes": 6872,
+      "sha256": "0e82f9c9c38175da5e2e4fd63cbc0893d86bdc58ce57537161a32ac9384bf9ca"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/2358.af418026.js",
+      "bytes": 2289,
+      "sha256": "a8f31a512191e13374f5f7802cb04b6d6d875b4a8c6a40fea9608851d4dd1968"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/7500.c9aedcf6.js",
+      "bytes": 2227,
+      "sha256": "66d7e3148e066bc3a867ba04489a4be05cdc94b1f2f7b2f01dce5f7721db5847"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/6044.2360fb87.js",
+      "bytes": 4973,
+      "sha256": "5c7e8fcca263d393fc78b38bfa2a5a8b87a1b66207d5dd60deb86067e5590514"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/9903.46963227.js",
+      "bytes": 8315,
+      "sha256": "ff9339b119ae8fc53eb065e92ebd4c335fc1f576d3eb6a05468aad80088eb7cd"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/786.0176c1ce.js",
+      "bytes": 4076,
+      "sha256": "d4a489bd7cee25af8dbfd461a8f8185fd47cd4ffe69c56cb1ebce07e569f1235"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5106.1795c698.js",
+      "bytes": 2645,
+      "sha256": "98ffcec586ff4781efa95d13fb047ec08c6f33738954357e9562a5495e185a6d"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/3263.f889eed5.js",
+      "bytes": 6251,
+      "sha256": "b77144e8a69161e39a055a36bac0f3f8f38912615f8456eeece4ee3ac9db4596"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/9270.bf81be77.js.map",
+      "bytes": 10887,
+      "sha256": "eda089ca754c986e6e55cf2ed26d211dae644f3d8779321ddeeefacf4d73c612"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/6048.bd2d1e2e.js",
+      "bytes": 7139,
+      "sha256": "33b5f6af8736212bd431ba6924cb596ad38bd43686206a38588250c44723c77a"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/3817.1d0e00fb.js.map",
+      "bytes": 20191,
+      "sha256": "3bc7cd9e83c53fc690212eeed301a843a26b95db9660f24ce8fb2864c736a37c"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/8412.2ab279f2.js",
+      "bytes": 7609,
+      "sha256": "6ff7eb2299a46f4d90af41450bc887744e56620512882ed116140b9e2f2f3bde"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/3268.e1f7139d.js.map",
+      "bytes": 32914,
+      "sha256": "9166d442d623bb9de84480184b0576e680ae7dbea772ce367acefefd161e6483"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/7473.f030518c.js.map",
+      "bytes": 5136,
+      "sha256": "f62d47d19fd77e790c4523c480104c0eff4a1014885b896e48cea219a199e98b"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5019.c721bfd6.js",
+      "bytes": 13924,
+      "sha256": "f8f3ddf2782afe4547ef221a62babafc53c3bc95be75a73e6830049d41de7053"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/7517.7f6b256e.js",
+      "bytes": 5372,
+      "sha256": "d480d2d4b3711553e40fc974936e13a624e4ed04b1c711e4ac7bf028c9c7d76b"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/7517.7f6b256e.js.map",
+      "bytes": 11845,
+      "sha256": "bb3d00417c1aee5e511efe525c854e233b59e887d49ba45f28b161c1dfd5df26"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5630.3ae5446a.js.map",
+      "bytes": 5802,
+      "sha256": "c492fd4716cfce48018fadb5b155e7900fa78a05c18f3d72cf5334e51c0d8d56"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/2936.3664eecd.js",
+      "bytes": 4427,
+      "sha256": "afe89218fed514c7173b266e56c72de47e571891ad019e1fe699c1bb66f40739"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/7083.799c6b0f.js",
+      "bytes": 5802,
+      "sha256": "e3cec413524be0d2ef4a21520773bb43e2e41ab208e1cec104600e8a3cb1f737"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/4034.170fc3cb.js.map",
+      "bytes": 9123,
+      "sha256": "3be82bbcfbeb0098bc3ef2bfacbe112bd54275276c19eabf60e96f6020ba52a6"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/7083.799c6b0f.js.map",
+      "bytes": 13375,
+      "sha256": "665db74d285afe56a2ff91549e81cf9ee68c2dbd5a3d3f8ebc5d2345c4b10b48"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/7146.193ca1fb.js.map",
+      "bytes": 7653,
+      "sha256": "961591df85427e30a54cc093b2b9cf25b595cef78d49ad9fac5f795a162b9eb4"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5985.fb43b8e2.js",
+      "bytes": 4030,
+      "sha256": "de15c2e46480ac1543045c2ef61c2918f1ad08560d78a3d742b5466e1dfd750f"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5856.b7031262.js",
+      "bytes": 7778,
+      "sha256": "0d9aa4fda9462fe19d52cb3b55e3ac4e0b5708f495392cd96dc41fd5856cb37b"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/7643.7caa6db3.js.map",
+      "bytes": 24881,
+      "sha256": "611f4c58e9ad2ed87a4f07685557e0a6d3fd7f42727020ecadaa7c7073eda235"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/6346.2b8973f1.js",
+      "bytes": 1308,
+      "sha256": "2586a29ebcf67b7fad4bce0ecb7c593ec31f0464a2583607ab5a88e6415251be"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/1463.f3df7e84.js.map",
+      "bytes": 12685,
+      "sha256": "e882282bb6046e99c0bea1329d7e782293eee8ce52c1d308726a399fe6989d12"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5856.b7031262.js.map",
+      "bytes": 17008,
+      "sha256": "d02c8a684a397623abe2e3a2a2ffcceb06d6718de1a3dc56d00b31304afc9df7"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/3986.e974a7c3.js.map",
+      "bytes": 39867,
+      "sha256": "037e4a8de5a22fbd9a5fd326bed22d2cd60ee2f84aa2c149d2bf3fbce8df3b54"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/2250.56ccf90b.js",
+      "bytes": 2329,
+      "sha256": "6f292fb58facd5d9abb02252887f4d3cf90c2d55f65339db0b72e24e5afd869c"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/6540.46988caa.js",
+      "bytes": 9508,
+      "sha256": "8ab82b758575d2832be8d4d18a9d0072fa4ef30c17cabf139d6937d75975fe6b"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5019.c721bfd6.js.map",
+      "bytes": 26783,
+      "sha256": "4c859b6bb9fedc121871c2174a44d447630c3ca4544ff16d404488f3314c84ae"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/4301.19ee1d1c.js.map",
+      "bytes": 82918,
+      "sha256": "34674e29a0d9d41bec705b4907b70b0df207b068764d52587b65f662e9578763"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/6540.46988caa.js.map",
+      "bytes": 21791,
+      "sha256": "b2a549d37b386ba2e79c46c2def5337a437a11b82aa2f6091a14afa383d10799"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/chunk-vendors.b176bbce.js.map",
+      "bytes": 18215214,
+      "sha256": "1f0acbab5dcea079f433f01ca0fcd046f9edba60fffcf4e65831a7808b756f32"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/1319.f0f9007b.js",
+      "bytes": 2897,
+      "sha256": "8d32819418e5574b876711c772fed7b02f6edd745557f5ccc1817aac23641939"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/622.d7257a2f.js",
+      "bytes": 7857,
+      "sha256": "67b0cbb71f29bfe8b6bda0148fd65fbb7139ff3f188fa88ee40d618dbe8e5940"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/9906.ddd5a7d5.js.map",
+      "bytes": 24523,
+      "sha256": "46f1d6af1240729f6182a2c6c6082cc760da9d38cec35d7b2ee5cc7c7684f583"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/501.2b51d14e.js.map",
+      "bytes": 7121,
+      "sha256": "78bbc874de2420177080eaa5f4cbcf1eb4633ec697e051a8a73bc48694b28960"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/2008.b5a25148.js.map",
+      "bytes": 3249,
+      "sha256": "8591bd382fc58c32f5e18206e959a1e29f985a8c60f6e5724d3b1b778393957a"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/9111.5f52d050.js.map",
+      "bytes": 13605,
+      "sha256": "405664cbd58533f54c72006cd6c00e4b1ac9895c30d545f9e9ee96cb9ab428ff"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/2008.b5a25148.js",
+      "bytes": 1561,
+      "sha256": "526d333eb7639ca2c9fb33af89e75f95caf1a9b582b7dadb3ffcdaba23eebe1e"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/app.6e4a76ae.js",
+      "bytes": 57207,
+      "sha256": "03e95919a8ff561c9d41cd71087d4cc6d7782ce74b74197ccc5dc15732a288f7"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5630.3ae5446a.js",
+      "bytes": 2460,
+      "sha256": "414ca48180e0195fe3ddd38269d4354200c8d26ab30a8a71ade900e3818639ac"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/3629.575f3ced.js.map",
+      "bytes": 38084,
+      "sha256": "885b995acf32f3c1187d2ceed86bd4aa4ca54ecfb71b6c2382b8d591443eeca2"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/7973.6a453003.js.map",
+      "bytes": 7022,
+      "sha256": "94bc956960d660095bec358c2945acd1a92042d060e6eebc2aa2c225bb98e945"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5191.77cc4abb.js",
+      "bytes": 4050,
+      "sha256": "2d9a06736121d28da28885f08b907eed6c0a50bb7ac7cd5b23df2534ef290459"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5106.1795c698.js.map",
+      "bytes": 6286,
+      "sha256": "f7932120fa94453628c5927ae4a2d1b78e39fe848fca4a1ff886209e50b7e316"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/8822.3f86f82b.js.map",
+      "bytes": 8982,
+      "sha256": "e8f1b9627f0cf0f8cf8aa9bd492982b448471e1fde1c85872ee2c7022114a59e"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/9380.ed8358d6.js.map",
+      "bytes": 8071,
+      "sha256": "3ed12b6bd00b7ab3e15d81fce92620516467dbc530d44f2d401e1f3134b28e6d"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/9583.70f2cc52.js.map",
+      "bytes": 21895,
+      "sha256": "0ece65814cdd4e977869914f565c553b1d9e6f5b61a17ed985b3c1c5732a6697"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/4366.4ab605cd.js",
+      "bytes": 3681,
+      "sha256": "995ef27b4080c7a68da51b54dc93491ca34e0b262c15b92ab7ba890578f92057"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/386.aaf5e005.js.map",
+      "bytes": 21225,
+      "sha256": "1fb36c26f9525aea397f9c273d15a45c341434a67a89a98f9e83625b3dbff12a"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/6044.2360fb87.js.map",
+      "bytes": 10833,
+      "sha256": "64a8e7b09b7e6486d71ec4df1305c737c1a9ae8234652c8d4337e172b71b6637"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/8248.b0f83b8d.js.map",
+      "bytes": 8273,
+      "sha256": "b058fa35e33cfd39300384a62602495f5f33b0e85a08c365429f9543b14eca6c"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5250.39edc890.js",
+      "bytes": 16643,
+      "sha256": "96aa5dec285ec5d0716199c4a23eaba789b57085e1635f3090448d00192b5585"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5191.77cc4abb.js.map",
+      "bytes": 9494,
+      "sha256": "8bbb85df464824c7eaca1472848ccf5284be652b2ab47c21c788073fda2d1873"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5527.7140885a.js.map",
+      "bytes": 8236,
+      "sha256": "9f7c4ea093e33b44f2c927e0920e8c8530b464af7b47fd39f03f0d223715af7f"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/9674.64d5fcd8.js",
+      "bytes": 3012,
+      "sha256": "49d78ed6d35d63d61fbe7ae5d029a13711b20bc5f9c513034f5dcee70745550a"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/6862.2b515d91.js.map",
+      "bytes": 18161,
+      "sha256": "88e477058339c2eb2a9187d5f3acf6882b7674776490c28857f2fe5944d38e63"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/3700.7cc95f13.js.map",
+      "bytes": 6032,
+      "sha256": "97acb302e45aebc90fc556d14bc1ff294e5f813cdbd53243f365f040ce4b4381"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/2358.af418026.js.map",
+      "bytes": 4979,
+      "sha256": "97e4600251425a022e9cdcd65fc72a966c50f2bd4c5da7400abb553a55f77cd0"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/4514.570a33d4.js.map",
+      "bytes": 24249,
+      "sha256": "b7b05f672b378d0041b5f44e8e4a418c4b8799629a9e306e173edd3581570880"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/1319.f0f9007b.js.map",
+      "bytes": 6586,
+      "sha256": "2ff6c2e66e23fe578b26ab92f90eb4ae9043a0b60562af3a75d8857cc38fa3d4"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/8412.2ab279f2.js.map",
+      "bytes": 17277,
+      "sha256": "795ac626c827567b0d61f36f398fab3478cea22a52fce057b63c2c6473edd032"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/3399.f0b2256b.js",
+      "bytes": 938598,
+      "sha256": "7b20b775352ca210f05860005f395cbb24e9b9e09dc52781add2ad9f5e3902aa"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/9906.ddd5a7d5.js",
+      "bytes": 12260,
+      "sha256": "8e706dd96f63e2ccc47e543d9dcfc50a1596d00f9c89e07c06cc37fc75871aec"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/7973.6a453003.js",
+      "bytes": 2880,
+      "sha256": "768ae102781122ad8510d29de6a7a23d7a5f4fb4d8c359d991f61405b15f7059"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/4816.c7158f34.js",
+      "bytes": 5328,
+      "sha256": "9da4980ab9147fd159dad7a1bed1da2e064f140c7b50c0f8bf05fd5021895eb5"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/3268.e1f7139d.js",
+      "bytes": 14623,
+      "sha256": "16a26b3e500af64fd1a1ea751097b3282f84bca1e90584068c05a6b3fe95d93c"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/6590.7ac2402e.js.map",
+      "bytes": 7274,
+      "sha256": "3d9bd57ff9a5ab7cf83427323833adae89cf6d1ed1ae1d857725a23b311860a2"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/3415.3be772f1.js",
+      "bytes": 3899,
+      "sha256": "4ff63a8e8168cb0c8dea30fbb42d62907d2d5a0954dc0b5ff2fbf0f105beabff"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/7500.c9aedcf6.js.map",
+      "bytes": 4883,
+      "sha256": "739e948ba6ef9873b02764a0ed33bdb14bfad241c6c9de8b3f7ccf1c3edfe3a8"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/7007.c46d66ce.js.map",
+      "bytes": 4755,
+      "sha256": "8beda3b986169774a04154c194bb4bc1222a4604ae75931aa3f0e6f091de11c3"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/3629.575f3ced.js",
+      "bytes": 19057,
+      "sha256": "0f0c32a8bf753c57e5d6b82213a74b3fa1d01c7c7cea23e80868dd79110b0035"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/chunk-vendors.b176bbce.js",
+      "bytes": 4683317,
+      "sha256": "0af74e4c2db7f2066c8b34dae599c8332c8410edb95a3453f22dbd93529122f5"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/15.67c94349.js.map",
+      "bytes": 6539,
+      "sha256": "e9844e17ae1e6a2cc7aaf668cee057fac5a30138cbd5528bd79f6aa7c1e36029"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5535.8221711e.js",
+      "bytes": 7074,
+      "sha256": "4d8808c75867121a219eb621b15a91694404cdef07bf98091a926ca214b1f081"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/4816.c7158f34.js.map",
+      "bytes": 12816,
+      "sha256": "fdca92b06a3d364cb11af900fa02c3c8853865788b65b1f8f2c021a95eb7fb4f"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5096.e4707a69.js.map",
+      "bytes": 31028,
+      "sha256": "bfdd75bf8e5407edfca03d2cf2e116fe062b7838df8cbefb3781ae9929a3bb5b"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/3415.3be772f1.js.map",
+      "bytes": 8766,
+      "sha256": "da4bf62a54b4858508fd75d91bd88fa15c102301144512a53024754de04b6fff"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/6590.7ac2402e.js",
+      "bytes": 3117,
+      "sha256": "c9ceca33f90fe9bb596f21a7b527638c5bb66cdc3c08961f5359f35a51cb1f8a"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/9583.70f2cc52.js",
+      "bytes": 9251,
+      "sha256": "271ad86a5dd5665a7ef46fc0256103587a6d02b0de4b144b19f5841915ff2755"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/4034.170fc3cb.js",
+      "bytes": 4365,
+      "sha256": "1ef5d9e10f4dc492deafed7a4b4d1056dab41873af86e234a9b6a3f55816d181"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/4366.4ab605cd.js.map",
+      "bytes": 8178,
+      "sha256": "4b572a9f3a21450f701168718480a69cad58d09165523c420204bd6e8e7d22a9"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/9674.64d5fcd8.js.map",
+      "bytes": 6664,
+      "sha256": "c49f79f42b4ed41dca1aafb3109327fc591e985d977e536a008ba6320e56268d"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/9928.31af6e82.js",
+      "bytes": 3277,
+      "sha256": "3fd1f432ca220d4e2e7788e1f16bc68b55ab65648ce5567e778baccce9c9f911"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/2341.d93e0e89.js",
+      "bytes": 4476,
+      "sha256": "b738635073f46bebcae99a2f0d94dc10fcdb47dd5ea44290762da01746ae1afd"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5250.39edc890.js.map",
+      "bytes": 56685,
+      "sha256": "3546735e4c0f76c88705dd5953f5658a1a726dd2680d2283e9d4290abdf3bedb"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5254.4589bb34.js",
+      "bytes": 3728,
+      "sha256": "ca55b29d24aa01c3a158cd5464a57f4f2aa8e499e8d29bc1fce63b171ef0b163"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/1022.5549aa0e.js",
+      "bytes": 2269,
+      "sha256": "e50b2b7c08564d8efeff205e2b08c0f8f57f1f9d14c0d1a6e5e6d8c144ccbb8a"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/6388.67d6acb6.js",
+      "bytes": 4015,
+      "sha256": "ca92793589422cc9d81f53f60ce8bced031b84f59fec442f96273c984b156359"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/1030.c0cd7ff6.js.map",
+      "bytes": 15202,
+      "sha256": "a2a08f48eb0a388148d0cb083858ddae3b4f660f5180ceadbd402a4b952e1118"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/3986.e974a7c3.js",
+      "bytes": 16247,
+      "sha256": "bf5f9e2900c5f4f1c5b1f514c29bb050f9ebe3208aae2e0684adb779ceb4aaa1"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/9111.5f52d050.js",
+      "bytes": 5499,
+      "sha256": "f5ea8cf3899a802fa6d311111666a4cc29171485e37a66bd572a1d4a8e723049"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/2250.56ccf90b.js.map",
+      "bytes": 5547,
+      "sha256": "7ce377ae9fe862267eac142ddeccda525c86ef86d76f2c4412851b308f43cf17"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5662.079cc878.js",
+      "bytes": 8715,
+      "sha256": "98eae59e14b83046577133680c74912edc4a4d25e7cec8c37a97a1b9275a63b9"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/1463.f3df7e84.js",
+      "bytes": 8537,
+      "sha256": "b25dd8b4a0b7930fe780505883940513e080d6f01e8692706ed8899ffa57a423"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/3263.f889eed5.js.map",
+      "bytes": 13577,
+      "sha256": "881c514603f9fb80630b517f14c62bf258a1f0fa4911bb7752760dcda370bf2a"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/6896.85db9730.js",
+      "bytes": 2583,
+      "sha256": "8212064d0416e5aead081577d7e14c5f40991cb99157fed5dee4cc6d66786c4d"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/15.67c94349.js",
+      "bytes": 2858,
+      "sha256": "f0a9d5501cd1264c075f2ad0f5371e2d1b311d460a0849f0494371bd80e0d1f2"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/6896.85db9730.js.map",
+      "bytes": 5972,
+      "sha256": "ff50e7210aa6eae765000ba1560c43700d7d20edce1a6d7563f864005668caaa"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/6786.48d79ff0.js",
+      "bytes": 33674,
+      "sha256": "8876be777cb6653e1b019a9ccd042370cde05f4669af7e8706447f91175bc7a0"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/2784.5f0cfc37.js",
+      "bytes": 4710,
+      "sha256": "d4235629466f6e8178be6f838c2af3af20ae6e30aa1d7ecfa0e622828f6df64d"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/2401.b597d5da.js.map",
+      "bytes": 3217,
+      "sha256": "9ea1d203759b824c52dd7ba71d51b2a2acac6e80e71a68b0c7f4e7a3e94e5d86"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/8248.b0f83b8d.js",
+      "bytes": 3590,
+      "sha256": "d2cf41e2f519c2840c9d697ae2252f99124408e1a9e0d4b642e5fcebc9b76475"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/3202.d51ebdbb.js.map",
+      "bytes": 14308,
+      "sha256": "5b10044e6743f022d65aa1f0bceef70997ecab0b12d73ce7dad4441008060d20"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/501.2b51d14e.js",
+      "bytes": 3222,
+      "sha256": "907cf5d7c22b74610d9929ef4f059e622d45e57733f7ef0d94c780683f222aea"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/app.6e4a76ae.js.map",
+      "bytes": 223981,
+      "sha256": "997a60dc234d19b1a1d3a195c079dca748b371134721745bbd69524a4a159b24"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/8647.352e1a05.js",
+      "bytes": 3532,
+      "sha256": "ef5448fcee26bff8bafabda757d22f9388935c75eacb4b6a5c1f1c21a8ca5d1d"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/3399.f0b2256b.js.map",
+      "bytes": 2058568,
+      "sha256": "a13632d5cbc17abf91097c09174a22a09c959f1b2f6b74f36d9217564c29d750"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/386.aaf5e005.js",
+      "bytes": 10101,
+      "sha256": "539c29ff6fdf3873f9088553135f61e6ee0eb2c48f3da46d9669830ea5692fe1"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/3700.7cc95f13.js",
+      "bytes": 2720,
+      "sha256": "6296c75eb4a5d5ff8802eebe0c41da47a3cb4bc776c4cbcef3a2f6c2347cb9ba"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/4962.203e1195.js",
+      "bytes": 34240,
+      "sha256": "29ce9a24e164c6cdc39cc092ccb8f201484d00c068617a2dd168edbdf33ddc48"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/7954.266c72b0.js",
+      "bytes": 5868,
+      "sha256": "11b3695bb87c123f7df8be19a0e688a37bddb3bc94c71d8f3dc86c3927065337"
+    },
+    {
+      "path": "codeoj-frontend/dist/js/5661.6ec28344.js",
+      "bytes": 4359,
+      "sha256": "c5ce93ef5528f54d1485ccb88fdba04d5ce3d447a29c1cf777688aa99a398523"
+    },
+    {
+      "path": "codeoj-frontend/dist/img/oj-logo.e5619229.svg",
+      "bytes": 2774,
+      "sha256": "811e88b06f9eb97dc3380c7ef3a6f19b1c932a785d5cb4ae3a62d6981c9c1761"
+    },
+    {
+      "path": "codeoj-frontend/dist/fonts/codicon.589e0820.ttf",
+      "bytes": 73464,
+      "sha256": "79f233d057d658d1789db12d2575aedad79036150cafe310c3cb26e6e49041bc"
+    }
+  ]
+}

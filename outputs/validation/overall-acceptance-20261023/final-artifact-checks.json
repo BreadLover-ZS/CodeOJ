@@ -1,0 +1,11 @@
+{
+  "allJsonParsed": true,
+  "allPythonParsed": true,
+  "reportFileLinksChecked": 27,
+  "brokenReportLinks": [],
+  "sensitivePatternHits": [],
+  "gitStatus": [
+    "?? outputs/validation/overall-acceptance-20261023/"
+  ],
+  "productDiffEmpty": true
+}

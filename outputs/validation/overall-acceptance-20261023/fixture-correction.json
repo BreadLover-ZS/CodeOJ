@@ -1,0 +1,14 @@
+{
+  "initialFailure": "business-matrix/native/browser.log: Timeout waiting for login account input",
+  "cause": "Original acceptance orchestrator omitted VUE_APP_API_BASE_URL; generated OpenAPI defaults to http://localhost:8101, while the owned Gateway uses a random port behind the browser same-origin proxy. The initial router waits for current-user lookup before navigation.",
+  "evidence": [
+    "codeoj-frontend/generated/core/OpenAPI.ts",
+    "codeoj-frontend/src/access/index.ts",
+    "scripts/test-native-stack.sh:19",
+    "scripts/local/start-stack.py:252"
+  ],
+  "fix": "Rebuild with VUE_APP_API_BASE_URL empty, as existing supported launchers do; rerun full suite in a new evidence/database directory",
+  "sourceOrAssertionChanges": false,
+  "initialEvidenceRetained": true,
+  "finalRerunEvidence": "business-matrix-02/"
+}

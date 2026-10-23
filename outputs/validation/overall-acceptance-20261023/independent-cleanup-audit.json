@@ -1,0 +1,30 @@
+{
+  "ownedTemporaryRootExists": false,
+  "remainingOpenOwnedPorts": [],
+  "portsChecked": 63,
+  "remainingMatchingRuntimeProcesses": [],
+  "newMatchingHarnessDirectories": [],
+  "runsChecked": [
+    {
+      "receipt": "judge-cutover/run.json",
+      "runnerReportedDataRemoved": true
+    },
+    {
+      "receipt": "current-permissions/run.json",
+      "runnerReportedDataRemoved": true
+    },
+    {
+      "receipt": "registration-recovery/run.json",
+      "runnerReportedDataRemoved": true
+    },
+    {
+      "receipt": "business-matrix/native/run.json",
+      "runnerReportedDataRemoved": true
+    },
+    {
+      "receipt": "business-matrix-02/native/run.json",
+      "runnerReportedDataRemoved": true
+    }
+  ],
+  "passed": true
+}

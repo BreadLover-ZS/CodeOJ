@@ -1,0 +1,52 @@
+{"at": "2026-10-23T06:24:08.406474+00:00", "action": "STAGE_STARTED", "stage": "native-preparation"}
+{"at": "2026-10-23T06:24:08.406770+00:00", "action": "STAGE_STARTED", "stage": "frontend-build"}
+{"at": "2026-10-23T06:24:08.407962+00:00", "action": "DOWNLOAD_STARTED", "asset": "lima.tgz"}
+{"at": "2026-10-23T06:24:08.408058+00:00", "action": "DOWNLOAD_STARTED", "asset": "docker-mac.tgz"}
+{"at": "2026-10-23T06:24:08.408442+00:00", "action": "DOWNLOAD_STARTED", "asset": "docker-linux.tgz"}
+{"at": "2026-10-23T06:24:08.409599+00:00", "action": "DOWNLOAD_STARTED", "asset": "ubuntu.img"}
+{"at": "2026-10-23T06:24:22.319327+00:00", "action": "STAGE_FINISHED", "stage": "frontend-build", "status": "PASS", "exitCode": 0, "elapsedSeconds": 13.911}
+{"at": "2026-10-23T06:24:24.895249+00:00", "action": "DOWNLOAD_PROGRESS", "asset": "docker-mac.tgz", "receivedMiB": 14}
+{"at": "2026-10-23T06:24:24.909426+00:00", "action": "DOWNLOAD_PROGRESS", "asset": "docker-linux.tgz", "receivedMiB": 9}
+{"at": "2026-10-23T06:24:25.240748+00:00", "action": "DOWNLOAD_PROGRESS", "asset": "lima.tgz", "receivedMiB": 6}
+{"at": "2026-10-23T06:24:25.305904+00:00", "action": "DOWNLOAD_PROGRESS", "asset": "ubuntu.img", "receivedMiB": 4}
+{"at": "2026-10-23T06:24:28.658560+00:00", "action": "DOWNLOAD_VERIFIED", "asset": "docker-mac.tgz"}
+{"at": "2026-10-23T06:24:40.530087+00:00", "action": "DOWNLOAD_PROGRESS", "asset": "docker-linux.tgz", "receivedMiB": 25}
+{"at": "2026-10-23T06:24:40.542074+00:00", "action": "DOWNLOAD_PROGRESS", "asset": "lima.tgz", "receivedMiB": 22}
+{"at": "2026-10-23T06:24:40.888175+00:00", "action": "DOWNLOAD_PROGRESS", "asset": "ubuntu.img", "receivedMiB": 17}
+{"at": "2026-10-23T06:24:53.862961+00:00", "action": "DOWNLOAD_VERIFIED", "asset": "lima.tgz"}
+{"at": "2026-10-23T06:24:55.761431+00:00", "action": "DOWNLOAD_PROGRESS", "asset": "docker-linux.tgz", "receivedMiB": 41}
+{"at": "2026-10-23T06:24:55.933885+00:00", "action": "DOWNLOAD_PROGRESS", "asset": "ubuntu.img", "receivedMiB": 30}
+{"at": "2026-10-23T06:25:11.445485+00:00", "action": "DOWNLOAD_PROGRESS", "asset": "docker-linux.tgz", "receivedMiB": 56}
+{"at": "2026-10-23T06:25:11.664890+00:00", "action": "DOWNLOAD_PROGRESS", "asset": "ubuntu.img", "receivedMiB": 45}
+{"at": "2026-10-23T06:25:27.093407+00:00", "action": "DOWNLOAD_PROGRESS", "asset": "ubuntu.img", "receivedMiB": 64}
+{"at": "2026-10-23T06:25:27.124725+00:00", "action": "DOWNLOAD_PROGRESS", "asset": "docker-linux.tgz", "receivedMiB": 72}
+{"at": "2026-10-23T06:25:28.182799+00:00", "action": "DOWNLOAD_VERIFIED", "asset": "docker-linux.tgz"}
+{"at": "2026-10-23T06:25:42.337033+00:00", "action": "DOWNLOAD_PROGRESS", "asset": "ubuntu.img", "receivedMiB": 89}
+{"at": "2026-10-23T06:25:57.465049+00:00", "action": "DOWNLOAD_PROGRESS", "asset": "ubuntu.img", "receivedMiB": 133}
+{"at": "2026-10-23T06:26:12.638408+00:00", "action": "DOWNLOAD_PROGRESS", "asset": "ubuntu.img", "receivedMiB": 209}
+{"at": "2026-10-23T06:26:27.771420+00:00", "action": "DOWNLOAD_PROGRESS", "asset": "ubuntu.img", "receivedMiB": 272}
+{"at": "2026-10-23T06:26:33.982387+00:00", "action": "STAGE_FINISHED", "stage": "native-preparation", "status": "PASS", "exitCode": 0, "elapsedSeconds": 145.576}
+{"at": "2026-10-23T06:26:42.870592+00:00", "action": "DOWNLOAD_PROGRESS", "asset": "ubuntu.img", "receivedMiB": 329}
+{"at": "2026-10-23T06:26:58.000228+00:00", "action": "DOWNLOAD_PROGRESS", "asset": "ubuntu.img", "receivedMiB": 383}
+{"at": "2026-10-23T06:27:13.095808+00:00", "action": "DOWNLOAD_PROGRESS", "asset": "ubuntu.img", "receivedMiB": 425}
+{"at": "2026-10-23T06:27:28.116916+00:00", "action": "DOWNLOAD_PROGRESS", "asset": "ubuntu.img", "receivedMiB": 469}
+{"at": "2026-10-23T06:27:43.183173+00:00", "action": "DOWNLOAD_PROGRESS", "asset": "ubuntu.img", "receivedMiB": 539}
+{"at": "2026-10-23T06:27:56.229105+00:00", "action": "DOWNLOAD_VERIFIED", "asset": "ubuntu.img"}
+{"at": "2026-10-23T06:27:57.069672+00:00", "action": "PRIVATE_VM_STARTING"}
+{"at": "2026-10-23T06:28:11.631959+00:00", "action": "PRIVATE_DOCKER_READY", "version": "29.9.2", "cgroup": "2"}
+{"at": "2026-10-23T06:29:16.481556+00:00", "action": "PINNED_ISOLATION_IMAGE_READY", "image": "sha256:5d4bdb63cf15accd7caf2cd14290be952237a74e60ac302c4c6068a1ad4f134d"}
+{"at": "2026-10-23T06:29:16.482295+00:00", "action": "STAGE_STARTED", "stage": "backend-regression"}
+{"at": "2026-10-23T06:29:50.159004+00:00", "action": "STAGE_FINISHED", "stage": "backend-regression", "status": "PASS", "exitCode": 0, "elapsedSeconds": 33.676}
+{"at": "2026-10-23T06:29:50.168665+00:00", "action": "STAGE_STARTED", "stage": "startup-unit-tests"}
+{"at": "2026-10-23T06:29:50.298592+00:00", "action": "STAGE_FINISHED", "stage": "startup-unit-tests", "status": "PASS", "exitCode": 0, "elapsedSeconds": 0.13}
+{"at": "2026-10-23T06:29:50.302447+00:00", "action": "STAGE_STARTED", "stage": "isolation-probes"}
+{"at": "2026-10-23T06:30:27.012406+00:00", "action": "STAGE_FINISHED", "stage": "isolation-probes", "status": "PASS", "exitCode": 0, "elapsedSeconds": 36.71}
+{"at": "2026-10-23T06:30:27.057025+00:00", "action": "STAGE_STARTED", "stage": "business-matrix"}
+{"at": "2026-10-23T06:32:48.853102+00:00", "action": "STAGE_FINISHED", "stage": "business-matrix", "status": "FAIL", "exitCode": 1, "elapsedSeconds": 141.795}
+{"at": "2026-10-23T06:32:48.950857+00:00", "action": "STAGE_STARTED", "stage": "current-permissions"}
+{"at": "2026-10-23T06:33:18.648353+00:00", "action": "STAGE_FINISHED", "stage": "current-permissions", "status": "PASS", "exitCode": 0, "elapsedSeconds": 29.697}
+{"at": "2026-10-23T06:33:18.694482+00:00", "action": "STAGE_STARTED", "stage": "registration-recovery"}
+{"at": "2026-10-23T06:46:08.589754+00:00", "action": "STAGE_FINISHED", "stage": "registration-recovery", "status": "PASS", "exitCode": 0, "elapsedSeconds": 769.894}
+{"at": "2026-10-23T06:46:08.646166+00:00", "action": "STAGE_STARTED", "stage": "judge-cutover"}
+{"at": "2026-10-23T06:47:04.495457+00:00", "action": "STAGE_FINISHED", "stage": "judge-cutover", "status": "PASS", "exitCode": 0, "elapsedSeconds": 55.849}
+{"at": "2026-10-23T06:47:05.390900+00:00", "action": "ACCEPTANCE_FINISHED", "stages": [{"stage": "frontend-build", "status": "PASS", "exitCode": 0, "elapsedSeconds": 13.911}, {"stage": "native-preparation", "status": "PASS", "exitCode": 0, "elapsedSeconds": 145.576}, {"stage": "backend-regression", "status": "PASS", "exitCode": 0, "elapsedSeconds": 33.676}, {"stage": "startup-unit-tests", "status": "PASS", "exitCode": 0, "elapsedSeconds": 0.13}, {"stage": "isolation-probes", "status": "PASS", "exitCode": 0, "elapsedSeconds": 36.71}, {"stage": "business-matrix", "status": "FAIL", "exitCode": 1, "elapsedSeconds": 141.795}, {"stage": "current-permissions", "status": "PASS", "exitCode": 0, "elapsedSeconds": 29.697}, {"stage": "registration-recovery", "status": "PASS", "exitCode": 0, "elapsedSeconds": 769.894}, {"stage": "judge-cutover", "status": "PASS", "exitCode": 0, "elapsedSeconds": 55.849}], "cleanup": {"privateVmRemoved": true, "temporaryRootRemoved": true}}

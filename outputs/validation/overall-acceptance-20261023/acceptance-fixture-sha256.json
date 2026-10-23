@@ -1,0 +1,107 @@
+[
+  {
+    "path": "outputs/validation/final-acceptance-20261018/extended_cases.py",
+    "sha256": "c1ae58765952c2c09ed41a00425a4d38c24f9787211712d4ab6aa89e1fe5f6da",
+    "matchesAcceptedCommit": true
+  },
+  {
+    "path": "outputs/validation/final-acceptance-20261018/fault_proxy.py",
+    "sha256": "711f5138386d7d4389d45a0033ca71f21c74f00f75288942fe5b5f05d0a5988b",
+    "matchesAcceptedCommit": true
+  },
+  {
+    "path": "outputs/validation/final-acceptance-20261018/finalize_evidence.py",
+    "sha256": "04abdba685ad6e70620fcb8238e513f88796fd0e16ebd4562f6f3a8c3142f000",
+    "matchesAcceptedCommit": true
+  },
+  {
+    "path": "outputs/validation/final-acceptance-20261018/followup_cases.py",
+    "sha256": "130fae6222425c2b46de909a12d3202d756fed6d46993f7c0e7f55cba9f2ca8a",
+    "matchesAcceptedCommit": true
+  },
+  {
+    "path": "outputs/validation/final-acceptance-20261018/permission_probe.py",
+    "sha256": "45ece3c7d8efe0e919062bebda3cd240fea5e8b1e61cf34f1b9002e7363b9b6c",
+    "matchesAcceptedCommit": true
+  },
+  {
+    "path": "outputs/validation/final-acceptance-20261018/run_acceptance.py",
+    "sha256": "7671e516587905f66ff8a0647fbc2d48abda9a9609dd9fed391cea7d22879fdf",
+    "matchesAcceptedCommit": true
+  },
+  {
+    "path": "outputs/validation/final-acceptance-20261018/run_diagnostics.py",
+    "sha256": "c193c3788fcf47f529a40e37891ad691797e22a2442b8f894e13a2a8eb4ec853",
+    "matchesAcceptedCommit": true
+  },
+  {
+    "path": "outputs/validation/final-acceptance-20261018/run_followup.py",
+    "sha256": "c7f488ebab316895f18b9ce4447f8bd5d39ea6b6d3783231f1a746cb7bfb8e2a",
+    "matchesAcceptedCommit": true
+  },
+  {
+    "path": "outputs/validation/final-acceptance-20261018/run_snapshot.py",
+    "sha256": "f04f4761d15ed7838a466c2e6221c0b60b177936bd4e102fc30f84ffd9c52a9c",
+    "matchesAcceptedCommit": true
+  },
+  {
+    "path": "scripts/local/check-current-permissions.py",
+    "sha256": "14362f43fdf0ffe2fbecc6e704a69da56845e0c5a3e2aea6d80a2ac1689f03c6",
+    "matchesAcceptedCommit": true
+  },
+  {
+    "path": "scripts/local/check-isolation.py",
+    "sha256": "7b2f5d72a09015fa01912665e23a57cc1b9c718ae050e0acfd1e16f970710aac",
+    "matchesAcceptedCommit": true
+  },
+  {
+    "path": "scripts/local/check-judge-cutover.py",
+    "sha256": "23a009d4f69d6b777a8a0885e308f8f2b70bdd4e0ddecdda9bca28a18d59d9f9",
+    "matchesAcceptedCommit": true
+  },
+  {
+    "path": "scripts/local/check-registration-recovery.py",
+    "sha256": "f4ddfb7fe24885518147410af4c22caa85f55e37778908532a634c140ce7b118",
+    "matchesAcceptedCommit": true
+  },
+  {
+    "path": "scripts/local/prepare-runtimes.py",
+    "sha256": "b520c115b68f8c8cf3cccb4c9610858142e22554561deaca609f3d2d149440c6",
+    "matchesAcceptedCommit": true
+  },
+  {
+    "path": "scripts/local/private-isolation.py",
+    "sha256": "2e57674ceca69fc60b3c830c547146d31cd23a30c37bb0d104d70af13983d4f9",
+    "matchesAcceptedCommit": true
+  },
+  {
+    "path": "scripts/local/run-final-acceptance.py",
+    "sha256": "c93d351d954aef288550db064d8f6f09f19864d48098f75e30d10f3467fcb991",
+    "matchesAcceptedCommit": true
+  },
+  {
+    "path": "scripts/local/run-native-stack.py",
+    "sha256": "21af09fb5264fb7473b92aacdd9ea57ba43c3db2f68bc31a83ecdb22a31e8feb",
+    "matchesAcceptedCommit": true
+  },
+  {
+    "path": "scripts/local/start-stack.py",
+    "sha256": "c8afd809829382bd64940da037ca33bc76dd70ca1b383876648eb56ee05eb316",
+    "matchesAcceptedCommit": true
+  },
+  {
+    "path": "scripts/local/verified_download.py",
+    "sha256": "444fcd3016d137941d405d8ec5f7b40587ce9e845feeef0f9a0c20185bee8609",
+    "matchesAcceptedCommit": true
+  },
+  {
+    "path": "scripts/validation/contest-real-browser.cjs",
+    "sha256": "97dc96730d037194b9768b39f6eee918430cf9b4264a4f7fb0ee6be0096400f9",
+    "matchesAcceptedCommit": true
+  },
+  {
+    "path": "scripts/validation/startup-real-browser.cjs",
+    "sha256": "b653806b34272940edaa88f5f03ef236725b02c370f6a40ad3bda8eddcd1d817",
+    "matchesAcceptedCommit": true
+  }
+]

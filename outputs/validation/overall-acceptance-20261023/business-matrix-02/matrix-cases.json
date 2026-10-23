@@ -1,0 +1,419 @@
+[
+  {
+    "case": "fixtures",
+    "jv": [],
+    "status": "PASS",
+    "facts": {
+      "users": 8,
+      "practiceQuestionId": "2113520509380902914",
+      "fixtureOnly": true
+    },
+    "elapsedSeconds": 0.93
+  },
+  {
+    "case": "submission-idempotency",
+    "jv": [
+      "JV01"
+    ],
+    "status": "PASS",
+    "facts": {
+      "identicalReplaySameId": true,
+      "differentContentHttp": 409,
+      "authorityRows": 1
+    },
+    "elapsedSeconds": 1.55
+  },
+  {
+    "case": "api-crash-commit-windows",
+    "jv": [
+      "JV02"
+    ],
+    "status": "PASS",
+    "facts": {
+      "beforeCommitApiSigkill": true,
+      "beforeCommitNoAuthorityOrOutbox": true,
+      "afterCommitApiSigkill": true,
+      "persistedOutboxRecovered": true
+    },
+    "elapsedSeconds": 20.63
+  },
+  {
+    "case": "publisher-return-confirm-loss-disconnect",
+    "jv": [
+      "JV03"
+    ],
+    "status": "PASS",
+    "facts": {
+      "realReturnPersisted": true,
+      "realPublisherConfirmFramesDropped": 1,
+      "unknownAttemptPreserved": true,
+      "disconnectedBrokerRecovered": true
+    },
+    "elapsedSeconds": 33.68
+  },
+  {
+    "case": "two-consumers-precise-lock-observer",
+    "jv": [
+      "JV04"
+    ],
+    "status": "PASS",
+    "facts": {
+      "actualInnoDbLockWaitObserved": true,
+      "triggerWindowObserved": true,
+      "judgeProcesses": 2,
+      "effectiveAttempts": 1,
+      "brokerDuplicateDeliveries": 2,
+      "claimGateSeconds": 2,
+      "actualFeignReadTimeoutMs": 5000,
+      "replacesMisconfiguredPrimaryFaultGate": true
+    },
+    "elapsedSeconds": 6.28
+  },
+  {
+    "case": "worker-sigkill-token-generation-fence",
+    "jv": [
+      "JV05",
+      "JV20"
+    ],
+    "status": "PASS",
+    "facts": {
+      "runningWorkerSigkill": true,
+      "leaseRecoveredWithoutTimeMutation": true,
+      "oldHeartbeatRejected": true,
+      "oldResultRejected": true,
+      "staleGenerationRedelivered": true,
+      "attempts": 2,
+      "oldTokenDigest": "749a0d99c655"
+    },
+    "elapsedSeconds": 27.48
+  },
+  {
+    "case": "commit-before-ack-redelivery",
+    "jv": [
+      "JV06"
+    ],
+    "status": "PASS",
+    "facts": {
+      "resultCommittedBeforeBrokerAck": true,
+      "consumerAckFramesDropped": 1,
+      "workerSigkillAndBrokerRedelivery": true,
+      "attempts": 1,
+      "resultEvents": 1
+    },
+    "elapsedSeconds": 22.94
+  },
+  {
+    "case": "limited-registration",
+    "jv": [
+      "JV09"
+    ],
+    "status": "PASS",
+    "facts": {
+      "contestId": "2113520981634359297",
+      "concurrentUsers": 8,
+      "functionalRequestsNotLoadTest": true,
+      "confirmed": 2,
+      "remainingCapacity": 0,
+      "identityStableOnRetry": true,
+      "ledgerRows": 2
+    },
+    "elapsedSeconds": 4.88
+  },
+  {
+    "case": "reservation-api-crash-before-db",
+    "jv": [
+      "JV10"
+    ],
+    "status": "PASS",
+    "facts": {
+      "apiSigkillAfterRedisBeforeDbCommit": true,
+      "noDbRequestBeforeRestart": true,
+      "sameRequestIdRecovered": true,
+      "sameEventIdRecovered": true,
+      "status": "CONFIRMED"
+    },
+    "elapsedSeconds": 12.21
+  },
+  {
+    "case": "confirmation-marker-failure",
+    "jv": [
+      "JV11"
+    ],
+    "status": "PASS",
+    "facts": {
+      "dbConfirmedRedisConfirmedBeforeDbMarker": true,
+      "fixtureSqlFailureInjected": true,
+      "retryCompletesMarker": true,
+      "capacityDeductedOnce": true
+    },
+    "elapsedSeconds": 11.12
+  },
+  {
+    "case": "redis-down-confirmation-and-release",
+    "jv": [
+      "JV11",
+      "JV22"
+    ],
+    "status": "PASS",
+    "facts": {
+      "dbConfirmationCommittedWhileRedisUnavailable": true,
+      "confirmedMarkRecovered": true,
+      "capacityDeductedOnce": true,
+      "dbTerminalCommittedBeforeRedisRelease": true,
+      "releasePendingDurableDuringOutage": true,
+      "releasedExactlyOnceAfterRecovery": true,
+      "unknownApiStatusesRecorded": [
+        202,
+        503
+      ]
+    },
+    "elapsedSeconds": 52.49
+  },
+  {
+    "case": "reservation-before-close-consume-after",
+    "jv": [
+      "JV12"
+    ],
+    "status": "PASS",
+    "facts": {
+      "requestId": "2113521333192552450",
+      "reservedBeforeClose": true,
+      "actualMqConsumptionAfterClose": true,
+      "newReservationAfterCloseHttp": 409
+    },
+    "elapsedSeconds": 10.18
+  },
+  {
+    "case": "registration-cancel-race",
+    "jv": [
+      "JV13"
+    ],
+    "status": "PASS",
+    "facts": {
+      "cancelRacedWithRegistrationHttp": true,
+      "cancelCommitted": true,
+      "qualificationInvalid": true,
+      "postCancelNewRequestRejected": true,
+      "capacity": 2,
+      "confirmedHistory": 0
+    },
+    "elapsedSeconds": 3.23
+  },
+  {
+    "case": "submission-cancel-race",
+    "jv": [
+      "JV13"
+    ],
+    "status": "PASS",
+    "facts": {
+      "actualSubmitCancelRace": true,
+      "concurrentRequests": 6,
+      "newSubmissionsAfterCancellation": 0,
+      "postCancelNewKeyHttp": 409,
+      "acceptedBeforeCancel": 0
+    },
+    "elapsedSeconds": 9.16
+  },
+  {
+    "case": "private-snapshot-and-submission-permissions",
+    "jv": [
+      "JV14"
+    ],
+    "status": "PASS",
+    "facts": {
+      "unregisteredPrivateStatementHiddenAfterStart": true,
+      "unregisteredSubmissionDenied": true,
+      "snapshotNotAccessibleThroughLegacyQuestion": true,
+      "adminFlagCannotGrantRole": true,
+      "otherUsersSubmissionDenied": true,
+      "internalEndpointsDeniedViaGatewayAndDirect": true
+    },
+    "elapsedSeconds": 11.8
+  },
+  {
+    "case": "accepted-snapshot-edited-before-execution",
+    "jv": [
+      "JV15"
+    ],
+    "status": "PASS",
+    "facts": {
+      "acceptedBeforeSourceEdit": true,
+      "contestAC": true,
+      "newPracticeWA": true,
+      "snapshotHashUnchanged": true,
+      "practiceAcceptedNumUnchanged": true,
+      "fixtureQuestionIndependent": true
+    },
+    "elapsedSeconds": 16.75
+  },
+  {
+    "case": "budget-exhaustion-manual-recovery",
+    "jv": [
+      "JV19"
+    ],
+    "status": "PASS",
+    "facts": {
+      "platformFailuresExhaustedAt": 3,
+      "needsAttentionWasNotWa": true,
+      "retryWithoutBudgetHttp": 409,
+      "explicitFiniteRetryCompletesAc": true,
+      "attemptHistory": 4,
+      "auditRows": 2
+    },
+    "elapsedSeconds": 11.69
+  },
+  {
+    "case": "confirmed-unclaimed-recovery",
+    "jv": [
+      "JV21"
+    ],
+    "status": "PASS",
+    "facts": {
+      "confirmedButUnclaimedOverThreshold": true,
+      "generationBefore": 1,
+      "generationAfter": 2,
+      "businessScannerRecovered": true,
+      "effectiveAttempts": 1
+    },
+    "elapsedSeconds": 35.57
+  },
+  {
+    "case": "late-confirm-after-release",
+    "jv": [
+      "JV22"
+    ],
+    "status": "PASS",
+    "facts": {
+      "dbFailedBeforeRelease": true,
+      "realLateConsumerAfterRelease": true,
+      "duplicateLateEvents": 2,
+      "qualifications": 0,
+      "stockBeforeRelease": 1,
+      "stockAfterDuplicates": 2
+    },
+    "elapsedSeconds": 6.06
+  },
+  {
+    "case": "cancel-committed-redis-down",
+    "jv": [
+      "JV23"
+    ],
+    "status": "PASS",
+    "facts": {
+      "cancellationCommittedWhileRedisDown": true,
+      "lateRealConsumerCannotConfirm": true,
+      "newQualificationCount": 0,
+      "redisGateClosedAfterRecovery": true,
+      "reclaimRecovered": true,
+      "newRequestHttp": 409,
+      "cancelResponseMayBeUnknown": 503
+    },
+    "elapsedSeconds": 37.16
+  },
+  {
+    "case": "ledger-initialization-loss-persistence",
+    "jv": [
+      "JV24",
+      "JV28"
+    ],
+    "status": "PASS",
+    "facts": {
+      "initializationRetriesNeverResetStock": true,
+      "partialLedgerLossPausesNotEmptyInventory": true,
+      "reconcileHttpOnLoss": 503,
+      "fixtureOriginalLedgerRestoredForCleanup": true,
+      "persistentKeyTtls": [
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "clockSkewNotIncludedInThisCase": true
+    },
+    "elapsedSeconds": 5.28
+  },
+  {
+    "case": "complete-redis-ledger-loss",
+    "jv": [
+      "JV24"
+    ],
+    "status": "PASS",
+    "facts": {
+      "completeLedgerLossDetected": true,
+      "unknownNeverBecomesEmptyStock": true,
+      "stockNotReinitialized": true,
+      "authorityQualificationRetained": true,
+      "reconcileHttp": 503
+    },
+    "elapsedSeconds": 3.88
+  },
+  {
+    "case": "mysql-clock-skew-both-directions",
+    "jv": [
+      "JV24"
+    ],
+    "status": "PASS",
+    "facts": {
+      "mysqlSessionOnlyClockOffsetsSeconds": [
+        10,
+        -10
+      ],
+      "positiveAndNegativeSkewPause": true,
+      "reservationsCreated": 0,
+      "stockNotReset": true,
+      "hostClockUnchanged": true
+    },
+    "elapsedSeconds": 25.75
+  },
+  {
+    "case": "score-race-rebuild-finalization",
+    "jv": [
+      "JV16",
+      "JV17",
+      "JV18",
+      "JV26",
+      "JV27"
+    ],
+    "status": "PASS",
+    "facts": {
+      "contestId": "2113522064985358337",
+      "controlledAcceptedAtFixture": true,
+      "timestampFixtureScope": "5 HTTP submissions retimed only in isolated DB to produce exact hand-calculated ties; not claimed as natural HTTP timing",
+      "initialAllZeroRank": 1,
+      "intermediateTwoUsersTieAtRank": 1,
+      "sameUserTwoProblemsActuallyRunningConcurrently": true,
+      "finalRanks": [
+        1,
+        2,
+        3,
+        3
+      ],
+      "crossPageZeroRanks": [
+        3,
+        3
+      ],
+      "actualAcceptedBeforeDeadlineCompletedAfter": true,
+      "pendingFinishHttp": 409,
+      "rebuildSqlFailureHttp": 503,
+      "rollbackPreservedVersion": 1,
+      "firstLateScoreDeliveryDuringRebuild": true,
+      "atomicVersionObserved": 2,
+      "finalVersion": 2
+    },
+    "elapsedSeconds": 55.06
+  },
+  {
+    "case": "practice-spec-frozen-at-acceptance",
+    "jv": [
+      "JV29"
+    ],
+    "status": "PASS",
+    "facts": {
+      "actualPracticeApiAndMq": true,
+      "queuedBeforeEditUsesOldSpec": "AC",
+      "newSubmissionUsesNewSpec": "WA",
+      "immutableSpecHashesDiffer": true
+    },
+    "elapsedSeconds": 5.89
+  }
+]

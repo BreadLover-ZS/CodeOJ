@@ -1,0 +1,9 @@
+locator.fill: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for getByPlaceholder('账号', { exact: true })[22m
+
+    at login (/Users/zzds/Workspace/gitStore/CodeOJ/scripts/validation/contest-real-browser.cjs:24:95)
+    at async /Users/zzds/Workspace/gitStore/CodeOJ/scripts/validation/contest-real-browser.cjs:28:17 {
+  log: [ "  - waiting for getByPlaceholder('账号', { exact: true })" ],
+  name: 'TimeoutError'
+}

@@ -1,0 +1,445 @@
+[
+  {
+    "id": "JV01",
+    "label": "同幂等键重发提交；再换代码重发",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "submission-idempotency",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV02",
+    "label": "提交事务提交前/后分别杀API",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "api-crash-commit-windows",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV03",
+    "label": "MQ断连、Confirm丢失、不可路由",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "publisher-return-confirm-loss-disconnect",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV04",
+    "label": "两消费者同时处理同一消息",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "two-consumers-precise-lock-observer",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV05",
+    "label": "RUNNING时杀worker并重启",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "worker-sigkill-token-generation-fence",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV06",
+    "label": "结果事务后、ACK前杀worker",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "commit-before-ack-redelivery",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV07",
+    "label": "无输出死循环、stderr刷屏、stdin不读",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "isolation-probes",
+        "case": "real-java-and-cgroup-metrics",
+        "status": "PASS"
+      },
+      {
+        "suite": "isolation-probes",
+        "case": "wall-deadline",
+        "status": "PASS"
+      },
+      {
+        "suite": "isolation-probes",
+        "case": "stdout-budget",
+        "status": "PASS"
+      },
+      {
+        "suite": "isolation-probes",
+        "case": "stderr-budget",
+        "status": "PASS"
+      },
+      {
+        "suite": "isolation-probes",
+        "case": "stdin-not-read",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV08",
+    "label": "内存、PID、网络、文件越界样例",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "isolation-probes",
+        "case": "network-denied",
+        "status": "PASS"
+      },
+      {
+        "suite": "isolation-probes",
+        "case": "nonroot-no-capabilities-no-docker-socket",
+        "status": "PASS"
+      },
+      {
+        "suite": "isolation-probes",
+        "case": "readonly-root-artifacts-and-private-receipt",
+        "status": "PASS"
+      },
+      {
+        "suite": "isolation-probes",
+        "case": "bounded-tmpfs",
+        "status": "PASS"
+      },
+      {
+        "suite": "isolation-probes",
+        "case": "pid-cgroup-limit-and-descendant-cleanup",
+        "status": "PASS"
+      },
+      {
+        "suite": "isolation-probes",
+        "case": "cgroup-memory-limit",
+        "status": "PASS"
+      },
+      {
+        "suite": "isolation-probes",
+        "case": "cpu-quota-throttling",
+        "status": "PASS"
+      },
+      {
+        "suite": "isolation-probes",
+        "case": "case-filesystem-isolation",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV09",
+    "label": "M名额、N>M个用户、重复请求混合",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "limited-registration",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV10",
+    "label": "Redis预留后、DB落盘前杀API",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "reservation-api-crash-before-db",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV11",
+    "label": "DB确认后Redis标记失败；回收时Redis失败",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "confirmation-marker-failure",
+        "status": "PASS"
+      },
+      {
+        "suite": "business-matrix-02",
+        "case": "redis-down-confirmation-and-release",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV12",
+    "label": "报名关闭前预留、关闭后消费",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "reservation-before-close-consume-after",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV13",
+    "label": "取消与报名消费、取消与提交并发",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "registration-cancel-race",
+        "status": "PASS"
+      },
+      {
+        "suite": "business-matrix-02",
+        "case": "submission-cancel-race",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV14",
+    "label": "未报名/他人账号/普通API绕过赛题",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "private-snapshot-and-submission-permissions",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV15",
+    "label": "赛中编辑原题，再执行既有提交",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "accepted-snapshot-edited-before-execution",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV16",
+    "label": "同题多次AC，较早提交结果更晚到",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "score-race-rebuild-finalization",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV17",
+    "label": "截止前受理、截止后完成",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "score-race-rebuild-finalization",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV18",
+    "label": "清空榜单缓存，重建投影",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "score-race-rebuild-finalization",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV19",
+    "label": "基础设施反复失败到重试上限",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "budget-exhaustion-manual-recovery",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV20",
+    "label": "旧dispatchGeneration消息在新代次到达",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "worker-sigkill-token-generation-fence",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV21",
+    "label": "Broker已Confirm但任务长期QUEUED未领取",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "confirmed-unclaimed-recovery",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV22",
+    "label": "终止/回收与迟到确认消费者竞争",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "redis-down-confirmation-and-release",
+        "status": "PASS"
+      },
+      {
+        "suite": "business-matrix-02",
+        "case": "late-confirm-after-release",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV23",
+    "label": "取消已提交但Redis关闸失败",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "cancel-committed-redis-down",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV24",
+    "label": "重复初始化、恢复时存在未决预留/时钟偏差",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "ledger-initialization-loss-persistence",
+        "status": "PASS"
+      },
+      {
+        "suite": "business-matrix-02",
+        "case": "complete-redis-ledger-loss",
+        "status": "PASS"
+      },
+      {
+        "suite": "business-matrix-02",
+        "case": "mysql-clock-skew-both-directions",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV25",
+    "label": "slot耗尽、旧沙箱失联后仍运行",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "isolation-probes",
+        "case": "pid-cgroup-limit-and-descendant-cleanup",
+        "status": "PASS"
+      },
+      {
+        "suite": "isolation-probes",
+        "case": "setsid-descendants-cleaned-on-normal-exit",
+        "status": "PASS"
+      },
+      {
+        "suite": "isolation-probes",
+        "case": "shared-slot-token-dedup-and-restart",
+        "status": "PASS"
+      },
+      {
+        "suite": "isolation-probes",
+        "case": "sigkill-manager-independent-deadline-recovery",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV26",
+    "label": "同用户两题同时AC、并列跨页与零分用户",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "score-race-rebuild-finalization",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV27",
+    "label": "最终重建期间迟到消息和旧版本缓存",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "score-race-rebuild-finalization",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV28",
+    "label": "报名在途账本到达普通缓存TTL",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "ledger-initialization-loss-persistence",
+        "status": "PASS"
+      }
+    ]
+  },
+  {
+    "id": "JV29",
+    "label": "普通练习提交排队后管理员修改题目",
+    "status": "PASS",
+    "evidence": [
+      {
+        "suite": "business-matrix-02",
+        "case": "practice-spec-frozen-at-acceptance",
+        "status": "PASS"
+      }
+    ]
+  }
+]

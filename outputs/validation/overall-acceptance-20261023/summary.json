@@ -1,0 +1,73 @@
+{
+  "status": "PASS",
+  "scope": "Current Mac full local acceptance; no Nacos/deployment/load testing",
+  "commit": "19f77fc11c50aac34fa189a7b39bcb27fad9b139",
+  "finishedAt": "2026-10-23T06:48:41.824558+00:00",
+  "checks": {
+    "sameSourceAndCommit": true,
+    "backend": true,
+    "packagedLuaMatchesSource": true,
+    "businessGroups": true,
+    "fullBaseline": true,
+    "browser": true,
+    "permissions": true,
+    "isolation": true,
+    "registrationRecovery": true,
+    "cutover": true,
+    "allJv": true,
+    "cleanup": true,
+    "remainingStages": true,
+    "localDocumentLinks": true
+  },
+  "changedTrackedSources": [],
+  "backend": {
+    "tests": 248,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "backendClasses": 27,
+  "businessGroups": 25,
+  "businessFaultGroupsExcludingFixtureSetup": 24,
+  "browserChecks": 8,
+  "isolationChecks": 16,
+  "permissions": 53,
+  "jv": {
+    "PASS": 29
+  },
+  "rawStageFailures": [
+    {
+      "stage": "business-matrix",
+      "status": "FAIL",
+      "exitCode": 1,
+      "elapsedSeconds": 141.795
+    }
+  ],
+  "resolvedFixtureFailure": {
+    "initialFailure": "business-matrix/native/browser.log: Timeout waiting for login account input",
+    "cause": "Original acceptance orchestrator omitted VUE_APP_API_BASE_URL; generated OpenAPI defaults to http://localhost:8101, while the owned Gateway uses a random port behind the browser same-origin proxy. The initial router waits for current-user lookup before navigation.",
+    "evidence": [
+      "codeoj-frontend/generated/core/OpenAPI.ts",
+      "codeoj-frontend/src/access/index.ts",
+      "scripts/test-native-stack.sh:19",
+      "scripts/local/start-stack.py:252"
+    ],
+    "fix": "Rebuild with VUE_APP_API_BASE_URL empty, as existing supported launchers do; rerun full suite in a new evidence/database directory",
+    "sourceOrAssertionChanges": false,
+    "initialEvidenceRetained": true,
+    "finalRerunEvidence": "business-matrix-02/"
+  },
+  "unresolvedStages": [],
+  "nonblockingFindings": [
+    "Frontend: 21 ESLint warnings, 5.02 MiB entrypoint, outdated Browserslist data and Node API deprecation notices",
+    "Historical handoff counts differ from current default isolation entrypoint, which now runs 16 checks including CPU/PID kernel observations"
+  ],
+  "untested": [
+    "Real Nacos service discovery",
+    "Target-environment deployment and production rollout/rollback",
+    "Load/performance and long-duration stability",
+    "Multi-host capacity and power-loss recovery",
+    "Kernel/container-escape certification"
+  ],
+  "published": false
+}

@@ -1,0 +1,56 @@
+[
+  {
+    "stage": "frontend-build",
+    "status": "PASS",
+    "exitCode": 0,
+    "elapsedSeconds": 13.911
+  },
+  {
+    "stage": "native-preparation",
+    "status": "PASS",
+    "exitCode": 0,
+    "elapsedSeconds": 145.576
+  },
+  {
+    "stage": "backend-regression",
+    "status": "PASS",
+    "exitCode": 0,
+    "elapsedSeconds": 33.676
+  },
+  {
+    "stage": "startup-unit-tests",
+    "status": "PASS",
+    "exitCode": 0,
+    "elapsedSeconds": 0.13
+  },
+  {
+    "stage": "isolation-probes",
+    "status": "PASS",
+    "exitCode": 0,
+    "elapsedSeconds": 36.71
+  },
+  {
+    "stage": "business-matrix",
+    "status": "FAIL",
+    "exitCode": 1,
+    "elapsedSeconds": 141.795
+  },
+  {
+    "stage": "current-permissions",
+    "status": "PASS",
+    "exitCode": 0,
+    "elapsedSeconds": 29.697
+  },
+  {
+    "stage": "registration-recovery",
+    "status": "PASS",
+    "exitCode": 0,
+    "elapsedSeconds": 769.894
+  },
+  {
+    "stage": "judge-cutover",
+    "status": "PASS",
+    "exitCode": 0,
+    "elapsedSeconds": 55.849
+  }
+]

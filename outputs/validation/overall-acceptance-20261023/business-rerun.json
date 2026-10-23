@@ -1,0 +1,10 @@
+{
+  "stage": "business-matrix-02",
+  "status": "PASS",
+  "correction": "Build frontend with VUE_APP_API_BASE_URL empty for the disposable same-origin Gateway proxy",
+  "productSourceChanged": false,
+  "businessAssertionsChanged": false,
+  "exitCode": 0,
+  "elapsedSeconds": 667.549,
+  "finishedAt": "2026-10-23T06:46:08.584003+00:00"
+}

@@ -1,0 +1,812 @@
+{
+  "scope": "Real native MySQL/Redis/RabbitMQ, Spring Session, Gateway, Feign; static discovery, no Nacos; not load/production acceptance",
+  "sandboxMode": "isolated",
+  "isolationImage": "sha256:5d4bdb63cf15accd7caf2cd14290be952237a74e60ac302c4c6068a1ad4f134d",
+  "passed": true,
+  "ports": {
+    "mysql": 61591,
+    "redis": 61592,
+    "amqp": 61593,
+    "management": 61594,
+    "epmd": 61595,
+    "distribution": 61596,
+    "user": 61597,
+    "question": 61598,
+    "judge": 61599,
+    "sandbox": 61600,
+    "gateway": 61601,
+    "frontend": 61602
+  },
+  "runtimeArchives": {
+    "mysql": {
+      "url": "https://cdn.mysql.com/Downloads/MySQL-8.0/mysql-8.0.46-macos15-arm64.tar.gz",
+      "verification": "sha256:6ca4a361a45f5019fbf6d500997986b4aaf6f0e30ff9c41179d1e8ecd635f3db",
+      "sha256": "6ca4a361a45f5019fbf6d500997986b4aaf6f0e30ff9c41179d1e8ecd635f3db"
+    },
+    "rabbitmq": {
+      "url": "https://github.com/rabbitmq/rabbitmq-server/releases/download/v4.3.6/rabbitmq-server-generic-unix-4.3.6.tar.xz",
+      "verification": "sha256:aa0ff5de9ff0136dc42eba21dc3a973cc3b286437cdba0f45556e890509c1614",
+      "sha256": "aa0ff5de9ff0136dc42eba21dc3a973cc3b286437cdba0f45556e890509c1614"
+    },
+    "erlang": {
+      "url": "https://ghcr.io/v2/homebrew/core/erlang/28/blobs/sha256:e37b0ce944f1e772767bb7b2fa8844076c3069754ce44c224f15d76fd39aed67",
+      "verification": "sha256:e37b0ce944f1e772767bb7b2fa8844076c3069754ce44c224f15d76fd39aed67",
+      "sha256": "e37b0ce944f1e772767bb7b2fa8844076c3069754ce44c224f15d76fd39aed67"
+    },
+    "openssl": {
+      "url": "https://ghcr.io/v2/homebrew/core/openssl/4/blobs/sha256:39fb74d25429fbb9794cf4327530ba458b97d0000406715270d3b0715bd6ba35",
+      "verification": "sha256:39fb74d25429fbb9794cf4327530ba458b97d0000406715270d3b0715bd6ba35",
+      "sha256": "39fb74d25429fbb9794cf4327530ba458b97d0000406715270d3b0715bd6ba35"
+    },
+    "redis": {
+      "url": "https://download.redis.io/releases/redis-6.2.24.tar.gz",
+      "verification": "sha256:c3f112749c7cb108597713469cc9beed305e91f036fba313ce8dcbad829f5821",
+      "sha256": "c3f112749c7cb108597713469cc9beed305e91f036fba313ce8dcbad829f5821"
+    }
+  },
+  "events": [
+    {
+      "at": "2026-10-23T06:32:49.031468+00:00",
+      "action": "PACKAGED_ARTIFACTS_MATCH_CURRENT_BUILD"
+    },
+    {
+      "at": "2026-10-23T06:32:50.636937+00:00",
+      "action": "MIGRATION_APPLIED",
+      "name": "V001__reliable_judging.sql"
+    },
+    {
+      "at": "2026-10-23T06:32:50.671676+00:00",
+      "action": "MIGRATION_APPLIED",
+      "name": "V002__contest_core.sql"
+    },
+    {
+      "at": "2026-10-23T06:32:50.717121+00:00",
+      "action": "MIGRATION_APPLIED",
+      "name": "V003__async_registration.sql"
+    },
+    {
+      "at": "2026-10-23T06:32:50.743395+00:00",
+      "action": "MIGRATION_APPLIED",
+      "name": "V004__contest_scoreboard.sql"
+    },
+    {
+      "at": "2026-10-23T06:32:50.760553+00:00",
+      "action": "MIGRATION_APPLIED",
+      "name": "V005__registration_recovery_fence.sql"
+    },
+    {
+      "at": "2026-10-23T06:32:52.771066+00:00",
+      "action": "INFRASTRUCTURE_READY",
+      "mysql": "8.0.46",
+      "rabbitmq": "4.3.6",
+      "erlang": "28.5.0.8",
+      "redis": "6.2.24"
+    },
+    {
+      "at": "2026-10-23T06:32:54.296530+00:00",
+      "action": "SERVICE_READY",
+      "service": "sandbox"
+    },
+    {
+      "at": "2026-10-23T06:32:57.031601+00:00",
+      "action": "SERVICE_READY",
+      "service": "user"
+    },
+    {
+      "at": "2026-10-23T06:33:00.371797+00:00",
+      "action": "SERVICE_READY",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-23T06:33:03.414856+00:00",
+      "action": "SERVICE_READY",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:33:05.552128+00:00",
+      "action": "SERVICE_READY",
+      "service": "gateway"
+    },
+    {
+      "at": "2026-10-23T06:33:06.478496+00:00",
+      "action": "REAL_SESSION_LOGIN_PASSED"
+    },
+    {
+      "at": "2026-10-23T06:33:06.682604+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "current administrator reads private question",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/question/get?id=2113519063327514625",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 0,
+      "expected": "allowed"
+    },
+    {
+      "at": "2026-10-23T06:33:06.694701+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "owner reads private question",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/question/get?id=2113519063327514625",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 0,
+      "expected": "allowed"
+    },
+    {
+      "at": "2026-10-23T06:33:06.710499+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "ordinary non-owner cannot read private question",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/question/get?id=2113519063327514625",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:06.721618+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "anonymous private question is unauthenticated",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/question/get?id=2113519063327514625",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 40100,
+      "expected": "unauthenticated"
+    },
+    {
+      "at": "2026-10-23T06:33:06.780435+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "public question view remains readable",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/question/get/vo?id=2113519063327514625",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 0,
+      "expected": "allowed"
+    },
+    {
+      "at": "2026-10-23T06:33:06.800720+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "current administrator updates question",
+      "status": "PASS",
+      "method": "POST",
+      "path": "/question/update",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 0,
+      "expected": "allowed"
+    },
+    {
+      "at": "2026-10-23T06:33:06.854232+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "current administrator lists private questions",
+      "status": "PASS",
+      "method": "POST",
+      "path": "/question/list/page",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 0,
+      "expected": "allowed"
+    },
+    {
+      "at": "2026-10-23T06:33:06.949037+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "current administrator manages users",
+      "status": "PASS",
+      "method": "POST",
+      "path": "/user/list/page",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 0,
+      "expected": "allowed"
+    },
+    {
+      "at": "2026-10-23T06:33:06.970960+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "current administrator sees judge operations",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/admin/operations",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 0,
+      "expected": "allowed"
+    },
+    {
+      "at": "2026-10-23T06:33:08.304016+00:00",
+      "action": "REAL_PRACTICE_JUDGE_AC",
+      "submissionId": "2113519064845852674"
+    },
+    {
+      "at": "2026-10-23T06:33:08.320601+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "current administrator reads another users submission",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/submissions/2113519064845852674",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 0,
+      "expected": "allowed"
+    },
+    {
+      "at": "2026-10-23T06:33:08.337537+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "ordinary session initially has no user management role",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/user/get?id=2113519061838544897",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.369447+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "promotion applies to same old ordinary Session",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/user/get?id=2113519061838544897",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 0,
+      "expected": "allowed"
+    },
+    {
+      "at": "2026-10-23T06:33:08.384117+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "promotion applies across service boundary",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/question/get?id=2113519063327514625",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 0,
+      "expected": "allowed"
+    },
+    {
+      "at": "2026-10-23T06:33:08.421374+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "administrator contest control before demotion",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/contests/2113519070701101058?admin=true",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 0,
+      "expected": "allowed"
+    },
+    {
+      "at": "2026-10-23T06:33:08.457805+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "F03 revoked administrator cannot read private judge cases",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/question/get?id=2113519063327514625",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.471007+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "F03 revoked administrator cannot update question",
+      "status": "PASS",
+      "method": "POST",
+      "path": "/question/update",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.489911+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "revoked administrator cannot edit another owners question",
+      "status": "PASS",
+      "method": "POST",
+      "path": "/question/edit",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.500825+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "revoked administrator cannot delete another owners question",
+      "status": "PASS",
+      "method": "POST",
+      "path": "/question/delete",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.510175+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "revoked administrator cannot list hidden questions",
+      "status": "PASS",
+      "method": "POST",
+      "path": "/question/list/page",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.522123+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "revoked administrator cannot manage contest",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/contests/2113519070701101058?admin=true",
+      "via": "gateway",
+      "httpStatus": 403,
+      "businessCode": 40300,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.531643+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "revoked administrator cannot read another users submission",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/submissions/2113519064845852674",
+      "via": "gateway",
+      "httpStatus": 403,
+      "businessCode": 40300,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.550796+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "revoked administrator legacy submission list remains sanitized",
+      "status": "PASS",
+      "method": "POST",
+      "path": "/question/question_submit/list/page",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 0,
+      "expected": "allowed"
+    },
+    {
+      "at": "2026-10-23T06:33:08.564564+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "owner legacy submission list retains own source",
+      "status": "PASS",
+      "method": "POST",
+      "path": "/question/question_submit/list/page",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 0,
+      "expected": "allowed"
+    },
+    {
+      "at": "2026-10-23T06:33:08.576363+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "revoked administrator denied /admin/operations",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/admin/operations",
+      "via": "gateway",
+      "httpStatus": 403,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.586119+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "revoked administrator denied /admin/operations/1",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/admin/operations/1",
+      "via": "gateway",
+      "httpStatus": 403,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.594315+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "revoked administrator denied /admin/operations/1/retry",
+      "status": "PASS",
+      "method": "POST",
+      "path": "/admin/operations/1/retry",
+      "via": "gateway",
+      "httpStatus": 403,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.604357+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "revoked administrator denied /user/get?id=2113519061838544897",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/user/get?id=2113519061838544897",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.613406+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "revoked administrator denied /user/get/vo?id=2113519061838544897",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/user/get/vo?id=2113519061838544897",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.621955+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "revoked administrator denied /user/list/page",
+      "status": "PASS",
+      "method": "POST",
+      "path": "/user/list/page",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.630690+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "revoked administrator denied /user/add",
+      "status": "PASS",
+      "method": "POST",
+      "path": "/user/add",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.640035+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "revoked administrator denied /user/update",
+      "status": "PASS",
+      "method": "POST",
+      "path": "/user/update",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.650295+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "revoked administrator denied /user/delete",
+      "status": "PASS",
+      "method": "POST",
+      "path": "/user/delete",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.657231+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "direct question service enforces revocation",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/question/get?id=2113519063327514625",
+      "via": "question",
+      "httpStatus": 200,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.664351+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "direct user service enforces revocation",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/user/get?id=2113519061838544897",
+      "via": "user",
+      "httpStatus": 200,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.700052+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "owner still edits own question",
+      "status": "PASS",
+      "method": "POST",
+      "path": "/question/edit",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 0,
+      "expected": "allowed"
+    },
+    {
+      "at": "2026-10-23T06:33:08.719045+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "banned old owner Session denied /question/get?id=2113519063327514625",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/question/get?id=2113519063327514625",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.727138+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "banned old owner Session denied /question/edit",
+      "status": "PASS",
+      "method": "POST",
+      "path": "/question/edit",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.737818+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "banned old owner Session denied /question/delete",
+      "status": "PASS",
+      "method": "POST",
+      "path": "/question/delete",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.750161+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "banned old owner Session denied /question/add",
+      "status": "PASS",
+      "method": "POST",
+      "path": "/question/add",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.760910+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "banned old owner Session denied /question/question_submit/do",
+      "status": "PASS",
+      "method": "POST",
+      "path": "/question/question_submit/do",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.769415+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "banned old owner Session denied /user/get/login",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/user/get/login",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.777090+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "banned old owner Session denied /user/update/my",
+      "status": "PASS",
+      "method": "POST",
+      "path": "/user/update/my",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:08.794929+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "unban restores owner access without relogin",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/question/get?id=2113519063327514625",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 0,
+      "expected": "allowed"
+    },
+    {
+      "at": "2026-10-23T06:33:08.814040+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "logically deleted owner loses question access",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/question/get?id=2113519063327514625",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 40100,
+      "expected": "unauthenticated"
+    },
+    {
+      "at": "2026-10-23T06:33:08.820182+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "logically deleted owner loses local profile access",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/user/get/login",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 40100,
+      "expected": "unauthenticated"
+    },
+    {
+      "at": "2026-10-23T06:33:08.997883+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "user"
+    },
+    {
+      "at": "2026-10-23T06:33:09.010245+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "user service outage never falls back to old administrator",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/question/get?id=2113519063327514625",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 50000,
+      "expected": "unavailable"
+    },
+    {
+      "at": "2026-10-23T06:33:09.018686+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "user service outage prevents privileged update",
+      "status": "PASS",
+      "method": "POST",
+      "path": "/question/update",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 50000,
+      "expected": "unavailable"
+    },
+    {
+      "at": "2026-10-23T06:33:11.768346+00:00",
+      "action": "PROCESS_RESTARTED",
+      "service": "user"
+    },
+    {
+      "at": "2026-10-23T06:33:11.992244+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "revocation survives user service restart",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/question/get?id=2113519063327514625",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 40101,
+      "expected": "forbidden"
+    },
+    {
+      "at": "2026-10-23T06:33:12.002427+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "current administrator still works after restart",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/question/get?id=2113519063327514625",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 0,
+      "expected": "allowed"
+    },
+    {
+      "at": "2026-10-23T06:33:12.088617+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "regrant applies to original Session",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/question/get?id=2113519063327514625",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 0,
+      "expected": "allowed"
+    },
+    {
+      "at": "2026-10-23T06:33:12.098883+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "regranted administrator can update",
+      "status": "PASS",
+      "method": "POST",
+      "path": "/question/update",
+      "via": "gateway",
+      "httpStatus": 200,
+      "businessCode": 0,
+      "expected": "allowed"
+    },
+    {
+      "at": "2026-10-23T06:33:12.107402+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "gateway rejects unauthenticated internal endpoint",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/user/inner/get/id?userId=2113519061058404353",
+      "via": "gateway",
+      "httpStatus": 403,
+      "businessCode": null,
+      "expected": "internal_denied"
+    },
+    {
+      "at": "2026-10-23T06:33:12.116633+00:00",
+      "action": "PERMISSION_CHECK",
+      "case": "direct service rejects unauthenticated internal endpoint",
+      "status": "PASS",
+      "method": "GET",
+      "path": "/user/inner/get/id?userId=2113519061058404353",
+      "via": "user",
+      "httpStatus": 403,
+      "businessCode": null,
+      "expected": "internal_denied"
+    },
+    {
+      "at": "2026-10-23T06:33:14.642820+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "gateway"
+    },
+    {
+      "at": "2026-10-23T06:33:15.609444+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "judge"
+    },
+    {
+      "at": "2026-10-23T06:33:16.479736+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "question"
+    },
+    {
+      "at": "2026-10-23T06:33:16.655284+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "user"
+    },
+    {
+      "at": "2026-10-23T06:33:16.692010+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "sandbox"
+    },
+    {
+      "at": "2026-10-23T06:33:17.788217+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "rabbitmq"
+    },
+    {
+      "at": "2026-10-23T06:33:17.789659+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "epmd"
+    },
+    {
+      "at": "2026-10-23T06:33:17.828693+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "redis"
+    },
+    {
+      "at": "2026-10-23T06:33:18.604020+00:00",
+      "action": "PROCESS_STOPPED",
+      "service": "mysql"
+    }
+  ],
+  "temporaryDataRemoved": true
+}
