@@ -10,6 +10,7 @@
 | 名额竞争 | `RegistrationService.register` → `RedisRegistrationLedger.reserve` → `lua/contest-registration.lua` → persist+Outbox → `RegistrationConsumer` → confirmRegistration → synchronize | RegistrationRedisIntegrationTest；独立Redis+H2，MQ为手动消费/替身 |
 | Lua 部分执行与旧快照 | `RegistrationService.recoverUnknown` → `RedisRegistrationLedger.repair/check` → Lua mutation/apply/repair/anchored；`RegistrationTransactions.persist` + V005 唯一序号 | 48 项 Redis/H2 测试含故障注入；check-registration-recovery.py 的真实 MySQL/Redis/MQ 故障场景 |
 | 未知与恢复 | `OutboxStore.claim/record` → 每次 publish_attempt → `RegistrationMaintenance` → `recover`/`reconcile` → 人工 review | RegistrationMessagingTest、RegistrationRedisIntegrationTest |
+| 并发对账版本隔离 | `RegistrationService.reconcile` → 固定 begin revision → `finishReconcile` 返回本次新 revision → `issueIfCurrent` 在锁内校验 epoch/revision | RegistrationRedisIntegrationTest 新增七项故障组合；[2026-10-25 修复](registration-recovery.md) |
 | 乱序计分 | `ExecutionCommands.complete` → JUDGE_RESULT → `ScoreboardMessaging.Relay` → `ScoreboardConsumer` → `ScoreboardTransactions.project` → 用户锁+题目最早AC+重算 → 业务回执 | ScoreboardTest、ScoreboardMessagingTest |
 | 并列/缓存 | `ScoreboardController.page` → `ScoreboardService.page` → snapshot元数据 → 版本化页缓存/SQL排序 → 严格领先人数+1 | ScoreboardCacheTest、ScoreboardTest；真实 Chrome 主链及榜单故障矩阵 |
 | 最终结算 | `ContestLifecycle.tick` → FINALIZING → 报名关闭对账/待定解决 → scoreboard rebuild → 新版本校验/切换 → finish → finalVersion | ScoreboardTest、RegistrationRedisIntegrationTest；原生演示 |

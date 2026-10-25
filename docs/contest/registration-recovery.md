@@ -76,3 +76,13 @@ python3 -B scripts/local/check-registration-recovery.py --runtimes /private/path
 ## 6. 与点评仓库的区别
 
 本轮只读取同级 DianPing 当前版本 `8bec9928f853ffb0999787b62e4890fc84864fb4`。其 VoucherOrderServiceImpl 的 handleUnknownReserve 已有异常后查原映射的处理，但 seckill.lua 仍先 DECR，再 SADD/HSET 用户映射；映射不存在时将执行认定为未生效，对脚本内部部分写入不充分。本轮没有修改或运行验收 DianPing，不能把 CodeOJ 的新恢复协议描述成点评也已修复。
+
+## 7. 2026-10-25：并发对账与名额展示修复
+
+本轮修复[全链路审查](../../outputs/validation/registration-chain-review-20261025/report.md)发现的两项问题，保留原审查及其探针作为修复前证据。修复与复查收据见[本轮报告](../../outputs/validation/registration-chain-fix-20261025/report.md)。
+
+对账从 `beginReconcile` 到 Redis 关闸、快照校验及数据库完成，始终使用本次操作取得的 revision；数据库完成后只使用该事务返回的新 revision，不通过另一次查询接管其他操作的版本。失败处理在比赛锁内同时校验 epoch、revision 及可处理状态：旧请求不能暂停更新的成功恢复、覆盖更新的安全暂停或改变取消状态。维护、报名、本人查询及未知结果恢复也携带原观察版本，通过 `issueIfCurrent` 防止迟到错误覆盖新恢复。当前操作遇到真实故障时仍转为 `RECONCILIATION_INCOMPLETE` 暂停。
+
+用户比赛列表及详情改为“已确认人数 / 总名额”。MySQL `remainingCapacity` 保持最终确认事务中的原含义；页面用 `capacity - remainingCapacity` 显示已确认人数，不把在途预留误称为可报名余量，也没有新增 Redis 查询或改变配额扣减。
+
+新增七项独立 Redis/H2 回归覆盖旧请求在初始化后/最后开闸前迟到、新安全暂停、取消、当前操作在数据库完成前后的真实失败，以及部分预留后取消并恢复，以及维护/报名/查询的旧账本错误迟到。它们与既有测试一起验证修复，但不替代真实 MySQL/MQ/浏览器全栈验收。

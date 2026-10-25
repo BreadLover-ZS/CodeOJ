@@ -75,6 +75,13 @@ public class RegistrationTransactions {
         jdbc.update("UPDATE contest SET registrationMode='REDIS_PAUSED',registrationReady=false,registrationIssue=?,version=version+1 WHERE id=?",issue,id);
         audit(id,null,"REGISTRATION_HOLD",issue,c.version,c.version+1,null);
     }
+    /** A delayed external observation may pause only its original authority revision. */
+    @Transactional(rollbackFor=Exception.class)
+    public void issueIfCurrent(long id,long epoch,long revision,String issue) {
+        ContestTransactions.Contest c=contests.load(id,true);RegistrationSettings s=settings(id);
+        if(s.getEpoch()!=epoch || c.version!=revision || !c.mode.startsWith("REDIS_")) { return; }
+        issue(id,issue);
+    }
     private boolean same(RegistrationReservation a,RegistrationReservation b) { return sameIdentity(a,b) && Objects.equals(a.getSequence(),b.getSequence()); }
     private boolean sameIdentity(RegistrationReservation a,RegistrationReservation b) {
         return Objects.equals(a.getRequestId(),b.getRequestId()) && Objects.equals(a.getEventId(),b.getEventId()) && Objects.equals(a.getUserId(),b.getUserId())

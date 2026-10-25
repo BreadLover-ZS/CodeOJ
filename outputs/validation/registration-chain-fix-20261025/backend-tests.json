@@ -1,0 +1,199 @@
+{
+  "totals": {
+    "tests": 255,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "classes": [
+    {
+      "name": "com.codeoj.codeojbackendmodel.model.codesandbox.TextOutputComparatorTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendgateway.ContestRouteTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendserviceclient.auth.CurrentAccountAuthorizationTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendserviceclient.filter.SessionAvailabilityFilterTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardMessagingTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardTest",
+      "tests": 25,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardCacheTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.contest.RegistrationMessagingTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.contest.ContestCoreTest",
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.contest.RegistrationRedisIntegrationTest",
+      "tests": 55,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.submission.outbox.OutboxRelayTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.submission.SubmissionStatusAccessTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcAdviceTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.submission.ReliableExecutionTest",
+      "tests": 26,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.submission.QuestionSubmitPrivacyTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcContractTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackenduserservice.service.CurrentUserServiceTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendjudgeservice.rabbitmq.ReliableJudgeConsumerTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendjudgeservice.judge.SandboxResultMapperTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandboxTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendjudgeservice.judge.ReliableJudgeWorkerTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImplTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendjudgeservice.judge.strategy.JavaLanguageJudgeStrategyTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendcodesandbox.service.impl.DurableExecutionRegistryTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandboxTest",
+      "tests": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendcodesandbox.service.impl.NativeReceiptTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.codeoj.codeojbackendcodesandbox.service.impl.NativeExecutionIdentityTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ]
+}

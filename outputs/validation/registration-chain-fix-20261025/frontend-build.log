@@ -1,0 +1,449 @@
+
+> codeoj-frontend@0.1.0 build
+> vue-cli-service build --dest /private/tmp/codeoj-registration-fix-20261025/frontend-dist
+
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+All browser targets in the browserslist configuration have supported ES module.
+Therefore we don't build two separate bundles for differential loading.
+
+
+-  Building for production...
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+(node:3351) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+(node:3350) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+(node:3356) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+(node:3362) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:3361) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+(node:3358) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:3359) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:3360) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:3357) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+ WARNING  Compiled with 3 warnings12:26:18 PM
+
+[eslint] 
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/App.vue
+  27:3  warning  Unexpected console statement  no-console
+
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/access/checkAccess.ts
+  9:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/access/index.ts
+  7:3  warning  Unexpected console statement  no-console
+
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/components/CodeEditor.vue
+  38:5  warning  Unexpected console statement  no-console
+
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/components/MdEditor.vue
+  13:18  warning  'Viewer' is defined but never used          @typescript-eslint/no-unused-vars
+  14:10  warning  'ref' is defined but never used             @typescript-eslint/no-unused-vars
+  34:7   warning  'props' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  38:5   warning  Unexpected console statement                no-console
+
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/components/MdViewer.vue
+  27:7  warning  'props' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/plugins/axios.ts
+  20:5  warning  Unexpected console statement  no-console
+
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/router/index.ts
+  1:42  warning  'RouteRecordRaw' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/router/routes.ts
+  2:8  warning  'HomeView' is defined but never used   @typescript-eslint/no-unused-vars
+  6:8  warning  'AdminView' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/store/user.ts
+  14:43  warning  'payload' is defined but never used       @typescript-eslint/no-unused-vars
+  32:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/views/question/AddQuestionView.vue
+  123:16  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  136:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/views/question/QuestionSubmitView.vue
+   94:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  124:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  176:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/zzds/Workspace/gitStore/CodeOJ/codeoj-frontend/src/views/question/ViewQuestionView.vue
+  105:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 21 problems (0 errors, 21 warnings)
+
+
+You may use special comments to disable some warnings.
+Use // eslint-disable-next-line to ignore the next line.
+Use /* eslint-disable */ to ignore all warnings in a file.
+ warning  
+
+asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
+This can impact web performance.
+Assets: 
+  editor.worker.js (248 KiB)
+  js/3399.f0b2256b.js (917 KiB)
+  css/chunk-vendors.726b9b17.css (500 KiB)
+  js/chunk-vendors.b176bbce.js (4.47 MiB)
+
+ warning  
+
+entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
+Entrypoints:
+  app (5.02 MiB)
+      css/chunk-vendors.726b9b17.css
+      js/chunk-vendors.b176bbce.js
+      css/app.1113673c.css
+      js/app.76e509a3.js
+
+
+  File                                      Size             Gzipped
+
+  ../../../../../../private/tmp/codeoj-r    4573.55 KiB      1194.62 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/chunk-vendors.b176bbce.js
+  ../../../../../../private/tmp/codeoj-r    916.60 KiB       292.26 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/3399.f0b2256b.js
+  ../../../../../../private/tmp/codeoj-r    247.73 KiB       79.11 KiB
+  egistration-fix-20261025/frontend-dist
+  /editor.worker.js
+  ../../../../../../private/tmp/codeoj-r    55.87 KiB        17.19 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/app.76e509a3.js
+  ../../../../../../private/tmp/codeoj-r    38.84 KiB        10.42 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/7271.84ad37c2.js
+  ../../../../../../private/tmp/codeoj-r    33.44 KiB        8.43 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/4962.203e1195.js
+  ../../../../../../private/tmp/codeoj-r    32.88 KiB        8.33 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/6786.48d79ff0.js
+  ../../../../../../private/tmp/codeoj-r    23.87 KiB        7.94 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/4301.19ee1d1c.js
+  ../../../../../../private/tmp/codeoj-r    23.00 KiB        6.27 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/6877.f37f325b.js
+  ../../../../../../private/tmp/codeoj-r    18.61 KiB        4.60 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/3629.575f3ced.js
+  ../../../../../../private/tmp/codeoj-r    16.99 KiB        5.01 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/5096.e4707a69.js
+  ../../../../../../private/tmp/codeoj-r    16.25 KiB        5.79 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/5250.39edc890.js
+  ../../../../../../private/tmp/codeoj-r    15.87 KiB        4.07 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/3986.e974a7c3.js
+  ../../../../../../private/tmp/codeoj-r    14.28 KiB        5.47 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/3268.e1f7139d.js
+  ../../../../../../private/tmp/codeoj-r    13.60 KiB        4.65 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/5019.c721bfd6.js
+  ../../../../../../private/tmp/codeoj-r    11.97 KiB        4.48 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/9906.ddd5a7d5.js
+  ../../../../../../private/tmp/codeoj-r    11.46 KiB        4.23 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/7643.7caa6db3.js
+  ../../../../../../private/tmp/codeoj-r    10.50 KiB        4.02 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/413.18641670.js
+  ../../../../../../private/tmp/codeoj-r    10.47 KiB        2.71 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/9700.df9517fb.js
+  ../../../../../../private/tmp/codeoj-r    9.86 KiB         3.77 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/386.aaf5e005.js
+  ../../../../../../private/tmp/codeoj-r    9.29 KiB         2.27 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/6540.46988caa.js
+  ../../../../../../private/tmp/codeoj-r    9.03 KiB         2.46 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/9583.70f2cc52.js
+  ../../../../../../private/tmp/codeoj-r    8.75 KiB         2.76 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/3817.1d0e00fb.js
+  ../../../../../../private/tmp/codeoj-r    8.51 KiB         3.29 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/5662.079cc878.js
+  ../../../../../../private/tmp/codeoj-r    8.34 KiB         2.82 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/1463.f3df7e84.js
+  ../../../../../../private/tmp/codeoj-r    8.29 KiB         2.27 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/5710.bb4c0a45.js
+  ../../../../../../private/tmp/codeoj-r    8.12 KiB         2.62 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/9903.46963227.js
+  ../../../../../../private/tmp/codeoj-r    7.87 KiB         2.94 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/6862.2b515d91.js
+  ../../../../../../private/tmp/codeoj-r    7.67 KiB         3.17 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/4012.0966253f.js
+  ../../../../../../private/tmp/codeoj-r    7.67 KiB         2.44 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/622.d7257a2f.js
+  ../../../../../../private/tmp/codeoj-r    7.60 KiB         2.29 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/5856.b7031262.js
+  ../../../../../../private/tmp/codeoj-r    7.43 KiB         2.83 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/8412.2ab279f2.js
+  ../../../../../../private/tmp/codeoj-r    7.07 KiB         1.80 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/3703.d0757878.js
+  ../../../../../../private/tmp/codeoj-r    6.97 KiB         2.48 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/6048.bd2d1e2e.js
+  ../../../../../../private/tmp/codeoj-r    6.93 KiB         3.04 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/2972.80c99b6d.js
+  ../../../../../../private/tmp/codeoj-r    6.71 KiB         1.95 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/1030.c0cd7ff6.js
+  ../../../../../../private/tmp/codeoj-r    6.29 KiB         1.74 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/3202.d51ebdbb.js
+  ../../../../../../private/tmp/codeoj-r    6.10 KiB         2.26 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/3263.f889eed5.js
+  ../../../../../../private/tmp/codeoj-r    5.80 KiB         2.33 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/1636.3efdb3ed.js
+  ../../../../../../private/tmp/codeoj-r    5.73 KiB         2.34 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/7954.266c72b0.js
+  ../../../../../../private/tmp/codeoj-r    5.67 KiB         2.45 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/7083.799c6b0f.js
+  ../../../../../../private/tmp/codeoj-r    5.37 KiB         1.60 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/9111.5f52d050.js
+  ../../../../../../private/tmp/codeoj-r    5.25 KiB         2.23 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/2804.1b805036.js
+  ../../../../../../private/tmp/codeoj-r    5.25 KiB         2.17 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/7517.7f6b256e.js
+  ../../../../../../private/tmp/codeoj-r    5.20 KiB         1.64 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/4816.c7158f34.js
+  ../../../../../../private/tmp/codeoj-r    5.16 KiB         1.86 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/7010.fd90b134.js
+  ../../../../../../private/tmp/codeoj-r    4.87 KiB         1.94 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/9007.be8dee33.js
+  ../../../../../../private/tmp/codeoj-r    4.86 KiB         1.60 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/6044.2360fb87.js
+  ../../../../../../private/tmp/codeoj-r    4.60 KiB         1.86 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/2784.5f0cfc37.js
+  ../../../../../../private/tmp/codeoj-r    4.51 KiB         2.03 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/9270.bf81be77.js
+  ../../../../../../private/tmp/codeoj-r    4.37 KiB         1.71 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/2341.d93e0e89.js
+  ../../../../../../private/tmp/codeoj-r    4.32 KiB         1.85 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/2936.3664eecd.js
+  ../../../../../../private/tmp/codeoj-r    4.26 KiB         1.59 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/4034.170fc3cb.js
+  ../../../../../../private/tmp/codeoj-r    4.26 KiB         1.64 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/5661.6ec28344.js
+  ../../../../../../private/tmp/codeoj-r    4.17 KiB         1.60 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/1598.ed75cfc5.js
+  ../../../../../../private/tmp/codeoj-r    3.98 KiB         1.78 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/786.0176c1ce.js
+  ../../../../../../private/tmp/codeoj-r    3.96 KiB         1.53 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/5191.77cc4abb.js
+  ../../../../../../private/tmp/codeoj-r    3.96 KiB         1.70 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/9765.35309c5e.js
+  ../../../../../../private/tmp/codeoj-r    3.94 KiB         1.81 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/3956.e76da3e0.js
+  ../../../../../../private/tmp/codeoj-r    3.94 KiB         1.58 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/5985.fb43b8e2.js
+  ../../../../../../private/tmp/codeoj-r    3.92 KiB         1.70 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/6388.67d6acb6.js
+  ../../../../../../private/tmp/codeoj-r    3.81 KiB         1.69 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/3415.3be772f1.js
+  ../../../../../../private/tmp/codeoj-r    3.76 KiB         1.66 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/8822.3f86f82b.js
+  ../../../../../../private/tmp/codeoj-r    3.64 KiB         1.59 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/5254.4589bb34.js
+  ../../../../../../private/tmp/codeoj-r    3.59 KiB         1.61 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/4366.4ab605cd.js
+  ../../../../../../private/tmp/codeoj-r    3.51 KiB         1.50 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/8248.b0f83b8d.js
+  ../../../../../../private/tmp/codeoj-r    3.45 KiB         1.43 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/8647.352e1a05.js
+  ../../../../../../private/tmp/codeoj-r    3.37 KiB         1.63 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/9380.ed8358d6.js
+  ../../../../../../private/tmp/codeoj-r    3.36 KiB         1.54 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/7146.193ca1fb.js
+  ../../../../../../private/tmp/codeoj-r    3.32 KiB         1.58 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/5527.7140885a.js
+  ../../../../../../private/tmp/codeoj-r    3.20 KiB         1.53 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/9928.31af6e82.js
+  ../../../../../../private/tmp/codeoj-r    3.15 KiB         1.42 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/501.2b51d14e.js
+  ../../../../../../private/tmp/codeoj-r    3.04 KiB         1.37 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/6590.7ac2402e.js
+  ../../../../../../private/tmp/codeoj-r    2.97 KiB         1.31 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/2532.021b8d5a.js
+  ../../../../../../private/tmp/codeoj-r    2.94 KiB         1.39 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/9674.64d5fcd8.js
+  ../../../../../../private/tmp/codeoj-r    2.93 KiB         1.19 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/7099.759ae719.js
+  ../../../../../../private/tmp/codeoj-r    2.83 KiB         1.16 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/1319.f0f9007b.js
+  ../../../../../../private/tmp/codeoj-r    2.81 KiB         1.18 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/7973.6a453003.js
+  ../../../../../../private/tmp/codeoj-r    2.79 KiB         1.28 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/15.67c94349.js
+  ../../../../../../private/tmp/codeoj-r    2.66 KiB         1.25 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/3700.7cc95f13.js
+  ../../../../../../private/tmp/codeoj-r    2.58 KiB         1.19 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/5106.1795c698.js
+  ../../../../../../private/tmp/codeoj-r    2.52 KiB         1.15 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/6896.85db9730.js
+  ../../../../../../private/tmp/codeoj-r    2.40 KiB         1.14 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/5630.3ae5446a.js
+  ../../../../../../private/tmp/codeoj-r    2.27 KiB         0.91 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/2250.56ccf90b.js
+  ../../../../../../private/tmp/codeoj-r    2.25 KiB         1.10 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/7007.c46d66ce.js
+  ../../../../../../private/tmp/codeoj-r    2.24 KiB         1.06 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/2358.af418026.js
+  ../../../../../../private/tmp/codeoj-r    2.22 KiB         1.08 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/1022.5549aa0e.js
+  ../../../../../../private/tmp/codeoj-r    2.17 KiB         1.05 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/7500.c9aedcf6.js
+  ../../../../../../private/tmp/codeoj-r    2.09 KiB         0.89 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/7473.f030518c.js
+  ../../../../../../private/tmp/codeoj-r    1.83 KiB         0.77 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/2401.b597d5da.js
+  ../../../../../../private/tmp/codeoj-r    1.52 KiB         0.78 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/2008.b5a25148.js
+  ../../../../../../private/tmp/codeoj-r    1.28 KiB         0.57 KiB
+  egistration-fix-20261025/frontend-dist
+  /js/6346.2b8973f1.js
+  ../../../../../../private/tmp/codeoj-r    499.71 KiB       66.61 KiB
+  egistration-fix-20261025/frontend-dist
+  /css/chunk-vendors.726b9b17.css
+  ../../../../../../private/tmp/codeoj-r    11.73 KiB        2.97 KiB
+  egistration-fix-20261025/frontend-dist
+  /css/app.1113673c.css
+  ../../../../../../private/tmp/codeoj-r    9.71 KiB         1.88 KiB
+  egistration-fix-20261025/frontend-dist
+  /css/4301.0f3978fa.css
+  ../../../../../../private/tmp/codeoj-r    4.75 KiB         1.03 KiB
+  egistration-fix-20261025/frontend-dist
+  /css/4012.b4868b61.css
+  ../../../../../../private/tmp/codeoj-r    2.91 KiB         0.70 KiB
+  egistration-fix-20261025/frontend-dist
+  /css/2972.e418d41e.css
+
+  Images and other types of assets omitted.
+  Build at: 2026-10-25T04:26:18.141Z - Hash: 4ddc332cc4498cfd - Time: 14684ms
+
+ DONE  Build complete. The ../../../../../../private/tmp/codeoj-registration-fix-20261025/frontend-dist directory is ready to be deployed.
+ INFO  Check out deployment instructions at https://cli.vuejs.org/guide/deployment.html
+       

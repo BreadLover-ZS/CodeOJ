@@ -1,0 +1,488 @@
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-common:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ com.codeoj:codeoj-backend-microservice:0.0.1-SNAPSHOT, /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/pom.xml, line 44, column 20
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-model:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ com.codeoj:codeoj-backend-microservice:0.0.1-SNAPSHOT, /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/pom.xml, line 44, column 20
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-gateway:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ com.codeoj:codeoj-backend-microservice:0.0.1-SNAPSHOT, /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/pom.xml, line 44, column 20
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-service-client:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ com.codeoj:codeoj-backend-microservice:0.0.1-SNAPSHOT, /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/pom.xml, line 44, column 20
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-question-service:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ com.codeoj:codeoj-backend-microservice:0.0.1-SNAPSHOT, /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/pom.xml, line 44, column 20
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-user-service:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ com.codeoj:codeoj-backend-microservice:0.0.1-SNAPSHOT, /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/pom.xml, line 44, column 20
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-judge-service:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ com.codeoj:codeoj-backend-microservice:0.0.1-SNAPSHOT, /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/pom.xml, line 44, column 20
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-codesandbox:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ com.codeoj:codeoj-backend-microservice:0.0.1-SNAPSHOT, /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/pom.xml, line 44, column 20
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.codeoj:codeoj-backend-microservice:pom:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.scope' for org.springframework.cloud:spring-cloud-dependencies:pom must be one of [provided, compile, runtime, test, system] but is 'import'. @ line 44, column 20
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] codeoj-backend-microservice                                        [pom]
+[INFO] codeoj-backend-common                                              [jar]
+[INFO] codeoj-backend-model                                               [jar]
+[INFO] codeoj-backend-gateway                                             [jar]
+[INFO] codeoj-backend-service-client                                      [jar]
+[INFO] codeoj-backend-question-service                                    [jar]
+[INFO] codeoj-backend-user-service                                        [jar]
+[INFO] codeoj-backend-judge-service                                       [jar]
+[INFO] codeoj-backend-codesandbox                                         [jar]
+[INFO] 
+[INFO] ---------------< com.codeoj:codeoj-backend-microservice >---------------
+[INFO] Building codeoj-backend-microservice 0.0.1-SNAPSHOT                [1/9]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] ------------------< com.codeoj:codeoj-backend-common >------------------
+[INFO] Building codeoj-backend-common 0.0.1-SNAPSHOT                      [2/9]
+[INFO]   from codeoj-backend-common/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ codeoj-backend-common ---
+[INFO] skip non existing resourceDirectory /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-common/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ codeoj-backend-common ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ codeoj-backend-common ---
+[INFO] skip non existing resourceDirectory /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-common/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ codeoj-backend-common ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ codeoj-backend-common ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ codeoj-backend-common ---
+[INFO] Building jar: /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-common/target/codeoj-backend-common-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] ------------------< com.codeoj:codeoj-backend-model >-------------------
+[INFO] Building codeoj-backend-model 0.0.1-SNAPSHOT                       [3/9]
+[INFO]   from codeoj-backend-model/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ codeoj-backend-model ---
+[INFO] skip non existing resourceDirectory /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-model/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ codeoj-backend-model ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ codeoj-backend-model ---
+[INFO] skip non existing resourceDirectory /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-model/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ codeoj-backend-model ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ codeoj-backend-model ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.codeoj.codeojbackendmodel.model.codesandbox.TextOutputComparatorTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in com.codeoj.codeojbackendmodel.model.codesandbox.TextOutputComparatorTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ codeoj-backend-model ---
+[INFO] Building jar: /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-model/target/codeoj-backend-model-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] -----------------< com.codeoj:codeoj-backend-gateway >------------------
+[INFO] Building codeoj-backend-gateway 0.0.1-SNAPSHOT                     [4/9]
+[INFO]   from codeoj-backend-gateway/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ codeoj-backend-gateway ---
+[INFO] Copying 2 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ codeoj-backend-gateway ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ codeoj-backend-gateway ---
+[INFO] skip non existing resourceDirectory /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-gateway/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ codeoj-backend-gateway ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ codeoj-backend-gateway ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.codeoj.codeojbackendgateway.ContestRouteTest
+12:30:40.915 [main] DEBUG reactor.util.Loggers - Using Slf4j logging framework
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.200 s -- in com.codeoj.codeojbackendgateway.ContestRouteTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ codeoj-backend-gateway ---
+[INFO] Building jar: /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-gateway/target/codeoj-backend-gateway-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:2.6.13:repackage (repackage) @ codeoj-backend-gateway ---
+[INFO] Replacing main artifact with repackaged archive
+[INFO] 
+[INFO] --------------< com.codeoj:codeoj-backend-service-client >--------------
+[INFO] Building codeoj-backend-service-client 0.0.1-SNAPSHOT              [5/9]
+[INFO]   from codeoj-backend-service-client/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ codeoj-backend-service-client ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ codeoj-backend-service-client ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ codeoj-backend-service-client ---
+[INFO] skip non existing resourceDirectory /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-service-client/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ codeoj-backend-service-client ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ codeoj-backend-service-client ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.codeoj.codeojbackendserviceclient.auth.CurrentAccountAuthorizationTest
+12:30:41.709 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'userFeignClient' of type [null] on target object [com.codeoj.codeojbackendserviceclient.aop.AuthInterceptor@64ba3208] or target class [class com.codeoj.codeojbackendserviceclient.aop.AuthInterceptor] to value [com.codeoj.codeojbackendserviceclient.service.UserFeignClient$MockitoMock$285205653@158a3b2e]
+12:30:41.725 [main] DEBUG org.springframework.aop.aspectj.annotation.ReflectiveAspectJAdvisorFactory - Found AspectJ method: public java.lang.Object com.codeoj.codeojbackendserviceclient.aop.AuthInterceptor.doInterceptor(org.aspectj.lang.ProceedingJoinPoint,com.codeoj.codeojbackendcommon.annotation.AuthCheck) throws java.lang.Throwable
+12:30:41.818 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'userFeignClient' of type [null] on target object [com.codeoj.codeojbackendserviceclient.aop.AuthInterceptor@514eedd8] or target class [class com.codeoj.codeojbackendserviceclient.aop.AuthInterceptor] to value [com.codeoj.codeojbackendserviceclient.service.UserFeignClient$MockitoMock$285205653@617fe9e1]
+12:30:41.818 [main] DEBUG org.springframework.aop.aspectj.annotation.ReflectiveAspectJAdvisorFactory - Found AspectJ method: public java.lang.Object com.codeoj.codeojbackendserviceclient.aop.AuthInterceptor.doInterceptor(org.aspectj.lang.ProceedingJoinPoint,com.codeoj.codeojbackendcommon.annotation.AuthCheck) throws java.lang.Throwable
+12:30:41.820 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'userFeignClient' of type [null] on target object [com.codeoj.codeojbackendserviceclient.aop.AuthInterceptor@5b800468] or target class [class com.codeoj.codeojbackendserviceclient.aop.AuthInterceptor] to value [com.codeoj.codeojbackendserviceclient.service.UserFeignClient$MockitoMock$285205653@2e185cd7]
+12:30:41.821 [main] DEBUG org.springframework.aop.aspectj.annotation.ReflectiveAspectJAdvisorFactory - Found AspectJ method: public java.lang.Object com.codeoj.codeojbackendserviceclient.aop.AuthInterceptor.doInterceptor(org.aspectj.lang.ProceedingJoinPoint,com.codeoj.codeojbackendcommon.annotation.AuthCheck) throws java.lang.Throwable
+12:30:41.822 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'userFeignClient' of type [null] on target object [com.codeoj.codeojbackendserviceclient.aop.AuthInterceptor@60094a13] or target class [class com.codeoj.codeojbackendserviceclient.aop.AuthInterceptor] to value [com.codeoj.codeojbackendserviceclient.service.UserFeignClient$MockitoMock$285205653@5aceec94]
+12:30:41.822 [main] DEBUG org.springframework.aop.aspectj.annotation.ReflectiveAspectJAdvisorFactory - Found AspectJ method: public java.lang.Object com.codeoj.codeojbackendserviceclient.aop.AuthInterceptor.doInterceptor(org.aspectj.lang.ProceedingJoinPoint,com.codeoj.codeojbackendcommon.annotation.AuthCheck) throws java.lang.Throwable
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.312 s -- in com.codeoj.codeojbackendserviceclient.auth.CurrentAccountAuthorizationTest
+[INFO] Running com.codeoj.codeojbackendserviceclient.filter.SessionAvailabilityFilterTest
+12:30:41.831 [main] WARN com.codeoj.codeojbackendserviceclient.filter.SessionAvailabilityFilter - Redis-dependent request unavailable: type=org.springframework.data.redis.RedisConnectionFailureException
+12:30:41.835 [main] WARN com.codeoj.codeojbackendserviceclient.filter.SessionAvailabilityFilter - Redis-dependent request unavailable: type=javax.servlet.ServletException
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.010 s -- in com.codeoj.codeojbackendserviceclient.filter.SessionAvailabilityFilterTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ codeoj-backend-service-client ---
+[INFO] Building jar: /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-service-client/target/codeoj-backend-service-client-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] -------------< com.codeoj:codeoj-backend-question-service >-------------
+[INFO] Building codeoj-backend-question-service 0.0.1-SNAPSHOT            [6/9]
+[INFO]   from codeoj-backend-question-service/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ codeoj-backend-question-service ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ codeoj-backend-question-service ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 52 source files to /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-question-service/target/classes
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ codeoj-backend-question-service ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ codeoj-backend-question-service ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 13 source files to /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-question-service/target/test-classes
+[INFO] /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardCacheTest.java: /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardCacheTest.java使用了未经检查或不安全的操作。
+[INFO] /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/scoreboard/ScoreboardCacheTest.java: 有关详细信息, 请使用 -Xlint:unchecked 重新编译。
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ codeoj-backend-question-service ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardMessagingTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.389 s -- in com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardMessagingTest
+[INFO] Running com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardTest
+[INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.743 s -- in com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardTest
+[INFO] Running com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardCacheTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.071 s -- in com.codeoj.codeojbackendquestionservice.scoreboard.ScoreboardCacheTest
+[INFO] Running com.codeoj.codeojbackendquestionservice.contest.RegistrationMessagingTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.016 s -- in com.codeoj.codeojbackendquestionservice.contest.RegistrationMessagingTest
+[INFO] Running com.codeoj.codeojbackendquestionservice.contest.ContestCoreTest
+[INFO] Tests run: 22, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.216 s -- in com.codeoj.codeojbackendquestionservice.contest.ContestCoreTest
+[INFO] Running com.codeoj.codeojbackendquestionservice.contest.RegistrationRedisIntegrationTest
+REGISTRATION_RECOVERY_CASE reservation-write-points=7 original-identity-and-single-allocation=PASS
+REGISTRATION_LOCAL_SAMPLE {"scope":"real isolated Redis/Lua + H2; manual consumer invocation; no MySQL/RabbitMQ acceptance","status":"CONFIRMED","remainingRedis":0,"requests":1,"qualifications":1,"outboxEvents":1}
+REGISTRATION_RECOVERY_CASE release-write-points=6 no-double-refund=PASS
+[INFO] Tests run: 55, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.160 s -- in com.codeoj.codeojbackendquestionservice.contest.RegistrationRedisIntegrationTest
+[INFO] Running com.codeoj.codeojbackendquestionservice.submission.outbox.OutboxRelayTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in com.codeoj.codeojbackendquestionservice.submission.outbox.OutboxRelayTest
+[INFO] Running com.codeoj.codeojbackendquestionservice.submission.SubmissionStatusAccessTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.059 s -- in com.codeoj.codeojbackendquestionservice.submission.SubmissionStatusAccessTest
+[INFO] Running com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcAdviceTest
+ERROR c.c.c.s.ExecutionRpcAdvice - Execution authority unavailable: [java.lang.IllegalStateException, com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcAdviceTest.authorityDiagnosticsRetainTypeLocationAndSqlCodeWithoutSensitiveMessages:15, java.sql.SQLException, com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcAdviceTest.authorityDiagnosticsRetainTypeLocationAndSqlCodeWithoutSensitiveMessages:15, SQL_STATE=23000;CODE=1062]
+ERROR c.c.c.s.ExecutionRpcAdvice - Execution authority unavailable: [java.lang.IllegalStateException, com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcAdviceTest.untrustedSqlStateIsReducedToUnknown:25, java.sql.SQLException, com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcAdviceTest.untrustedSqlStateIsReducedToUnknown:25, SQL_STATE=UNKNOWN;CODE=0]
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcAdviceTest
+[INFO] Running com.codeoj.codeojbackendquestionservice.submission.ReliableExecutionTest
+[INFO] Tests run: 26, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.089 s -- in com.codeoj.codeojbackendquestionservice.submission.ReliableExecutionTest
+[INFO] Running com.codeoj.codeojbackendquestionservice.submission.QuestionSubmitPrivacyTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in com.codeoj.codeojbackendquestionservice.submission.QuestionSubmitPrivacyTest
+[INFO] Running com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcContractTest
+WARN c.c.c.f.InnerApiAuthFilter - 内部接口鉴权失败，来源: 127.0.0.1
+ERROR c.c.c.s.ExecutionRpcAdvice - Execution authority unavailable: [java.lang.IllegalStateException, com.codeoj.codeojbackendquestionservice.controller.inner.QuestionInnerController.claimExecution:80]
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.033 s -- in com.codeoj.codeojbackendquestionservice.submission.ExecutionRpcContractTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 160, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ codeoj-backend-question-service ---
+[INFO] Building jar: /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-question-service/target/codeoj-backend-question-service-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:2.6.13:repackage (repackage) @ codeoj-backend-question-service ---
+[INFO] Replacing main artifact with repackaged archive
+[INFO] 
+[INFO] ---------------< com.codeoj:codeoj-backend-user-service >---------------
+[INFO] Building codeoj-backend-user-service 0.0.1-SNAPSHOT                [7/9]
+[INFO]   from codeoj-backend-user-service/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ codeoj-backend-user-service ---
+[INFO] Copying 2 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ codeoj-backend-user-service ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ codeoj-backend-user-service ---
+[INFO] skip non existing resourceDirectory /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-user-service/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ codeoj-backend-user-service ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ codeoj-backend-user-service ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.codeoj.codeojbackenduserservice.service.CurrentUserServiceTest
+12:30:51.253 [main] DEBUG org.apache.ibatis.logging.LogFactory - Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter.
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.286 s -- in com.codeoj.codeojbackenduserservice.service.CurrentUserServiceTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ codeoj-backend-user-service ---
+[INFO] Building jar: /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-user-service/target/codeoj-backend-user-service-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:2.6.13:repackage (repackage) @ codeoj-backend-user-service ---
+[INFO] Replacing main artifact with repackaged archive
+[INFO] 
+[INFO] --------------< com.codeoj:codeoj-backend-judge-service >---------------
+[INFO] Building codeoj-backend-judge-service 0.0.1-SNAPSHOT               [8/9]
+[INFO]   from codeoj-backend-judge-service/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ codeoj-backend-judge-service ---
+[INFO] Copying 2 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ codeoj-backend-judge-service ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ codeoj-backend-judge-service ---
+[INFO] skip non existing resourceDirectory /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-judge-service/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ codeoj-backend-judge-service ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ codeoj-backend-judge-service ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.codeoj.codeojbackendjudgeservice.rabbitmq.ReliableJudgeConsumerTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.290 s -- in com.codeoj.codeojbackendjudgeservice.rabbitmq.ReliableJudgeConsumerTest
+[INFO] Running com.codeoj.codeojbackendjudgeservice.judge.SandboxResultMapperTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s -- in com.codeoj.codeojbackendjudgeservice.judge.SandboxResultMapperTest
+[INFO] Running com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandboxTest
+12:30:54.243 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'url' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox@3b1bb3ab] or target class [class com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox] to value [http://127.0.0.1:56196/executeCode]
+12:30:54.244 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'authSecret' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox@3b1bb3ab] or target class [class com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox] to value [test-only]
+12:30:54.244 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'readTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox@3b1bb3ab] or target class [class com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox] to value [1000]
+12:30:54.244 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'totalTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox@3b1bb3ab] or target class [class com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox] to value [1500]
+12:30:54.282 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'url' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox@2db2cd5] or target class [class com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox] to value [http://127.0.0.1:56198/executeCode]
+12:30:54.282 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'authSecret' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox@2db2cd5] or target class [class com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox] to value [test-only]
+12:30:54.282 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'readTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox@2db2cd5] or target class [class com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox] to value [1000]
+12:30:54.282 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'totalTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox@2db2cd5] or target class [class com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox] to value [1500]
+12:30:54.282 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'totalTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox@2db2cd5] or target class [class com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox] to value [100]
+12:30:54.385 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'url' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox@285f09de] or target class [class com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox] to value [http://127.0.0.1:56201/executeCode]
+12:30:54.385 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'authSecret' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox@285f09de] or target class [class com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox] to value [test-only]
+12:30:54.385 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'readTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox@285f09de] or target class [class com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox] to value [1000]
+12:30:54.385 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'totalTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox@285f09de] or target class [class com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox] to value [1500]
+12:30:54.390 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'url' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox@1827a871] or target class [class com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox] to value [http://127.0.0.1:56203/executeCode]
+12:30:54.390 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'authSecret' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox@1827a871] or target class [class com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox] to value [test-only]
+12:30:54.390 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'readTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox@1827a871] or target class [class com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox] to value [1000]
+12:30:54.390 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'totalTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox@1827a871] or target class [class com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandbox] to value [1500]
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.171 s -- in com.codeoj.codeojbackendjudgeservice.judge.codesandbox.impl.RemoteCodeSandboxTest
+[INFO] Running com.codeoj.codeojbackendjudgeservice.judge.ReliableJudgeWorkerTest
+12:30:54.421 [pool-2-thread-1] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox request: language=java, cases=1
+12:30:54.628 [pool-2-thread-1] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox response: outcome=CE
+12:30:54.636 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox request: language=java, cases=1
+12:30:54.636 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox response: outcome=RE
+12:30:54.640 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox request: language=java, cases=1
+12:30:54.644 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox request: language=java, cases=1
+12:30:54.644 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox response: outcome=PLATFORM_ERROR
+12:30:54.646 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox request: language=java, cases=1
+12:30:54.646 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox response: outcome=CE
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.251 s -- in com.codeoj.codeojbackendjudgeservice.judge.ReliableJudgeWorkerTest
+[INFO] Running com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImplTest
+12:30:54.651 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'questionFeignClient' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl@63a5e46c] or target class [class com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl] to value [Mock for QuestionFeignClient, hashCode: 2123269713]
+12:30:54.651 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'codeSandboxFactory' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl@63a5e46c] or target class [class com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl] to value [Mock for CodeSandboxFactory, hashCode: 1240412896]
+12:30:54.651 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'judgeManager' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl@63a5e46c] or target class [class com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl] to value [com.codeoj.codeojbackendjudgeservice.judge.JudgeManager@271f18d3]
+12:30:54.651 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'type' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl@63a5e46c] or target class [class com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl] to value [remote]
+12:30:54.656 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox request: language=java, cases=1
+12:30:54.657 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox response: outcome=EXECUTED
+12:30:54.658 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'questionFeignClient' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl@df5f5c0] or target class [class com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl] to value [Mock for QuestionFeignClient, hashCode: 814377348]
+12:30:54.659 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'codeSandboxFactory' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl@df5f5c0] or target class [class com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl] to value [Mock for CodeSandboxFactory, hashCode: 1723278948]
+12:30:54.659 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'judgeManager' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl@df5f5c0] or target class [class com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl] to value [com.codeoj.codeojbackendjudgeservice.judge.JudgeManager@7a34b7b8]
+12:30:54.659 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'type' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl@df5f5c0] or target class [class com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl] to value [remote]
+12:30:54.660 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox request: language=java, cases=1
+12:30:54.660 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox response: outcome=CE
+12:30:54.662 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'questionFeignClient' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl@3be8821f] or target class [class com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl] to value [Mock for QuestionFeignClient, hashCode: 1689458432]
+12:30:54.662 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'codeSandboxFactory' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl@3be8821f] or target class [class com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl] to value [Mock for CodeSandboxFactory, hashCode: 996533593]
+12:30:54.662 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'judgeManager' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl@3be8821f] or target class [class com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl] to value [com.codeoj.codeojbackendjudgeservice.judge.JudgeManager@bae47a0]
+12:30:54.662 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'type' of type [null] on target object [com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl@3be8821f] or target class [class com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImpl] to value [remote]
+12:30:54.664 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox request: language=java, cases=1
+12:30:54.664 [main] INFO com.codeoj.codeojbackendjudgeservice.judge.codesandbox.CodeSandboxProxy - Sandbox response: outcome=PLATFORM_ERROR
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in com.codeoj.codeojbackendjudgeservice.judge.JudgeServiceImplTest
+[INFO] Running com.codeoj.codeojbackendjudgeservice.judge.strategy.JavaLanguageJudgeStrategyTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in com.codeoj.codeojbackendjudgeservice.judge.strategy.JavaLanguageJudgeStrategyTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 28, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ codeoj-backend-judge-service ---
+[INFO] Building jar: /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-judge-service/target/codeoj-backend-judge-service-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:2.6.13:repackage (repackage) @ codeoj-backend-judge-service ---
+[INFO] Replacing main artifact with repackaged archive
+[INFO] 
+[INFO] ---------------< com.codeoj:codeoj-backend-codesandbox >----------------
+[INFO] Building codeoj-backend-codesandbox 0.0.1-SNAPSHOT                 [9/9]
+[INFO]   from codeoj-backend-codesandbox/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ codeoj-backend-codesandbox ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ codeoj-backend-codesandbox ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ codeoj-backend-codesandbox ---
+[INFO] skip non existing resourceDirectory /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-codesandbox/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ codeoj-backend-codesandbox ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ codeoj-backend-codesandbox ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.codeoj.codeojbackendcodesandbox.service.impl.DurableExecutionRegistryTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.162 s -- in com.codeoj.codeojbackendcodesandbox.service.impl.DurableExecutionRegistryTest
+[INFO] Running com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandboxTest
+12:30:55.231 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@4d154ccd] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:30:55.462 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@11392934] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:30:55.684 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@7d0b7e3c] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:30:56.899 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@543295b0] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:30:56.899 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'attemptTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@543295b0] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [1]
+12:30:56.901 [main] WARN com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox - Native executor failed: IOException
+12:30:56.903 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@58cbafc2] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:30:56.903 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@2034b64c] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:30:56.903 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@75d3a5e0] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:30:56.903 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@74d1dc36] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:30:56.903 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@7161d8d1] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:30:56.904 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@74e28667] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:30:57.160 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@33065d67] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:30:58.143 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@d737b89] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:30:58.332 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@18271936] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:30:58.549 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@6caf0677] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:30:58.928 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@6fa51cd4] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:30:59.212 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@6440112d] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:30:59.328 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@2b40ff9c] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:30:59.553 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@7c37508a] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:30:59.771 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@43df23d3] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:31:00.027 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@12591ac8] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:31:00.257 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@6f36c2f0] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:31:00.475 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@2f67a4d3] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:31:00.698 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@4f49f6af] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:31:00.919 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@3bcd05cb] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:31:01.137 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@7068e664] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:31:01.355 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@3e2055d6] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:31:01.571 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@6bb4dd34] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:31:01.799 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@5f9edf14] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:31:02.028 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@16612a51] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:31:02.254 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@38af9828] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:31:02.482 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@4ef74c30] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:31:02.701 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@3cce57c7] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:31:02.914 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@1169afe1] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:31:02.915 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@2ca26d77] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+12:31:03.139 [main] DEBUG org.springframework.test.util.ReflectionTestUtils - Setting field 'runTimeoutMs' of type [null] on target object [com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox@7905a0b8] or target class [class com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandbox] to value [800]
+[INFO] Tests run: 31, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.156 s -- in com.codeoj.codeojbackendcodesandbox.service.impl.JavaNativeCodeSandboxTest
+[INFO] Running com.codeoj.codeojbackendcodesandbox.service.impl.NativeReceiptTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in com.codeoj.codeojbackendcodesandbox.service.impl.NativeReceiptTest
+[INFO] Running com.codeoj.codeojbackendcodesandbox.service.impl.NativeExecutionIdentityTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.343 s -- in com.codeoj.codeojbackendcodesandbox.service.impl.NativeExecutionIdentityTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 44, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ codeoj-backend-codesandbox ---
+[INFO] Building jar: /Users/zzds/Workspace/gitStore/CodeOJ/codeoj-backend/codeoj-backend-codesandbox/target/codeoj-backend-codesandbox-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:2.6.13:repackage (repackage) @ codeoj-backend-codesandbox ---
+[INFO] Replacing main artifact with repackaged archive
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for codeoj-backend-microservice 0.0.1-SNAPSHOT:
+[INFO] 
+[INFO] codeoj-backend-microservice ........................ SUCCESS [  0.001 s]
+[INFO] codeoj-backend-common .............................. SUCCESS [  0.563 s]
+[INFO] codeoj-backend-model ............................... SUCCESS [  0.361 s]
+[INFO] codeoj-backend-gateway ............................. SUCCESS [  0.712 s]
+[INFO] codeoj-backend-service-client ...................... SUCCESS [  0.613 s]
+[INFO] codeoj-backend-question-service .................... SUCCESS [  9.106 s]
+[INFO] codeoj-backend-user-service ........................ SUCCESS [  0.674 s]
+[INFO] codeoj-backend-judge-service ....................... SUCCESS [  3.162 s]
+[INFO] codeoj-backend-codesandbox ......................... SUCCESS [  9.039 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  24.364 s
+[INFO] Finished at: 2026-10-25T12:31:03+08:00
+[INFO] ------------------------------------------------------------------------

@@ -56,7 +56,7 @@ public class RegistrationService {
                 r=ledger.reserve(s,user,IdWorker.getId(),UUID.randomUUID().toString(),key,RegistrationTransactions.hash(contest,s.getPublishedVersion()));
             }
             if(r==null || !r.valid()) { throw unavailable(); }persist(r);return contests.registration(contest,user);
-        } catch(RedisRegistrationLedger.LedgerException error) { handleLedger(contest,error);throw error; }
+        } catch(RedisRegistrationLedger.LedgerException error) { handleLedger(s,error);throw error; }
         catch(SubmissionConflictException | BusinessException known) { throw known; }
         catch(RuntimeException unknown) { return recoverUnknown(s,user,key); } // Never infer a failed reservation from a lost response.
     }
@@ -68,7 +68,7 @@ public class RegistrationService {
             ledger.repair(s);ledger.check(s);
             RegistrationReservation r=ledger.user(contest,user);if(r!=null) { persist(r);return contests.registration(contest,user); }
             return contests.registration(contest,user);
-        } catch(RuntimeException unknown) { if(unknown instanceof RedisRegistrationLedger.LedgerException) { hold(contest,((RedisRegistrationLedger.LedgerException)unknown).getCode()); }throw unavailable(); }
+        } catch(RuntimeException unknown) { if(unknown instanceof RedisRegistrationLedger.LedgerException) { hold(s,((RedisRegistrationLedger.LedgerException)unknown).getCode()); }throw unavailable(); }
     }
     private Map<String,Object> recoverUnknown(RegistrationSettings s,long user,String key) {
         try {
@@ -78,20 +78,25 @@ public class RegistrationService {
             if(r!=null && r.valid() && key.equals(r.getRequestKey()) && RegistrationTransactions.hash(s.getContestId(),s.getPublishedVersion()).equals(r.getRequestHash())) {
                 persist(r);return contests.registration(s.getContestId(),user);
             }
-        } catch(RuntimeException stillUnknown) { hold(s.getContestId(),"RESERVATION_EXECUTION_UNKNOWN"); }
+        } catch(RuntimeException stillUnknown) { hold(s,"RESERVATION_EXECUTION_UNKNOWN"); }
         throw unavailable();
     }
-    private void handleLedger(long contest,RedisRegistrationLedger.LedgerException error) {
+    private void handleLedger(RegistrationSettings s,RedisRegistrationLedger.LedgerException error) {
         String code=error.getCode();if(Arrays.asList("CONTEST_FULL","REGISTRATION_WINDOW_CLOSED","REGISTRATION_PAUSED","IDEMPOTENCY_CONFLICT","REGISTRATION_LEDGER_LIMIT").contains(code)) { throw new SubmissionConflictException(code); }
-        hold(contest,code);throw unavailable();
+        hold(s,code);throw unavailable();
     }
     public void hold(long contest,String code) { transactions.issue(contest,code.matches("[A-Z_]{1,128}")?code:"REGISTRATION_EVIDENCE_UNKNOWN"); }
+    public void hold(RegistrationSettings observed,String code) {
+        transactions.issueIfCurrent(observed.getContestId(),observed.getEpoch(),observed.getRevision(),code.matches("[A-Z_]{1,128}")?code:"REGISTRATION_EVIDENCE_UNKNOWN");
+    }
     public RegistrationSettings prepare(long id,ContestCommand command,long actor) { requireEnabled();return retry(()->transactions.prepare(id,command,actor)); }
     public RegistrationSettings reconcile(long id,ContestCommand command,long actor) {
         requireEnabled();RegistrationSettings s=retry(()->transactions.beginReconcile(id,command,actor));
+        long ownedRevision=s.getRevision();
         try {
             ledger.repair(s);ledger.initialize(s);if(!s.isInitialized()) { transactions.initialized(id,s.getEpoch(),s.getRevision()); }
-            s=transactions.settings(id);ledger.gate(s,false,false);List<RegistrationReservation> rows=ledger.snapshot(id);
+            // Keep this operation's revision; a later authority read belongs to another operation.
+            ledger.gate(s,false,false);List<RegistrationReservation> rows=ledger.snapshot(id);
             for(RegistrationReservation r:rows) { persist(r); }
             int stock=ledger.stats(id).getInt("stock");long revision=s.getRevision();
             if(!"2".equals(ledger.stats(id).getStr("format"))) {
@@ -99,9 +104,12 @@ public class RegistrationService {
             }
             for(RegistrationReservation r:rows) { synchronize(transactions.request(id,r.getRequestId(),false)); }
             List<RegistrationReservation> verifiedRows=ledger.snapshot(id);int verifiedStock=ledger.stats(id).getInt("stock");
-            retry(()->transactions.finishReconcile(id,revision,verifiedRows,verifiedStock,actor,command.getReason()));
-            RegistrationSettings current=transactions.settings(id);ledger.gate(current,current.gateOpen(),true);return current;
-        } catch(RuntimeException error) { hold(id,"RECONCILIATION_INCOMPLETE");throw error instanceof BusinessException?error:unavailable(); }
+            RegistrationSettings current=retry(()->transactions.finishReconcile(id,revision,verifiedRows,verifiedStock,actor,command.getReason()));
+            ownedRevision=current.getRevision();ledger.gate(current,current.gateOpen(),true);return current;
+        } catch(RuntimeException error) {
+            transactions.issueIfCurrent(id,s.getEpoch(),ownedRevision,"RECONCILIATION_INCOMPLETE");
+            throw error instanceof BusinessException?error:unavailable();
+        }
     }
     /** Called only after a durable terminal DB state. Lua verifies exact original reservation identity. */
     public void synchronize(RegistrationRequest q) {

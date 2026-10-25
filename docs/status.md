@@ -1,12 +1,21 @@
 # 当前项目状态
 
-更新：2026-10-23。最近一次完整本机验收的源码基线为 `19f77fc11c50aac34fa189a7b39bcb27fad9b139`；验收材料归档提交为 `bbfd4af169a70cc180d583249deeacc25e0bc00d`。本页汇总已有证据，本次文档整理没有重新运行服务或扩大验收范围。
+更新：2026-10-25。最近一次完整本机验收的源码基线仍为 `19f77fc11c50aac34fa189a7b39bcb27fad9b139`；验收材料归档提交为 `bbfd4af169a70cc180d583249deeacc25e0bc00d`。此后发生了下述报名修复；不能把旧版本的完整本机验收直接当成本轮源码的全栈结果。
 
-## 完成情况
+## 2026-10-25 后续修复与复查
+
+- 修复并发对账：旧请求始终使用自己的版本，失败处理也受 epoch/revision 约束，不再暂停更新的成功恢复或覆盖更新的安全状态。
+- 修复用户页面名额口径：比赛列表和详情显示“已确认人数 / 总名额”，不把尚未确认的数据库余量视为可预留名额。
+- 本轮 Java 8 全后端打包回归 255 tests、27 类，0 失败/错误/跳过；报名相关 62 项通过（包含于本轮后端回归），含新增七项并发/故障组合回归。另有首轮报名专项 61 项通过；各轮不相加。
+- 前端生产构建通过；实际 Vue 模板的待确认/已确认两种数据夹具渲染通过。本轮未重跑真实 MySQL/MQ、浏览器、隔离全栈或 JV01—JV29。
+
+修复前反例保留在[审查报告](../outputs/validation/registration-chain-review-20261025/report.md)；修复后的范围、复查及清理见[本轮报告](../outputs/validation/registration-chain-fix-20261025/report.md)。
+
+## 2026-10-23 完整本机验收
 
 可靠判题、固定规格与赛事快照、限额报名、Lua 异常恢复、当前账号鉴权、可重建榜单/最终结算，以及 Linux 隔离执行与持久回收均已实现，并通过上述基线的本机整体验收。
 
-| 验证层 | 最近结果 | 依据 |
+| 验证层 | 该轮结果 | 依据 |
 | --- | --- | --- |
 | 后端构建与回归 | Java 8 clean/package；248 tests、27 类，0 失败/错误/跳过 | [测试明细](../outputs/validation/overall-acceptance-20261023/backend-tests.json) |
 | 前端 | 生产构建通过；真实 Chrome 8 项检查，pageErrors=[] | [最终构建](../outputs/validation/overall-acceptance-20261023/frontend-build-relative.log)、[浏览器](../outputs/validation/overall-acceptance-20261023/business-matrix-02/native/browser.log) |

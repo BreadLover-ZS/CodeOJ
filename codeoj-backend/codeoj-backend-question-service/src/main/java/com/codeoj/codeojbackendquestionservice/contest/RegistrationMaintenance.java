@@ -33,7 +33,7 @@ public class RegistrationMaintenance {
             }
         } catch(RedisRegistrationLedger.LedgerException broken) {
             if("STALE_GATE_REVISION".equals(broken.getCode())) { return; } // Another authority revision already fenced this tick.
-            service.hold(contest,broken.getCode());throw broken;
+            service.hold(s,broken.getCode());throw broken;
         }
     }
 }

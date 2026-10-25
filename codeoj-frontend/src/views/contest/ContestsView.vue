@@ -23,9 +23,10 @@
             localTime(record.startAt)
           }}</template></a-table-column
         >
-        <a-table-column title="剩余名额"
+        <a-table-column title="已确认人数 / 总名额"
           ><template #cell="{ record }"
-            >{{ record.remainingCapacity }} / {{ record.capacity }}</template
+            >{{ record.capacity - record.remainingCapacity }} /
+            {{ record.capacity }}</template
           ></a-table-column
         >
         <a-table-column title="操作"

@@ -1,0 +1,31 @@
+{
+  "scope": "Actual production Vue templates rendered via Vue SSR with UI-component and API-data fixtures; not real browser or full HTTP validation",
+  "results": [
+    {
+      "mysqlRemaining": 1,
+      "confirmed": 0,
+      "list": {
+        "text": "比赛 刷新专用赛题报名中0 / 1查看比赛上一页 第 1 页 下一页",
+        "warnings": []
+      },
+      "detail": {
+        "text": "返回比赛刷新状态 Audit 报名中 比赛专用题目 已确认 0 / 1 人 报名： 至 比赛： 至 （本地时间） 报名状态：确认中；参赛资格：当前无有效资格 报名 按各题最早 AC 提交的受理时间计分；解题数优先，达到该解题数的时间次之。同分同时间并列。",
+        "warnings": []
+      },
+      "status": "PASS"
+    },
+    {
+      "mysqlRemaining": 0,
+      "confirmed": 1,
+      "list": {
+        "text": "比赛 刷新专用赛题报名中1 / 1查看比赛上一页 第 1 页 下一页",
+        "warnings": []
+      },
+      "detail": {
+        "text": "返回比赛刷新状态 Audit 报名中 比赛专用题目 已确认 1 / 1 人 报名： 至 比赛： 至 （本地时间） 报名状态：已确认；参赛资格：有效 报名 按各题最早 AC 提交的受理时间计分；解题数优先，达到该解题数的时间次之。同分同时间并列。",
+        "warnings": []
+      },
+      "status": "PASS"
+    }
+  ]
+}

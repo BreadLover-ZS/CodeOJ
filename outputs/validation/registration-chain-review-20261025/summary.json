@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-25",
+  "commit": "b9af09bfaf339fa6e39d84eec97fd77dce3d08b4",
+  "scope": "CodeOJ limited contest registration; source review plus private Redis 6.2.24 / Spring / H2 probes",
+  "status": "REVIEW_COMPLETE_WITH_UNFIXED_FINDINGS",
+  "findings": [
+    {
+      "id": "R1",
+      "priority": "P2",
+      "status": "REPRODUCED_UNFIXED",
+      "title": "Late older reconciliation failure pauses a newer successful reconciliation",
+      "observation": {
+        "newerCompletedRevision": 8,
+        "newerCompletedReady": true,
+        "afterOlderFailureRevision": 9,
+        "afterOlderFailureReady": false,
+        "afterOlderFailureMode": "REDIS_PAUSED",
+        "issue": "RECONCILIATION_INCOMPLETE",
+        "lateGateError": "STALE_GATE_REVISION",
+        "redisGateBeforeNextTick": "1",
+        "newRegistrationRejected": true,
+        "confirmedUserQualificationValid": false
+      }
+    },
+    {
+      "id": "R2",
+      "priority": "P3",
+      "status": "REPRODUCED_UNFIXED",
+      "title": "Remaining-capacity UI counts pending reservations as remaining places",
+      "observation": {
+        "displayedRemainingCapacity": 1,
+        "redisAvailable": 0,
+        "pendingStatus": "PROCESSING",
+        "confirmedQualifications": 0,
+        "nextUserResult": "CONTEST_FULL"
+      }
+    }
+  ],
+  "tests": [
+    {
+      "name": "RegistrationRedisIntegrationTest",
+      "tests": 48,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "RegistrationMessagingTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "RegistrationChainAuditProbeTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "baselineTests": 55,
+  "probeTests": 3,
+  "probeInterpretation": "Two probes assert that defects are reproducible; their successful assertions do not mean business correctness. The third probe validates partial-reserve + cancel + recovery + late-confirm safety.",
+  "baselineCommand": "JAVA_HOME=<Java8> PATH=<Java8>/bin:$PATH mvn -o -B -f codeoj-backend/pom.xml -pl codeoj-backend-question-service -am -Dtest=RegistrationRedisIntegrationTest,RegistrationMessagingTest -Dsurefire.failIfNoSpecifiedTests=false -Dcodeoj.real-redis=true -Dcodeoj.redis-server=<Redis6.2.24AbsolutePath> test",
+  "unverifiedThisRun": [
+    "Real MySQL transaction/concurrency behavior",
+    "Real RabbitMQ transport/faults",
+    "Full Gateway HTTP and finalization chain",
+    "Real browser rendering",
+    "Redis primary/replica failover and Cluster",
+    "Deployment, performance/load and long-running stability"
+  ],
+  "trackedChanges": [],
+  "businessSourcesModified": false,
+  "published": false,
+  "redisSourceSha256": "c3f112749c7cb108597713469cc9beed305e91f036fba313ce8dcbad829f5821"
+}

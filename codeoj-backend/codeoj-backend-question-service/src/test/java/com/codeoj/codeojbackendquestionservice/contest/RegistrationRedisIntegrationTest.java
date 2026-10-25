@@ -466,4 +466,107 @@ class RegistrationRedisIntegrationTest {
         assertEquals("CONFIRMED",ledger.user(id,10).getState());assertEquals(0,stock(id));assertEquals(1,count("contest_registration"));
     }
 
+    class DelayedReconcileLedger extends RedisRegistrationLedger {
+        final String point;final CountDownLatch blocked=new CountDownLatch(1),resume=new CountDownLatch(1);boolean once=true;
+        DelayedReconcileLedger(String point) { super(redis);this.point=point; }
+        void stopAt(String current) {
+            if(once && point.equals(current)) {
+                once=false;blocked.countDown();
+                try { if(!resume.await(10,TimeUnit.SECONDS)) { throw new IllegalStateException("RECONCILIATION_TEST_TIMEOUT"); } }
+                catch(InterruptedException e) { Thread.currentThread().interrupt();throw new IllegalStateException(e); }
+            }
+        }
+        @Override public void initialize(RegistrationSettings s) { super.initialize(s);stopAt("initialize"); }
+        @Override public void gate(RegistrationSettings s,boolean open,boolean clear) { if(open && clear) { stopAt("open"); }super.gate(s,open,clear); }
+    }
+    Future<String> delayedReconcile(long id,DelayedReconcileLedger delayed,ExecutorService worker) {
+        long revision=transactions.settings(id).getRevision();
+        return worker.submit(()->{try { facade(delayed).reconcile(id,command(revision),99);return "SUCCESS"; }catch(BusinessException error) { return error.getMessage(); }});
+    }
+    void olderReconcileCannotPauseNewerSuccess(String point) throws Exception {
+        long id=active(2);RegistrationRequest q=accept(id,10);transactions.confirm(q.event());service.synchronize(request(id,10));
+        DelayedReconcileLedger delayed=new DelayedReconcileLedger(point);ExecutorService worker=Executors.newSingleThreadExecutor();
+        try {
+            Future<String> old=delayedReconcile(id,delayed,worker);assertTrue(delayed.blocked.await(10,TimeUnit.SECONDS));
+            RegistrationSettings newer=service.reconcile(id,command(transactions.settings(id).getRevision()),99);
+            assertTrue(newer.isReady());delayed.resume.countDown();assertEquals("REGISTRATION_STATE_UNAVAILABLE",old.get(10,TimeUnit.SECONDS));
+            RegistrationSettings after=transactions.settings(id);assertTrue(after.isReady());assertEquals("REDIS_READY",after.getMode());
+            assertEquals(newer.getRevision(),after.getRevision());assertNull(after.getIssue());assertEquals("1",ledger.stats(id).getStr("open"));
+            assertEquals(true,service.status(id,10).get("qualificationValid"));accept(id,11);
+        } finally { delayed.resume.countDown();worker.shutdownNow();assertTrue(worker.awaitTermination(5,TimeUnit.SECONDS)); }
+    }
+    @Test void lateGateFailureCannotPauseANewerSuccessfulReconciliation() throws Exception { olderReconcileCannotPauseNewerSuccess("open"); }
+    @Test void supersededReconciliationCannotAdoptTheNewerRevisionAndCloseItsGate() throws Exception { olderReconcileCannotPauseNewerSuccess("initialize"); }
+
+    @Test void lateReconciliationFailurePreservesANewerSafetyHold() throws Exception {
+        long id=active(1);DelayedReconcileLedger delayed=new DelayedReconcileLedger("open");ExecutorService worker=Executors.newSingleThreadExecutor();
+        try {
+            Future<String> old=delayedReconcile(id,delayed,worker);assertTrue(delayed.blocked.await(10,TimeUnit.SECONDS));
+            service.hold(id,"LEDGER_ROLLBACK_DETECTED");RegistrationSettings held=transactions.settings(id);maintenance().maintain(id);
+            delayed.resume.countDown();assertEquals("REGISTRATION_STATE_UNAVAILABLE",old.get(10,TimeUnit.SECONDS));
+            RegistrationSettings after=transactions.settings(id);assertFalse(after.isReady());assertEquals(held.getRevision(),after.getRevision());
+            assertEquals("LEDGER_ROLLBACK_DETECTED",after.getIssue());assertEquals("0",ledger.stats(id).getStr("open"));
+        } finally { delayed.resume.countDown();worker.shutdownNow();assertTrue(worker.awaitTermination(5,TimeUnit.SECONDS)); }
+    }
+    @Test void lateReconciliationFailureCannotChangeTheCancellationRevision() throws Exception {
+        long id=active(1);DelayedReconcileLedger delayed=new DelayedReconcileLedger("open");ExecutorService worker=Executors.newSingleThreadExecutor();
+        try {
+            Future<String> old=delayedReconcile(id,delayed,worker);assertTrue(delayed.blocked.await(10,TimeUnit.SECONDS));
+            contests.cancel(id,command(transactions.settings(id).getRevision()),99);RegistrationSettings cancelled=transactions.settings(id);maintenance().maintain(id);
+            delayed.resume.countDown();assertEquals("REGISTRATION_STATE_UNAVAILABLE",old.get(10,TimeUnit.SECONDS));
+            RegistrationSettings after=transactions.settings(id);assertEquals("CANCELLED",after.getStatus());assertFalse(after.isReady());
+            assertEquals(cancelled.getRevision(),after.getRevision());assertNull(after.getIssue());assertEquals("0",ledger.stats(id).getStr("open"));
+        } finally { delayed.resume.countDown();worker.shutdownNow();assertTrue(worker.awaitTermination(5,TimeUnit.SECONDS)); }
+    }
+    @Test void actualCurrentReconciliationFailureStillPausesBeforeAndAfterDatabaseCompletion() {
+        for(boolean afterCompletion:new boolean[]{false,true}) {
+            long id=active(1);RedisRegistrationLedger failing=new RedisRegistrationLedger(redis) {
+                @Override public void gate(RegistrationSettings s,boolean open,boolean clear) {
+                    if(open==afterCompletion) { throw new IllegalStateException("CONTROLLED_CURRENT_RECONCILIATION_FAILURE"); }super.gate(s,open,clear);
+                }
+            };
+            assertThrows(BusinessException.class,()->facade(failing).reconcile(id,command(transactions.settings(id).getRevision()),99));
+            RegistrationSettings after=transactions.settings(id);assertFalse(after.isReady());assertEquals("REDIS_PAUSED",after.getMode());
+            assertEquals("RECONCILIATION_INCOMPLETE",after.getIssue());maintenance().maintain(id);assertEquals("0",ledger.stats(id).getStr("open"));
+        }
+    }
+    @Test void partialReservationThenCancellationRetainsIdentityAndRefundsOnlyOnce() {
+        long id=active(1);RegistrationSettings s=transactions.settings(id);FaultLedger interrupted=new FaultLedger("reserve","-- reserve.write.stock");
+        assertThrows(RuntimeException.class,()->interrupted.reserve(s,10,IdWorker.getId(),UUID.randomUUID().toString(),key,RegistrationTransactions.hash(id,s.getPublishedVersion())));
+        contests.cancel(id,command(s.getRevision()),99);maintenance().maintain(id);RegistrationRequest q=request(id,10);
+        assertEquals(interrupted.proposedRequest,q.getReservation().getRequestId().toString());assertEquals("CANCELLED",q.getStatus());assertEquals("RELEASED",q.getReclaimState());
+        assertEquals(1,stock(id));assertTrue(transactions.confirm(q.event()));maintenance().maintain(id);assertEquals(1,stock(id));assertEquals(0,count("contest_registration"));
+    }
+
+    @Test void delayedLedgerErrorsCannotPauseNewRecoveryFromMaintenanceAdmissionOrStatus() throws Exception {
+        for(String entry:Arrays.asList("maintenance","admission","status")) {
+            long id=active(1);CountDownLatch observed=new CountDownLatch(1),resume=new CountDownLatch(1);
+            String pending=RedisRegistrationLedger.keys(id).get(4);redis.opsForValue().set(pending,"controlled-wrong-type");
+            RedisRegistrationLedger delayed=new RedisRegistrationLedger(redis) {
+                @Override public void repair(RegistrationSettings s) {
+                    try { super.repair(s); }
+                    catch(LedgerException error) {
+                        observed.countDown();
+                        try { if(!resume.await(10,TimeUnit.SECONDS)) { throw new IllegalStateException("LEDGER_OBSERVATION_TEST_TIMEOUT"); } }
+                        catch(InterruptedException e) { Thread.currentThread().interrupt();throw new IllegalStateException(e); }
+                        throw error;
+                    }
+                }
+            };
+            ExecutorService worker=Executors.newSingleThreadExecutor();
+            try {
+                Future<?> old=worker.submit(()->{
+                    if("maintenance".equals(entry)) { new RegistrationMaintenance(jdbc,transactions,facade(delayed),delayed).maintain(id); }
+                    else if("admission".equals(entry)) { facade(delayed).register(id,key,10); }
+                    else { facade(delayed).status(id,10); }
+                });
+                assertTrue(observed.await(10,TimeUnit.SECONDS));redis.delete(pending);
+                RegistrationSettings restored=service.reconcile(id,command(transactions.settings(id).getRevision()),99);assertTrue(restored.isReady());
+                resume.countDown();assertThrows(ExecutionException.class,()->old.get(10,TimeUnit.SECONDS));
+                RegistrationSettings after=transactions.settings(id);assertTrue(after.isReady(),entry);
+                assertEquals(restored.getRevision(),after.getRevision(),entry);assertNull(after.getIssue(),entry);accept(id,10);
+            } finally { resume.countDown();worker.shutdownNow();assertTrue(worker.awaitTermination(5,TimeUnit.SECONDS)); }
+        }
+    }
+
 }

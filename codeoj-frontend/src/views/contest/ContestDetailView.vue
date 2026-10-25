@@ -16,7 +16,8 @@
               : "公开练习题训练赛"
           }}</span
           ><span
-            >剩余 {{ contest.remainingCapacity }} / {{ contest.capacity }}</span
+            >已确认 {{ contest.capacity - contest.remainingCapacity }} /
+            {{ contest.capacity }} 人</span
           ></a-space
         >
         <p>

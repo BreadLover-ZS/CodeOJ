@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-25",
+  "baseCommit": "b9af09bfaf339fa6e39d84eec97fd77dce3d08b4",
+  "sourceState": "Uncommitted working tree, identified by source-sha256.json",
+  "status": "PASS_WITH_SCOPE_LIMITS",
+  "fixed": [
+    "Original R1 late reconcile failure pausing newer success",
+    "Related old reconcile adopting a newer revision",
+    "Original R2 misleading remaining-capacity display",
+    "Follow-up delayed Redis observations overwriting newer recovery in maintenance/admission/status/unknown recovery"
+  ],
+  "finalBackend": {
+    "classes": 27,
+    "tests": 255,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "registrationWithinBackend": {
+    "realRedisAndSpringH2": 55,
+    "mockMessageContract": 7
+  },
+  "newRegressionMethods": [
+    "lateGateFailureCannotPauseANewerSuccessfulReconciliation",
+    "supersededReconciliationCannotAdoptTheNewerRevisionAndCloseItsGate",
+    "lateReconciliationFailurePreservesANewerSafetyHold",
+    "lateReconciliationFailureCannotChangeTheCancellationRevision",
+    "actualCurrentReconciliationFailureStillPausesBeforeAndAfterDatabaseCompletion",
+    "partialReservationThenCancellationRetainsIdentityAndRefundsOnlyOnce",
+    "delayedLedgerErrorsCannotPauseNewRecoveryFromMaintenanceAdmissionOrStatus"
+  ],
+  "frontend": {
+    "productionBuild": "PASS",
+    "actualTemplateFixtureStates": 2,
+    "renderWarnings": 0,
+    "browserRun": false
+  },
+  "followup": {
+    "fixtureDiagnostic": "The first new probe waited in check while the actual error occurred earlier in repair; diagnostic retained, not counted as product defect",
+    "beforeFix": "Real Redis LEDGER_INCOMPLETE was delayed until after newer reconciliation succeeded; maintenance then paused it; assertion failed",
+    "afterFix": "All three maintenance/admission/status paths pass, genuine current-fault holds still pass"
+  },
+  "unverified": [
+    "Real MySQL/RabbitMQ/Gateway full stack",
+    "Real browser",
+    "Linux isolation full stack and JV01-JV29",
+    "Redis primary/replica and Cluster",
+    "Deployment/load/long-duration stability"
+  ],
+  "commands": {
+    "backend": "env JAVA_HOME=<Java8> PATH=<Java8>/bin:$PATH mvn -o -B -f codeoj-backend/pom.xml -Dcodeoj.real-redis=true -Dcodeoj.redis-server=<Redis6.2.24> -Dcodeoj.native-observation=true package",
+    "frontend": "VUE_APP_API_BASE_URL= npm run build -- --dest <privateTemporaryRoot>/frontend-dist"
+  },
+  "trackedChangedFiles": [
+    "codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationMaintenance.java",
+    "codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationService.java",
+    "codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationTransactions.java",
+    "codeoj-backend/codeoj-backend-question-service/src/test/java/com/codeoj/codeojbackendquestionservice/contest/RegistrationRedisIntegrationTest.java",
+    "codeoj-frontend/src/views/contest/ContestDetailView.vue",
+    "codeoj-frontend/src/views/contest/ContestsView.vue",
+    "docs/contest/registration-recovery.md",
+    "docs/contest/source-reading.md",
+    "docs/status.md"
+  ],
+  "published": false
+}
