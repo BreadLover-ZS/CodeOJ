@@ -8,7 +8,6 @@
 | --- | --- |
 | [赛事平台 1.1 原方案](../contest/development-plan-v1.1.md) | J0—J6、JV01—JV29 的需求与完成条件；原文中的 UNTESTED 是设计阶段状态 |
 | [基础版判题流程与图解](legacy-judge-walkthrough.md) | 从旧 README 拆出的提交、MQ、沙箱三条流程；不能替代可靠判题链 |
-| [基础模块学习目录](../learning/02-模块/README.md) | 六篇按模块学习的原笔记；已有新版补充段落，正文仍含早期分析 |
 | [2026-09-22 Docker 联调报告](../docker-local-joint-debug-report.md) | 当时 Windows/Docker 环境与旧分支；不能证明当前 Mac 新版的 Nacos 或全容器部署 |
 
 ## 2026-10-17—18 阶段开发与问题修复
@@ -34,3 +33,7 @@
 | [报名恢复说明](../contest/registration-recovery.md) | 旧快照、Lua 部分写入、V005 与旧账本升级；技术说明仍适用 |
 
 2026-10-23 在报名修复后的源码上完成了新一轮完整本机验收。历史报告中的 FAIL、UNTESTED、“尚未提交”和诊断错误保留原样；后续修复以新报告建立证据链，不回写历史结果。
+
+## 2026-10-25 报名审查与修复
+
+[修复前审查](../../outputs/validation/registration-chain-review-20261025/report.md)记录并发对账和名额展示反例；[修复及再次检查](../../outputs/validation/registration-chain-fix-20261025/report.md)记录后续同类窗口与最终回归。当前源码讲解见[学习链路](../learning/03-链路.md)，原失败探针保留其历史含义。

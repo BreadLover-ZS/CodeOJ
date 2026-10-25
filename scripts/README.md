@@ -39,4 +39,4 @@
 python3 -B -m unittest discover -s scripts/local/tests -v
 ```
 
-这些测试不启动真实 VM。[历史 Python 夹具依赖与文件保留规则](../docs/project-files.md#历史路径中的可执行依赖)说明为什么不能移动 `outputs/validation/final-acceptance-20261018/`。完整本机验收同时需要后端/前端构建、业务、隔离、权限、报名专项、切换与独立清理证据。
+这些测试不启动真实 VM。[历史 Python 夹具依赖与文件保留规则](../docs/project-files.md#验收目录不都是纯日志)说明为什么不能移动 `outputs/validation/final-acceptance-20261018/`。完整本机验收同时需要后端/前端构建、业务、隔离、权限、报名专项、切换与独立清理证据。

@@ -2,20 +2,16 @@
 
 CodeOJ 基于课程基础版本继续开发，使用 Java 8、Spring Cloud 和 Vue 3，覆盖用户与题目管理、可靠异步判题、比赛快照、限额报名、成绩榜单与最终结算。MySQL 保存业务事实，RabbitMQ 传递事件，Redis 承载会话、报名预留和榜单缓存。
 
-**2026-10-23 本机整体验收通过**：源码基线 `19f77fc`，JV01—JV29 全部通过，证据归档于 `bbfd4af`。详细数量、失败修正和后置项目统一见[当前状态](docs/status.md)与[完整报告](outputs/validation/overall-acceptance-20261023/report.md)。Nacos、目标环境部署和压测继续后置。
+完成情况、各轮验证范围与后置工作统一见[项目状态](docs/status.md)。学习当前实现，从下方源码路线进入。
 
 ## 从哪里开始
 
 | 目的 | 入口 |
 | --- | --- |
-| 查找所有文档 | [文档导航](docs/README.md) |
-| 查看当前完成情况与验收证据 | [项目状态](docs/status.md) |
-| 在 Mac 启动、演示与清理 | [完整启动](docs/contest/local-startup.md)、[运行交接](docs/contest/handoff.md) |
-| 按源码学习和自测 | [学习路线](docs/learning/01-总览.md) → [业务链路](docs/learning/03-链路.md) → [面试追问](docs/learning/04-面试.md) |
-| 理解报名、隔离和榜单实现 | [赛事开发导航](docs/contest/README.md)、[源码地图](docs/contest/source-reading.md) |
-| 选择运行/验证脚本 | [脚本索引](scripts/README.md) |
-| 查询历史问题与运行记录 | [历史文档](docs/history/README.md)、[验收证据索引](outputs/validation/README.md) |
-| 了解目录职责与清理规则 | [文件管理](docs/project-files.md) |
+| 跟读源码和自测 | [学习总览](docs/learning/01-总览.md) → [源码链路](docs/learning/03-链路.md) → [面试练习](docs/learning/04-面试.md) |
+| 启动和演示 | [Mac 本机启动](docs/contest/local-startup.md) |
+| 查看进度和验收 | [项目状态](docs/status.md) |
+| 查全部文档、历史和证据 | [文档导航](docs/README.md) |
 
 ## 本机启动
 
@@ -30,15 +26,6 @@ CodeOJ 基于课程基础版本继续开发，使用 Java 8、Spring Cloud 和 V
 ```
 
 真实 Chrome 验证的额外依赖、私有演示账号、输出地址及失败清理方式见[启动说明](docs/contest/local-startup.md)。单次启动 smoke 不替代整套 JV；完整复验见[交接文档](docs/contest/handoff.md)。
-
-只学习可信样例时可运行：
-
-```bash
-./scripts/demo-local-judge.sh
-./scripts/demo-local-contest.sh
-```
-
-这两个样例显式使用 native；赛事样例使用 H2 和手动事件分发，不能代替真实 MySQL/Redis/MQ、HTTP 或容器隔离验收。
 
 ## 当前业务链
 
