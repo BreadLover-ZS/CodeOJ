@@ -7,7 +7,7 @@
 | `codeoj-backend/` | 后端源码、测试、迁移及旧 Compose | 不因文档整理移动模块或修改业务开关 |
 | `codeoj-frontend/src/`、`generated/` | 前端源码与已引用的 API 客户端 | generated 是构建输入，不当作 dist 删除 |
 | `scripts/` | 可复用启动、演示与验证入口 | 用途见[脚本索引](../scripts/README.md) |
-| `docs/learning/` | 总览、当前模块、链路自测与面试 | 主线为 01→03→04；02 按模块查阅 |
+| `docs/learning/` | 项目全貌、完整链路、8 篇模块详解与面试 | 按 01→03→02 模块展开→04 学习；赛事报名与榜单独立成篇 |
 | `docs/contest/` | 技术专题、运行交接和阶段记录 | 当前说明与历史阶段按[赛事导航](contest/README.md)区分 |
 | `docs/history/`、`docs/images/` | 历史索引、基础版图解和引用素材 | 旧图仍有引用，不随正文精简删除 |
 | `outputs/validation/` | 各轮报告、日志、事实及源码指纹 | 新执行写新目录，不覆盖旧结果或重算旧清单 |
