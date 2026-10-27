@@ -39,7 +39,9 @@ flowchart LR
 | 沙箱服务 | 编译运行、资源与文件边界、期限、执行对象清理 |
 | common/model/service-client | 共享响应与异常、DTO/实体/VO/协议、Feign 与鉴权；这些是依赖库 |
 
-公共类型按需查看：[common 响应与异常](../../codeoj-backend/codeoj-backend-common/src/main/java/com/codeoj/codeojbackendcommon)、[model 数据与协议](../../codeoj-backend/codeoj-backend-model/src/main/java/com/codeoj/codeojbackendmodel/model)、[service-client 调用契约](../../codeoj-backend/codeoj-backend-service-client/src/main/java/com/codeoj/codeojbackendserviceclient)。先在链路里遇到具体对象，再打开对应类型，不需要预先读完整个目录。
+公共类型按需查看：[common 响应与异常](../../codeoj-backend/codeoj-backend-common/src/main/java/com/codeoj/codeojbackendcommon)、[model 数据与协议](../../codeoj-backend/codeoj-backend-model/src/main/java/com/codeoj/codeojbackendmodel/model)、[service-client 调用契约](../../codeoj-backend/codeoj-backend-service-client/src/main/java/com/codeoj/codeojbackendserviceclient)。
+
+先在链路里遇到具体对象，再打开对应类型，不需要预先读完整个目录。
 
 工程入口与版本见[后端父 POM](../../codeoj-backend/pom.xml)：Java 8、Spring Boot 2.6.13、Spring Cloud。前端为 Vue 3、TypeScript、Arco Design 与 Monaco。
 
@@ -48,6 +50,29 @@ flowchart LR
 MySQL 保存提交、执行权、资格和成绩事实；RabbitMQ 传递待处理事件；Redis 分别承载共享会话、报名预留账本与榜单缓存。报名账本需要保护未落库身份，不能因榜单缓存可丢失就把全部 Redis 数据随意删除。
 
 基础版提供用户/题目管理、异步判题、远程沙箱与判题策略；当前扩展包括固定规格、Outbox、租约恢复、隔离回收、赛事快照、异步报名和可重建榜单。个人贡献需按实际参与情况表达。
+
+### 1.1 同一个 Java 名字，不等于同一个运行对象
+
+| 名称/关系 | 编译时看到什么 | 运行时实际发生什么 |
+| --- | --- | --- |
+| 依赖 service-client JAR | 多个服务都能引用相同接口 | 每个进程各自加载类型和创建 Bean |
+| Feign Client | 一份远程方法声明 | 调用方代理构造 HTTP，提供方 Controller 接收 |
+| Controller implements Client | Java 方法签名对齐 | 不会让两个进程变成一次普通对象调用 |
+| ServiceImpl 继承通用 Service | 某些 CRUD 方法没写在当前类 | 由 MyBatis-Plus 继承实现执行本地数据访问 |
+| 同名 getLoginUser | 各处都有获取用户的方法 | 需要按调用对象区分页面 API、本地解析和远程查询 |
+
+这也是阅读顺序里先讲登录链的原因：先用具体请求理解“本地对象、客户端代理、远端提供者”，后面的执行命令就容易接起来。
+
+### 1.2 全项目反复出现的四种边界
+
+| 边界 | 过界时发生什么 | 读源码先确认什么 |
+| --- | --- | --- |
+| HTTP | 参数/对象序列化为请求，远端重新解析 | Client/Controller 两端、地址、路径、请求头、返回类型 |
+| MQ | 先持久投递，再由消费者线程处理 | 事件身份、交换机/路由/队列、ACK 与业务状态 |
+| 数据库事务 | 多条本地写入一起提交或回滚 | 代理入口、锁/条件、外部调用是否在事务外 |
+| 用户进程 | 后端启动受限执行对象 | stdin/stdout、期限、资源、可信收据与物理清理 |
+
+**全局图的箭头只是起点。** 每读一个箭头，都应知道谁发起、传什么、谁接收，以及收到响应到底证明了什么。
 
 ## 2. 五条链路如何连接
 
@@ -65,7 +90,7 @@ MySQL 保存提交、执行权、资格和成绩事实；RabbitMQ 传递待处�
 
 ## 3. 正文怎样配合源码阅读
 
-每步先看“源码位置与阅读范围”，在 IDE 里只读指定分支，再回文档理解业务和数据变化。普通赋值与重复校验简述，关键判断、SQL 条件和事务边界展开。第一遍跳过已标明的故障分支，第二遍回到同一流程推演异常。
+每步先看“方法职责与输入输出”，知道它为什么存在；再按阅读范围打开源码，最后核对业务和数据变化。普通赋值与重复校验简述，关键判断、SQL 条件和事务边界展开。第一遍跳过已标明的故障分支，第二遍回到同一流程推演异常。
 
 | 看到的对象 | 先回答的问题 |
 | --- | --- |
@@ -77,9 +102,23 @@ MySQL 保存提交、执行权、资格和成绩事实；RabbitMQ 传递待处�
 
 不要求先逐目录读完，也不把全部 DTO、Mapper 字段当成重点。题目准备、登录、提交、判题、隔离、报名和榜单都在对应业务链中覆盖；样式和重复 CRUD 可略读。
 
+### 3.1 读一个方法需要得到的五项信息
+
+| 信息 | 文档应提供的解释 |
+| --- | --- |
+| 职责 | 这个方法负责哪件业务，为什么在这一层 |
+| 输入 | 参数来自浏览器、数据库、消息还是上游返回 |
+| 输出 | 返回值、异常、数据库变更或外部副作用 |
+| 机制 | 相关代理、事务、监听器、脚本、进程等怎样起作用 |
+| 衔接 | 调用谁、回到谁、接下来走哪一段链路 |
+
+先走正常分支建立调用图，再在第二遍推演失败。方法表负责快速定位，正文解释原因，流程图负责把局部重新放回全局。
+
 ## 4. 阅读前明确当前实现
 
-普通提交的分叉在 [QuestionSubmitServiceImpl.doQuestionSubmit](../../codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/service/impl/QuestionSubmitServiceImpl.java)。主文沿可靠判题，旧 MyMessageProducer/MyMessageConsumer 仅作局部对照，旧图见[历史流程](../history/legacy-judge-walkthrough.md)。
+普通提交的分叉在 [QuestionSubmitServiceImpl.doQuestionSubmit](../../codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice/service/impl/QuestionSubmitServiceImpl.java)。
+
+主文沿可靠判题，旧 MyMessageProducer/MyMessageConsumer 仅作局部对照，旧图见[历史流程](../history/legacy-judge-walkthrough.md)。
 
 | 配置/条件 | 阅读含义 |
 | --- | --- |
@@ -89,7 +128,11 @@ MySQL 保存提交、执行权、资格和成绩事实；RabbitMQ 传递待处�
 | 判题端 type=remote | 使用 HTTP 调用沙箱 |
 | 沙箱端 mode=isolated | Linux 容器执行，默认模式；native 是显式可信样例模式 |
 
-三个业务开关默认关闭，后两项依赖可靠判题；完整启动显式配置。迁移按[基础表](../../codeoj-backend/mysql-init/create_table.sql)、[V001—V005](../../codeoj-backend/mysql-init/migrations)顺序准备。remote 与 isolated 可以同时成立，它们配置在不同一端。
+三个业务开关默认关闭，后两项依赖可靠判题；完整启动显式配置。
+
+迁移按[基础表](../../codeoj-backend/mysql-init/create_table.sql)、[V001—V005](../../codeoj-backend/mysql-init/migrations)顺序准备。
+
+remote 与 isolated 可以同时成立，它们配置在不同一端。
 
 ## 5. 运行与证据放在什么位置
 
@@ -101,7 +144,9 @@ MySQL 保存提交、执行权、资格和成绩事实；RabbitMQ 传递待处�
 | 当前验证范围 | [项目状态](../status.md)，区分历史全栈基线与后续修复回归 |
 | 复验和配置细节 | [运行交接](../contest/handoff.md)；操作和历史证据保留原路径 |
 
-完整本机链使用 Mac 业务管理器、私有 MySQL/Redis/MQ、临时 Linux Docker/cgroup 环境和静态发现。先核对页面代理、Cookie、Redis 编号、Feign 地址/内部密钥、沙箱 URL/auth、镜像和持久目录。入口实现为 [local-stack.sh](../../scripts/local-stack.sh) → [start-stack.py](../../scripts/local/start-stack.py)。端口监听不等于真实业务就绪。
+完整本机链使用 Mac 业务管理器、私有 MySQL/Redis/MQ、临时 Linux Docker/cgroup 环境和静态发现。先核对页面代理、Cookie、Redis 编号、Feign 地址/内部密钥、沙箱 URL/auth、镜像和持久目录。
+
+入口实现为 [local-stack.sh](../../scripts/local-stack.sh) → [start-stack.py](../../scripts/local/start-stack.py)。端口监听不等于真实业务就绪。
 
 本次重构是源码导读，不重跑业务测试。测试链接用于阅读断言；H2、MQ/引擎替身、真实 Redis、完整跨进程链各能证明什么，要分别判断。真实 Nacos、目标部署、压测、长期稳定性等以状态页的未验收范围表达，不提供未经测量的 QPS。
 
