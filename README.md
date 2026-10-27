@@ -8,12 +8,12 @@ CodeOJ 基于课程基础版本继续开发，使用 Java 8、Spring Cloud 和 V
 
 | 目的 | 入口 |
 | --- | --- |
-| 从不熟悉项目到面试准备 | [建立项目全貌](docs/learning/01-总览.md) → [走通一次提交](docs/learning/03-链路.md) → [逐模块读懂源码](docs/learning/02-模块/README.md) → [面试练习](docs/learning/04-面试.md) |
+| 从不熟悉项目到面试准备 | [项目全貌与五条链路](docs/learning/README.md) → [按链路读源码](docs/learning/02-提交与判题链路.md) → [面试复盘](docs/learning/06-面试复盘.md) |
 | 启动和演示 | [Mac 本机启动](docs/contest/local-startup.md) |
 | 查看进度和验收 | [项目状态](docs/status.md) |
 | 查全部文档、历史和证据 | [文档导航](docs/README.md) |
 
-学习资料按已有 Spring Boot CRUD 基础编写，先讲正常流程，再展开可靠性、隔离、报名恢复和榜单结算。每篇包含业务解释、源码顺序、数据变化和自测核对；已了解秒杀的读者可重点看[当前报名的变化](docs/learning/02-模块/07-赛事与报名.md)。
+学习资料按登录、提交判题、沙箱、赛事报名、榜单结算五条业务链编写。每条链先交代全局位置，再给源码阅读范围和解释，先正常流程、后异常分析，不复制源码；已了解秒杀的读者可重点看[当前报名的变化](docs/learning/04-赛事报名与参赛链路.md)。
 
 ## 本机启动
 
@@ -42,7 +42,7 @@ CodeOJ 基于课程基础版本继续开发，使用 Java 8、Spring Cloud 和 V
 报名请求 → Redis Lua 预留 → 请求/Outbox 落库 → MQ 消费 → MySQL 确认资格 → 同步账本
 ```
 
-平台错误进入有限恢复或人工处理，不当作用户 WA。报名资格以 MySQL 确认为准，Lua 报错不表示此前写入已经回滚。源码、时序和失败窗口见[链路学习](docs/learning/03-链路.md)。
+平台错误进入有限恢复或人工处理，不当作用户 WA。报名资格以 MySQL 确认为准，Lua 报错不表示此前写入已经回滚。源码阅读顺序、全局关系和失败窗口见[五条业务链](docs/learning/README.md)。
 
 ## 模块与技术
 

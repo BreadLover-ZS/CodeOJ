@@ -1,6 +1,6 @@
 # 赛事源码速查
 
-需要按步骤学习和自测，读[源码链路](../learning/03-链路.md)；这里只用于按业务查方法。
+需要按步骤学习和自测，读[源码阅读指南](../learning/README.md)；这里只用于按业务查方法。
 
 后端下列类位于题目服务 [Java 包目录](../../codeoj-backend/codeoj-backend-question-service/src/main/java/com/codeoj/codeojbackendquestionservice)，判题与沙箱类分别在各自模块。
 

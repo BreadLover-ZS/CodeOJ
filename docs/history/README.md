@@ -36,4 +36,4 @@
 
 ## 2026-10-25 报名审查与修复
 
-[修复前审查](../../outputs/validation/registration-chain-review-20261025/report.md)记录并发对账和名额展示反例；[修复及再次检查](../../outputs/validation/registration-chain-fix-20261025/report.md)记录后续同类窗口与最终回归。当前源码讲解见[学习链路](../learning/03-链路.md)，原失败探针保留其历史含义。
+[修复前审查](../../outputs/validation/registration-chain-review-20261025/report.md)记录并发对账和名额展示反例；[修复及再次检查](../../outputs/validation/registration-chain-fix-20261025/report.md)记录后续同类窗口与最终回归。当前源码讲解见[赛事报名链路](../learning/04-赛事报名与参赛链路.md)，原失败探针保留其历史含义。

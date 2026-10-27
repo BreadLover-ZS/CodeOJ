@@ -1,6 +1,6 @@
 # CodeOJ 前端
 
-Vue 3 + TypeScript + Arco Design + Monaco，包含题目练习、用户管理、比赛管理、报名、比赛提交与榜单。源码导读见[前端模块](../docs/learning/02-模块/01-前端.md)，构建及浏览器验证状态见[项目状态](../docs/status.md)。
+Vue 3 + TypeScript + Arco Design + Monaco，包含题目练习、用户管理、比赛管理、报名、比赛提交与榜单。源码导读见[提交与页面查询链路](../docs/learning/02-提交与判题链路.md)，构建及浏览器验证状态见[项目状态](../docs/status.md)。
 
 ## 运行
 
